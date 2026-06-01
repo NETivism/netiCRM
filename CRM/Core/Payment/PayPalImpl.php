@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
 
 /*
  +--------------------------------------------------------------------+
@@ -27,10 +30,9 @@
 */
 
 /**
+ * Payment processor implementation for PayPal (Standard, Pro, and Express) gateways
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,8 +58,6 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;

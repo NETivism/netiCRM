@@ -1,0 +1,123 @@
+diff --git a/CRM/Contribute/Form/ContributionPage/Amount.php b/CRM/Contribute/Form/ContributionPage/Amount.php
+index 5c8fa3627..4289a6bd1 100644
+--- a/CRM/Contribute/Form/ContributionPage/Amount.php
++++ b/CRM/Contribute/Form/ContributionPage/Amount.php
+@@ -116,6 +116,27 @@ SELECT id
+       $this->assign('paymentProcessor', $paymentProcessor);
+     }
+ 
++    // Identify active non-3D TapPay processors for risk warning dialog
++    $non3dTapPayProcessors = [];
++    if (!empty($paymentProcessor)) {
++      $ppIds = CRM_Utils_Array::implode(',', array_keys($paymentProcessor));
++      $query = "
++SELECT id, name
++  FROM civicrm_payment_processor
++ WHERE id IN ({$ppIds})
++   AND payment_processor_type = 'TapPay'
++   AND (url_site IS NULL OR url_site = '')";
++      $ppDao = CRM_Core_DAO::executeQuery($query);
++      while ($ppDao->fetch()) {
++        $non3dTapPayProcessors[$ppDao->id] = $ppDao->name;
++      }
++    }
++    $this->assign('non3dTapPayProcessors', $non3dTapPayProcessors);
++
++    // Assign is_internal flag so the template can suppress the warning for internal pages
++    $isInternal = $this->_id ? CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'is_internal') : 0;
++    $this->assign('isInternalPage', empty($isInternal) ? 0 : 1);
++
+     foreach ($paymentProcessor as $pid => &$pvalue) {
+       $pvalue .= "-".ts("ID")."$pid";
+     }
+diff --git a/templates/CRM/Contribute/Form/ContributionPage/Amount.tpl b/templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
+index da0ccb4c7..e4faa0ebf 100644
+--- a/templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
++++ b/templates/CRM/Contribute/Form/ContributionPage/Amount.tpl
+@@ -384,6 +384,86 @@
+ }
+ {/if}
+ 
++{* Risk warning dialog for non-3D TapPay payment processors on external contribution pages *}
++<style>
++.tappay-risk-dialog {
++  position: fixed !important;
++  top: 200px;
++  left: 50%;
++  transform: translate(-50%, -50%) !important;
++  margin: 0 !important;
++}
++.tappay-risk-dialog .ui-dialog-content ul {
++  margin: 8px 0 8px 20px;
++  padding: 0;
++}
++</style>
++<div id="dialog-tappay-risk" title="{ts}Risk Warning{/ts} ⚠" style="display:none;">
++  <p>{ts}The following TapPay payment processors do not have 3D Secure verification enabled. Using them on a public contribution page may expose contributors to higher security risks:{/ts}</p>
++  <ul id="tappay-risk-processor-list"></ul>
++  <p>{ts}Do you still want to save these settings?{/ts}</p>
++</div>
++{literal}
++<script type="text/javascript">
++cj(document).ready(function($) {
++  var non3dTapPayProcessors = {};
++{/literal}
++{foreach from=$non3dTapPayProcessors key=ppId item=ppName}
++{literal}  non3dTapPayProcessors[{/literal}{$ppId}{literal}] = '{/literal}{$ppName|escape:'javascript'}{literal}';
++{/literal}
++{/foreach}
++{literal}
++  var isInternalPage = {/literal}{$isInternalPage}{literal};
++  var clickedSaveBtn = null;
++
++  cj('#dialog-tappay-risk').dialog({
++    autoOpen: false,
++    resizable: false,
++    width: 500,
++    modal: true,
++    dialogClass: 'tappay-risk-dialog',
++    buttons: {
++      '{/literal}{ts escape='js'}Confirm{/ts}{literal}': function() {
++        cj(this).dialog('close');
++        if (clickedSaveBtn) {
++          cj(clickedSaveBtn).off('click.tappayRisk');
++          clickedSaveBtn.click();
++        }
++      },
++      '{/literal}{ts escape='js'}Cancel{/ts}{literal}': function() {
++        cj(this).dialog('close');
++        clickedSaveBtn = null;
++      }
++    }
++  });
++
++  cj('[id^="_qf_Amount_upload"]').on('click.tappayRisk', function(e) {
++    if (isInternalPage) {
++      return true;
++    }
++    var selectedNon3d = [];
++    $.each(non3dTapPayProcessors, function(id, name) {
++      if (cj('input[name="payment_processor[' + id + ']"]').is(':checked')) {
++        selectedNon3d.push(name);
++      }
++    });
++    if (selectedNon3d.length === 0) {
++      return true;
++    }
++    e.preventDefault();
++    clickedSaveBtn = this;
++    var listHtml = '';
++    $.each(selectedNon3d, function(i, name) {
++      listHtml += '<li>' + $('<span>').text(name).html() + '</li>';
++    });
++    cj('#tappay-risk-processor-list').html(listHtml);
++    cj('#dialog-tappay-risk').dialog('open');
++    return false;
++  });
++});
++</script>
++{/literal}
++
+ {* include jscript to warn if unsaved form field changes *}
+ {include file="CRM/common/formNavigate.tpl"}
+ 

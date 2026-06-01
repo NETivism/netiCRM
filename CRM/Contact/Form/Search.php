@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -250,11 +248,26 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_validContext;
   }
 
+  /**
+   * Check if the context is a search context
+   *
+   * @param string $context
+   *
+   * @return boolean
+   * @access public
+   * @static
+   */
   public static function isSearchContext($context) {
     $searchContext = CRM_Utils_Array::value($context, self::validContext());
     return $searchContext ? TRUE : FALSE;
   }
 
+  /**
+   * Set the mode values
+   *
+   * @return void
+   * @access public
+   */
   public function setModeValues() {
     if (!self::$_modeValues) {
       $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
@@ -262,6 +275,14 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Get the mode value
+   *
+   * @param int $mode
+   *
+   * @return array
+   * @access public
+   */
   public function getModeValue($mode = 1) {
     $this->setModeValues();
 
@@ -272,6 +293,15 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_modeValues[$mode];
   }
 
+  /**
+   * Get the mode value (static)
+   *
+   * @param int $mode
+   *
+   * @return array
+   * @access public
+   * @static
+   */
   public static function getModeValueCommon($mode) {
     if (!self::$_modeValues) {
       self::setModeValuesCommon('CRM_Contact_Selector');
@@ -284,6 +314,15 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_modeValues[$mode];
   }
 
+  /**
+   * Set the mode values (static)
+   *
+   * @param string $selectorName
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function setModeValuesCommon($selectorName) {
     self::$_modeValues = [
       1 => [
@@ -330,6 +369,12 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     ];
   }
 
+  /**
+   * Get the mode select options
+   *
+   * @return array
+   * @access public
+   */
   public function getModeSelect() {
     $this->setModeValues();
 
@@ -785,6 +830,12 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $controller->moveFromSessionToTemplate();
   }
 
+  /**
+   * Get the form values
+   *
+   * @return array
+   * @access public
+   */
   public function &getFormValues() {
     return $this->_formValues;
   }
@@ -905,6 +956,12 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Get return properties
+   *
+   * @return array
+   * @access public
+   */
   public function &returnProperties() {
     return CRM_Core_DAO::$_nullObject;
   }

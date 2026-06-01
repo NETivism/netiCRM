@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,6 +50,11 @@ class CRM_Contribute_Form extends CRM_Core_Form {
    * @var string
    */
   protected $_BAOName;
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
@@ -63,7 +66,7 @@ class CRM_Contribute_Form extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array<string, int>
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -88,7 +91,7 @@ class CRM_Contribute_Form extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {

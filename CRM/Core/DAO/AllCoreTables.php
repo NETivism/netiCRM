@@ -27,8 +27,8 @@
  */
 
 /**
+ * Registry of all core CiviCRM DAO classes and their corresponding database tables
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2019
  */
 class CRM_Core_DAO_AllCoreTables {

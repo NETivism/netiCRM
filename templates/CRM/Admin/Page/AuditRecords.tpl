@@ -1,6 +1,6 @@
 <div class="crm-container">
   <div class="messages">
-    {ts 1=30}This page displays the user data has been changed in last %1 days.{/ts}
+    {ts 1=180}This page displays the user data has been changed in last %1 days.{/ts}
   </div>
   <table id="audit-records" class="crm-audit-records">
     <thead>
@@ -24,7 +24,7 @@
       <td class="crm-audit-records-user">
         {if $row.user_id}
           {capture assign=user_link}{crmURL p="user/`$row.user_id`" h=0 a=1 fe=1}{/capture}
-          {capture assign=user_name}{if $row.user_contact_name}{$row.user_contact_name} ({ts}User ID{/ts}: {$row.user_id}){else}{ts}User ID{/ts}:{ts}User ID{/ts}: {$row.user_id}{/if}{/capture}
+          {capture assign=user_name}{if $row.user_contact_name}{$row.user_contact_name} ({ts}User ID{/ts}: {$row.user_id}){else}{ts}User ID{/ts}: {$row.user_id}{/if}{/capture}
           <a href="{$user_link}" target="_blank">{$user_name}</a>
         {/if}
       </td>
@@ -39,6 +39,8 @@
                 <li>{$field}</li>
               {/foreach}
             </ol>
+        {elseif $row.audit_type eq 'audit.connector.mcp' || $row.audit_type eq 'audit.connector.apikey'}
+          {$row.data.action}
         {else}
           {$row.data}
         {/if}

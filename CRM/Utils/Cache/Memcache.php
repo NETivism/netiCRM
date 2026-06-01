@@ -26,10 +26,9 @@
 */
 
 /**
+ * Cache backend implementation using Memcache
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 class CRM_Utils_Cache_Memcache {
@@ -81,8 +80,6 @@ class CRM_Utils_Cache_Memcache {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
-   * @return void
    */
   public function __construct($config) {
     if (isset($config['host'])) {

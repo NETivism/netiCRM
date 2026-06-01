@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,22 +38,14 @@
  */
 
 /**
- * Smarty mb_truncate modifier plugin
+ * Truncate a string to a certain length, multibyte version.
  *
- * Type:     modifier<br>
- * Name:     mb_truncate<br>
- * Purpose:  Truncate a string to a certain length if necessary,
- *           optionally splitting in the middle of a word, and
- *           appending the $etc string. Multibyte version.
- * @link http://smarty.php.net/manual/en/language.modifier.truncate.php
- *          truncate (Smarty online manual)
+ * @param string $string input string
+ * @param int $length maximum length
+ * @param string $etc string to append if truncated
+ * @param bool $break_words whether to split in the middle of a word
  *
- * @param string
- * @param integer
- * @param string
- * @param boolean
- *
- * @return string
+ * @return string truncated string
  */
 function smarty_modifier_mb_truncate(
   $string,

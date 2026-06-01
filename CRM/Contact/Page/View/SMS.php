@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,8 +43,6 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
    * This method is called after the page is created.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     // get the callback, module and activity id

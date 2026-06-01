@@ -30,9 +30,7 @@
  * as specified in the API specs. We attempt to keep the number and type of actions consistent
  * and similar across all objects (thus providing both reuse and standards)
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,9 +40,7 @@ class CRM_Core_Action {
    * Different possible actions are defined here. Keep in sync with the
    * constant from CRM_Core_Form for various modes.
    *
-   * @var const
-   *
-   * @access public
+   * @var int
    */
   public const
     NONE = 0,
@@ -73,15 +69,11 @@ class CRM_Core_Action {
   //make sure MAX_ACTION = 2^n - 1 ( n = total number of actions )
 
   /**
-   * map the action names to the relevant constant. We perform
+   * Map the action names to the relevant constant. We perform
    * bit manipulation operations so we can perform multiple
-   * actions on the same object if needed
+   * actions on the same object if needed.
    *
-   * @var array  _names  tupe of variable name to action constant
-   *
-   * @access private
-   * @static
-   *
+   * @var array Tuple of variable name to action constant.
    */
   public static $_names = [
     'add' => self::ADD,
@@ -104,23 +96,18 @@ class CRM_Core_Action {
   ];
 
   /**
-   * the flipped version of the names array, initialized when used
+   * The flipped version of the names array, initialized when used.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   public static $_description;
 
   /**
+   * Translates a string of actions separated by '|' into a bitmask.
    *
-   * called by the request object to translate a string into a mask
+   * @param string|null $str The action string to be resolved.
    *
-   * @param string $action the action to be resolved
-   *
-   * @return int the action mask corresponding to the input string
-   * @access public
-   * @static
-   *
+   * @return int The action mask corresponding to the input string.
    */
   public static function resolve($str) {
     $action = 0;
@@ -133,14 +120,11 @@ class CRM_Core_Action {
 
   /**
    * Given a string or an array of strings, determine the bitmask
-   * for this set of actions
+   * for this set of actions.
    *
-   * @param mixed either a single string or an array of strings
+   * @param string|array $item Either a single string or an array of strings.
    *
-   * @return int the action mask corresponding to the input args
-   * @access public
-   * @static
-   *
+   * @return int The action mask corresponding to the input args.
    */
   public static function map($item) {
     $mask = 0;
@@ -157,14 +141,11 @@ class CRM_Core_Action {
   }
 
   /**
-   * Given a string determine the bitmask for this specific string
+   * Given a string determine the bitmask for this specific string.
    *
-   * @param string the input action to process
+   * @param string $item The input action to process.
    *
-   * @return int the action mask corresponding to the input string
-   * @access public
-   * @static
-   *
+   * @return int The action mask corresponding to the input string.
    */
   public static function mapItem($item) {
     $mask = CRM_Utils_Array::value(trim($item), self::$_names);
@@ -172,15 +153,11 @@ class CRM_Core_Action {
   }
 
   /**
+   * Given an action mask, find the corresponding description.
    *
-   * Given an action mask, find the corresponding description
+   * @param int $mask The action mask.
    *
-   * @param int the action mask
-   *
-   * @return string the corresponding action description
-   * @access public
-   * @static
-   *
+   * @return string The corresponding action description.
    */
   public static function description($mask) {
     if (!isset($_description)) {
@@ -191,18 +168,16 @@ class CRM_Core_Action {
   }
 
   /**
-   * given a set of links and a mask, return the html action string for
-   * the links associated with the mask
+   * Given a set of links and a mask, return the html action string for
+   * the links associated with the mask.
    *
-   * @param array $links  the set of link items
-   * @param int   $mask   the mask to be used. a null mask means all items
-   * @param array $values the array of values for parameter substitution in the link items
-   * @param string  $extraULName            enclosed extra links in this UL.
-   * @param boolean $enclosedAllInSingleUL  force to enclosed all links in single UL.
+   * @param array $links The set of link items.
+   * @param int|null $mask The mask to be used. A null mask means all items.
+   * @param array $values The array of values for parameter substitution in the link items.
+   * @param string $extraULName Enclose extra links in this UL.
+   * @param bool $enclosedAllInSingleUL Force to enclose all links in single UL.
    *
-   * @return string       the html string
-   * @access public
-   * @static
+   * @return string|null The html string.
    */
   public static function formLink(
     &$links,
@@ -321,15 +296,13 @@ class CRM_Core_Action {
   }
 
   /**
-   * given a string and an array of values, substitute the real values
-   * in the placeholder in the str in the CiviCRM format
+   * Given a string and an array of values, substitute the real values
+   * in the placeholder in the string in the CiviCRM format (%%key%%).
    *
-   * @param string $str    the string to be replaced
-   * @param array  $values the array of values for parameter substitution in the str
+   * @param string $str The string to be replaced.
+   * @param array $values The array of values for parameter substitution in the string.
    *
-   * @return string        the substituted string
-   * @access public
-   * @static
+   * @return string The substituted string.
    */
   public static function &replace(&$str, &$values) {
     foreach ($values as $n => $v) {
@@ -339,13 +312,11 @@ class CRM_Core_Action {
   }
 
   /**
-   * get the mask for a permission (view, edit or null)
+   * Get the mask for a set of permissions (view, edit or null).
    *
-   * @param string the permission
+   * @param array|null $permissions The permissions array.
    *
-   * @return int   the mask for the above permission
-   * @static
-   * @access public
+   * @return int|null The mask for the above permissions.
    */
   public static function mask($permissions) {
     $mask = NULL;

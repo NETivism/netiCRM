@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -120,18 +119,17 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
    */
   public $where_tables;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_saved_search
-  */
+   * class constructor
+   *
+   * @return civicrm_saved_search
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -143,11 +141,11 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -156,11 +154,10 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -168,41 +165,41 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'form_values' => [
           'name' => 'form_values',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Submitted Form Values') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_saved_search.form_values',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'mapping_id' => [
           'name' => 'mapping_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_Mapping',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_Mapping',
+        ],
         'search_custom_id' => [
           'name' => 'search_custom_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'where_clause' => [
           'name' => 'where_clause',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Where Clause') ,
-                  ] ,
+        ],
         'select_tables' => [
           'name' => 'select_tables',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Select Tables') ,
-                  ] ,
+        ],
         'where_tables' => [
           'name' => 'where_tables',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Where Tables') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -210,7 +207,6 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -219,7 +215,6 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -228,8 +223,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -251,8 +245,7 @@ class CRM_Contact_DAO_SavedSearch extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

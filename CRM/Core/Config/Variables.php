@@ -30,9 +30,7 @@
  * CRM_Core_Config. If you want a config variable to be present in run time config object,
  * it need to be defined here first.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -452,6 +450,11 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $aiOrganizationIntro = '';
 
   /**
+   * neti.cc API key for URL shortener
+   */
+  public $netiCCAPIKey = '';
+
+  /**
    * Webserver Log Dir
    *
    * It should only use for web server log processing cron jobs
@@ -469,6 +472,13 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
     'custom_name' => 1,
     'anonymous' => 0
   ];
+
+  /**
+   * Use receipt title as default for donor credit name (full/partial options).
+   *
+   * @var bool
+   */
+  public $useReceiptTitleForDonorCredit = 1;
 
   /**
    * Days for premium inventory restock processing for credit card payments
@@ -513,11 +523,9 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $premiumIRManualCancel = 1;
 
   /**
-   * Provide addressSequence
+   * Provide address sequence setting.
    *
-   * @param
-   *
-   * @return string
+   * @return string The address sequence value.
    */
   public function addressSequence() {
 
@@ -525,11 +533,11 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   }
 
   /**
-   * Provide cached default currency symbol
+   * Provide cached default currency symbol.
    *
-   * @param
+   * @param string|null $defaultCurrency The currency code (e.g., 'USD').
    *
-   * @return string
+   * @return string The currency symbol (e.g., '$').
    */
   public function defaultCurrencySymbol($defaultCurrency = NULL) {
     static $cachedSymbol = NULL;
@@ -551,11 +559,9 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   }
 
   /**
-   * Provide cached default currency symbol
+   * Provide cached default contact country ISO code.
    *
-   * @param
-   *
-   * @return string
+   * @return string The country ISO code.
    */
   public function defaultContactCountry() {
     static $cachedContactCountry = NULL;
@@ -567,11 +573,9 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   }
 
   /**
-   * Provide cached default country name
+   * Provide cached default country name.
    *
-   * @param
-   *
-   * @return string
+   * @return string The country name.
    */
   public function defaultContactCountryName() {
     static $cachedContactCountryName = NULL;
@@ -583,11 +587,9 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   }
 
   /**
-   * Provide cached country limit translated to names
+   * Provide cached country limit translated to names.
    *
-   * @param
-   *
-   * @return array
+   * @return array List of country names.
    */
   public function countryLimit() {
     static $cachedCountryLimit = NULL;
@@ -608,11 +610,9 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   }
 
   /**
-   * Provide cached province limit translated to names
+   * Provide cached province limit translated to names.
    *
-   * @param
-   *
-   * @return array
+   * @return array List of province names.
    */
   public function provinceLimit() {
     static $cachedProvinceLimit = NULL;

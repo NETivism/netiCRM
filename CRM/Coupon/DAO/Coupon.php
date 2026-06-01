@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -138,18 +137,17 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_coupon
-  */
+   * class constructor
+   *
+   * @return civicrm_coupon
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -159,62 +157,62 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-                  ] ,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-                  ] ,
+        ],
         'code' => [
           'name' => 'code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Code') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'coupon_type' => [
           'name' => 'coupon_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Coupon Type') ,
           'required' => TRUE,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-                ] ,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+        ],
         'discount' => [
           'name' => 'discount',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'minimal_amount' => [
           'name' => 'minimal_amount',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Minimal Amount') ,
-                  ] ,
+        ],
         'count_max' => [
           'name' => 'count_max',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Count Max') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -222,7 +220,6 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -231,7 +228,6 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -240,8 +236,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -263,8 +258,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

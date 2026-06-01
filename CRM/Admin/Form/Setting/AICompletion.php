@@ -1,6 +1,11 @@
 <?php
 
 class CRM_Admin_Form_Setting_AICompletion extends CRM_Admin_Form_Setting {
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('AI Copywriter').' - '.ts('Settings'));
@@ -10,10 +15,9 @@ class CRM_Admin_Form_Setting_AICompletion extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return void
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
 

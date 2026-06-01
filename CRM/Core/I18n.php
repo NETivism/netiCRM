@@ -26,10 +26,9 @@
 */
 
 /**
+ * Core internationalization and localization class providing translation and locale support
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,11 +52,9 @@ class CRM_Core_I18n {
   public $_localeCustomStrings;
 
   /**
-   * A locale-based constructor that shouldn't be called from outside of this class (use singleton() instead).
+   * Locale-based constructor.
    *
-   * @param  $locale string  the base of this certain object's existence
-   *
-   * @return         void
+   * @param string $locale The base of this certain object's existence.
    */
   public function __construct($locale) {
     if (!empty($locale) and $locale != CRM_Core_Config::SYSTEM_LANG) {
@@ -93,6 +90,9 @@ class CRM_Core_I18n {
     }
   }
 
+  /**
+   * Initializes the I18n object.
+   */
   public function initialize() {
     $config = CRM_Core_Config::singleton();
     if ($config->initialized && !$this->_initConfig) {
@@ -109,9 +109,9 @@ class CRM_Core_I18n {
   /**
    * Return languages available in this instance of CiviCRM.
    *
-   * @param $justEnabled boolean  whether to return all languages or just the enabled ones
+   * @param bool $justEnabled Whether to return all languages or just the enabled ones.
    *
-   * @return             array    of code/language name mappings
+   * @return array Array of code/language name mappings.
    */
   public static function languages($justEnabled = FALSE) {
     static $all = NULL;
@@ -173,10 +173,10 @@ class CRM_Core_I18n {
   /**
    * Replace arguments in a string with their values. Arguments are represented by % followed by their number.
    *
-   * @param  $str string  source string
-   * @param       mixed   arguments, can be passed in an array or through single variables
+   * @param string $str Source string.
+   * @param mixed ...$args Arguments, can be passed in an array or through single variables.
    *
-   * @return      string  modified string
+   * @return string Modified string.
    */
   public function strarg($str) {
     $tr = [];
@@ -196,7 +196,7 @@ class CRM_Core_I18n {
   }
 
   /**
-   * Smarty block function, provides gettext support for smarty.
+   * Translate a string with parameters.
    *
    * The block content is the text that should be translated.
    *
@@ -210,10 +210,10 @@ class CRM_Core_I18n {
    *   - count - The item count for plural mode (3rd parameter of ngettext())
    *   - context - gettext context of that string (for homonym handling)
    *
-   * @param $text   string  the original string
-   * @param $params array   the params of the translation (if any)
+   * @param string $text The original string.
+   * @param array $params The params of the translation (if any).
    *
-   * @return        string  the translated string
+   * @return string The translated string.
    */
   public function crm_translate($text, $params = []) {
     if (isset($params['escape'])) {
@@ -323,9 +323,9 @@ class CRM_Core_I18n {
   /**
    * Translate a string to the current locale.
    *
-   * @param  $string string  this string should be translated
+   * @param string $string This string should be translated.
    *
-   * @return         string  the translated string
+   * @return string The translated string.
    */
   public function translate($string) {
     return ($this->_phpgettext) ? $this->_phpgettext->translate($string) : $string;
@@ -343,10 +343,8 @@ class CRM_Core_I18n {
   /**
    * Localize (destructively) array values.
    *
-   * @param  $array array  the array for localization (in place)
-   * @param  $params array an array of additional parameters
-   *
-   * @return        void
+   * @param array $array The array for localization (in place).
+   * @param array $params An array of additional parameters.
    */
   public function localizeArray(&$array, $params = []) {
     global $tsLocale;
@@ -365,9 +363,7 @@ class CRM_Core_I18n {
   /**
    * Localize (destructively) array elements with keys of 'title'.
    *
-   * @param  $array array  the array for localization (in place)
-   *
-   * @return        void
+   * @param array $array The array for localization (in place).
    */
   public function localizeTitles(&$array) {
     foreach ($array as $key => $value) {
@@ -383,6 +379,8 @@ class CRM_Core_I18n {
 
   /**
    * Static instance provider - return the instance for the current locale.
+   *
+   * @return CRM_Core_I18n
    */
   public static function singleton() {
     static $singleton = [];
@@ -418,8 +416,7 @@ class CRM_Core_I18n {
   /**
    * Is the CiviCRM in multilingual mode.
    *
-   * @return Bool
-   *   True if CiviCRM is in multilingual mode.
+   * @return bool True if CiviCRM is in multilingual mode.
    */
   public static function isMultilingual() {
     $domain = new CRM_Core_DAO_Domain();

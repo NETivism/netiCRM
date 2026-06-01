@@ -1,3 +1,4 @@
+// Test event registration with no participant limit but approval required
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

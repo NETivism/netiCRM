@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,12 +51,9 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
   protected $_title;
 
   /**
-   * set up variables to build the form
-   *
-   * @param null
+   * Set up variables to build the form.
    *
    * @return void
-   * @acess protected
    */
   public function preProcess() {
     $this->_fid = $this->get('fid');
@@ -76,12 +71,9 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->addButtons(
@@ -98,15 +90,11 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
   }
 
   /**
-   * Process the form when submitted
-   *
-   * @param null
+   * Process the form when submitted.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
-
     if (CRM_Price_BAO_Field::deleteField($this->_fid)) {
       CRM_Core_Session::setStatus(ts('The Price Field \'%1\' has been deleted.', [1 => $this->_title]));
     }

@@ -25,6 +25,13 @@
  +--------------------------------------------------------------------+
 */
 
+/**
+ * Report export utility for generating CSV and Excel files using the Spout library
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 require_once 'Spout/Autoloader/autoload.php';
 
 use Box\Spout\Writer\WriterFactory;
@@ -34,10 +41,24 @@ use Box\Spout\Common\Type;
 class CRM_Core_Report_Excel {
   private static $_singleton = NULL;
 
+  /**
+   * Get the writer instance.
+   *
+   * @param string $type The type of writer ('csv' or 'excel').
+   *
+   * @return \Box\Spout\Writer\WriterInterface
+   */
   public static function &singleton($type) {
     return self::writer($type);
   }
 
+  /**
+   * Create a writer instance.
+   *
+   * @param string $type The type of writer ('csv' or 'excel').
+   *
+   * @return \Box\Spout\Writer\WriterInterface
+   */
   public static function writer($type) {
     switch ($type) {
       case 'csv':
@@ -52,6 +73,13 @@ class CRM_Core_Report_Excel {
     return $writer;
   }
 
+  /**
+   * Create a reader instance.
+   *
+   * @param string $type The type of reader ('csv' or 'excel').
+   *
+   * @return \Box\Spout\Reader\ReaderInterface
+   */
   public static function reader($type) {
     switch ($type) {
       case 'csv':
@@ -67,20 +95,20 @@ class CRM_Core_Report_Excel {
   }
 
   /**
-   * Code copied from phpMyAdmin (v2.6.1-pl3)
-   * File: PHPMYADMIN/libraries/export/csv.php
-   * Function: PMA_exportData
+   * Code copied from phpMyAdmin (v2.6.1-pl3).
+   * File: PHPMYADMIN/libraries/export/csv.php.
+   * Function: PMA_exportData.
    *
    * Outputs a result set with a given header
-   * in the string buffer result
+   * in the string buffer result.
    *
-   * @param   string   $header (reference ) column headers
-   * @param   string   $rows   (reference ) result set rows
-   * @param   boolean  $print should the output be printed
+   * @param array $header Column headers.
+   * @param array $rows Result set rows.
+   * @param string|null $titleHeader Optional title header.
+   * @param bool $print Whether the output should be printed.
+   * @param bool $outputHeader Whether to output the header.
    *
-   * @return  mixed    empty if output is printed, else output
-   *
-   * @access  public
+   * @return string|void Empty if output is printed, else output.
    */
   public function makeCSVTable(&$header, &$rows, $titleHeader = NULL, $print = TRUE, $outputHeader = TRUE) {
     if ($titleHeader) {
@@ -193,6 +221,15 @@ class CRM_Core_Report_Excel {
     }
   }
   // end of the 'getTableCsv()' function
+  /**
+   * Write result set to a pseudo-HTML Excel file.
+   *
+   * @param string $fileName The file name.
+   * @param array $header Column headers.
+   * @param array $rows Result set rows.
+   * @param string|null $titleHeader Optional title header.
+   * @param bool $outputHeader Whether to output the header.
+   */
   public function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
     if ($outputHeader) {
 
@@ -227,10 +264,27 @@ class CRM_Core_Report_Excel {
     echo "</tbody></table>";
   }
 
+  /**
+   * Write result set to a CSV file.
+   *
+   * @param string $fileName The file name.
+   * @param array $header Column headers.
+   * @param array $rows Result set rows.
+   * @param bool $download Whether to trigger a download.
+   */
   public static function writeCSVFile($fileName, &$header, &$rows, $download = TRUE) {
     return self::writeExportFile('csv', $fileName, $header, $rows, $download);
   }
 
+  /**
+   * Write result set to an Excel file.
+   *
+   * @param string $fileName The file name.
+   * @param array $header Column headers.
+   * @param array $rows Result set rows.
+   * @param bool $download Whether to trigger a download.
+   * @param bool $append Whether to append to existing file.
+   */
   public static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE, $append = FALSE) {
     if ($append) {
       return self::appendExcelFile($fileName, $header, $rows);
@@ -240,6 +294,13 @@ class CRM_Core_Report_Excel {
     }
   }
 
+  /**
+   * Read an Excel file and return a row iterator.
+   *
+   * @param string $fileName The file name.
+   *
+   * @return \Box\Spout\Reader\Iterator\RowIterator|null
+   */
   public static function readExcelFile($fileName) {
     if (file_exists($fileName)) {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
@@ -258,6 +319,17 @@ class CRM_Core_Report_Excel {
     return NULL;
   }
 
+  /**
+   * Write result set to an export file.
+   *
+   * @param string $type The export type ('csv' or 'excel').
+   * @param string $fileName The file name.
+   * @param array $header Column headers.
+   * @param array $rows Result set rows.
+   * @param bool $download Whether to trigger a download.
+   *
+   * @return string|void The file path if not downloading.
+   */
   public static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $writer = self::singleton($type);
@@ -304,6 +376,13 @@ class CRM_Core_Report_Excel {
     }
   }
 
+  /**
+   * Append rows to an existing Excel file.
+   *
+   * @param string $fileName The file name.
+   * @param array $header Column headers.
+   * @param array $rows Result set rows.
+   */
   public static function appendExcelFile($fileName, &$header, &$rows) {
     $config = CRM_Core_Config::singleton();
     if (strpos($fileName, $config->uploadDir) === 0) {

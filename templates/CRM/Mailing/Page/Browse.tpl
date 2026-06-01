@@ -68,7 +68,7 @@
         <td class="crm-mailing-name">{$row.id}</td>
         <td class="crm-mailing-name">{$row.name}</td>
         <td class="crm-mailing-subject">{$row.subject}</td>
-        <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}(<a href="{crmURL p='civicrm/mailing/view' q="reset=1&id=`$row.id`"}" target="_blank">{ts}view{/ts}</a>)</td>
+        <td class="crm-mailing-visibility">{ts}{$row.visibility}{/ts}({if $row.is_complete}<a href="{crmURL p='civicrm/mailing/view' q="reset=1&id=`$row.id`"}" target="_blank">{ts}view{/ts}</a>{else}<span title="{ts}Mailing content is incomplete, please edit before viewing{/ts}">{ts}view{/ts}</span>{/if})</td>
         <td class="crm-mailing-status crm-mailing_status-{$row.status|lower} {if $row.status == 'Canceled'}font-red{/if}">{$row.status_label}</td>
         <td class="crm-mailing-created_by"><a href ={crmURL p='civicrm/contact/view' q="reset=1&cid="}{$row.created_id}>{$row.created_by}</a></td>
         {if $unscheduled}

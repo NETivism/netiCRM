@@ -497,6 +497,22 @@ cj(document).ready(function(){
   });
   isPassChekcedDeductible = false;
 
+  var nonDeductibleIds = [{/literal}{$non_deductible_type_ids}{literal}];
+  function updateAttachReceiptByType() {
+    var typeId = parseInt(cj('#contribution_type_id').val());
+    if (nonDeductibleIds.includes(typeId)) {
+      cj('#is_attach_receipt').hide();
+      cj('#is_attach_receipt input[type=checkbox]').prop('checked', false);
+    }
+    else if (cj('#is_email_receipt').is(':checked')) {
+      cj('#is_attach_receipt').show();
+    }
+  }
+  updateAttachReceiptByType();
+  cj('#is_email_receipt').on('change', function() {
+    updateAttachReceiptByType();
+  });
+
   cj("#contribution_type_id").change(function(){
     let contributionTypeId = parseInt(cj(this).val());
     let notifySpan = cj('#have_receipt').next('.description');
@@ -506,6 +522,7 @@ cj(document).ready(function(){
         notifySpan.append('<span class="font-red">{/literal}{ts}This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?{/ts}{literal}</span>');
       }
     }
+    updateAttachReceiptByType();
   });
 
   // Track initial contribution status value

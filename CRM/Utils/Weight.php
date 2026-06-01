@@ -25,17 +25,32 @@
  +--------------------------------------------------------------------+
 */
 
+/**
+ * Utility class for managing weight-based ordering of database rows.
+ *
+ * Provides methods to add, remove, reorder, and fix weight values
+ * used for sorting rows within DAO tables.
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ */
 class CRM_Utils_Weight {
 
   /**
-   * Function to correct duplicate weight entries by putting them (duplicate weights) in sequence.
+   * Correct duplicate weight entries by putting them in sequence.
    *
-   * @param string  $daoName full name of the DAO
-   * @param array   $fieldValues field => value to be used in the WHERE
-   * @param string  $weightField field which contains the weight value,
-   * defaults to 'weight'
+   * Recursively finds rows sharing the same weight and increments
+   * weights to eliminate duplicates.
    *
-   * @return bool
+   * @param string $daoName
+   *   Full class name of the DAO (e.g., 'CRM_Core_DAO_OptionValue').
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
+   *
+   * @return bool|void
+   *   TRUE if no duplicates remain, FALSE if the update failed,
+   *   or void on successful recursive correction.
    */
   public static function correctDuplicateWeights($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $selectField = "MIN(id) AS dupeId, count(id) as dupeCount, $weightField as dupeWeight";
@@ -65,15 +80,23 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * Remove a row from the specified weight, and shift all rows below it up
+   * Remove a row from the weight sequence and shift rows below it up.
    *
-   * @param string $daoName full name of the DAO
-   * $param integer $weight the weight to be removed
-   * @param array $fieldValues field => value to be used in the WHERE
-   * @param string $weightField field which contains the weight value,
-   * defaults to 'weight'
+   * Finds the weight of the specified row and decrements the weight
+   * of all rows with a higher weight value to fill the gap.
+   *
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param int $fieldID
+   *   The ID of the row to remove from the weight sequence.
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
    *
    * @return bool
+   *   TRUE if weights were successfully updated, FALSE if the row was
+   *   not found or had a weight less than 1.
    */
   public static function delWeight($daoName, $fieldID, $fieldValues = NULL, $weightField = 'weight') {
     $object = new $daoName();
@@ -96,18 +119,26 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * Updates the weight fields of other rows according to the new and old weight paased in.
-   * And returns the new weight be used. If old-weight not present, Creates a gap for a new row to be inserted
-   * at the specified new weight
+   * Update the weight fields of other rows to accommodate a weight change.
    *
-   * @param string $daoName full name of the DAO
-   * @param integer $oldWeight
-   * @param integer $newWeight
-   * @param array $fieldValues field => value to be used in the WHERE
-   * @param string $weightField field which contains the weight value,
-   * defaults to 'weight'
+   * Shifts other rows up or down to make room for the new weight.
+   * If oldWeight is 0 or absent, creates a gap for a new row at
+   * the specified newWeight position.
    *
-   * @return bool
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param int $oldWeight
+   *   The current weight of the row being moved (0 if inserting a new row).
+   * @param int $newWeight
+   *   The desired new weight position.
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
+   *
+   * @return int|null
+   *   The weight value to assign to the row, or NULL if duplicate
+   *   weights were corrected and no further change is needed.
    */
   public static function updateOtherWeights($daoName, $oldWeight, $newWeight, $fieldValues = NULL, $weightField = 'weight') {
     $oldWeight = (int ) $oldWeight;
@@ -171,13 +202,20 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * returns the new calculated weight.
+   * Calculate a new weight value accounting for duplicates.
    *
-   * @param string  $daoName     full name of the DAO
-   * @param array   $fieldValues field => value to be used in the WHERE
-   * @param string  $weightField field which used to get the wt, default to 'weight'.
+   * Examines existing weights and returns an appropriate new weight.
+   * If duplicate weights exist, returns one above the maximum weight.
    *
-   * @return integer
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
+   *
+   * @return int
+   *   The calculated weight value for a new row.
    */
   public static function getNewWeight($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $selectField = "id AS fieldID, $weightField AS weight";
@@ -209,14 +247,17 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * returns the highest weight.
+   * Get the highest weight value among matching rows.
    *
-   * @param string $daoName full name of the DAO
-   * @param array  $fieldValues field => value to be used in the WHERE
-   * @param string $weightField field which contains the weight value,
-   * defaults to 'weight'
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
    *
-   * @return integer
+   * @return int
+   *   The maximum weight value, or 0 if no rows exist.
    */
   public static function getMax($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $selectField = "MAX(ROUND($weightField)) AS max_weight";
@@ -229,14 +270,17 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * returns the default weight ( highest weight + 1 ) to be used.
+   * Get the default weight for a new row (highest weight + 1).
    *
-   * @param string $daoName full name of the DAO
-   * @param array  $fieldValues field => value to be used in the WHERE
-   * @param string $weightField field which contains the weight value,
-   * defaults to 'weight'
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
    *
-   * @return integer
+   * @return int
+   *   The next available weight value.
    */
   public static function getDefaultWeight($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $maxWeight = CRM_Utils_Weight::getMax($daoName, $fieldValues, $weightField);
@@ -244,15 +288,30 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * Execute a weight-related query
+   * Execute a weight-related SQL query.
    *
-   * @param string $queryType SELECT, UPDATE, DELETE
-   * @param string $daoName full name of the DAO
-   * @param array $fieldValues field => value to be used in the WHERE
-   * @param string $queryData data to be used, dependent on the query type
-   * @param string $orderBy optional ORDER BY field
+   * Builds and executes a SELECT, UPDATE, or DELETE query against
+   * the table associated with the given DAO class.
    *
-   * @return Object CRM_Core_DAO objet that holds the results of the query
+   * @param string $queryType
+   *   The type of query: 'SELECT', 'UPDATE', or 'DELETE'.
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param array<string, mixed>|null $fieldValues
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $queryData
+   *   Query-type-dependent data: column list for SELECT, SET clause
+   *   for UPDATE, or additional WHERE condition for DELETE.
+   * @param string|null $additionalWhere
+   *   Optional additional WHERE clause fragment.
+   * @param string|null $orderBy
+   *   Optional ORDER BY clause (used only for SELECT).
+   * @param string|null $groupBy
+   *   Optional GROUP BY clause (used only for SELECT).
+   *
+   * @return CRM_Core_DAO|false
+   *   The DAO result object, or FALSE if an invalid field or
+   *   unknown query type is specified.
    */
   public static function &query(
     $queryType,
@@ -324,6 +383,25 @@ class CRM_Utils_Weight {
     return $resultDAO;
   }
 
+  /**
+   * Add order navigation links (arrows) to rows for weight reordering.
+   *
+   * Generates HTML links with up/down/top/bottom arrow icons for each
+   * row, enabling users to reorder items via the admin weight endpoint.
+   *
+   * @param array<int, array<string, mixed>> $rows
+   *   The rows to add order links to, keyed by row ID. Modified by reference.
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param string $idName
+   *   The column name of the ID field in the DAO table.
+   * @param string $returnURL
+   *   The URL to redirect back to after reordering.
+   * @param string|null $filter
+   *   Optional filter string for the WHERE clause (e.g., 'option_group_id=1').
+   *
+   * @return void
+   */
   public static function addOrder(&$rows, $daoName, $idName, $returnURL, $filter = NULL) {
     if (empty($rows)) {
       return;
@@ -383,6 +461,16 @@ class CRM_Utils_Weight {
     }
   }
 
+  /**
+   * Fix the weight order based on HTTP request parameters.
+   *
+   * Retrieves source (src) and destination (dst) IDs along with
+   * direction (dir: 'swap', 'first', 'last') from the request,
+   * then reorders weights accordingly. Redirects to the return URL
+   * when done. Also corrects any duplicate weights before reordering.
+   *
+   * @return void
+   */
   public static function fixOrder() {
     $daoName = CRM_Utils_Request::retrieve('dao', 'String', CRM_Core_DAO::$_nullObject);
     $id = CRM_Utils_Request::retrieve('id', 'Integer', CRM_Core_DAO::$_nullObject);
@@ -457,9 +545,17 @@ class CRM_Utils_Weight {
   }
 
   /**
-   * Check if there are multiple same weight value.
-   * @param string $daoName Dao class name in CRM
-   * @param string $filter  WHERE clause in sql (Not include 'WHERE')
+   * Check if there are multiple rows with the same weight value.
+   *
+   * @param string $daoName
+   *   Full class name of the DAO.
+   * @param array<string, mixed>|null $filter
+   *   Field-value pairs to filter rows in the WHERE clause.
+   * @param string $weightField
+   *   Column name that stores the weight value. Defaults to 'weight'.
+   *
+   * @return bool
+   *   TRUE if duplicate weights exist, FALSE otherwise.
    */
   public static function isDuplicateWeights($daoName, $filter, $weightField = 'weight') {
     $selectField = "COUNT($weightField) as count";

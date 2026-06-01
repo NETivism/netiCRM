@@ -8,10 +8,11 @@
  */
 
 /**
+ * Dummy payment processor implementation for testing and development
  *
- * @package CRM
  * @author Marshal Newrock <marshal@idealso.com>
  * $Id: Dummy.php 30063 2010-10-06 10:33:02Z ashwini $
+ * @package CiviCRM_PaymentProcessor
  */
 
 /* NOTE:
@@ -40,11 +41,10 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Class constructor.
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array &$paymentProcessor payment processor parameters
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
@@ -53,13 +53,13 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_Dummy
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -70,12 +70,11 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   }
 
   /**
-   * Submit a payment using Advanced Integration Method
+   * Submit a payment using Advanced Integration Method (AIM).
    *
-   * @param  array $params assoc array of input parameters for this transaction
+   * @param array &$params associative array of input parameters for this transaction
    *
-   * @return array the result in a nice formatted array (or an error object)
-   * @public
+   * @return array the result in a nice formatted array
    */
   public function doDirectPayment(&$params) {
     // Invoke hook_civicrm_paymentProcessor
@@ -113,6 +112,14 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
     return $params;
   }
 
+  /**
+   * Push an error to the error object.
+   *
+   * @param int|null $errorCode error code
+   * @param string|null $errorMessage error message
+   *
+   * @return CRM_Core_Error error object
+   */
   public function &error($errorCode = NULL, $errorMessage = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($errorCode) {
@@ -125,10 +132,9 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     return NULL;

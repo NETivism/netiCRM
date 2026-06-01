@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -65,7 +63,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -75,9 +72,8 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * This function sets the default values for the form. For edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $parentDefaults = parent::setDefaultValues();
@@ -254,8 +250,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
@@ -272,6 +267,27 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
 
     $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH' AND billing_mode != 7");
     $this->assign('paymentProcessor', $paymentProcessor);
+
+    // Identify active non-3D TapPay processors for risk warning dialog
+    $non3dTapPayProcessors = [];
+    if (!empty($paymentProcessor)) {
+      $ppIds = CRM_Utils_Array::implode(',', array_keys($paymentProcessor));
+      $query = "
+SELECT id, name
+  FROM civicrm_payment_processor
+ WHERE id IN ({$ppIds})
+   AND payment_processor_type = 'TapPay'
+   AND (url_site IS NULL OR url_site = '')";
+      $ppDao = CRM_Core_DAO::executeQuery($query);
+      while ($ppDao->fetch()) {
+        $non3dTapPayProcessors[$ppDao->id] = $ppDao->name;
+      }
+    }
+    $this->assign('non3dTapPayProcessors', $non3dTapPayProcessors);
+
+    // Suppress warning for non-public events
+    $isPublic = $this->_id ? CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $this->_id, 'is_public') : 1;
+    $this->assign('isPublicEvent', empty($isPublic) ? 0 : 1);
 
     foreach ($paymentProcessor as $pid => &$pvalue) {
       $pvalue .= "-".ts("ID")."$pid";
@@ -439,7 +455,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
   /**
    * Add local and global form rules
    *
-   * @access protected
    *
    * @return void
    */
@@ -453,8 +468,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * @param array $values posted values of the form
    *
    * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
    */
   public static function formRule($values) {
     $errors = [];
@@ -581,6 +594,11 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Build amount label
+   *
+   * @return void
+   */
   public function buildAmountLabel() {
 
     $default = [];
@@ -604,7 +622,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * Process the form
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = [];
@@ -737,7 +754,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Event Fees');

@@ -27,14 +27,24 @@
 */
 
 /**
+ * Advanced multi-select form element supporting nested and hierarchical option loading
  *
- * @package CRM
  * @copyright U.S. PIRG Education Fund 2007
- * $Id$
  *
  */
 
 class CRM_Core_QuickForm_NestedAdvMultiSelect extends HTML_QuickForm_advmultiselect {
+  /**
+   * Load options for the multi-select component.
+   *
+   * @param array|Iterator &$options the options to load
+   * @param mixed $param1 optional parameter
+   * @param mixed $param2 optional parameter
+   * @param mixed $param3 optional parameter
+   * @param mixed $param4 optional parameter
+   *
+   * @return mixed
+   */
   public function load(
     &$options,
     $param1 = NULL,

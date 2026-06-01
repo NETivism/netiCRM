@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -211,7 +209,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_eventId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
@@ -398,49 +395,48 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       if ($isMonetary &&
         (!$isPayLater || CRM_Utils_Array::value('payment_processor', $this->_values['event']))
       ) {
-        $ppID = CRM_Utils_Array::value(
-          'payment_processor',
-          $this->_values['event']
-        );
+        $ppID = CRM_Utils_Array::value('payment_processor', $this->_values['event']);
         if (!$ppID) {
-          return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later.'), $infoUrl);
+          $this->assign('paymentProcessorConfigError', TRUE);
+          $this->assign('isPreviewMode', $this->_action == CRM_Core_Action::PREVIEW);
+          $this->set('paymentProcessorConfigError', TRUE);
         }
-        $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
+        else {
+          $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
+          $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
 
-        $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
-        $this->set('paymentProcessors', $this->_paymentProcessors);
-
-        //set default payment processor
-        if (!empty($this->_paymentProcessors) && empty($this->_paymentProcessor)) {
-          foreach ($this->_paymentProcessors as $ppId => $values) {
-            if ($values['is_default'] == 1 || (count($this->_paymentProcessors) == 1)) {
-              $defaultProcessorId = $ppId;
-              break;
+          // Validate each processor config and filter out disabled or misconfigured ones
+          foreach ($this->_paymentProcessors as $ppId => $eachPaymentProcessor) {
+            if (empty($eachPaymentProcessor)) {
+              unset($this->_paymentProcessors[$ppId]);
+              continue;
+            }
+            $payment = CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
+            if (!empty($payment->checkConfig())) {
+              unset($this->_paymentProcessors[$ppId]);
             }
           }
-        }
+          $this->set('paymentProcessors', $this->_paymentProcessors);
 
-        if (isset($defaultProcessorId)) {
-          $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($defaultProcessorId, $this->_mode);
-          $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);
-        }
-
-        // make sure we have a valid payment class, else abort
-        if ($this->_values['event']['is_monetary']) {
-          if (!CRM_Utils_System::isNull($this->_paymentProcessors)) {
-            foreach ($this->_paymentProcessors as $eachPaymentProcessor) {
-
-              // check selected payment processor is active
-              if (!$eachPaymentProcessor) {
-                return CRM_Core_Error::statusBounce(ts('The site administrator must set a Payment Processor for this event in order to use online registration.'));
+          if (empty($this->_paymentProcessors) && !$isPayLater) {
+            $this->assign('paymentProcessorConfigError', TRUE);
+            $this->assign('isPreviewMode', $this->_action == CRM_Core_Action::PREVIEW);
+            $this->set('paymentProcessorConfigError', TRUE);
+          }
+          else {
+            // Set default payment processor from remaining valid ones
+            if (!empty($this->_paymentProcessors) && empty($this->_paymentProcessor)) {
+              foreach ($this->_paymentProcessors as $ppId => $values) {
+                if ($values['is_default'] == 1 || (count($this->_paymentProcessors) == 1)) {
+                  $defaultProcessorId = $ppId;
+                  break;
+                }
               }
-
-              // ensure that processor has a valid config
-              $payment = CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
-              $error = $payment->checkConfig();
-              if (!empty($error)) {
-                CRM_Core_Error::fatal($error);
-              }
+            }
+            if (isset($defaultProcessorId)) {
+              $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($defaultProcessorId, $this->_mode);
+              $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);
+              $this->set('paymentProcessor', $this->_paymentProcessor);
             }
           }
         }
@@ -568,7 +564,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * assign the minimal set of variables to the template
    *
    * @return void
-   * @access public
    */
   public function assignToTemplate() {
     //process only primary participant params
@@ -657,8 +652,11 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   /**
    * Function to add the custom fields
    *
-   * @return None
-   * @access public
+   * @param int $id
+   * @param string $name
+   * @param bool $viewOnly
+   *
+   * @return void
    */
   public function buildCustom($id, $name, $viewOnly = FALSE) {
     $stateCountryMap = $fields = [];
@@ -799,6 +797,14 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Init event fee
+   *
+   * @param CRM_Core_Form $form
+   * @param int $eventID
+   *
+   * @return void|CRM_Core_Error
+   */
   public static function initEventFee(&$form, $eventID) {
     // get price info
 
@@ -837,10 +843,13 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   }
 
   /**
-   * Function to handle  process after the confirmation of payment by User
+   * Function to handle process after the confirmation of payment by User
    *
-   * @return None
-   * @access public
+   * @param int $contactID
+   * @param CRM_Contribute_BAO_Contribution $contribution
+   * @param object $payment
+   *
+   * @return void
    */
   public function confirmPostProcess($contactID = NULL, $contribution = NULL, $payment = NULL) {
     // add/update contact information
@@ -944,16 +953,13 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   }
 
   /**
-    *Function to process Registration of free event
-    *
-    *@param  array $param Form valuess
-    *@param  int contactID
-    *
-    *@return None
-    *access public
-    *
-    */
-
+   * Function to process Registration of free event
+   *
+   * @param array $params Form valuess
+   * @param int $contactID
+   *
+   * @return void
+   */
   public function processRegistration($params, $contactID = NULL) {
     $session = CRM_Core_Session::singleton();
     $this->_participantInfo = [];
@@ -1131,7 +1137,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * Process the participant
    *
    * @return object
-   * @access public
    */
   public function addParticipant($params, $contactID) {
 
@@ -1239,7 +1244,6 @@ WHERE  v.option_group_id = g.id
      * @param  array $params user params.
      *
      * @return $totalCount total participant count.
-     * @access public
      */
 
   public static function getParticipantCount(&$form, $params, $skipCurrent = FALSE) {
@@ -1332,7 +1336,6 @@ WHERE  v.option_group_id = g.id
      *
      *
      * @return array $formatted, formatted price set params.
-     * @access public
      */
 
   public static function formatPriceSetParams(&$form, $params) {
@@ -1377,7 +1380,6 @@ WHERE  v.option_group_id = g.id
      *
      *
      * @return array $optionsCount, array of each option w/ count total.
-     * @access public
      */
   public static function getPriceSetOptionCount(&$form) {
     $params = $form->get('params');
@@ -1617,8 +1619,11 @@ WHERE  v.option_group_id = g.id
   /**
    * function to update contact fields
    *
-   * @return void
-   * @access public
+   * @param int $contactID
+   * @param array $params
+   * @param array $fields
+   *
+   * @return int
    */
   public function updateContactFields($contactID, $params, $fields) {
     //add the contact to group, if add to group is selected for a
@@ -1742,8 +1747,10 @@ WHERE  v.option_group_id = g.id
   /**
    * Fix the Location Fields
    *
+   * @param array $params
+   * @param array $fields
+   *
    * @return void
-   * @access public
    */
   public function fixLocationFields(&$params, &$fields) {
     if (!empty($this->_fields)) {

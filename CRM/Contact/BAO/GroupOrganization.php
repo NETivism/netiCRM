@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,9 +43,9 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * takes an associative array and creates a groupOrganization object
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array $params (reference) an assoc array of name/value pairs
    *
-   * @return void
+   * @return CRM_Contact_DAO_GroupOrganization|null group organization object
    * @access public
    * @static
    */
@@ -67,8 +65,8 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * Format the params
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
-   * @param array  $formatedValues (reference ) an assoc array of name/value pairs
+   * @param array $params         (reference) an assoc array of name/value pairs
+   * @param array $formatedValues (reference) an assoc array of name/value pairs
    *
    * @return void
    * @access public
@@ -91,7 +89,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * Check if there is data to create the object
    *
-   * @param array  $params  (reference ) an assoc array of name/value pairs
+   * @param array $params an assoc array of name/value pairs
    *
    * @return boolean
    * @access public
@@ -107,6 +105,16 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
     return FALSE;
   }
 
+  /**
+   * Retrieve group organization record
+   *
+   * @param int   $groupID  group id
+   * @param array $defaults (reference) defaults array
+   *
+   * @return void
+   * @static
+   * @access public
+   */
   public static function &retrieve($groupID, &$defaults) {
     $dao = new CRM_Contact_DAO_GroupOrganization();
     $dao->group_id = $groupID;
@@ -119,7 +127,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * Method to check group organization relationship exist
    *
-   * @param  int  $contactId
+   * @param int $contactID contact id
    *
    * @return boolean
    * @access public
@@ -143,7 +151,7 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    *
    * @param int $groupOrganizationID group organization id that needs to be deleted
    *
-   * @return $results   no of deleted group organization on success, false otherwise
+   * @return int|boolean no of deleted group organization on success, false otherwise
    * @access public
    */
   public function delete($groupOrganizationID = NULL) {

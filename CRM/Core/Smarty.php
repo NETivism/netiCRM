@@ -26,10 +26,9 @@
 */
 
 /**
+ * CiviCRM Smarty template engine initialization and configuration
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -57,10 +56,7 @@ class CRM_Core_Smarty extends Smarty {
   private static $_singleton = NULL;
 
   /**
-   * class constructor
-   *
-   * @return CRM_Core_Smarty
-   * @access private
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
@@ -180,8 +176,7 @@ class CRM_Core_Smarty extends Smarty {
   /**
    * Static instance provider.
    *
-   * Method providing static instance of SmartTemplate, as
-   * in Singleton pattern.
+   * @return CRM_Core_Smarty
    */
   public static function &singleton() {
     if (!isset(self::$_singleton)) {
@@ -191,12 +186,14 @@ class CRM_Core_Smarty extends Smarty {
   }
 
   /**
-   * executes & returns or displays the template results
+   * Executes & returns or displays the template results.
    *
    * @param string $resource_name
-   * @param string $cache_id
-   * @param string $compile_id
-   * @param boolean $display
+   * @param string|null $cache_id
+   * @param string|null $compile_id
+   * @param bool $display
+   *
+   * @return string|null
    */
   public function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
 
@@ -205,6 +202,12 @@ class CRM_Core_Smarty extends Smarty {
     return parent::fetch($resource_name, $cache_id, $compile_id, $display);
   }
 
+  /**
+   * Appends a value to a template variable.
+   *
+   * @param string $name
+   * @param mixed $value
+   */
   public function appendValue($name, $value) {
     $currentValue = $this->get_template_vars($name);
     if (!$currentValue) {
@@ -217,6 +220,9 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
+  /**
+   * Clears all template variables except config and session.
+   */
   public function clearTemplateVars() {
     foreach (array_keys($this->_tpl_vars) as $key) {
       if ($key == 'config' || $key == 'session') {
@@ -226,6 +232,14 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
+  /**
+   * Check if a template variable is assigned.
+   *
+   * @param string $var
+   * @param mixed $value
+   *
+   * @return bool
+   */
   public function isAssigned($var, $value = NULL) {
     if (isset($this->_tpl_vars[$var])) {
       $exists = $this->_tpl_vars[$var];
@@ -241,6 +255,11 @@ class CRM_Core_Smarty extends Smarty {
     return FALSE;
   }
 
+  /**
+   * Add template directories.
+   *
+   * @param array $dirs
+   */
   public function addTemplateDirs($dirs = []) {
     if (!empty($dirs) && is_array($dirs)) {
       $this->template_dir = array_merge($dirs, $this->template_dir);

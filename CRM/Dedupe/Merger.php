@@ -26,10 +26,9 @@
 */
 
 /**
+ * Handles contact deduplication merging including field conflict resolution
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Dedupe_Merger {
@@ -66,9 +65,15 @@ class CRM_Dedupe_Merger {
 
   public static $dupePairsSorted = [];
 
-  // FIXME: consider creating a common structure with cidRefs() and eidRefs()
-  // FIXME: the sub-pages references by the URLs should
-  // be loaded dynamically on the merge form instead
+  /**
+   * Related tables
+   *
+   * FIXME: consider creating a common structure with cidRefs() and eidRefs()
+   * FIXME: the sub-pages references by the URLs should
+   * be loaded dynamically on the merge form instead
+   *
+   * @return array
+   */
   public static function relTables() {
     static $relTables;
 
@@ -294,6 +299,12 @@ class CRM_Dedupe_Merger {
 
   /**
    * return payment update Query.
+   *
+   * @param string $tableName
+   * @param int $mainContactId
+   * @param int $otherContactId
+   *
+   * @return array
    */
   public static function paymentSql($tableName, $mainContactId, $otherContactId) {
     $sqls = [];
@@ -338,6 +349,17 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     return $sqls;
   }
 
+  /**
+   * Operation SQL
+   *
+   * @param int $mainId
+   * @param int $otherId
+   * @param string $tableName
+   * @param array $tableOperations
+   * @param string $mode
+   *
+   * @return array
+   */
   public static function operationSql($mainId, $otherId, $tableName, $tableOperations = [], $mode = 'add') {
     $sqls = [];
     if (!$tableName || !$mainId || !$otherId) {
@@ -441,6 +463,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
   /**
    * Find differences between contacts.
+   * @return array<string, list>
    */
   public static function findDifferences($main, $other) {
     $result = [
@@ -478,8 +501,6 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @param  boolean $autoFlip   wether to let api decide which contact to retain and which to delete.
    *
    *
-   * @static
-   * @access public
    */
   public static function merge($dupePairs = [], $cacheParams = [], $mode = 'safe', $autoFlip = TRUE, $redirectForPerformance = FALSE, $action = CRM_Core_Action::PREVIEW) {
     $cacheKeyString = CRM_Utils_Array::value('cache_key_string', $cacheParams);
@@ -590,8 +611,6 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    *                                 A 'safe' value skips the merge if there are any un-resolved conflicts.
    *                                 Does a force merge otherwise (aggressive mode).
    *
-   * @static
-   * @access public
    */
   public static function skipMerge($mainId, $otherId, &$migrationInfo, $mode, &$reason) {
     $conflicts = [];
@@ -709,8 +728,6 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @param  int     $mainId         main contact with whom merge has to happen
    * @param  int     $otherId        duplicate contact which would be deleted after merge operation
    *
-   * @static
-   * @access public
    */
   public static function getRowsElementsAndInfo($mainId, $otherId) {
     $qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
@@ -1116,8 +1133,6 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @param  int     $mainId         main contact with whom merge has to happen
    * @param  int     $otherId        duplicate contact which would be deleted after merge operation
    *
-   * @static
-   * @access public
    */
   public static function moveAllBelongings($mainId, $otherId, $migrationInfo) {
     if (empty($migrationInfo)) {
@@ -1477,6 +1492,13 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     return TRUE;
   }
 
+  /**
+   * Format reason
+   *
+   * @param array $conflicts
+   *
+   * @return array
+   */
   public static function formatReason($conflicts) {
     static $lables;
     static $customFields;
@@ -1546,6 +1568,13 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     iterator_apply($iterator, [self, 'recursiveIterator'], [$iterator]);
     return self::$dupePairsSorted;
   }
+  /**
+   * Recursive iterator
+   *
+   * @param RecursiveArrayIterator $iterator
+   *
+   * @return void
+   */
   public function recursiveIterator($iterator) {
     while ($iterator -> valid()) {
       if ($iterator->hasChildren()) {

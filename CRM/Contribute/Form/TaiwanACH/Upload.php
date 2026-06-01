@@ -1,15 +1,32 @@
 <?php
 
+/**
+ * Form for uploading Taiwan ACH import files.
+ */
 class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
   protected $_contactId = NULL;
   protected $_id = NULL;
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * Registers the global form validation rule.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Upload', 'formRule'], $this);
   }
 
+  /**
+   * Actually build the form components.
+   *
+   * Adds the file upload field and standard Continue/Cancel buttons.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
@@ -26,6 +43,17 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Global form rule for validation.
+   *
+   * Ensures that a file is uploaded and that its type is 'text/plain'.
+   *
+   * @param array $fields posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if (empty($files)) {
@@ -39,11 +67,24 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     return $errors;
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * @return array{} the array of default values (currently empty)
+   */
   public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
+  /**
+   * Process the form submission.
+   *
+   * Triggers the file parsing process and stores the result in the session
+   * for the preview step.
+   *
+   * @return void
+   */
   public function postProcess() {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
@@ -54,6 +95,18 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Parse the uploaded Taiwan ACH file.
+   *
+   * Reads the file content and calls the BAO method to process it. It also
+   * calculates summary statistics (success/failure counts) and defines
+   * the columns for display in the preview step.
+   *
+   * @param string $file the path to the uploaded file
+   * @param int|null $processId the optional process ID for tracking
+   *
+   * @return array the array containing parsed data and summary statistics
+   */
   public static function parseUpload($file, $processId = NULL) {
     $result = [];
     if (file_exists($file)) {
@@ -125,10 +178,9 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Upload Data');

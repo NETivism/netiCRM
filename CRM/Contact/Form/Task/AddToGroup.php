@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -62,10 +60,9 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   protected $_title;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     /*
@@ -79,9 +76,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
@@ -159,11 +154,10 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @access protected
-   *
-   * @return array the default array reference
+   * @return array<string, int>
+   *   The default array reference.
    */
   public function &setDefaultValues() {
     $defaults = [];
@@ -177,9 +171,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Add local and global form rules
-   *
-   * @access protected
+   * Add local and global form rules.
    *
    * @return void
    */
@@ -188,13 +180,13 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array $fields posted values of the form
+   * @param array $params
+   *   Posted values of the form.
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool
+   *   TRUE if no errors, else array of errors.
    */
   public static function formRule($params) {
     $errors = [];
@@ -210,11 +202,9 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues();

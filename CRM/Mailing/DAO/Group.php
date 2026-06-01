@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -119,18 +118,17 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
    */
   public $search_args;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_mailing_group
-  */
+   * class constructor
+   *
+   * @return civicrm_mailing_group
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -142,11 +140,11 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -156,11 +154,10 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -168,41 +165,41 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'mailing_id' => [
           'name' => 'mailing_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Mailing_DAO_Mailing',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Mailing',
+        ],
         'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Group Type') ,
-                   'enumValues' => 'Include, Exclude, Base',
-         ] ,
+          'enumValues' => 'Include, Exclude, Base',
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'search_id' => [
           'name' => 'search_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'search_args' => [
           'name' => 'search_args',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Search Args') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -210,7 +207,6 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -219,7 +215,6 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -228,8 +223,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -251,8 +245,7 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
@@ -278,8 +271,8 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
    */
   public static function &getEnums() {
     static $enums = [
-                                            'group_type',
-                                                                ];
+        'group_type',
+    ];
     return $enums;
   }
   /**
@@ -294,12 +287,12 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                            'group_type' => [
-                  'Include' => ts('Include'),
-                  'Exclude' => ts('Exclude'),
-                  'Base' => ts('Base'),
-                ],
-                                                                  ];
+        'group_type' => [
+          'Include' => ts('Include'),
+          'Exclude' => ts('Exclude'),
+          'Base' => ts('Base'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }

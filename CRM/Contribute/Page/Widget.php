@@ -1,5 +1,10 @@
 <?php
 class CRM_Contribute_Page_Widget extends CRM_Core_Page {
+  /**
+   * Run the page
+   *
+   * @return void
+   */
   public function run() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE, 0, 'GET');
     $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', $this, TRUE, 0, 'GET');

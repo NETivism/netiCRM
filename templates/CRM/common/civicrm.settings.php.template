@@ -83,6 +83,18 @@ define( 'CIVICRM_UF_DSN'           , 'mysqli://%%CMSdbUser%%:%%CMSdbPass%%@%%CMS
 define( 'CIVICRM_DSN'          , 'mysqli://%%dbUser%%:%%dbPass%%@%%dbHost%%/%%dbName%%?new_link=true' );
 
 /**
+ * CiviCRM Read-only Database User (optional)
+ *
+ * If defined, CRM_Core_ReadonlyDAO will connect as this user for MCP query tools.
+ * This user should exist in MySQL/MariaDB with SELECT-only grants on the v_civicrm_*
+ * views. The user is NOT created automatically; a DBA must provision it manually.
+ *
+ * EXAMPLE:
+ *      define( 'CIVICRM_DSN_READONLY', 'mysqli://%%dbUser%%_readonly:YOUR_PASSWORD@localhost/%%dbName%%' );
+ */
+// define( 'CIVICRM_DSN_READONLY', 'mysqli://%%dbUser%%_readonly:%%dbPass%%@%%dbHost%%/%%dbName%%' );
+
+/**
  * CiviCRM Logging Database
  *
  * Used to point to a different database to use for logging (if desired). If unset defaults to equal CIVICRM_DSN.

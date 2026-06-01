@@ -66,6 +66,13 @@
       <add>1.8</add>
   </field>
   <field>
+      <name>show_remaining</name>
+      <type>boolean</type>
+      <default>0</default>
+      <comment>Show remaining capacity on frontend price field options</comment>
+      <add>4.0</add>
+  </field>
+  <field>
       <name>help_pre</name>
       <type>text</type>
       <localizable>true</localizable>

@@ -25,6 +25,13 @@
  +--------------------------------------------------------------------+
 */
 
+/**
+ * Session management class that provides scoped access to PHP session data with expiration handling
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Core_Session {
 
   /**
@@ -65,31 +72,17 @@ class CRM_Core_Session {
   private static $_singleton = NULL;
 
   /**
-   * Constructor
-   *
-   * Since we are now a client / module of drupal, drupal takes care
-   * of initiating the php session handler session_start ().
-   *
-   * When using CiviCRM standalone (i.e. w/o Drupal), we start the session
-   * in index.php and then pass it off to here.
-   *
-   * All crm code should always use the session using
-   * CRM_Core_Session. we prefix stuff to avoid collisions with drupal and also
-   * collisions with other crm modules!!
-   * This constructor is invoked whenever any module requests an instance of
-   * the session and one is not available.
-   *
-   * @return void
+   * Class constructor.
    */
   public function __construct() {
     $this->_session = NULL;
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
-   * @return object
-   * @static  */
+   * @return CRM_Core_Session
+   */
   public static function &singleton() {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Session();
@@ -99,13 +92,9 @@ class CRM_Core_Session {
 
   /**
    * Creates an array in the session. All variables now will be stored
-   * under this array
+   * under this array.
    *
-   * @param boolean isRead is this a read operation, in this case, the session will not be touched
-   *
-   * @access private
-   *
-   * @return void
+   * @param bool $isRead Is this a read operation, in this case, the session will not be touched.
    */
   public function initialize($isRead = FALSE) {
     // lets initialize the _session variable just before we need it
@@ -137,11 +126,9 @@ class CRM_Core_Session {
   }
 
   /**
-   * Resets the session store
+   * Resets the session store.
    *
-   * @access public
-   *
-   * @return void
+   * @param int $all Reset level.
    */
   public function reset($all = 1) {
     if ($all != 1) {
@@ -157,12 +144,10 @@ class CRM_Core_Session {
   }
 
   /**
-   * creates a session local scope
+   * Creates a session local scope.
    *
-   * @param string local scope name
-   * @access public
-   *
-   * @return void
+   * @param string $prefix Local scope name.
+   * @param bool $isRead Whether this is a read operation.
    */
   public function createScope($prefix, $isRead = FALSE) {
     $this->initialize($isRead);
@@ -177,12 +162,9 @@ class CRM_Core_Session {
   }
 
   /**
-   * resets the session local scope
+   * Resets the session local scope.
    *
-   * @param string local scope name
-   * @access public
-   *
-   * @return void
+   * @param string $prefix Local scope name.
    */
   public function resetScope($prefix) {
     $this->initialize();
@@ -197,15 +179,12 @@ class CRM_Core_Session {
   }
 
   /**
-   * Change scope name and move old scope to new
+   * Change scope name and move old scope to new.
    *
-   * @param string old scope name
-   * @access public
+   * @param string $oldPrefix Old scope name.
+   * @param string $newPrefix New scope name.
    *
-   * @param new scope name
-   * @access public
-   *
-   * @return Boolean
+   * @return bool
    */
   public function changeScope($oldPrefix, $newPrefix) {
     $this->initialize();
@@ -221,12 +200,11 @@ class CRM_Core_Session {
   }
 
   /**
-   * Check local scope exists
+   * Check local scope exists.
    *
-   * @param string for check
-   * @access public
+   * @param string $prefix Prefix to check.
    *
-   * @return Boolean
+   * @return bool
    */
   public function checkScope($prefix) {
     $this->initialize();
@@ -235,14 +213,13 @@ class CRM_Core_Session {
   }
 
   /**
-   * Lookup scope name by inner value
+   * Lookup scope name by inner value.
    *
-   * @param string for lookup
-   * @param string name of inner prefix to find
-   * @param string value of inner prefix to find
-   * @access public
+   * @param string $lookup Prefix to lookup.
+   * @param string $name Name of inner variable to find.
+   * @param mixed $value Value of inner variable to find.
    *
-   * @return Boolean
+   * @return string|null The scope name.
    */
   public function lookupScope($lookup, $name, $value) {
     $this->initialize();
@@ -261,21 +238,11 @@ class CRM_Core_Session {
   }
 
   /**
-   * Store the variable with the value in the session scope
+   * Store the variable with the value in the session scope.
    *
-   * This function takes a name, value pair and stores this
-   * in the session scope. Not sure what happens if we try
-   * to store complex objects in the session. I suspect it
-   * is supported but we need to verify this
-   *
-   * @access public
-   *
-   * @param  string $name    name  of the variable
-   * @param  mixed  $value   value of the variable
-   * @param  string $prefix  a string to prefix the keys in the session with
-   *
-   * @return void
-   *
+   * @param string|array $name Name of the variable or an assoc array of name/value pairs.
+   * @param mixed $value Value of the variable if name is a string.
+   * @param string|null $prefix A string to prefix the keys in the session with.
    */
   public function set($name, $value = NULL, $prefix = NULL) {
     // create session scope
@@ -303,18 +270,12 @@ class CRM_Core_Session {
   }
 
   /**
-   * Gets the value of the named variable in the session scope
+   * Gets the value of the named variable in the session scope.
    *
-   * This function takes a name and retrieves the value of this
-   * variable from the session scope.
-   *
-   * @access public
-   *
-   * @param  string name  : name  of the variable
-   * @param  string prefix : adds another level of scope to the session
+   * @param string $name Name of the variable.
+   * @param string|null $prefix Adds another level of scope to the session.
    *
    * @return mixed
-   *
    */
   public function get($name, $prefix = NULL) {
     $this->createScope($prefix, TRUE);
@@ -337,16 +298,10 @@ class CRM_Core_Session {
   }
 
   /**
-   * Gets all the variables in the current session scope
-   * and stuffs them in an associate array
+   * Gets all the variables in the current session scope.
    *
-   * @access public
-   *
-   * @param  array  vars : associative array to store name/value pairs
-   * @param  string  Strip prefix from the key before putting it in the return
-   *
-   * @return void
-   *
+   * @param array $vars Associative array to store name/value pairs (passed by reference).
+   * @param string $prefix Prefix to filter variables by.
    */
   public function getVars(&$vars, $prefix = '') {
     // create session scope
@@ -366,15 +321,10 @@ class CRM_Core_Session {
   }
 
   /**
-   * adds a userContext to the stack
+   * Adds a userContext to the stack.
    *
-   * @param string  $userContext the url to return to when done
-   * @param boolean $check       should we do a dupe checking with the top element
-   *
-   * @return void
-   *
-   * @access public
-   *
+   * @param string $userContext The URL to return to when done.
+   * @param bool $check Should we do a dupe checking with the top element.
    */
   public function pushUserContext($userContext, $check = TRUE) {
     if (empty($userContext)) {
@@ -407,14 +357,9 @@ class CRM_Core_Session {
   }
 
   /**
-   * replace the userContext of the stack with the passed one
+   * Replace the userContext of the stack with the passed one.
    *
-   * @param string the url to return to when done
-   *
-   * @return void
-   *
-   * @access public
-   *
+   * @param string $userContext The URL to return to when done.
    */
   public function replaceUserContext($userContext) {
     if (empty($userContext)) {
@@ -428,12 +373,9 @@ class CRM_Core_Session {
   }
 
   /**
-   * pops the top userContext stack
+   * Pops the top userContext stack.
    *
-   * @param void
-   *
-   * @return the top of the userContext stack (also pops the top element)
-   *
+   * @return string|null The top of the userContext stack.
    */
   public function popUserContext() {
     $this->createScope(self::USER_CONTEXT);
@@ -442,12 +384,9 @@ class CRM_Core_Session {
   }
 
   /**
-   * reads the top userContext stack
+   * Reads the top userContext stack.
    *
-   * @param void
-   *
-   * @return the top of the userContext stack
-   *
+   * @return string|null The top of the userContext stack.
    */
   public function readUserContext() {
     $this->createScope(self::USER_CONTEXT);
@@ -458,7 +397,9 @@ class CRM_Core_Session {
   }
 
   /**
-   * dumps the session to the log
+   * Dumps the session to the log.
+   *
+   * @param int $all Whether to dump all or just CiviCRM scope.
    */
   public function debug($all = 1) {
     $this->initialize();
@@ -471,11 +412,11 @@ class CRM_Core_Session {
   }
 
   /**
-   * stores a status message, resets status if asked to
+   * Stores a status message, resets status if asked to.
    *
-   * @param $reset boolean should we reset the status variable?
+   * @param bool $reset Should we reset the status variable?
    *
-   * @return string        the status message if any
+   * @return mixed The status message if any.
    */
   public function getStatus($reset = FALSE) {
     $this->initialize();
@@ -492,14 +433,11 @@ class CRM_Core_Session {
   }
 
   /**
-   * stores the status message in the session
+   * Stores the status message in the session.
    *
-   * @param $status string the status message
-   * @param $append boolean if you want to append or set new status
-   * @param $status when you want to define new type of status. default: status, warning, error
-   *
-   * @static  *
-   * @return void
+   * @param string|array|bool $status The status message.
+   * @param bool $append If you want to append or set new status.
+   * @param string $type The status type (status, warning, error).
    */
   public static function setStatus($status, $append = TRUE, $type = 'status') {
     if ($status === FALSE && !$append) {
@@ -536,6 +474,11 @@ class CRM_Core_Session {
     }
   }
 
+  /**
+   * Registers names of session objects and restores them from cache.
+   *
+   * @param string|array $names
+   */
   public static function registerAndRetrieveSessionObjects($names) {
     if (!is_array($names)) {
       $names = [$names];
@@ -551,6 +494,11 @@ class CRM_Core_Session {
     CRM_Core_BAO_Cache::restoreSessionFromCache($names);
   }
 
+  /**
+   * Stores session objects to cache.
+   *
+   * @param bool $reset Whether to reset the cache.
+   */
   public static function storeSessionObjects($reset = TRUE) {
     // refs #32045, should run only once when fatal error appear
     static $ran;

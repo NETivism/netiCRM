@@ -27,17 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_Form_ACLBasic extends CRM_Admin_Form {
@@ -45,9 +41,8 @@ class CRM_ACL_Form_ACLBasic extends CRM_Admin_Form {
   /**
    * This function sets the default values for the form.
    *
-   * @access public
    *
-   * @return None
+   * @return array<string, int|int[]>
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -77,8 +72,7 @@ SELECT object_table
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -113,6 +107,13 @@ SELECT object_table
     $this->addFormRule(['CRM_ACL_Form_ACLBasic', 'formRule']);
   }
 
+  /**
+   * Form rule for ACLBasic
+   *
+   * @param array $params
+   *
+   * @return array|bool
+   */
   public static function formRule($params) {
     if ($params['entity_id'] == -1) {
       $errors = ['entity_id' => ts('Role is a required field')];
@@ -125,9 +126,8 @@ SELECT object_table
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

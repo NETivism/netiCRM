@@ -27,24 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
 /**
- * This class generates form components generic to recurring contributions
+ * This class generates form components generic to recurring contributions.
  *
  * It delegates the work to lower level subclasses and integrates the changes
  * back in. It also uses a lot of functionality with the CRM API's, so any change
  * made here could potentially affect the API etc. Be careful, be aware, use unit tests.
- *
  */
 class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
 
   /**
-   * The recurring contribution id, used when editing the recurring contribution
+   * The recurring contribution id, used when editing the recurring contribution.
    *
    * @var int
    */
@@ -52,13 +49,21 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
   protected $_online;
 
   /**
-   * the id of the contact associated with this recurring contribution
+   * the id of the contact associated with this recurring contribution.
    *
    * @var int
    * @public
    */
   public $_contactID;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes the recurring ID and contact ID, determines if the
+   * recurring contribution was made online, and handles custom data initialization.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_id = $this->get('id');
     $this->_contactID = $this->get('cid');
@@ -117,12 +122,12 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing recurring contribution details (dates, amounts, etc.)
+   * and custom field values from the database.
    *
-   * @return None
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -171,10 +176,12 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the components of the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Defines fields for amount, frequency, status, and various dates. It also
+   * handles field freezing based on payment processor permissions.
+   *
+   * @return mixed the built form elements, or specific custom data form
    */
   public function buildQuickForm() {
     if ($_GET['type'] == 'ContributionRecur') {
@@ -322,11 +329,12 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
   }
 
   /**
-   * This function is called after the user submits the form
+   * Process the form submission.
    *
-   * @access public
+   * Formats the submitted dates, updates the recurring contribution record,
+   * and communicates with the payment processor if an online update is required.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // store the submitted values in an array

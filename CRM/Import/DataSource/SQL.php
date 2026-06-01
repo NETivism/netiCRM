@@ -27,14 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
 
+  /**
+   * Get info about this data source.
+   *
+   * @return array
+   */
   public function getInfo() {
     return [
       'title' => ts('SQL Query'),
@@ -42,15 +45,38 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     ];
   }
 
+  /**
+   * Pre-process form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function preProcess(&$form) {
   }
 
+  /**
+   * Build the form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_SQL');
     $form->add('textarea', 'sqlQuery', ts('Specify SQL Query'), 'rows=10 cols=45', TRUE);
     $form->addFormRule(['CRM_Import_DataSource_SQL', 'formRule'], $form);
   }
 
+  /**
+   * Form rule for validation.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $form
+   *
+   * @return mixed
+   */
   public static function formRule($fields, $files, $form) {
     $errors = [];
 
@@ -65,6 +91,15 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     return $errors ? $errors : TRUE;
   }
 
+  /**
+   * Process the form.
+   *
+   * @param CRM_Core_Form $form
+   * @param array $params
+   * @param object $db
+   *
+   * @return void
+   */
   public static function postProcess(&$form, &$params, &$db) {
     $importJob = new CRM_Import_ImportJob(
       CRM_Utils_Array::value('import_table_name', $params),

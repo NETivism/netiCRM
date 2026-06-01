@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -57,7 +55,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   public static $_gName = NULL;
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
@@ -66,7 +64,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
@@ -103,15 +101,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the page.
-   *
-   * This method is called after the page is created. It checks for the
-   * type of action and executes that action.
-   * Finally it calls the parent's run method.
+   * Runs the page.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     $this->_gid = CRM_Utils_Request::retrieve(
@@ -143,12 +135,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all options value.
-   *
+   * Browses all option values.
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
 
@@ -222,7 +211,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
@@ -231,7 +220,7 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
@@ -240,16 +229,20 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/optionValue';
   }
 
   /**
-   * Redirect to Specific Option Value Editing
+   * Redirects to specific option value editing.
+   *
+   * @return void
    */
   public static function redirect() {
     $path = CRM_Utils_System::currentPath();

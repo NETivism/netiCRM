@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,7 +46,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * the custom set id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_sid;
 
@@ -56,7 +53,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * The field id, used when editing the field
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -64,17 +60,13 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * The extended component Id
    *
    * @var array
-   * @access protected
    */
   protected $_extendComponentId;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @param null
+   * Function to set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // add custom field support
@@ -120,13 +112,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @param null
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return array    array of default values
-   * @access public
+   * @return array array of default values
    */
   public function setDefaultValues() {
     if ($this->_cdType) {
@@ -189,12 +179,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // custom data related
@@ -381,14 +368,13 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields (reference) posted values of the form
+   * @param array $files
+   * @param CRM_Core_Form $form
    *
-   * @return array    if errors then list of errors to be posted back to the form,
-   *                  true otherwise
-   * @static
-   * @access public
+   * @return array|bool if errors then list of errors to be posted back to the form, true otherwise
    */
   public static function formRule($fields, $files, $form) {
 
@@ -567,12 +553,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
-   *
-   * @param null
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // store the submitted values in an array

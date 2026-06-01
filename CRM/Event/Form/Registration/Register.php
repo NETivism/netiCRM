@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -84,7 +82,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -182,9 +179,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * This function sets the default values for the form. For edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if ($this->_ppType) {
@@ -380,10 +376,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
-
   public function buildQuickForm() {
     if ($this->_ppType) {
       return CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
@@ -657,8 +651,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @param int      $discountId discount id for the event
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function buildAmount(&$form, $required = TRUE, $discountId = NULL) {
     //if payment done, no need to build the fee block.
@@ -788,6 +780,27 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
             $options,
             $optionFullIds
           );
+        }
+      }
+      // Sync db_total_count from _feeBlock to _priceSet fields for template rendering
+      if (!empty($form->_priceSet['show_remaining'])) {
+        foreach ($form->_feeBlock as $fIdx => $feeField) {
+          if (!is_array($feeField) || !isset($form->_priceSet['fields'][$fIdx])) {
+            continue;
+          }
+          $sumCount = 0;
+          foreach ($feeField['options'] as $oIdx => $opt) {
+            $dbCount = CRM_Utils_Array::value('db_total_count', $opt, 0);
+            if (isset($form->_priceSet['fields'][$fIdx]['options'][$oIdx])) {
+              $form->_priceSet['fields'][$fIdx]['options'][$oIdx]['db_total_count'] = $dbCount;
+              $form->_priceSet['fields'][$fIdx]['options'][$oIdx]['is_full'] = !empty($opt['is_full']);
+            }
+            $sumCount += $dbCount;
+          }
+          // Store field-level sum for field-level max_value case
+          if (!empty($form->_priceSet['fields'][$fIdx]['max_value'])) {
+            $form->_priceSet['fields'][$fIdx]['db_total_count'] = $sumCount;
+          }
         }
       }
       $form->assign('priceSet', $form->_priceSet);
@@ -934,16 +947,19 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Event_Form_Registration_Register $self additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
+
+    if ($self->get('paymentProcessorConfigError')) {
+      return ['_qf_default' => ts('This page is currently unavailable due to a payment processor configuration error. Please contact the site administrator.')];
+    }
+
     $self->isEventFull();
 
     //To check if the user is already registered for the event(CRM-2426)
@@ -1133,9 +1149,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 
@@ -1357,17 +1372,16 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
   /**
    * check if event can be register by current user
-   * 
+   *
    * If event cannot be register, and the user is already registered.
    * Use $allowRedirection when event cannot be registered
    *
-   * @param array $fields  the input form values(anonymous user)
-   * @param object $self    event form object. The check result message will save into $self->_check
-   * @param boolean $isAdditional  if it's additional participant
-   * @param boolean $allowRedirection if event found user registered or cannot bt registered, redirect to info page
+   * @param array $fields the input form values(anonymous user)
+   * @param CRM_Event_Form_Registration_Register $self event form object. The check result message will save into $self->_check
+   * @param bool $isAdditional if it's additional participant
+   * @param bool $allowRedirection if event found user registered or cannot bt registered, redirect to info page
    *
    * @return bool TRUE for allowed register going on, FALSE when not allowed. Redirection will happen when allowRedirection set to TRUE
-   * @access public
    */
   public static function checkRegistration($fields, &$self, $isAdditional = FALSE, $allowRedirection = TRUE) {
     if ($self->_mode == 'test') {
@@ -1457,6 +1471,15 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     return TRUE;
   }
 
+  /**
+   * Get registration contact ID
+   *
+   * @param array $fields
+   * @param CRM_Event_Form_Registration_Register $self
+   * @param bool $isAdditional
+   *
+   * @return int|null
+   */
   public static function getRegistrationContactID($fields, $self, $isAdditional) {
     $contactID = NULL;
     if (!$isAdditional) {
@@ -1481,6 +1504,13 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     return ts('Register for Event');
   }
 
+  /**
+   * Get registration timestamp
+   *
+   * @param int $participantId
+   *
+   * @return int
+   */
   public static function getRegistrationTimestamp($participantId) {
     if (!empty($participantId)) {
       $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);

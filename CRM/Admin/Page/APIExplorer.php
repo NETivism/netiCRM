@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2013
- * $Id$
  *
  */
 
@@ -38,6 +36,11 @@
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
   public const PUBLIC_API = 'Activity,Contact,Contribution,ContributionPage,Event,Participant,Membership,Address,Email,Phone,CustomValue,Group,GroupContact,Tag,EntityTag';
 
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
   public function run() {
     if ($this->allowVisit()) {
       $config = CRM_Core_Config::singleton();
@@ -51,14 +54,21 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
   public function userContext($mode = NULL) {
     return 'civicrm/apibrowser';
   }
 
+  /**
+   * Checks if visit is allowed.
+   *
+   * @return bool
+   */
   public function allowVisit() {
     if (defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1) {
       return TRUE;

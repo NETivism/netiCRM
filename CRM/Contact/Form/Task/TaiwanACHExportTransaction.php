@@ -3,6 +3,11 @@
 class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_Task_TaiwanACHExport {
   public $_exportParams;
   public $_additionalIds;
+  /**
+   * Build all the data structures needed to build the form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
     $this->_exportParams = [];
@@ -33,11 +38,21 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     parent::buildQuickForm();
     $this->addDate('transact_date', ts('Process Date'), TRUE, ['formatType' => 'searchDate']);
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, string>
+   */
   public function setDefaultValues() {
     $defaults = [
       'transact_date' => date('Y-m-d', strtotime('+1 day')),
@@ -45,9 +60,24 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     return $defaults;
   }
 
+  /**
+   * Form rule.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     return parent::formRule($fields, $files, $self);
   }
+
+  /**
+   * Process the form after the input has been submitted and validated.
+   *
+   * @return void
+   */
   public function postProcess() {
     // $this->_contactIds  <== contact id
     // $this->_additionalIds <== recurring id

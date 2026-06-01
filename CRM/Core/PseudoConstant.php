@@ -39,9 +39,7 @@
  * currently we're getting the data from the underlying database. this
  * will be reworked to use caching.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_PseudoConstant {
@@ -357,24 +355,23 @@ class CRM_Core_PseudoConstant {
   private static $referrerTypes = [];
 
   /**
-   * populate the object from the database. generic populate
-   * method
+   * Populate the object from the database. generic populate
+   * method.
    *
    * The static array $var is populated from the db
-   * using the <b>$name DAO</b>.
+   * using the $name DAO.
    *
    * Note: any database errors will be trapped by the DAO.
    *
-   * @param array   $var        the associative array we will fill
-   * @param string  $name       the name of the DAO
-   * @param boolean $all        get all objects. default is to get only active ones.
-   * @param string  $retrieve   the field that we are interested in (normally name, differs in some objects)
-   * @param string  $filter     the field that we want to filter the result set with
-   * @param string  $condition  the condition that gets passed to the final query as the WHERE clause
-   *
-   * @return void
-   * @access public
-   * @static
+   * @param array $var The associative array we will fill.
+   * @param string $name The name of the DAO.
+   * @param bool $all Get all objects. Default is to get only active ones.
+   * @param string $retrieve The field that we are interested in.
+   * @param string $filter The field that we want to filter the result set with.
+   * @param string|null $condition The condition that gets passed to the final query as the WHERE clause.
+   * @param string|null $orderby The field to order by.
+   * @param string $key The field to use as the key.
+   * @param bool|null $force Whether to force a reload.
    */
   public static function populate(
     &$var,
@@ -424,13 +421,9 @@ class CRM_Core_PseudoConstant {
 
   /**
    * Flush given pseudoconstant so it can be reread from db
-   * nex time it's requested.
+   * next time it's requested.
    *
-   * @access public
-   * @static
-   *
-   * @param boolean $name pseudoconstant to be flushed
-   *
+   * @param string $name Pseudoconstant to be flushed.
    */
   public static function flush($name = 'cache') {
     if (isset(self::$$name)) {
@@ -442,9 +435,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Contact Type wrapper
+   * Get contact types.
    *
-   * @return array()
+   * @return array
    */
   public static function &contactType() {
     if (!self::$contactType) {
@@ -457,9 +450,11 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Contact Type wrapper
+   * Get contact sub-types.
    *
-   * @return array()
+   * @param string|null $parentType The parent contact type.
+   *
+   * @return array
    */
   public static function &contactSubType($parentType = NULL) {
     if (!self::$contactSubType) {
@@ -493,15 +488,10 @@ class CRM_Core_PseudoConstant {
   /**
    * Get all location types.
    *
-   * The static array locationType is returned
+   * @param bool $all Get all location types - default is to get only active ones.
+   * @param string $field The field to return.
    *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All location types - default is to get only active ones.
-   *
-   * @return array - array reference of all location types.
-   *
+   * @return array
    */
   public static function &locationType($all = FALSE, $field = 'label') {
     self::populate(self::$locationType, 'CRM_Core_DAO_LocationType', $all, $field);
@@ -511,15 +501,9 @@ class CRM_Core_PseudoConstant {
   /**
    * Get all location vCard names.
    *
-   * The static array locationVcardName is returned
+   * @param bool $all Get all location vCard names - default is to get only active ones.
    *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All location vCard names - default is to get only active ones.
-   *
-   * @return array - array reference of all location vCard names.
-   *
+   * @return array
    */
   public static function &locationVcardName($all = FALSE) {
     if (!self::$locationVcardName) {
@@ -529,16 +513,15 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all Activty types.
+   * Get all activity types.
    *
-   * The static array activityType is returned
+   * @param bool $all Get all activity types - default is to get only active ones.
+   * @param bool $includeCaseActivities Whether to include CiviCase activities.
+   * @param bool $reset Whether to reset the cache.
+   * @param string $returnColumn The column to return.
+   * @param bool $includeCampaignActivities Whether to include CiviCampaign activities.
    *
-   * @param boolean $all - get All Activity  types - default is to get only active ones.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all activty types.
+   * @return array
    */
   public static function &activityType(
     $all = TRUE,
@@ -599,17 +582,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all Individual Prefix.
+   * Get all individual prefixes.
    *
-   * The static array individualPrefix is returned
-   *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All Individual Prefix - default is to get only active ones.
-   *
-   * @return array - array reference of all individual prefix.
-   *
+   * @return array
    */
   public static function &individualPrefix() {
     if (!self::$individualPrefix) {
@@ -620,7 +595,7 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * alias of individualPrefix, call by api
+   * Alias of individualPrefix, called by API.
    *
    * @return array
    */
@@ -629,17 +604,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all phone type
-   * The static array phoneType is returned
+   * Get all phone types.
    *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All phone type - default is to get
-   * only active ones.
-   *
-   * @return array - array reference of all phone types.
-   *
+   * @return array
    */
   public static function &phoneType() {
     if (!self::$phoneType) {
@@ -650,17 +617,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all Individual Suffix.
+   * Get all individual suffixes.
    *
-   * The static array individualSuffix is returned
-   *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All Individual Suffix - default is to get only active ones.
-   *
-   * @return array - array reference of all individual suffix.
-   *
+   * @return array
    */
   public static function &individualSuffix() {
     if (!self::$individualSuffix) {
@@ -670,7 +629,7 @@ class CRM_Core_PseudoConstant {
     return self::$individualSuffix;
   }
   /**
-   * Alias for individualSuffix, call by api
+   * Alias for individualSuffix, called by API.
    *
    * @return array
    */
@@ -679,17 +638,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all Gender.
+   * Get all genders.
    *
-   * The static array gender is returned
-   *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All Gender - default is to get only active ones.
-   *
-   * @return array - array reference of all gender.
-   *
+   * @return array
    */
   public static function &gender() {
     if (!self::$gender) {
@@ -700,19 +651,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all the IM Providers from database.
+   * Get all the IM providers from database.
    *
-   * The static array imProvider is returned, and if it's
-   * called the first time, the <b>IM DAO</b> is used
-   * to get all the IM Providers.
-   *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all IM providers.
-   *
+   * @return array
    */
   public static function &IMProvider() {
     if (!self::$imProvider) {
@@ -722,7 +663,7 @@ class CRM_Core_PseudoConstant {
     return self::$imProvider;
   }
   /**
-   * alias of IMProvider, for api
+   * Alias of IMProvider, for API.
    *
    * @return array
    */
@@ -733,17 +674,7 @@ class CRM_Core_PseudoConstant {
   /**
    * Get all the website types from database.
    *
-   * The static array websiteType is returned, and if it's
-   * called the first time, the <b>Website DAO</b> is used
-   * to get all the Website Types.
-   *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all Website types.
-   *
+   * @return array
    */
   public static function &websiteType() {
     if (!self::$websiteType) {
@@ -754,21 +685,12 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get the all From Email Address from database.
+   * Get all from email addresses from database.
    *
-   * The static array $fromEmailAddress is returned, and if it's
-   * called the first time, DAO is used
-   * to get all the From Email Address
+   * @param bool $separateNameEmail Whether to return associative array for separate name / email.
+   * @param bool $refresh Whether to refresh data from database.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @param bool $separateNameEmail default FALSE, TRUE will return associative array for separate name / email
-   * @param bool $refresh refresh default FALSE, TRUE will refresh data from database
-   *
-   * @return array - array reference of all From Email Address.
+   * @return array
    */
   public static function &fromEmailAddress($separateNameEmail = FALSE, $refresh = FALSE) {
     if (!self::$fromEmailAddress || $refresh) {
@@ -796,18 +718,9 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get the all Mail Protocols from database.
+   * Get all mail protocols from database.
    *
-   * The static array mailProtocol is returned, and if it's
-   * called the first time, the DAO is used
-   * to get all the Mail Protocol.
-   *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all Mail Protocols.
+   * @return array
    */
   public static function &mailProtocol() {
     if (!self::$mailProtocol) {
@@ -818,21 +731,12 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all the State/Province from database.
+   * Get all the states/provinces from database.
    *
-   * The static array stateProvince is returned, and if it's
-   * called the first time, the <b>State Province DAO</b> is used
-   * to get all the States.
+   * @param int|bool $id Optional ID to return.
+   * @param bool $limit Whether to limit the list based on configuration.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @param int $id -  Optional id to return
-   *
-   * @return array - array reference of all State/Provinces.
-   *
+   * @return array|string|null
    */
   public static function &stateProvince($id = FALSE, $limit = TRUE) {
     if (($id && !CRM_Utils_Array::value($id, self::$stateProvince)) || !self::$stateProvince || !$id) {
@@ -876,16 +780,12 @@ class CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all the State/Province abbreviations from the database.
+   * Get all the state/province abbreviations from the database.
    *
-   * Same as above, except gets the abbreviations instead of the names.
+   * @param int|bool $id Optional ID to return.
+   * @param bool $limit Whether to limit the list based on configuration.
    *
-   * @access public
-   * @static
-   *
-   * @param int $id  -     Optional id to return
-   *
-   * @return array - array reference of all State/Province abbreviations.
+   * @return array|string|null
    */
   public static function &stateProvinceAbbreviation($id = FALSE, $limit = TRUE) {
     if ($id > 1) {
@@ -936,19 +836,10 @@ WHERE  id = %1";
   /**
    * Get all the countries from database.
    *
-   * The static array country is returned, and if it's
-   * called the first time, the <b>Country DAO</b> is used
-   * to get all the countries.
+   * @param int|bool $id Optional ID to return.
+   * @param bool $applyLimit Whether to limit the list based on configuration.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @param int $id - Optional id to return
-   *
-   * @return array - array reference of all countries.
-   *
+   * @return array|string|null
    */
   public static function country($id = FALSE, $applyLimit = TRUE) {
     if (($id && !CRM_Utils_Array::value($id, self::$country)) || !self::$country || !$id) {
@@ -1007,19 +898,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the country ISO Code abbreviations from the database.
+   * Get all the country ISO code abbreviations from the database.
    *
-   * The static array countryIsoCode is returned, and if it's
-   * called the first time, the <b>Country DAO</b> is used
-   * to get all the countries' ISO codes.
+   * @param int|bool $id Optional ID to return.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all country ISO codes.
-   *
+   * @return array|string|null
    */
   public static function &countryIsoCode($id = FALSE) {
     if (!self::$countryIsoCode) {
@@ -1044,17 +927,7 @@ WHERE  id = %1";
   /**
    * Get all the categories from database.
    *
-   * The static array tag is returned, and if it's
-   * called the first time, the <b>Tag DAO</b> is used
-   * to get all the categories.
-   *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all categories.
-   *
+   * @return array
    */
   public static function &tag() {
     if (!self::$tag) {
@@ -1064,22 +937,12 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all groups from database
+   * Get all groups from database.
    *
-   * The static array group is returned, and if it's
-   * called the first time, the <b>Group DAO</b> is used
-   * to get all the groups.
+   * @param string|null $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Whether to exclude hidden groups.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @param string $groupType     type of group(Access/Mailing)
-   * @param boolen $excludeHidden exclude hidden groups.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array
    */
   public static function &allGroup($groupType = NULL, $excludeHidden = TRUE) {
 
@@ -1105,6 +968,13 @@ WHERE  id = %1";
     return self::$group[$groupKey];
   }
 
+  /**
+   * Get all public groups from database.
+   *
+   * @param string|null $groupType Type of group.
+   *
+   * @return array
+   */
   public static function &publicGroup($groupType = NULL) {
     if (!empty(self::$publicGroup)) {
       return self::$publicGroup;
@@ -1117,18 +987,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Create or get groups iterator (iterates over nested groups in a
-   *  logical fashion)
+   * Create or get groups iterator.
    *
-   * The GroupNesting instance is returned; it's created if this is being
-   *  called for the first time
+   * @param bool $styledLabels Whether to use styled labels.
    *
-   *
-   * @access public
-   * @static
-   *
-   * @return mixed - instance of CRM_Contact_BAO_GroupNesting
-   *
+   * @return object Instance of CRM_Contact_BAO_GroupNesting.
    */
   public static function &groupIterator($styledLabels = FALSE) {
     if (!self::$groupIterator) {
@@ -1143,22 +1006,12 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all permissioned groups from database
+   * Get all permissioned groups from database.
    *
-   * The static array group is returned, and if it's
-   * called the first time, the <b>Group DAO</b> is used
-   * to get all the groups.
+   * @param string|null $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Whether to exclude hidden groups.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @param string $groupType     type of group(Access/Mailing)
-   * @param boolen $excludeHidden exclude hidden groups.
-
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array
    */
   public static function group($groupType = NULL, $excludeHidden = TRUE) {
 
@@ -1166,19 +1019,12 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all permissioned groups from database
+   * Get all static (non-smart) groups.
    *
-   * The static array group is returned, and if it's
-   * called the first time, the <b>Group DAO</b> is used
-   * to get all the groups.
+   * @param bool $onlyPublic Whether to only return public groups.
+   * @param string|null $groupType Type of group.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array
    */
   public static function &staticGroup(
     $onlyPublic = FALSE,
@@ -1200,12 +1046,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the custom groups
+   * Get all the custom groups.
    *
-   * @access public
+   * @param bool $reset Whether to reset the cache.
    *
-   * @return array - array reference of all groups.
-   * @static
+   * @return array
    */
   public static function &customGroup($reset = FALSE) {
     if (!self::$customGroup || $reset) {
@@ -1215,12 +1060,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the user framework groups
+   * Get all the user framework groups.
    *
-   * @access public
-   *
-   * @return array - array reference of all groups.
-   * @static
+   * @return array
    */
   public static function &ufGroup() {
     if (!self::$ufGroup) {
@@ -1230,12 +1072,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the project tasks
+   * Get all the project tasks.
    *
-   * @access public
-   *
-   * @return array - array reference of all tasks
-   * @static
+   * @return array
    */
   public static function &tasks() {
     if (!self::$tasks) {
@@ -1245,20 +1084,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all Relationship Types  from database.
+   * Get all relationship types from database.
    *
-   * The static array group is returned, and if it's
-   * called the first time, the <b>RelationshipType DAO</b> is used
-   * to get all the relationship types.
+   * @param string $valueColumnName The column name to use for labels.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @param string $valueColumnName db column name/label.
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all relationship types.
+   * @return array
    */
   public static function &relationshipType($valueColumnName = 'label') {
     if (!CRM_Utils_Array::value($valueColumnName, self::$relationshipType)) {
@@ -1289,12 +1119,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the Currency Symbols from Database
+   * Get all the currency symbols from database.
    *
-   * @access public
+   * @param string $name The field to use as the value.
    *
-   * @return array - array reference of all Currency Symbols
-   * @static
+   * @return array
    */
   public static function &currencySymbols($name = 'symbol') {
     self::populate(self::$currencySymbols, 'CRM_Core_DAO_Currency', TRUE, $name, NULL, NULL, 'name');
@@ -1302,14 +1131,9 @@ WHERE  id = %1";
   }
 
   /**
-   * get all the ISO 4217 currency codes
+   * Get all the ISO 4217 currency codes.
    *
-   * so far, we use this for validation only, so there's no point of putting this into the database
-   *
-   * @access public
-   *
-   * @return array - array reference of all currency codes
-   * @static
+   * @return array
    */
   public static function &currencyCode() {
     if (!self::$currencyCode) {
@@ -1339,21 +1163,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the County from database.
+   * Get all the counties from database.
    *
-   * The static array county is returned, and if it's
-   * called the first time, the <b>County DAO</b> is used
-   * to get all the Counties.
+   * @param int|bool $id Optional ID to return.
    *
-   * Note: any database errors will be trapped by the DAO.
-   *
-   * @access public
-   * @static
-   *
-   * @param int $id -  Optional id to return
-   *
-   * @return array - array reference of all Counties
-   *
+   * @return array|string|null
    */
   public static function &county($id = FALSE) {
     if (!self::$county) {
@@ -1374,13 +1188,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the Preferred Communication Methods from database.
+   * Get all the preferred communication methods from database.
    *
-   * @access public
-   * @static
-   *
-   * @return array self::pcm - array reference of all preferred communication methods.
-   *
+   * @return array
    */
   public static function &pcm() {
     if (!self::$pcm) {
@@ -1391,18 +1201,13 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all active payment processors
+   * Get all active payment processors.
    *
-   * The static array paymentProcessor is returned
+   * @param bool $all Whether to get all processors or only active ones.
+   * @param bool $test Whether to get test processors.
+   * @param string|null $additionalCond Additional WHERE clause condition.
    *
-   * @access public
-   * @static
-   *
-   * @param boolean $all  - get payment processors     - default is to get only active ones.
-   * @param boolean $test - get test payment processors
-   *
-   * @return array - array of all payment processors
-   *
+   * @return array
    */
   public static function &paymentProcessor($all = FALSE, $test = FALSE, $additionalCond = NULL) {
     $condition = "is_test = ";
@@ -1427,17 +1232,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all active payment processors
+   * Get all active payment processor types.
    *
-   * The static array paymentProcessorType is returned
+   * @param bool $all Whether to get all types or only active ones.
    *
-   * @access public
-   * @static
-   *
-   * @param boolean $all  - get payment processors     - default is to get only active ones.
-   *
-   * @return array - array of all payment processor types
-   *
+   * @return array
    */
   public static function &paymentProcessorType($all = FALSE) {
     if (!self::$paymentProcessorType) {
@@ -1456,12 +1255,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all the World Regions from Database
+   * Get all the world regions from database.
    *
-   * @access public
+   * @param int|bool $id Optional ID to return.
    *
-   * @return array - array reference of all World Regions
-   * @static
+   * @return array|string|null
    */
   public static function &worldRegion($id = FALSE) {
     if (!self::$worldRegions) {
@@ -1481,17 +1279,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all Honor Type.
+   * Get all honor types.
    *
-   * The static array honorType is returned
-   *
-   * @access public
-   * @static
-   *
-   * @param boolean $all - get All Honor Type.
-   *
-   * @return array - array reference of all Honor Types.
-   *
+   * @return array
    */
   public static function &honor() {
     if (!self::$honorType) {
@@ -1502,14 +1292,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all Activity Statuses.
+   * Get all activity statuses.
    *
-   * The static array activityStatus is returned
+   * @param string $column The column to return.
    *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all activity statuses
+   * @return array
    */
   public static function &activityStatus($column = 'label') {
     if (!CRM_Utils_Array::arrayKeyExists($column, self::$activityStatus)) {
@@ -1529,14 +1316,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all Priorities
+   * Get all priorities.
    *
-   * The static array Priority is returned
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all Priority
+   * @return array
    */
   public static function &priority() {
     if (!self::$priority) {
@@ -1548,14 +1330,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all WYSIWYG Editors.
+   * Get all WYSIWYG editors.
    *
-   * The static array wysiwygEditor is returned
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all wysiwygEditors
+   * @return array
    */
   public static function &wysiwygEditor() {
     if (!self::$wysiwygEditor) {
@@ -1566,15 +1343,11 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all Visibility levels.
+   * Get all visibility levels.
    *
-   * The static array visibility is returned
+   * @param string $column The column to return.
    *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all Visibility levels.
-   *
+   * @return array
    */
   public static function &visibility($column = 'label') {
     if (!self::$visibility) {
@@ -1590,11 +1363,9 @@ WHERE  id = %1";
   }
 
   /**
-   * Get all mapping types
+   * Get all mapping types.
    *
-   * @return array - array reference of all mapping types
-   * @access public
-   * @static
+   * @return array
    */
   public static function &mappingTypes() {
     if (!self::$mappingType) {
@@ -1604,6 +1375,13 @@ WHERE  id = %1";
     return self::$mappingType;
   }
 
+  /**
+   * Get states/provinces for a specific country.
+   *
+   * @param int $countryID The country ID.
+   *
+   * @return array
+   */
   public static function &stateProvinceForCountry($countryID) {
     $query = "
 SELECT civicrm_state_province.name name, civicrm_state_province.id id
@@ -1630,17 +1408,12 @@ ORDER BY name";
   }
 
   /**
-   * Get all types of Greetings.
+   * Get all types of greetings.
    *
-   * The static array of greeting is returned
+   * @param array $filter Filter criteria.
+   * @param string $columnName The column name to return.
    *
-   * @access public
-   * @static
-   *
-   * @param $filter - get All Email Greetings - default is to get only active ones.
-   *
-   * @return array - array reference of all greetings.
-   *
+   * @return array
    */
   public static function greeting($filter, $columnName = 'label') {
     $index = $filter['greeting_type'] . '_' . $filter['contact_type'] . '_' . $columnName;
@@ -1677,13 +1450,9 @@ ORDER BY name";
   }
 
   /**
-   * Get all the Languages from database.
+   * Get all the languages from database.
    *
-   * @access public
-   * @static
-   *
-   * @return array self::languages - array reference of all languages
-   *
+   * @return array
    */
   public static function &languages() {
 
@@ -1691,14 +1460,9 @@ ORDER BY name";
   }
 
   /**
-   * Get all extensions
+   * Get all system extensions.
    *
-   * The static array extensions
-   *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all system extensions
+   * @return array
    */
   public static function &getExtensions() {
     if (!self::$extensions) {
@@ -1709,6 +1473,11 @@ ORDER BY name";
     return self::$extensions;
   }
 
+  /**
+   * Get track state labels.
+   *
+   * @return array
+   */
   public static function &trackState() {
     if (!self::$trackState) {
       self::$trackState = [
@@ -1722,6 +1491,11 @@ ORDER BY name";
     return self::$trackState;
   }
 
+  /**
+   * Get referrer types.
+   *
+   * @return array
+   */
   public static function &referrerTypes() {
     if (!self::$referrerTypes) {
       self::$referrerTypes =  [

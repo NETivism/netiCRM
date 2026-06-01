@@ -27,36 +27,33 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for Premiums
- *
+ * This class generates form components for managing premium products.
  */
 class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
   /**
-   * Function to pre  process the form
+   * Set up variables before the form is built.
    *
-   * @access public
+   * Calls the parent preProcess method.
    *
-   * @return None
+   * @return void
    */
   public function preProcess() {
     parent::preProcess();
   }
 
   /**
-   * This function sets the default values for the form. Manage Premiums that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves premium product details (name, SKU, cost, price, image URLs,
+   * subscription periods, etc.) from the database if in edit mode.
    *
-   * @return None
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
 
@@ -93,10 +90,13 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds fields for premium product name, SKU, description, images, market value,
+   * actual cost, contribution thresholds, options, subscription details,
+   * and inventory settings.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     //parent::buildQuickForm( );
@@ -212,15 +212,15 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   }
 
   /**
-   * Function for validation
+   * Validation rule for the form.
    *
-   * @param array $params (ref.) an assoc array of name/value pairs
+   * Validates image URLs, subscription period settings, and inventory quantity
+   * if stock management is enabled.
    *
-   * @param $files
+   * @param array $params an assoc array of name/value pairs submitted by the form
+   * @param array $files the uploaded files array
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @return mixed true if no errors, or an array of error messages
    */
   public static function formRule($params, $files) {
     if (isset($params['imageOption'])) {
@@ -270,11 +270,12 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Handles deletion, previewing, and saving of premium products. It also manages
+   * image uploads and resizing, and cleanses monetary input fields.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 
@@ -352,16 +353,14 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   }
 
   /**
-   * Resize a premium image to a different size
+   * Resize a premium image to a different size.
    *
-   * @access private
+   * @param string $fileName the path to the original image
+   * @param string $resizedName the path to save the resized image
+   * @param int $w the target width
+   * @param int $h the target height
    *
-   * @param string $filename
-   * @param string $resizedName
-   * @param $width
-   * @param $height
-   *
-   * @return Path to image
+   * @return string the URL to the resized image
    */
   private function _resizeImage($fileName, $resizedName, $w, $h) {
     $image = new CRM_Utils_Image($fileName, $resizedName);

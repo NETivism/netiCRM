@@ -101,6 +101,11 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     );
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, numeric-string|int|float>
+   */
   public function setDefaultValues() {
     $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
@@ -108,11 +113,11 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -167,16 +172,34 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Append HTML to the temporary receipt file.
+   *
+   * @param string $html
+   */
   public function pushFile($html) {
     // tmp directory
     file_put_contents(self::$_tmpreceipt, $html, FILE_APPEND);
   }
+
+  /**
+   * Read and delete the temporary receipt file.
+   *
+   * @return string
+   */
   public function popFile() {
     $return = file_get_contents(self::$_tmpreceipt);
     unlink(self::$_tmpreceipt);
     return $return;
   }
 
+  /**
+   * Generate the final PDF from the aggregated HTML.
+   *
+   * @param bool $download
+   *
+   * @return string|void
+   */
   public function makePDF($download = TRUE) {
     $template = &CRM_Core_Smarty::singleton();
     $pages = $this->popFile();
@@ -189,11 +212,24 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
   }
 
+  /**
+   * Generate a unique export filename.
+   *
+   * @return string
+   */
   public static function getExportFileName() {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
     return 'Annual-Receipt-Batch-'.$rand.'-'.date('YmdHi');
   }
 
+  /**
+   * Generate receipts for a set of contacts.
+   *
+   * This can be called directly or as a batch job callback.
+   *
+   * @param array $contactIds
+   * @param array $option
+   */
   public function makeReceipt($contactIds, &$option) {
     global $civicrm_batch;
 
@@ -256,6 +292,11 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
   }
 
+  /**
+   * Batch job finish callback.
+   *
+   * Zips up all the generated PDF files.
+   */
   public static function batchFinish() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {

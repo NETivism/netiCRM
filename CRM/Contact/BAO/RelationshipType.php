@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,7 +50,7 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contact_BAO_RelationshipType object
+   * @return CRM_Contact_BAO_RelationshipType|null CRM_Contact_BAO_RelationshipType object
    * @access public
    * @static
    */
@@ -70,11 +68,12 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
   /**
    * update the is_active flag in the db
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int     $id        id of the database record
+   * @param boolean $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean true on success, false otherwise
    * @static
+   * @access public
    */
   public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_RelationshipType', $id, 'is_active', $is_active);
@@ -83,13 +82,12 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
   /**
    * Function to add the relationship type in the db
    *
-   * @param array $params (reference ) an assoc array of name/value pairs
-   * @param array $ids    the array that holds all the db ids
+   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array $ids    (reference) the array that holds all the db ids
    *
-   * @return object CRM_Contact_DAO_RelationshipType
+   * @return CRM_Contact_DAO_RelationshipType relationship type object
    * @access public
    * @static
-   *
    */
   public static function add(&$params, &$ids) {
     //to change name, CRM-3336
@@ -137,10 +135,12 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
   /**
    * Function to delete Relationship Types
    *
-   * @param int $relationshipTypeId
+   * @param int $relationshipTypeId relationship type id
+   *
+   * @return boolean true if deleted, false otherwise
    * @static
+   * @access public
    */
-
   public static function del($relationshipTypeId) {
     // make sure relationshipTypeId is an integer
     if (!CRM_Utils_Rule::positiveInteger($relationshipTypeId)) {

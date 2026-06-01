@@ -26,14 +26,22 @@
 */
 
 /**
+ * Bridges Drupal Organic Groups with CiviCRM group and membership operations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Bridge_OG_CiviCRM {
 
+  /**
+   * OG group sync
+   *
+   * @param int $groupID
+   * @param object $group
+   * @param string $op
+   *
+   * @return void
+   */
   public static function group($groupID, $group, $op) {
     if ($op == 'add') {
       self::groupAdd($groupID, $group);
@@ -43,6 +51,14 @@ class CRM_Bridge_OG_CiviCRM {
     }
   }
 
+  /**
+   * OG group add sync
+   *
+   * @param int $groupID
+   * @param object $group
+   *
+   * @return void
+   */
   public static function groupAdd($groupID, $group) {
 
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);
@@ -75,6 +91,14 @@ class CRM_Bridge_OG_CiviCRM {
     );
   }
 
+  /**
+   * OG group delete sync
+   *
+   * @param int $groupID
+   * @param object $group
+   *
+   * @return void
+   */
   public static function groupDelete($groupID, $group) {
 
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);
@@ -85,6 +109,15 @@ class CRM_Bridge_OG_CiviCRM {
     node_delete($ogID);
   }
 
+  /**
+   * OG group contact sync
+   *
+   * @param int $groupID
+   * @param array $contactIDs
+   * @param string $op
+   *
+   * @return void
+   */
   public static function groupContact($groupID, $contactIDs, $op) {
 
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);

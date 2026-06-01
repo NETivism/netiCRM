@@ -27,33 +27,79 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
 
   /**
-   * @var never[]
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
+
   /**
+   * The SQL FROM clause built by from().
+   *
    * @var string
    */
   public $_from;
-  public $_where;
+
   /**
+   * The SQL WHERE clause built by where().
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * The SQL GROUP BY clause built by groupBy().
+   *
    * @var string
    */
   public $_groupBy;
+
+  /**
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
   public $_aliases;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * The current output mode (e.g. 'html', 'csv', 'pdf').
+   *
+   * @var string
+   */
   public $_outputMode;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
 
+  /**
+   * Contact sub-types whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
   protected $_customGroupExtends = ['Contact', 'Individual'];
+
+  /**
+   * Initialises column definitions for employer (organization), employee (contact),
+   * relationship, email, address, and group tables.
+   */
   public function __construct() {
 
     $this->_columns = [
@@ -176,10 +222,21 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   * Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
 
     $select = $this->_columnHeaders = [];
@@ -202,6 +259,13 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Builds the FROM clause joining the employee contact to the employer contact via
+   * employer_id, and joining relationship (type ID 4), address, and email tables.
+   * Populates $_from.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
 FROM civicrm_contact {$this->_aliases['civicrm_contact']} 
@@ -223,6 +287,12 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
              AND {$this->_aliases['civicrm_email']}.is_primary = 1) ";
   }
 
+  /**
+   * Builds the WHERE clause from submitted filter values, always requiring a non-null
+   * employer_id on the contact. Appends ACL restrictions. Populates $_where.
+   *
+   * @return void
+   */
   public function where() {
 
     $clauses = [];
@@ -269,17 +339,37 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
     }
   }
 
+  /**
+   * Builds the GROUP BY clause grouping by employer ID then employee ID. Populates $_groupBy.
+   *
+   * @return void
+   */
   public function groupBy() {
 
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_employer']}.id,{$this->_aliases['civicrm_contact']}.id";
   }
 
+  /**
+   * Builds ACL clauses for both employee and employer contact aliases, then delegates
+   * to the parent postProcess().
+   *
+   * @return void
+   */
   public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause([$this->_aliases['civicrm_contact'], $this->_aliases['civicrm_employer']]);
     parent::postProcess();
   }
 
+  /**
+   * Post-processes result rows to linkify employer and employee names to the contact
+   * detail report, suppress repeated values in no-repeat columns (non-CSV mode),
+   * and resolve gender and country/state IDs to human-readable labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $checkList = [];

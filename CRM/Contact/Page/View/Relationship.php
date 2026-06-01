@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,14 +54,11 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
   public $_contactId = NULL;
 
   /**
-   * View details of a relationship
+   * View details of a relationship.
    *
    * @return void
-   *
-   * @access public
    */
   public function view() {
-
     $viewRelationship = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId, NULL, NULL, NULL, $this->_id);
     //To check whether selected contact is a contact_id_a in
     //relationship type 'a_b' in relationship table, if yes then
@@ -137,10 +132,9 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function browse() {
     $links = &self::links();
@@ -182,10 +176,9 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is update or new
+   * This function is called when action is update or new.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_Relationship', ts('Contact Relationships'), $this->_action);
@@ -228,6 +221,11 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $controller->run();
   }
 
+  /**
+   * Build all the data structures needed to build the page.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
@@ -251,8 +249,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * This function is the main function that is called when the page loads,
    * it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();
@@ -288,6 +285,11 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Set user context for redirection.
+   *
+   * @return void
+   */
   public function setContext() {
     $context = CRM_Utils_Request::retrieve(
       'context',
@@ -318,10 +320,9 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
   }
 
   /**
-   * This function is called to delete the relationship of a contact
+   * This function is called to delete the relationship of a contact.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function delete() {
     // calls a function to delete relationship
@@ -329,10 +330,9 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
   }
 
   /**
-   * Get action links
+   * Get action links.
    *
-   * @return array (reference) of action links
-   * @static
+   * @return array
    */
   public static function &links() {
     if (!(self::$_links)) {

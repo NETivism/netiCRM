@@ -27,11 +27,9 @@
 */
 
 /**
+ * Builds SQL queries for custom field data with support for various field types and operators
  *
- *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_BAO_CustomQuery {
@@ -119,14 +117,12 @@ class CRM_Core_BAO_CustomQuery {
   ];
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * Takes in a set of custom field ids andsets up the data structures to
-   * generate a query
+   * Takes in a set of custom field IDs and sets up the data structures to
+   * generate a query.
    *
-   * @param  array  $ids     the set of custom field ids
-   *
-   * @access public
+   * @param array $ids the set of custom field IDs
    */
   public function __construct($ids) {
     $this->_ids = &$ids;
@@ -239,13 +235,9 @@ SELECT label, value
   }
 
   /**
-   * generate the select clause and the associated tables
-   * for the from clause
-   *
-   * @param  NULL
+   * Generate the SELECT clause and the associated tables for the FROM clause.
    *
    * @return void
-   * @access public
    */
   public function select() {
     if (empty($this->_fields)) {
@@ -301,14 +293,9 @@ SELECT label, value
   }
 
   /**
-   * generate the where clause and also the english language
-   * equivalent
-   *
-   * @param NULL
+   * Generate the WHERE clause and also the English language equivalent (QILL).
    *
    * @return void
-   *
-   * @access public
    */
   public function where() {
     //CRM_Core_Error::debug( 'fld', $this->_fields );
@@ -596,13 +583,11 @@ SELECT label, value
   }
 
   /**
-   * function that does the actual query generation
-   * basically ties all the above functions together
+   * Finalize the query and return the components of the SQL statement.
    *
-   * @param NULL
+   * Tries all the functions together to generate the SELECT, FROM, and WHERE clauses.
    *
-   * @return  array   array of strings
-   * @access public
+   * @return array [select_clause, from_clause, where_clause]
    */
   public function query() {
     $this->select();
@@ -628,6 +613,18 @@ SELECT label, value
     ];
   }
 
+  /**
+   * Generate WHERE and QILL clauses for a range search on a custom field.
+   *
+   * @param int $id custom field ID
+   * @param string $label custom field label
+   * @param string $type data type of the field
+   * @param string $fieldName SQL column name
+   * @param array $value associative array containing 'from' and/or 'to' values
+   * @param int $grouping grouping index for the WHERE clause
+   *
+   * @return void
+   */
   public function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
     $qill = [];
 

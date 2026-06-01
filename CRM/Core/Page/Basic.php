@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,99 +40,87 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    */
 
   /**
-   * name of the BAO to perform various DB manipulations
+   * Get the name of the BAO associated with this page.
    *
-   * @return string
-   * @access public
+   * @return string BAO class name
    */
-
   abstract public function getBAOName();
 
   /**
-   * an array of action links
+   * Get an array of action links.
    *
-   * @return array (reference)
-   * @access public
+   * @return array associative array of links
    */
   abstract public function &links();
 
   /**
-   * name of the edit form class
+   * Get the class name of the edit form.
    *
-   * @return string
-   * @access public
+   * @return string form class name
    */
   abstract public function editForm();
 
   /**
-   * name of the form
+   * Get the name of the form.
    *
-   * @return string
-   * @access public
+   * @return string form name
    */
   abstract public function editName();
 
   /**
-   * userContext to pop back to
+   * Get the user context URL to return to after processing.
    *
-   * @param int $mode mode that we are in
+   * @param int|null $mode the current mode
    *
-   * @return string
-   * @access public
+   * @return string return URL
    */
   abstract public function userContext($mode = NULL);
 
   /**
-   * function to get userContext params
+   * Get the user context parameters.
    *
-   * @param int $mode mode that we are in
+   * @param int|null $mode the current mode
    *
-   * @return string
-   * @access public
+   * @return string URL query parameters
    */
   public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
   }
 
   /**
-   * allow objects to be added based on permission
+   * Check if the user has permission to access or modify a specific record.
    *
-   * @param int $id   the id of the object
-   * @param int $name the name or title of the object
+   * @param int $id record ID
+   * @param string|null $name record name or title
    *
-   * @return string   permission value if permission is granted, else null
-   * @access public
+   * @return int|null permission constant (e.g., CRM_Core_Permission::EDIT) or NULL if denied
    */
   public function checkPermission($id, $name) {
     return CRM_Core_Permission::EDIT;
   }
 
   /**
-   * allows the derived class to add some more state variables to
-   * the controller. By default does nothing, and hence is abstract
+   * Add extra values to the controller before processing.
    *
    * @param CRM_Core_Controller $controller the controller object
    *
    * @return void
-   * @access public
    */
   public function addValues($controller) {
   }
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param string $title title of the page
-   * @param int    $mode  mode of the page
-   *
-   * @return CRM_Core_Page
+   * @param string|null $title title of the page
+   * @param int|null $mode mode of the page
    */
   public function __construct($title = NULL, $mode = NULL) {
     parent::__construct($title, $mode);
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Run the basic page execution flow.
    *
    * @return void
    */
@@ -190,17 +176,19 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Alias for the parent run method.
+   *
+   * @return void
+   */
   public function superRun() {
     return parent::run();
   }
 
   /**
-   * browse all entities.
-   *
-   * @param int $action
+   * Browse all entities and display them in a list.
    *
    * @return void
-   * @access public
    */
   public function browse() {
     $thisArgs = func_get_args();
@@ -279,18 +267,16 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
   }
 
   /**
-   * Given an object, get the actions that can be associated with this
-   * object. Check the is_active and is_required flags to display valid
-   * actions
+   * Populate action links for a given record.
    *
-   * @param CRM_Core_DAO $object the object being considered
-   * @param int     $action the base set of actions
-   * @param array   $values the array of values that we send to the template
-   * @param array   $links  the array of links
-   * @param string  $permission the permission assigned to this object
+   * @param CRM_Core_DAO &$object the data object
+   * @param int $action the base set of actions
+   * @param array &$values array to store link data for Smarty
+   * @param array &$links the array of link definitions
+   * @param int $permission permission level
+   * @param bool $forceAction whether to bypass some eligibility checks
    *
    * @return void
-   * @access private
    */
   public function action(&$object, $action, &$values, &$links, $permission, $forceAction = FALSE) {
     $values['class'] = '';
@@ -350,10 +336,12 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
   }
 
   /**
-   * Edit this entity.
+   * Delegate to the edit form for this entity.
    *
-   * @param int $mode - what mode for the form ?
-   * @param int $id - id of the entity (for update, view operations)
+   * @param int $mode form mode (ADD, UPDATE, DELETE, VIEW)
+   * @param int|null $id record ID
+   * @param bool $imageUpload whether the form handles image uploads
+   * @param bool $pushUserContext whether to push to the user context stack
    *
    * @return void
    */

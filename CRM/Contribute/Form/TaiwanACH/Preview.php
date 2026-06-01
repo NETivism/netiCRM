@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Form for previewing Taiwan ACH import results.
+ */
 class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   public $_processResult;
   protected $_contactId = NULL;
@@ -8,6 +11,14 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   protected $_action = NULL;
   protected $_parseResult = NULL;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes the form rule, retrieves the parse result from the
+   * session, and handles process ID validation for bank transaction imports.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Preview', 'formRule'], $this);
     $this->_parseResult = $this->get('parseResult');
@@ -33,6 +44,14 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     $this->assign('importType', $this->_parseResult['import_type']);
   }
 
+  /**
+   * Actually build the form components.
+   *
+   * Adds the receive date/start date field and handles dynamic button generation
+   * based on the import state (refresh vs. final import).
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $result = $this->_parseResult;
     if ($result['import_type'] == 'transaction') {
@@ -95,6 +114,18 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Global form rule for validation.
+   *
+   * Validates that a file was successfully parsed and verifies the custom
+   * ACH transaction file ID against the log table.
+   *
+   * @param array $fields posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if (empty($self->_parseResult)) {
@@ -122,12 +153,21 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
         }
       }
       else {
+        $tYear = date('Y') - 1911;
+        $tYear = sprintf('%04d', $tYear);
         $errors['custom_process_id'] = ts("Format is not correct. Input format is '%1'", [1 => 'BOFACHP01'.$tYear.date('md').'xxxxxx123123']);
       }
     }
     return $errors;
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * Sets the current date and time as the default receive date.
+   *
+   * @return array<string, string> the array of default values for form elements
+   */
   public function setDefaultValues() {
     $defaults = [
       'receive_date' => date('Y-m-d'),
@@ -136,6 +176,15 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     return $defaults;
   }
 
+  /**
+   * Process the form submission.
+   *
+   * Triggers the final import process by iterating through the parsed data
+   * and calling the corresponding BAO methods for verification or transaction processing.
+   * Updates the session with the final results.
+   *
+   * @return void
+   */
   public function postProcess() {
     // do not submit when button state is refresh
     $buttonPressed = $this->controller->getButtonName();
@@ -196,10 +245,9 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Preview');

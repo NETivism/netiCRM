@@ -1,3 +1,4 @@
+// Test event registration with participant limit and waitlist enabled
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

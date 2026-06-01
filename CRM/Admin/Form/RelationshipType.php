@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -125,6 +122,11 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     }
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     if ($this->_action != CRM_Core_Action::DELETE &&
       isset($this->_id)
@@ -151,11 +153,9 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

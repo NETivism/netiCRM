@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -152,6 +150,7 @@ class CRM_Contribute_Task {
    *
    * @return array set of tasks that are valid for the user
    * @access public
+   * @static
    */
   public static function &permissionedTaskTitles($permission) {
     $tasks = [];

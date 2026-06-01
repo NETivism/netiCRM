@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,15 +56,13 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   public static $_overwrite = TRUE;
 
   /**
-   * takes an associative array and creates a address
+   * Create one or more addresses for a contact or an entity.
    *
-   * @param array  $params (reference ) an assoc array of name/value pairs
-   * @param boolean  $fixAddress   true if you need to fix (format) address values
-   *                               before inserting in db
+   * @param array &$params associative array of name/value pairs
+   * @param bool $fixAddress TRUE if the address should be formatted/standardized before saving
+   * @param string|null $entity the entity type if not a contact (e.g., from location block)
    *
-   * @return array $blocks array of created address
-   * @access public
-   * @static
+   * @return array array of created CRM_Core_BAO_Address objects
    */
   public static function create(&$params, $fixAddress, $entity = NULL) {
     if (!isset($params['address']) ||
@@ -146,15 +142,12 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   }
 
   /**
-   * takes an associative array and adds phone
+   * Add a single address record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
-   * @param boolean  $fixAddress   true if you need to fix (format) address values
-   *                               before inserting in db
+   * @param array &$params associative array of name/value pairs
+   * @param bool $fixAddress TRUE if the address should be formatted/standardized before saving
    *
-   * @return object       CRM_Core_BAO_Address object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_Address the created address object
    */
   public static function add(&$params, $fixAddress) {
     static $customFields = NULL;
@@ -201,13 +194,14 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   }
 
   /**
-   * format the address params to have reasonable values
+   * Format address parameters to ensure they have reasonable values.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * Handles billing address field normalization, postal code splitting,
+   * country and state ID resolution, and USPS/Geocoding formatting.
+   *
+   * @param array &$params associative array of name/value pairs (passed by reference)
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function fixAddress(&$params) {
     if (CRM_Utils_Array::value('billing_street_address', $params)) {
@@ -365,14 +359,11 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   }
 
   /**
-   * Check if there is data to create the object
+   * Check if the parameters contain enough data to justify creating an address record.
    *
-   * @param array  $params    (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of name/value pairs (passed by reference)
    *
-   * @return boolean
-   *
-   * @access public
-   * @static
+   * @return bool TRUE if data exists (excluding structural fields like location_type_id)
    */
   public static function dataExists(&$params) {
     //check if location type is set if not return false
@@ -420,16 +411,13 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch addresses for a given entity and store them in an array.
    *
-   * @param array   $entityBlock   associated array of fields
-   * @param boolean $microformat   if microformat output is required
-   * @param int     $fieldName     conditional field name
+   * @param array &$entityBlock associated array of fields (e.g., contact_id, entity_table, entity_id)
+   * @param bool $microformat if microformat output is required for the display field
+   * @param string $fieldName conditional field name to use for matching (default: 'contact_id')
    *
-   * @return array  $addresses     array with address fields
-   * @access public
-   * @static
+   * @return array array of address associative arrays, keyed by index (1, 2, ...)
    */
   public static function &getValues(&$entityBlock, $microformat = FALSE, $fieldName = 'contact_id') {
     if (empty($entityBlock)) {
@@ -516,14 +504,11 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   }
 
   /**
-   * Add the formatted address to $this-> display
+   * Set the formatted address into the display and display_text properties of the object.
    *
-   * @param NULL
+   * @param bool $microformat if microformat output is required for the display property
    *
    * @return void
-   *
-   * @access public
-   *
    */
   public function addDisplay($microformat = FALSE) {
 
@@ -556,22 +541,23 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
   }
 
   /**
+   * Set the static overwrite flag to control address modification behavior.
    *
+   * @param bool $overwrite TRUE if existing addresses should be overwritten
    *
-   *
+   * @return void
    */
   public static function setOverwrite($overwrite) {
     self::$_overwrite = $overwrite;
   }
 
   /**
-   * Get all the addresses for a specified contact_id, with the primary address being first
+   * Get all address IDs for a specified contact, ordered by primary address first.
    *
-   * @param int $id the contact id
+   * @param int $id the contact ID
+   * @param bool $updateBlankLocInfo if TRUE, return indexed by sequential count; if FALSE, indexed by location_type_id
    *
-   * @return array  the array of adrress data
-   * @access public
-   * @static
+   * @return array array of address IDs
    */
   public static function allAddress($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
@@ -600,14 +586,11 @@ ORDER BY civicrm_address.is_primary DESC, address_id ASC";
   }
 
   /**
-   * Get all the addresses for a specified location_block id, with the primary address being first
+   * Get all address IDs for a specified entity (e.g., event, contribution page) via its location block.
    *
-   * @param array $entityElements the array containing entity_id and
-   * entity_table name
+   * @param array $entityElements array containing 'entity_id' and 'entity_table'
    *
-   * @return array  the array of adrress data
-   * @access public
-   * @static
+   * @return array array of address IDs indexed by sequential count (1, 2, ...)
    */
   public static function allEntityAddress(&$entityElements) {
     if (empty($entityElements)) {
@@ -637,6 +620,14 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     return $addresses;
   }
 
+  /**
+   * Merge new mappings into the global state-country map.
+   *
+   * @param array &$stateCountryMap the mappings to add
+   * @param array|null $defaults (unused)
+   *
+   * @return void
+   */
   public static function addStateCountryMap(
     &$stateCountryMap,
     $defaults = NULL
@@ -657,6 +648,14 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     );
   }
 
+  /**
+   * Fix all state/province selection elements on a form based on the state-country map.
+   *
+   * @param CRM_Core_Form &$form the form object to process
+   * @param array &$defaults associative array of form default values
+   *
+   * @return void
+   */
   public static function fixAllStateSelects(&$form, &$defaults) {
     $config = CRM_Core_Config::singleton();
 
@@ -683,11 +682,13 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     }
   }
 
-  /* Function to get address sequence
-     *
-     * @return  array of address sequence.
-     */
-
+  /**
+   * Get the sequence of address fields based on CiviCRM configuration.
+   *
+   * Normalizes sequences by combining country/state and city/postal into groups.
+   *
+   * @return string[] array of address field names in order
+   */
   public static function addressSequence() {
     $config = CRM_Core_Config::singleton();
     $addressSequence = $config->addressSequence();
@@ -718,12 +719,10 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * NB: civic street formats for en_CA and fr_CA used by default if those locales are active
    *     otherwise en_US format is default action
    *
-   * @param  string   Street address including number and apt
-   * @param  string   Locale - to set locale used to parse address
+   * @param string $streetAddress Street address including number and apt
+   * @param string|null $locale Locale - to set locale used to parse address
    *
-   * @return array    $parseFields    parsed fields values.
-   * @access public
-   * @static
+   * @return array $parseFields parsed fields values.
    */
   public static function parseStreetAddress($streetAddress, $locale = NULL) {
     $config = CRM_Core_Config::singleton();
@@ -833,14 +832,11 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * Validate the address fields based on the address options enabled
-   * in the Address Settings
+   * Filter address fields based on enabled options in CiviCRM Address Settings.
    *
-   * @param  array   $fields an array of importable/exportable contact fields
+   * @param array $fields associative array of address fields
    *
-   * @return array   $fields an array of contact fields and only the enabled address options
-   * @access public
-   * @static
+   * @return array the filtered associative array containing only enabled fields
    */
   public static function validateAddressOptions($fields) {
     static $addressOptions = NULL;
@@ -860,13 +856,11 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * Check if current address is used by any other contacts
+   * Get the number of contacts sharing the specified address ID.
    *
-   * @param int $addressId address id
+   * @param int $addressId the address ID to check
    *
-   * @return count of contacts that use this shared address
-   * @access public
-   * @static
+   * @return int the number of contacts that share this address
    */
   public static function checkContactSharedAddress($addressId) {
     $query = 'SELECT count(id) FROM civicrm_address WHERE master_id = %1';
@@ -874,14 +868,12 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * Function to update the shared addresses if master address is modified
+   * Update all shared addresses if the master address has been modified.
    *
-   * @param int    $addressId address id
-   * @param array  $params    associated array of address params
+   * @param int $addressId the ID of the master address
+   * @param array $params associative array of address parameters to propagate
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function processSharedAddress($addressId, $params) {
     $query = 'SELECT id FROM civicrm_address WHERE master_id = %1';
@@ -903,17 +895,15 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * Function to create relationship between contacts who share an address
+   * Create relationships between contacts who share an address.
    *
-   * Note that currently we create relationship only for Individual contacts
-   * Individual + Household and Individual + Orgnization
+   * Currently only creates relationships for Individual contacts sharing an address
+   * with a Household or Organization.
    *
-   * @param int    $masterAddressId master address id
-   * @param array  $params          associated array of submitted values
+   * @param int $masterAddressId the ID of the master address being shared
+   * @param array $params associative array containing the current contact's ID
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function processSharedAddressRelationship($masterAddressId, $params) {
     if (!$masterAddressId) {
@@ -978,15 +968,13 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * Function to check and set the status for shared address delete
+   * Notify and return status message when a shared address is deleted.
    *
-   * @param int     $addressId address id
-   * @param int     $contactId contact id
-   * @param boolean $returnStatus by default false
+   * @param int|null $addressId the ID of the address being deleted
+   * @param int|null $contactId the ID of the contact being deleted (alternative to addressId)
+   * @param bool $returnStatus TRUE to return the status as an array, FALSE to set it in the session
    *
-   * @return string $statusMessage
-   * @access public
-   * @static
+   * @return array|void if $returnStatus is TRUE, returns array with 'contactList' and 'count'
    */
   public static function setSharedAddressDeleteStatus($addressId = NULL, $contactId = NULL, $returnStatus = FALSE) {
     // check if address that is being deleted has any shared
@@ -1038,11 +1026,12 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * @addresses array from CRM_BAO_Address::getValues()
+   * Retrieve a default address from an array of addresses based on specific criteria.
    *
-   * @type is_primary or is_billing
+   * @param array $addresses array of address associative arrays (e.g., from getValues())
+   * @param string $type the criteria type ('is_primary' or 'is_billing')
    *
-   * @return return if type exists, or return first address
+   * @return array the matching address associative array, or the first address if no match
    */
   public static function getAddressByDefault($addresses, $type) {
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -1068,11 +1057,12 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
   }
 
   /**
-   * Get current exists id from value
+   * Check if an address with the given parameters already exists and set the 'id' parameter.
    *
-   * Only effect when id not provided. Id will be added into params.
+   * Only performs lookup if 'id' is not provided and enough identifying fields are present.
    *
-   * @param array $params referenced array to be add exists id
+   * @param array &$params associative array of address fields (passed by reference)
+   *
    * @return void
    */
   public static function valueExists(&$params) {

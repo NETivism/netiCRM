@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -285,7 +283,6 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
   public function run() {
@@ -350,6 +347,8 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       if ($shorten_pcp) {
         $this->assign('shorten_pcp', $shorten_pcp);
       }
+      $this->assign('shorten_history', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_contribution_page', $id));
+      $this->assign('shorten_history_pcp', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_pcp', $id));
 
       $this->assign('pcp_is_active', 0);
       $pcpInfo = new CRM_Contribute_DAO_PCPBlock();
@@ -437,8 +436,7 @@ WHERE       cp.contribution_page_id = {$id}";
    * This function is to make a copy of a contribution page, including
    * all the fields in the page
    *
-   * @return void
-   * @access public
+   * @return mixed
    */
   public function copy() {
     $key = CRM_Utils_Request::retrieve(
@@ -472,9 +470,9 @@ WHERE       cp.contribution_page_id = {$id}";
   /**
    * Browse all contribution pages
    *
+   * @param string $action the action being performed
+   *
    * @return void
-   * @access public
-   * @static
    */
   public function browse($action = NULL) {
     $this->_sortByCharacter = CRM_Utils_Request::retrieve(
@@ -603,6 +601,11 @@ ORDER BY is_active DESC, id ASC
     }
   }
 
+  /**
+   * Search contribution pages
+   *
+   * @return void
+   */
   public function search() {
     if (isset($this->_action) &
       (
@@ -625,6 +628,14 @@ ORDER BY is_active DESC, id ASC
     $form->run();
   }
 
+  /**
+   * Build where clause
+   *
+   * @param array $params the array to store parameters
+   * @param bool $sortBy whether to include sort by character
+   *
+   * @return string
+   */
   public function whereClause(&$params, $sortBy = TRUE) {
     $values = $clauses = [];
     $title = $this->get('title');
@@ -678,6 +689,14 @@ ORDER BY is_active DESC, id ASC
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Pager
+   *
+   * @param string $whereClause the where clause
+   * @param array $whereParams the parameters for the where clause
+   *
+   * @return void
+   */
   public function pager($whereClause, $whereParams) {
 
     $params['status'] = ts('Contribution %%StatusMessage%%');
@@ -700,6 +719,14 @@ SELECT count(id)
     $this->assign_by_ref('pager', $this->_pager);
   }
 
+  /**
+   * Pager A-Z
+   *
+   * @param string $whereClause the where clause
+   * @param array $whereParams the parameters for the where clause
+   *
+   * @return void
+   */
   public function pagerAtoZ($whereClause, $whereParams) {
 
     $query = "
@@ -714,6 +741,13 @@ SELECT count(id)
     $this->assign('aToZ', $aToZBar);
   }
 
+  /**
+   * Format configure links
+   *
+   * @param array $sectionsInfo the array of section information
+   *
+   * @return array
+   */
   public function formatConfigureLinks($sectionsInfo) {
     //build the formatted configure links.
     $formattedConfLinks = self::configureActionLinks();
@@ -740,6 +774,13 @@ SELECT count(id)
     return $formattedConfLinks;
   }
 
+  /**
+   * Check permissions
+   *
+   * @param array $page the contribution page details
+   *
+   * @return int
+   */
   public function checkPerm($page) {
     $configureActionLinks = self::configureActionLinks();
 

@@ -27,15 +27,19 @@
 */
 
 /**
+ * Provides query-building and search functionality for Event and Participant data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Event_BAO_Query {
 
   public $_qill;
+  /**
+   * Get fields
+   *
+   * @return array
+   */
   public static function &getFields() {
     $fields = [];
 
@@ -47,6 +51,13 @@ class CRM_Event_BAO_Query {
     return $fields;
   }
 
+  /**
+   * Get participant fields
+   *
+   * @param bool $onlyParticipant
+   *
+   * @return array
+   */
   public static function &getParticipantFields($onlyParticipant = FALSE) {
 
     $fields = &CRM_Event_BAO_Participant::importableFields('Individual', TRUE, $onlyParticipant);
@@ -56,8 +67,9 @@ class CRM_Event_BAO_Query {
   /**
    * build select for CiviEvent
    *
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
   public static function select(&$query) {
     if (($query->_mode & CRM_Contact_BAO_Query::MODE_EVENT) ||
@@ -215,6 +227,13 @@ class CRM_Event_BAO_Query {
     }
   }
 
+  /**
+   * Where clause
+   *
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   */
   public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
@@ -241,6 +260,14 @@ class CRM_Event_BAO_Query {
     }
   }
 
+  /**
+   * Where clause single
+   *
+   * @param array $values
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   */
   public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
     switch ($name) {
@@ -531,6 +558,15 @@ class CRM_Event_BAO_Query {
     }
   }
 
+  /**
+   * From clause
+   *
+   * @param string $name
+   * @param int $mode
+   * @param string $side
+   *
+   * @return string
+   */
   public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
@@ -589,12 +625,18 @@ class CRM_Event_BAO_Query {
    * getter for the qill object
    *
    * @return string
-   * @access public
    */
   public function qill() {
     return (isset($this->_qill)) ? $this->_qill : "";
   }
 
+  /**
+   * Default return properties
+   *
+   * @param int $mode
+   *
+   * @return array|null
+   */
   public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_EVENT) {
@@ -637,6 +679,13 @@ class CRM_Event_BAO_Query {
     return $properties;
   }
 
+  /**
+   * Build search form
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function buildSearchForm(&$form) {
     $dataURLEvent = CRM_Utils_System::url(
       'civicrm/ajax/event',
@@ -737,9 +786,24 @@ class CRM_Event_BAO_Query {
     $form->assign('validCiviEvent', TRUE);
   }
 
+  /**
+   * Search action
+   *
+   * @param array $row
+   * @param int $id
+   *
+   * @return void
+   */
   public static function searchAction(&$row, $id) {
   }
 
+  /**
+   * Table names
+   *
+   * @param array $tables
+   *
+   * @return void
+   */
   public static function tableNames(&$tables) {
     //add participant table
     if (CRM_Utils_Array::value('civicrm_event', $tables)) {

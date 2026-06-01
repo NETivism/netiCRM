@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,14 +37,16 @@
 class CRM_Utils_JSON {
 
   /**
-   * Function to create JSON object
+   * Encode an array of items into a Dojo-style identifier/items object string.
    *
-   * @param  array  $params     associated array, that needs to be
-   *                            converted to JSON array
-   * @param  string $identifier identifier for the JSON array
+   * Produces a non-standard JSON-like string used by legacy Dojo data stores,
+   * of the form: { identifier: "id", items: [{ name: "...", id: "..."}, ...] }
    *
-   * @return string $jsonObject JSON array
-   * @static
+   * @param array  $params      Array of associative arrays, each with at least a 'name' key
+   *                            and the key named by $identifier.
+   * @param string $identifier  The field name to use as the item identifier (default 'id').
+   *
+   * @return string  A Dojo-style object string (not valid JSON).
    */
   public static function encode($params, $identifier = 'id') {
     $buildObject = [];

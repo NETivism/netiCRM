@@ -26,10 +26,9 @@
 */
 
 /**
+ * Form handler for contact location (address, phone, email) editing
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_Form_Location {
@@ -37,7 +36,11 @@ class CRM_Contact_Form_Location {
   /**
    * Function to set variables up before form is built
    *
+   * @param object $form (reference) form object
+   *
    * @return void
+   * @static
+   * @access public
    */
   public static function preProcess(&$form) {
     $form->_addBlockName = CRM_Utils_Request::retrieve('block', 'String', CRM_Core_DAO::$_nullObject);
@@ -74,8 +77,11 @@ class CRM_Contact_Form_Location {
   /**
    * Function to build the form
    *
-   * @return None
+   * @param object $form (reference) form object
+   *
+   * @return void
    * @access public
+   * @static
    */
   public static function buildQuickForm(&$form) {
     // required for subsequent AJAX requests.

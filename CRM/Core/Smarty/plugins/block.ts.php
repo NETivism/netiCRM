@@ -28,23 +28,21 @@
 /**
  * CiviCRM's Smarty gettext plugin
  *
- * @package CRM
  * @author Piotr Szotkowski <shot@caltha.pl>
  * @author Michal Mach <mover@artnet.org>
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  */
 
 /**
- * Smarty block function providing gettext support
+ * Smarty block function providing gettext support.
  *
  * See CRM_Core_I18n class documentation for details.
  *
- * @param array $params   template call's parameters
- * @param string $text    {ts} block contents from the template
- * @param object $smarty  the Smarty object
+ * @param array $params template call's parameters
+ * @param string|null $text {ts} block contents from the template
+ * @param Smarty &$smarty the Smarty object
  *
- * @return string  the string, translated by gettext
+ * @return string the translated string
  */
 function smarty_block_ts($params, $text, &$smarty) {
   return ts($text, $params);

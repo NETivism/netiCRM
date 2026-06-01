@@ -29,9 +29,7 @@
  * Start of the Error framework. We should check out and inherit from
  * PEAR_ErrorStack and use that framework
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -66,10 +64,17 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   public static $modeException = NULL;
 
   /**
-   * singleton function used to manage this object. This function is not
-   * explicity declared static to be compatible with PEAR_ErrorStack
+   * Singleton function used to manage this object.
    *
-   * @return object
+   * This function is not explicitly declared static to be compatible with PEAR_ErrorStack.
+   *
+   * @param string|null $package
+   * @param callable|bool $msgCallback
+   * @param callable|bool $contextCallback
+   * @param bool $throwPEAR_Error
+   * @param string $stackClass
+   *
+   * @return CRM_Core_Error
    */
   public static function &singleton($package = NULL, $msgCallback = FALSE, $contextCallback = FALSE, $throwPEAR_Error = FALSE, $stackClass = 'PEAR_ErrorStack') {
     if (self::$_singleton === NULL) {
@@ -79,7 +84,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * construcor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct('CiviCRM');
@@ -96,6 +101,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
   }
 
+  /**
+   * Get error messages from the error stack.
+   *
+   * @param CRM_Core_Error|PEAR_ErrorStack $error The error object.
+   * @param string $separator The separator between messages.
+   *
+   * @return string|null The concatenated error messages.
+   */
   public static function getMessages(&$error, $separator = '<br />') {
     if (is_a($error, 'CRM_Core_Error')) {
       $errors = $error->getErrors();
@@ -109,6 +122,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return NULL;
   }
 
+  /**
+   * Display a session error message, typically for payment failures.
+   *
+   * @param CRM_Core_Error|PEAR_ErrorStack $error The error object.
+   * @param string $separator The separator for detail messages.
+   */
   public static function displaySessionError(&$error, $separator = '<br />') {
     $message = ts('Payment failed.').' '.ts('We were unable to process your payment. You will not be charged in this transaction.');
     $detail = self::getMessages($error, $separator);
@@ -124,15 +143,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * create the main callback method. this method centralizes error processing.
+   * Main callback method for centralized error processing.
    *
-   * the errors we expect are from the pear modules DB, DB_DataObject
-   * which currently use PEAR::raiseError to notify of error messages.
+   * Handles errors from PEAR modules like DB and DB_DataObject.
    *
-   * @param object PEAR_Error
+   * @param PEAR_Error $pearError The error object to process.
    *
-   * @return void
-   * @access public
+   * @throws CRM_Core_Exception
    */
   public static function handle($pearError) {
     $config = CRM_Core_Config::singleton();
@@ -170,30 +187,22 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   /**
    * Handle errors raised using the PEAR Error Stack.
    *
-   * currently the handler just requests the PES framework
-   * to push the error to the stack (return value PEAR_ERRORSTACK_PUSH).
+   * @param array $pearError The error details.
    *
-   * Note: we can do our own error handling here and return PEAR_ERRORSTACK_IGNORE.
-   *
-   * Also, if we do not return any value the PEAR_ErrorStack::push() then does the
-   * action of PEAR_ERRORSTACK_PUSHANDLOG which displays the errors on the screen,
-   * since the logger set for this error stack is 'display' - see CRM_Core_Config::getLog();
-   *
+   * @return int PEAR_ERRORSTACK_PUSH
    */
   public static function handlePES($pearError) {
     return PEAR_ERRORSTACK_PUSH;
   }
 
   /**
-   * display an error page with an error message describing what happened
+   * Display an error page with an error message describing what happened.
    *
-   * @param string message  the error message
-   * @param string status the http status error code if any, default is 500
-   * @param string suppress suppress error message with given string
+   * @param string|null $message The error message.
+   * @param string|null $status The HTTP status error code if any, default is 500.
+   * @param string|bool|null $suppress Suppress error message with given string or boolean.
    *
-   * @return void
-   * @static
-   * @acess public
+   * @throws CRM_Core_Exception
    */
   public static function fatal($message = NULL, $status = NULL, $suppress = NULL) {
     $config = CRM_Core_Config::singleton();
@@ -223,12 +232,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Handles fatal errors without requiring an initialized configuration object
+   * Handles fatal errors without requiring an initialized configuration object.
+   *
    * This function is useful in cases where using the regular fatal() function
-   * would cause a circular dependency
+   * would cause a circular dependency.
    *
-   * @param string message The error message to be displayed
-   *
+   * @param string|null $message The error message to be displayed.
    */
   public static function fatalWithoutInitialized($message = NULL) {
     http_response_code(self::FATAL_ERROR);
@@ -237,13 +246,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * display timeout message
+   * Display a timeout message.
    *
-   * @param string message
-   *
-   * @return void
-   * @static
-   * @acess public
+   * @param string $message The message to display.
    */
   public static function timeout($message) {
     $vars = [
@@ -254,17 +259,16 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * outputs pre-formatted debug information. Flushes the buffers
-   * so we can interrupt a potential POST/redirect
+   * Outputs pre-formatted debug information.
    *
-   * @param  string name of debug section
-   * @param  mixed  reference to variables that we need a trace of
-   * @param  bool   should we log or return the output
-   * @param  bool   whether to generate a HTML-escaped output
+   * Flushes the buffers so we can interrupt a potential POST/redirect.
    *
-   * @return string the generated output
-   * @access public
-   * @static
+   * @param string $name Name of debug section.
+   * @param mixed $variable Variable to be traced.
+   * @param bool $print Whether to echo the output.
+   * @param bool $html Whether to generate a HTML-escaped output.
+   *
+   * @return string The generated output.
    */
   public static function debug($name, $variable = NULL, $print = FALSE, $html = TRUE) {
     $error = &self::singleton();
@@ -297,22 +301,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Similar to the function debug. Only difference is
-   * in the formatting of the output.
+   * Debug a variable and log the output.
    *
-   * @param  string variable name
-   * @param  mixed  reference to variables that we need a trace of
-   * @param  bool   should we use print_r ? (else we use var_dump)
-   * @param  bool   should we log or return the output
-   *
-   * @return string the generated output
-   *
-   * @access public
-   *
-   * @static
-   *
-   * @see CRM_Core_Error::debug()
-   * @see CRM_Core_Error::debug_log_message()
+   * @param string $variable_name The name of the variable.
+   * @param mixed $variable The variable to be traced.
+   * @param bool $print Whether to use print_r instead of var_dump.
+   * @param bool $log Whether to log the output.
+   * @param string $comp Component name for log file suffix.
    */
   public static function debug_var(
     $variable_name,
@@ -350,16 +345,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * display the error message on terminal
+   * Display the error message on terminal or log file.
    *
-   * @param  string message to be output
-   * @param  bool   should we log or return the output
-   *
-   * @return void
-   *
-   * @access public
-   *
-   * @static
+   * @param string $message Message to be output.
+   * @param bool $out Whether to echo the message.
+   * @param string $comp Component name for log file suffix.
    */
   public static function debug_log_message($message, $out = FALSE, $comp = '') {
     $config = CRM_Core_Config::singleton();
@@ -392,6 +382,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $file_log->close();
   }
 
+  /**
+   * Generate a backtrace message and optionally log it.
+   *
+   * @param string $msg Optional header for the backtrace.
+   * @param bool $log Whether to log the backtrace.
+   *
+   * @return string The backtrace message.
+   */
   public static function backtrace($msg = 'backtrace', $log = TRUE) {
     $backTrace = debug_backtrace();
 
@@ -413,6 +411,16 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return $message;
   }
 
+  /**
+   * Push an error onto the stack.
+   *
+   * @param string $message The error message.
+   * @param int $code The error code.
+   * @param string $level The error level (e.g., 'Fatal').
+   * @param mixed $params Extra parameters for the error.
+   *
+   * @return CRM_Core_Error The error stack object.
+   */
   public static function createError($message, $code = 8000, $level = 'Fatal', $params = NULL) {
     $error = &CRM_Core_Error::singleton();
     $error->push($code, $level, [$params], $message);
@@ -420,13 +428,12 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Set a status message in the session, then bounce back to the referrer.
+   * Set a status message in the session, then bounce back to the referrer or a specific URL.
    *
-   * @param string $message The status message to set
+   * @param string $message The status message to set.
+   * @param string|bool|null $redirect The URL to redirect to. If false, no redirect occurs.
    *
-   * @return void
-   * @access public
-   * @static
+   * @throws CRM_Core_Exception
    */
   public static function statusBounce($message, $redirect = NULL) {
     $session = CRM_Core_Session::singleton();
@@ -446,10 +453,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Function to reset the error stack
-   *
-   * @access public
-   * @static
+   * Function to reset the error stack.
    */
   public static function reset() {
     $error = &self::singleton();
@@ -457,6 +461,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $error->_errorsByLevel = [];
   }
 
+  /**
+   * Set the PEAR error mode to ignore exceptions.
+   *
+   * @param callable|null $callback The callback handler.
+   */
   public static function ignoreException($callback = NULL) {
     if (!$callback) {
       $callback = ['CRM_Core_Error', 'nullHandler'];
@@ -466,6 +475,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $GLOBALS['_PEAR_default_error_options'] = $callback;
   }
 
+  /**
+   * Generic exception handler.
+   *
+   * @param PEAR_Error $pearError
+   *
+   * @throws PEAR_Exception
+   */
   public static function exceptionHandler($pearError) {
     CRM_Core_Error::debug_var('fatal_error', self::getErrorDetails($pearError));
     CRM_Core_Error::backtrace('backtrace', TRUE);
@@ -473,11 +489,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * this function is used to return error details
+   * Get details from a PEAR_Error object.
    *
-   * @param $pearError
+   * @param PEAR_Error $pearError The error object.
    *
-   * @return array $error
+   * @return array<string, mixed> The error details.
    */
   public static function getErrorDetails($pearError) {
     // create the error array
@@ -493,13 +509,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Error handler to quietly catch otherwise fatal smtp transport errors.
+   * Error handler to quietly catch errors.
    *
-   * @param object $obj       The PEAR_ERROR object
+   * @param mixed $obj The error object or message.
    *
-   * @return object $obj
-   * @access public
-   * @static
+   * @return mixed The input object.
    */
   public static function nullHandler($obj) {
     if (is_a($obj, 'PEAR_Error')) {
@@ -517,11 +531,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * (Re)set the default callback method
+   * (Re)set the default callback method for PEAR errors.
    *
-   * @return void
-   * @access public
-   * @static
+   * @param callable|null $callback
    */
   public static function setCallback($callback = NULL) {
     if (!$callback) {
@@ -531,6 +543,14 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $GLOBALS['_PEAR_default_error_options'] = $callback;
   }
 
+  /**
+   * Create an error array for CiviCRM API v3.
+   *
+   * @param string $msg The error message.
+   * @param mixed $data Extra error data.
+   *
+   * @return array|never The error array or throws an exception if modeException is set.
+   */
   public static function &createAPIError($msg, $data = NULL) {
     if (self::$modeException) {
       throw new Exception($msg, $data);
@@ -549,6 +569,13 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return $values;
   }
 
+  /**
+   * Create a success array for CiviCRM API v3.
+   *
+   * @param mixed $result The result data.
+   *
+   * @return array<string, mixed> The success array.
+   */
   public static function &createAPISuccess($result = 1) {
     $values = [];
 
@@ -557,6 +584,11 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return $values;
   }
 
+  /**
+   * Display an error when the site directory or server has moved.
+   *
+   * @param string $file The file path that could not be written.
+   */
   public static function movedSiteError($file) {
     $url = CRM_Utils_System::url(
       'civicrm/admin/setting/updateConfigBackend',
@@ -569,18 +601,19 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Terminate execution abnormally
+   * Terminate execution abnormally and force rollback if transaction is active.
    */
   protected static function abend() {
     CRM_Core_Transaction::forceRollbackIfEnabled();
   }
 
   /**
-   * Generate output of fatal tpl
+   * Generate output of fatal template.
    *
-   * @param string $tplFile
-   * @param array $vars
-   * @return string
+   * @param string $tplFile The template file to use.
+   * @param array $vars Template variables.
+   *
+   * @return string The rendered template content or JSON string.
    */
   protected static function output($tplFile, $vars) {
     $template = CRM_Core_Smarty::singleton();
@@ -609,7 +642,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   }
 
   /**
-   * Purge logs
+   * Purge old log files.
    */
   public static function purge() {
     $config = CRM_Core_Config::singleton();
@@ -628,6 +661,9 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
   }
 
+  /**
+   * Output database profiling information if enabled.
+   */
   public static function debugDatabaseProfiling() {
     if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
       $profiles = CRM_Core_DAO::getProfiles();

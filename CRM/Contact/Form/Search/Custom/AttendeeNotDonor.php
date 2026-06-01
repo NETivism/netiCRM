@@ -13,6 +13,13 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
     'Attended'
   ];
 
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
@@ -23,6 +30,12 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
     }
   }
 
+  /**
+   * Build columns
+   *
+   * @return void
+   * @access public
+   */
   public function buildColumn() {
     $this->_queryColumns = [
       'contact.id' => 'id',
@@ -36,6 +49,12 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
       ts('register count') => 'register_count',
     ];
   }
+  /**
+   * Build temp table
+   *
+   * @return void
+   * @access public
+   */
   public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
@@ -64,6 +83,12 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
+  /**
+   * Drop temp table
+   *
+   * @return void
+   * @access public
+   */
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
@@ -71,6 +96,9 @@ PRIMARY KEY (id)
 
   /**
    * fill temp table for further use
+   *
+   * @return void
+   * @access public
    */
   public function fillTable() {
     $this->buildTempTable();
@@ -115,6 +143,12 @@ $having
     }
   }
 
+  /**
+   * Get temp from clause
+   *
+   * @return string
+   * @access public
+   */
   public function tempFrom() {
     $attendeeStatus = CRM_Event_PseudoConstant::participantStatus(NULL);
     $statuses = array_intersect($attendeeStatus, $this->_participantStatuses);
@@ -128,6 +162,9 @@ $having
 
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @return string
+   * @access public
    */
   public function tempWhere() {
     $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
@@ -145,6 +182,12 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Get temp having clause
+   *
+   * @return string
+   * @access public
+   */
   public function tempHaving() {
     $attended = $this->_formValues['attended'];
     $clauses = [];
@@ -152,6 +195,14 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     for ($i = 1; $i <= 5; $i++) {
       $option[$i] = $i;
@@ -161,12 +212,24 @@ $having
     $form->addSelect('attended', CRM_Utils_Array::implode(', ', $attendeeStatus), $option);
   }
 
+  /**
+   * Set default values
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     return [
       'attended' => 1,
     ];
   }
 
+  /**
+   * Get qill
+   *
+   * @return array<int, array<int, string>>
+   * @access public
+   */
   public function qill() {
     $qill = [];
 
@@ -183,10 +246,22 @@ $having
     return $qill;
   }
 
+  /**
+   * Set breadcrumb
+   *
+   * @return void
+   * @access public
+   */
   public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
+  /**
+   * Get count
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     if (!$this->_filled) {
       $this->fillTable();
@@ -202,6 +277,15 @@ $having
 
   /**
    * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
+   * @access public
    */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
@@ -213,6 +297,19 @@ $having
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
+  /**
+   * Get sql
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param null $groupBy
+   *
+   * @return string
+   * @access public
+   */
   public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
@@ -225,19 +322,47 @@ $having
 
   /**
    * Functions below generally don't need to be modified
+   *
+   * @return string
+   * @access public
    */
   public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
+  /**
+   * Get where clause
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     return ' (1) ';
   }
 
+  /**
+   * Get having clause
+   *
+   * @return string
+   * @access public
+   */
   public function having() {
     return '';
   }
 
+  /**
+   * Include contact IDs
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
@@ -253,24 +378,57 @@ $having
     }
   }
 
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
   public function summary() {
     // return $summary;
   }
 
+  /**
+   * Alter row
+   *
+   * @param array $row
+   *
+   * @return void
+   * @access public
+   */
   public function alterRow(&$row) {
   }
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   * @access public
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/AttendeeNotDonor.tpl';
   }
 
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }

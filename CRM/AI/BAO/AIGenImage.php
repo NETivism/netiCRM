@@ -421,6 +421,7 @@ class CRM_AI_BAO_AIGenImage {
    *
    * @param string $translatedPrompt Translated prompt
    * @param int $aiCompletionId AI completion ID from translation process
+   * @return void None.
    * @throws Exception On database update failure
    */
   protected function updateTranslationResult($translatedPrompt, $aiCompletionId = NULL) {
@@ -448,6 +449,7 @@ class CRM_AI_BAO_AIGenImage {
    * Uses try-catch to prevent database issues from affecting main workflow
    *
    * @param string $imagePath Generated image path (relative to public directory)
+   * @return void None.
    */
   protected function updateFinalResult($imagePath) {
     if ($this->generationRecordId && !empty($imagePath)) {
@@ -491,6 +493,7 @@ class CRM_AI_BAO_AIGenImage {
    * Uses try-catch to prevent database issues from causing additional errors
    *
    * @param string $errorMessage Error message to store
+   * @return void None.
    */
   protected function updateErrorStatus($errorMessage) {
     if ($this->generationRecordId) {
@@ -514,6 +517,7 @@ class CRM_AI_BAO_AIGenImage {
    * @param array $params Original parameters
    * @param string $imagePath Stored image path
    * @param string $translatedPrompt Translated prompt
+   * @return void None.
    */
   private function saveGenerationRecord($params, $imagePath, $translatedPrompt) {
     // TODO: Implement database record saving
@@ -543,6 +547,7 @@ class CRM_AI_BAO_AIGenImage {
    * Creates directory recursively if needed
    *
    * @param string $directory Directory path
+   * @return void None.
    * @throws Exception If directory cannot be created or is not writable
    */
   private function ensureDirectoryExists($directory) {

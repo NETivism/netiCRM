@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,6 +39,9 @@ class CRM_Utils_System_UnitTests {
     return;
   }
 
+  /**
+   * @return array<int, int>
+   */
   public static function authenticate($name, $password) {
     $retVal = [1, 1, 12345];
     return $retVal;

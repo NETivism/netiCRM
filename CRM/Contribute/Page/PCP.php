@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -125,10 +123,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    * type of action and executes that action.
    * Finally it calls the parent's run method.
    *
-   * @param
-   *
-   * @return void
-   * @access public
+   * @return mixed
    */
   public function run() {
     // get the requested action
@@ -185,10 +180,9 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
   /**
    * Browse all custom data groups.
    *
+   * @param string $action the action being performed
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse($action = NULL) {
     $pcpSummary = $params = [];
@@ -321,6 +315,11 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
     }
   }
 
+  /**
+   * Search pcp pages
+   *
+   * @return void
+   */
   public function search() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
@@ -353,6 +352,8 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
 
   /**
    * Get user context.
+   *
+   * @param string $mode the current mode
    *
    * @return string user context.
    */

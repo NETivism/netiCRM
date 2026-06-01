@@ -27,23 +27,23 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for Payment-Instrument
- *
+ * This class generates form components for viewing contribution details.
  */
 class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method retrieves contribution data, payment processor info, soft credits,
+   * custom fields, premium details, and billing information. It also handles
+   * adding the contribution to recent items and listing receipt-related activities.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $id = $this->get('id');
@@ -296,10 +296,11 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds a 'Done' button to exit the view mode.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $this->addButtons(

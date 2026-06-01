@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,7 +40,6 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * mapper fields
    *
    * @var array
-   * @access protected
    */
   protected $_mapperFields;
 
@@ -50,7 +47,6 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * number of columns in import file
    *
    * @var int
-   * @access protected
    */
   protected $_exportColumnCount;
 
@@ -58,7 +54,6 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * loaded mapping ID
    *
    * @var int
-   * @access protected
    */
   protected $_mappingId;
 
@@ -66,15 +61,13 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * mapping object when we don't have mapping id
    *
    * @var int
-   * @access protected
    */
   public $_mappingObject;
 
   /**
-   * Function to actually build the form
+   * Pre-process form values.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function preProcess() {
 
@@ -102,6 +95,11 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
 
     $customSearchID = $this->get('customSearchID');
@@ -128,13 +126,13 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
    * @param array $fields posted values of the form
+   * @param array $values values
+   * @param int $mappingTypeId mapping type id
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
   public static function formRule($fields, $values, $mappingTypeId) {
     $errors = [];
@@ -165,10 +163,9 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * Process the uploaded file
+   * Process the form submission.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -287,19 +284,20 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Select Fields to Export');
   }
 
   /**
-   * Execute when press "Export"( name = _qf_Map_next ) and "Done"( name = _qf_Map_done ) buttom.
-   * @param  $params  The parameters in postProcess();
-   * @return none
+   * Execute when press "Export"( name = _qf_Map_next ) and "Done"( name = _qf_Map_done ) button.
+   *
+   * @param array $params The parameters in postProcess()
+   *
+   * @return void
    */
   private function updateAndSaveMapping($params) {
     if (CRM_Utils_Array::value('updateMapping', $params)) {

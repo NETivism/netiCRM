@@ -4,7 +4,6 @@ namespace Civi\Install;
 
 /**
  * Class Requirements
- * @package Civi\Install
  */
 class Requirements {
 

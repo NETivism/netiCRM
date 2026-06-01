@@ -1,3 +1,4 @@
+// Test adding a new individual contact with basic fields in the backend
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

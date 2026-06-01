@@ -5,9 +5,26 @@
  *
  * Modified and improved upon by CiviCRM LLC (c) 2007
  */
+
+/**
+ * Widget class providing contribution page data and embed code for embeddable donation widgets
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Widget_Widget {
 
+  /**
+   * Method table for remote access.
+   *
+   * @var array
+   */
   public static $_methodTable;
+
+  /**
+   * Initialize the method table.
+   */
   public function initialize() {
     if (!self::$_methodTable) {
       self::$_methodTable = [
@@ -32,6 +49,12 @@ class CRM_Widget_Widget {
     }
   }
 
+  /**
+   * Get the method table.
+   *
+   * @return array
+   *   A reference to the method table.
+   */
   public function &methodTable() {
     self::initialize();
 
@@ -39,7 +62,9 @@ class CRM_Widget_Widget {
   }
 
   /**
-   * Not implemented - registers an action and unique widget ID.  Useful for stats and debugging
+   * Not implemented - registers an action and unique widget ID.
+   *
+   * Useful for stats and debugging.
    *
    * @param int $contributionPageID
    * @param string $widgetID
@@ -52,12 +77,12 @@ class CRM_Widget_Widget {
   }
 
   /**
-   * Gets all campaign related data and returns it as a std class.
+   * Gets all contribution page related data and returns it as a std class.
    *
    * @param int $contributionPageID
    * @param string $widgetID
    *
-   * @return stdClass
+   * @return object
    */
   public function getContributionPageData($contributionPageID, $widgetID) {
     $config = CRM_Core_Config::singleton();
@@ -178,12 +203,15 @@ WHERE  id = %1";
   }
 
   /**
-   * Gets embed code.  Perhaps overkill, but we can track dropoffs in this case.
+   * Gets embed code.
+   *
+   * Perhaps overkill, but we can track dropoffs in this case
    * by # of people reqeusting emebed code / number of unique instances.
    *
    * @param int $contributionPageID
    * @param string $widgetID
-   * @param string $format - either myspace or normal
+   * @param string $format
+   *   Either myspace or normal.
    *
    * @return string
    */

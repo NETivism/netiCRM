@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Display.php 30467 2010-11-02 07:43:49Z sushant $
  *
@@ -38,6 +37,11 @@
  *
  */
 class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('Settings - Site Preferences'));
@@ -50,6 +54,11 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     ];
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = [];
 
@@ -57,6 +66,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     if ($this->_config->editor_id) {
       $defaults['wysiwyg_editor'] = $this->_config->editor_id;
     }
+    $defaults['editor_allow_all_content'] = !empty($this->_config->editor_allow_all_content) ? 1 : 0;
     if (empty($this->_config->display_name_format)) {
       $defaults['display_name_format'] = "{contact.individual_prefix}{ }{contact.first_name}{ }{contact.last_name}{ }{contact.individual_suffix}";
     }
@@ -74,10 +84,9 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     $wysiwyg_options = ['' => ts('Textarea')] + CRM_Core_PseudoConstant::wysiwygEditor();
@@ -89,6 +98,8 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
       unset($wysiwyg_options[3]);
     }
     $this->addElement('select', 'wysiwyg_editor', ts('WYSIWYG Editor'), $wysiwyg_options, NULL);
+
+    $this->addElement('checkbox', 'editor_allow_all_content', NULL, ts('Disable Security Filter (Allow all content & scripts)'));
 
     $this->addElement('textarea', 'display_name_format', ts('Individual Display Name Format'));
     $this->addElement('textarea', 'sort_name_format', ts('Individual Sort Name Format'));
@@ -105,11 +116,9 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action == CRM_Core_Action::VIEW) {
@@ -131,6 +140,10 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     }
 
     $this->_config->editor_id = $this->_params['wysiwyg_editor'];
+    $this->_config->editor_allow_all_content = (
+      !empty($this->_params['editor_allow_all_content']) &&
+      $this->_params['wysiwyg_editor'] == 4
+    ) ? 1 : 0;
     $this->_config->display_name_format = $this->_params['display_name_format'];
     $this->_config->sort_name_format = $this->_params['sort_name_format'];
 

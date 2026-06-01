@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -51,7 +49,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * Are we forced to run a search
    *
    * @var int
-   * @access protected
    */
   protected $_force;
 
@@ -59,7 +56,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * name of search button
    *
    * @var string
-   * @access protected
    */
   protected $_searchButtonName;
 
@@ -67,7 +63,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * name of print button
    *
    * @var string
-   * @access protected
    */
   protected $_printButtonName;
 
@@ -75,7 +70,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * name of action button
    *
    * @var string
-   * @access protected
    */
   protected $_actionButtonName;
 
@@ -83,7 +77,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * form values that we will be using
    *
    * @var array
-   * @access protected
    */
   protected $_formValues;
 
@@ -91,14 +84,12 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * the params that are sent to the query
    *
    * @var array
-   * @access protected
    */
   protected $_queryParams;
 
   /**
    * have we already done this search
    *
-   * @access protected
    * @var boolean
    */
   protected $_done;
@@ -106,7 +97,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_single = FALSE;
@@ -114,7 +104,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_limit = NULL;
@@ -122,7 +111,6 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   /**
    * what context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_context = NULL;
@@ -136,10 +124,9 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   protected $_defaults;
 
   /**
-   * processing needed for buildForm and later
+   * Processing needed for buildForm and later.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->set('searchFormName', 'Search');
@@ -227,9 +214,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
@@ -309,10 +294,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * The processing consists of using a Selector / Controller framework for getting the
    * search results.
    *
-   * @param
-   *
    * @return void
-   * @access public
    */
   public function postProcess() {
     if ($this->_done) {
@@ -405,10 +387,9 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
 
   /**
    * This function is used to add the rules (mainly global rules) for form.
-   * All local rules are added near the element
+   * All local rules are added near the element.
    *
-   * @return None
-   * @access public
+   * @return void
    * @see valid_date
    */
   public function addRules() {
@@ -416,14 +397,11 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
    * @param array $fields posted values of the form
-   * @param array $errors list of errors to be posted back to the form
    *
-   * @return void
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
   public static function formRule($fields) {
     $errors = [];
@@ -436,9 +414,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * Set the default form values
-   *
-   * @access protected
+   * Set the default form values.
    *
    * @return array the default array reference
    */
@@ -554,10 +530,9 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Find Pledges');

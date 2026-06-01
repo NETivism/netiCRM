@@ -26,10 +26,9 @@
 */
 
 /**
+ * Standalone mode bootstrap and session management without a CMS
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,12 +40,9 @@ class CRM_Core_Standalone {
   /* Copied from CRM/Core/Joomla.php */
 
   /**
-   * Reuse drupal blocks into a left sidebar. Assign the generated template
-   * to the smarty instance
+   * Reuse Drupal blocks into a left sidebar.
    *
-   * @return void
-   * @access public
-   * @static
+   * Assign the generated template to the Smarty instance.
    */
   public static function sidebarLeft() {
     $config = CRM_Core_Config::singleton();

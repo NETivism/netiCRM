@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,10 +46,9 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   public $_id;
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // check for edit permission
@@ -63,12 +60,9 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -88,10 +82,9 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     //add various dates
@@ -134,11 +127,9 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the submitted form values.

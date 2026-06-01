@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,7 +54,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @param null
    *
    * @return  array   array of action links that we need to display for the browse screen
-   * @access public
    */
   public function &actionLinks() {
     // check if variable _actionsLinks is populated
@@ -110,10 +107,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * type of action and executes that action.
    * Finally it calls the parent's run method.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    *
    */
   public function run() {
@@ -172,11 +166,10 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
   /**
    * edit custom group
    *
-   * @param int    $id       custom group id
-   * @param string $action   the action to be invoked
+   * @param int $id custom group id
+   * @param int $action the action to be invoked
    *
    * @return void
-   * @access public
    */
   public function edit($id, $action) {
     // create a simple controller for editing custom data
@@ -197,7 +190,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @param int $id custom group id
    *
    * @return void
-   * @access public
    */
   public function preview($id) {
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Preview', ts('Preview Custom Data'), NULL);
@@ -212,10 +204,9 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
   /**
    * Browse all custom data groups.
    *
-   * @param string $action   the action to be invoked
+   * @param int $action the action to be invoked
    *
    * @return void
-   * @access public
    */
   public function browse($action = NULL) {
     // get all custom groups sorted by weight

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -46,7 +44,7 @@ class CRM_Export_BAO_Export {
   public const EXPORT_TEMP_TABLE = 'civicrm_export';
 
   /**
-   * Function to get the list the export fields
+   * Function to get the list the export fields.
    *
    * @param int    $selectAll user preference while export
    * @param array  $ids  contact ids
@@ -59,9 +57,11 @@ class CRM_Export_BAO_Export {
    * @param string $componentTable component table
    * @param bool   $mergeSameAddress merge records if they have same address
    * @param bool   $mergeSameHousehold merge records if they belong to the same household
+   * @param int    $mappingId mapping id
+   * @param bool   $separateMode separate mode
+   * @param array  $exportCustomVars export custom variables
    *
-   * @static
-   * @access public
+   * @return void
    */
   public static function exportComponents(
     $selectAll,
@@ -400,6 +400,17 @@ class CRM_Export_BAO_Export {
 
     $allRelContactArray = $relationQuery = [];
 
+    // Pre-load symmetry flag (name_a_b = name_b_a) for every relationship type once,
+    // to avoid issuing one detect query per iteration of the loop below.
+    // Keyed by relationship_type_id => bool.
+    $symmetricTypes = [];
+    $symmetricDAO = CRM_Core_DAO::executeQuery(
+      "SELECT id, (name_a_b = name_b_a) AS is_symmetric FROM civicrm_relationship_type"
+    );
+    while ($symmetricDAO->fetch()) {
+      $symmetricTypes[(int) $symmetricDAO->id] = (bool) $symmetricDAO->is_symmetric;
+    }
+
     foreach ($contactRelationshipTypes as $rel => $dnt) {
       if ($relationReturnProperties = CRM_Utils_Array::value($rel, $returnProperties)) {
         $allRelContactArray[$rel] = [];
@@ -416,6 +427,7 @@ class CRM_Export_BAO_Export {
         $relationSelect = str_replace('civicrm_state_province.abbreviation', 'civicrm_state_province.name', $relationSelect);
 
         list($id, $direction) = explode('_', $rel, 2);
+        $id = (int) $id;
         // identify the relationship direction
         $contactA = 'contact_id_a';
         $contactB = 'contact_id_b';
@@ -423,6 +435,12 @@ class CRM_Export_BAO_Export {
           $contactA = 'contact_id_b';
           $contactB = 'contact_id_a';
         }
+        // For symmetric relationship types (name_a_b == name_b_a, e.g. "Sibling of"),
+        // the export form's selector dedupes options sharing the same label and only
+        // keeps the _a_b direction, so this foreach never iterates _b_a. Without the
+        // expanded join below, contacts stored on the opposite side of the
+        // relationship row would be silently dropped from the export.
+        $isSymmetric = !empty($symmetricTypes[$id]);
         if ($exportMode == CRM_Export_Form_Select::CONTACT_EXPORT) {
           $relIDs = $ids;
         }
@@ -465,21 +483,33 @@ class CRM_Export_BAO_Export {
 
         $relationshipJoin = $relationshipClause = '';
         if ($componentTable) {
-          $relationshipJoin = " INNER JOIN $componentTable ctTable ON ctTable.contact_id = {$contactA}";
+          // Symmetric types may store the exported contact on either side of the
+          // relationship row, so allow ctTable.contact_id to match contactA or contactB.
+          $relationshipJoin = ($isSymmetric)
+            ? " INNER JOIN $componentTable ctTable ON (ctTable.contact_id = crel.{$contactA} OR ctTable.contact_id = crel.{$contactB})"
+            : " INNER JOIN $componentTable ctTable ON ctTable.contact_id = {$contactA}";
         }
         else {
           $relID = CRM_Utils_Array::implode(',', $relIDs);
-          $relationshipClause = " AND crel.{$contactA} IN ( {$relID} )";
+          $relationshipClause = ($isSymmetric)
+            ? " AND (crel.{$contactA} IN ( {$relID} ) OR crel.{$contactB} IN ( {$relID} ))"
+            : " AND crel.{$contactA} IN ( {$relID} )";
         }
+        $joinOn = ($isSymmetric)
+          ? "(crel.{$contactA} = contact_a.id OR crel.{$contactB} = contact_a.id)"
+          : "crel.{$contactB} = contact_a.id";
+        $refExpr = ($isSymmetric)
+          ? "IF(crel.{$contactA} = contact_a.id, crel.{$contactB}, crel.{$contactA})"
+          : "crel.{$contactA}";
         $relTempName = CRM_Core_DAO::createTempTableName('civicrm_relationship_temp', FALSE);
         $sqlTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS $relTempName AS (SELECT * FROM civicrm_relationship ORDER BY is_active DESC, start_date DESC )";
         CRM_Core_DAO::executeQuery($sqlTempTable);
         $relationFrom = " {$relationFrom}
-                INNER JOIN {$relTempName} crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id}
+                INNER JOIN {$relTempName} crel ON {$joinOn} AND crel.relationship_type_id = {$id}
                 {$relationshipJoin} ";
         $relationWhere = " WHERE contact_a.is_deleted = 0 {$relationshipClause}";
-        $relationGroupBy = " GROUP BY crel.{$contactA}";
-        $relationSelect = "{$relationSelect}, {$contactA} as refContact ";
+        $relationGroupBy = " GROUP BY {$refExpr}";
+        $relationSelect = "{$relationSelect}, {$refExpr} as refContact ";
         $relationQueryString = "$relationSelect $relationFrom $relationWhere $relationGroupBy";
 
         $allRelContactDAO = CRM_Core_DAO::executeQuery($relationQueryString);
@@ -1282,10 +1312,9 @@ class CRM_Export_BAO_Export {
   }
 
   /**
-   * name of the export file based on mode
+   * Name of the export file based on mode.
    *
-   * @param string  $output type of output
-   * @param int     $mode export mode
+   * @param int $mode export mode
    *
    * @return string name of the file
    */
@@ -1296,9 +1325,9 @@ class CRM_Export_BAO_Export {
   }
 
   /**
-   * Name of the export mode
+   * Name of the export mode.
    *
-   * @param int     $mode export mode
+   * @param int $mode export mode
    *
    * @return string name of export mode
    */
@@ -1336,7 +1365,7 @@ class CRM_Export_BAO_Export {
   }
 
   /**
-   * Alias of importError to support old menu
+   * Alias of importError to support old menu.
    *
    * @deprecated
    * @return void
@@ -1348,7 +1377,8 @@ class CRM_Export_BAO_Export {
   /**
    * Function to handle import error file creation.
    *
-   **/
+   * @return void
+   */
   public static function importError() {
     $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject, TRUE);
     $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject, TRUE);
@@ -1383,6 +1413,19 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Export custom search results.
+   *
+   * @param string $customSearchClass custom search class name
+   * @param array $formValues form values
+   * @param string $order order by clause
+   * @param string|bool $primaryIDName primary id name
+   * @param bool $returnRows whether to return rows
+   * @param bool $exportFile whether to export to file
+   * @param int $exportMode export mode
+   *
+   * @return array|void
+   */
   public static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
     if ($exportMode === NULL) {
       $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
@@ -1521,6 +1564,16 @@ class CRM_Export_BAO_Export {
     }
   }
 
+  /**
+   * Define SQL column for a field.
+   *
+   * @param object $query query object
+   * @param array $sqlColumns sql columns
+   * @param string $field field name
+   * @param int $index index
+   *
+   * @return void
+   */
   public static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
     if (substr($field, -4) == '_a_b' ||
       substr($field, -4) == '_b_a'
@@ -1618,6 +1671,15 @@ class CRM_Export_BAO_Export {
     }
   }
 
+  /**
+   * Write details to temporary table.
+   *
+   * @param string $tableName table name
+   * @param array $details details
+   * @param array $sqlColumns sql columns
+   *
+   * @return void
+   */
   public static function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
     if (empty($details)) {
       return;
@@ -1667,6 +1729,13 @@ VALUES $sqlValueString
     CRM_Core_DAO::executeQuery($sql);
   }
 
+  /**
+   * Create temporary table for export.
+   *
+   * @param array $sqlColumns sql columns
+   *
+   * @return string temporary table name
+   */
   public static function createTempTable(&$sqlColumns) {
     //creating a temporary table for the search result that need be exported
     $exportTempTable = CRM_Core_DAO::createTempTableName(self::EXPORT_TEMP_TABLE, FALSE);
@@ -1705,6 +1774,16 @@ CREATE TEMPORARY TABLE {$exportTempTable} (
     return $exportTempTable;
   }
 
+  /**
+   * Merge records that have the same address.
+   *
+   * @param string $tableName table name
+   * @param array $headerRows header rows
+   * @param array $sqlColumns sql columns
+   * @param string|bool $drop whether to drop a column
+   *
+   * @return void
+   */
   public static function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
     // find all the records that have the same street address BUT not in a household
     $sql = "
@@ -1825,12 +1904,14 @@ DROP  $drop";
 
   /**
    * Function to merge household record into the individual record
-   * if exists
+   * if exists.
    *
    * @param string $exportTempTable temporary temp table that stores the records
    * @param array  $headerRows array of headers for the export file
    * @param array  $sqlColumns array of names of the table columns of the temp table
    * @param string $prefix name of the relationship type that is prefixed to the table columns
+   *
+   * @return void
    */
   public static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
     $prefixColumn = $prefix . '_';
@@ -1919,6 +2000,17 @@ GROUP BY civicrm_primary_id ";
     $dao = CRM_Core_DAO::executeQuery($query);
   }
 
+  /**
+   * Write CSV from table.
+   *
+   * @param string $exportTempTable temporary table name
+   * @param array $headerRows header rows
+   * @param array $sqlColumns sql columns
+   * @param int $exportMode export mode
+   * @param string $fileName file name
+   *
+   * @return void
+   */
   public static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
 
     $query = "SELECT * FROM $exportTempTable";
@@ -1965,6 +2057,17 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
+  /**
+   * Write batch from table.
+   *
+   * @param string $exportTempTable temporary table name
+   * @param array $headerRows header rows
+   * @param array $sqlColumns sql columns
+   * @param int $exportMode export mode
+   * @param string $fileName file name
+   *
+   * @return void
+   */
   public static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
     if (strstr($fileName, '.csv')) {
       // export csv. use Spout to add header row and BOM
@@ -2076,19 +2179,42 @@ GROUP BY civicrm_primary_id ";
   }
 
   /**
-   * Function to manipulate header rows for relationship fields
+   * Function to manipulate header rows for relationship fields.
    *
+   * @param array $headerRows header rows
+   * @param array $contactRelationshipTypes contact relationship types
+   *
+   * @return void
    */
   public static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
     foreach ($headerRows as &$header) {
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {
+        // For Chinese labels: swap with opposite direction's label, prefix with "的 "
+        if (preg_match('/[^\x00-\x7F]/', $relationTypeName)) {
+          $keyParts = explode('_', $split[0]);
+          if (count($keyParts) === 3) {
+            $typeId = $keyParts[0];
+            $dir = $keyParts[1] . '_' . $keyParts[2];
+            $oppositeDir = ($dir === 'a_b') ? 'b_a' : 'a_b';
+            $oppositeKey = $typeId . '_' . $oppositeDir;
+            $oppositeLabel = CRM_Utils_Array::value($oppositeKey, $contactRelationshipTypes);
+            if ($oppositeLabel) {
+              $relationTypeName = ts("'s") . ' ' . $oppositeLabel;
+            }
+          }
+        }
         $split[0] = $relationTypeName;
         $header = CRM_Utils_Array::implode('-', $split);
       }
     }
   }
 
+  /**
+   * Batch finish.
+   *
+   * @return void
+   */
   public static function batchFinish() {
     global $civicrm_batch;
     $batchData = $civicrm_batch->data;
@@ -2102,6 +2228,16 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
+  /**
+   * Audit export.
+   *
+   * @param int $exportMode export mode
+   * @param string $fileName file name
+   * @param int $totalNumRow total number of rows
+   * @param array $fields fields
+   *
+   * @return void
+   */
   public static function audit($exportMode, $fileName, $totalNumRow, $fields) {
     $serial = CRM_REQUEST_TIME;
     $flatten = [];

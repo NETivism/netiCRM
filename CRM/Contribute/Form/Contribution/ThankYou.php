@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,11 +43,15 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
    * @var mixed[]
    */
   public $_submitValues;
+
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method retrieves contribution and line item data from the session,
+   * handles "do not notify" checks for contacts, and assigns transaction details
+   * and GTM data layers to the template.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -162,11 +164,12 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
   }
 
   /**
-   * overwrite action, since we are only showing elements in frozen mode
-   * no help display needed
+   * Determine the current action for the page.
    *
-   * @return int
-   * @access public
+   * Overwrites the parent action to ensure elements are shown in frozen mode
+   * without help displays.
+   *
+   * @return int the action code (VIEW or VIEW|PREVIEW)
    */
   public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
@@ -178,10 +181,12 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * This method assigns contribution, premium, honor roll, membership,
+   * and custom field details to the template. It also sets up "Tell a Friend" links.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->assignToTemplate();

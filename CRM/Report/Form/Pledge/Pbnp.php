@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -54,6 +52,9 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
   ];
 
   protected $_customGroupExtends = ['Pledge'];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -155,11 +156,21 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->assign('reportTitle', ts('Pledge But Not Paid Report'));
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -187,6 +198,11 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = NULL;
 
@@ -229,6 +245,11 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "";
     $this->_groupBy = "
@@ -236,12 +257,24 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
                   {$this->_aliases['civicrm_pledge']}.id";
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::PostProcess();
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -77,7 +75,6 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
    * set up variables to build the form
    *
    * @return void
-   * @acess protected
    */
   public function preProcess() {
     $this->_srcFID = CRM_Utils_Request::retrieve(
@@ -108,11 +105,9 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-
     $customGroup = CRM_Core_PseudoConstant::customGroup();
     unset($customGroup[$this->_srcGID]);
     if (empty($customGroup)) {
@@ -144,6 +139,15 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
     $this->addFormRule(['CRM_Custom_Form_MoveField', 'formRule'], $this);
   }
 
+  /**
+   * global validation rules for the form
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Custom_Form_MoveField $self
+   *
+   * @return array|bool
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
 
@@ -208,7 +212,6 @@ WHERE  id IN ( %1, %2 )
    * Process the form when submitted
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // step 1: copy and create dstField and column

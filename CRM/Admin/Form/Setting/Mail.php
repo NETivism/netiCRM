@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,10 +37,9 @@
 class CRM_Admin_Form_Setting_Mail extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings').' - '.ts('Mailer Settings'));

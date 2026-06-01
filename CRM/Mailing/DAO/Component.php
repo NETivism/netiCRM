@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -124,18 +123,17 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_mailing_component
-  */
+   * class constructor
+   *
+   * @return civicrm_mailing_component
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -145,49 +143,49 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'component_type' => [
           'name' => 'component_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Component Type') ,
-                   'enumValues' => 'Header, Footer, Subscribe, Welcome, Unsubscribe, OptOut, Reply, Resubscribe',
-         ] ,
+          'enumValues' => 'Header, Footer, Subscribe, Welcome, Unsubscribe, OptOut, Reply, Resubscribe',
+        ],
         'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'body_html' => [
           'name' => 'body_html',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Body Html') ,
-             'rows' => 8,
-           'cols' => 80,
-              ] ,
+          'rows' => 8,
+          'cols' => 80,
+        ],
         'body_text' => [
           'name' => 'body_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Body Text') ,
-             'rows' => 8,
-           'cols' => 80,
-              ] ,
+          'rows' => 8,
+          'cols' => 80,
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -195,7 +193,6 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -205,7 +202,6 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -214,8 +210,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -237,8 +232,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
@@ -264,8 +258,8 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
    */
   public static function &getEnums() {
     static $enums = [
-                                            'component_type',
-                                                                            ];
+        'component_type',
+    ];
     return $enums;
   }
   /**
@@ -280,17 +274,17 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                            'component_type' => [
-                  'Header' => ts('Header'),
-                  'Footer' => ts('Footer'),
-                  'Subscribe' => ts('Subscribe'),
-                  'Welcome' => ts('Welcome'),
-                  'Unsubscribe' => ts('Unsubscribe'),
-                  'OptOut' => ts('OptOut'),
-                  'Reply' => ts('Reply'),
-                  'Resubscribe' => ts('Resubscribe'),
-                ],
-                                                                              ];
+        'component_type' => [
+          'Header' => ts('Header'),
+          'Footer' => ts('Footer'),
+          'Subscribe' => ts('Subscribe'),
+          'Welcome' => ts('Welcome'),
+          'Unsubscribe' => ts('Unsubscribe'),
+          'OptOut' => ts('OptOut'),
+          'Reply' => ts('Reply'),
+          'Resubscribe' => ts('Resubscribe'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }

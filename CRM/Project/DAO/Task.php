@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Project_DAO_Task extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -150,18 +149,17 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_task
-  */
+   * class constructor
+   *
+   * @return civicrm_task
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -171,74 +169,74 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'task_type_id' => [
           'name' => 'task_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Task Type') ,
-                  ] ,
+        ],
         'owner_entity_table' => [
           'name' => 'owner_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Owner Entity Table') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'owner_entity_id' => [
           'name' => 'owner_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Task Owner ID') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'parent_entity_table' => [
           'name' => 'parent_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Parent Entity Table') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'parent_entity_id' => [
           'name' => 'parent_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Task Parent') ,
-                  ] ,
+        ],
         'due_date' => [
           'name' => 'due_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Due Date') ,
-                  ] ,
+        ],
         'priority_id' => [
           'name' => 'priority_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Priority') ,
-                  ] ,
+        ],
         'task_class' => [
           'name' => 'task_class',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Task Class') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Active?') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -246,7 +244,6 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -255,7 +252,6 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -264,8 +260,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -287,8 +282,7 @@ class CRM_Project_DAO_Task extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

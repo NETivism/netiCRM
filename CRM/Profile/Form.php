@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -140,15 +138,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
   protected $_profileIds = [];
 
   /**
-   * pre processing work done here.
+   * Pre-process form.
    *
-   * gets session variables for table name, id of entity in table, type of entity and stores them.
-   *
-   * @param
+   * Gets session variables for table name, id of entity in table, type of entity and stores them.
    *
    * @return void
-   *
-   * @access public
    */
   public function preProcess() {
 
@@ -342,10 +336,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * This function sets the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
    * @return void
    */
@@ -408,10 +401,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return void
-   * @access public
+   * @return bool|void
    */
   public function buildQuickForm() {
     if ($this->_disallowed) {
@@ -595,12 +587,13 @@ class CRM_Profile_Form extends CRM_Core_Form {
   }
 
   /**
-   * Function to validate profile and provided activity Id
+   * Function to validate profile and provided activity Id.
    *
-   * @params Integer $activityId Activity Id
-   * @params Integer $gid        Profile Id
+   * @param int $activityId Activity Id
+   * @param int $contactId contact id
+   * @param int $gid Profile Id
    *
-   * @return Array   $errors     Errors ( if any ).
+   * @return array Errors (if any).
    */
   public static function validateContactActivityProfile($activityId, $contactId, $gid) {
     $errors = [];
@@ -636,15 +629,13 @@ class CRM_Profile_Form extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array  $fields the input form values
-   * @param array  $files  the uploaded files if any
-   * @param object $form   the form object
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Core_Form $form the form object
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $form) {
     $errors = [];
@@ -833,8 +824,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
   /**
    * Process the user submitted custom data values.
-   *
-   * @access public
    *
    * @return void
    */
@@ -1044,6 +1033,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
     $transaction->commit();
   }
 
+  /**
+   * Get template file name.
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Form/{$this->_gid}/{$this->_name}.tpl";
@@ -1064,6 +1058,13 @@ class CRM_Profile_Form extends CRM_Core_Form {
     return parent::getTemplateFileName();
   }
 
+  /**
+   * Track the visit.
+   *
+   * @param int $state
+   *
+   * @return void
+   */
   public function track($state) {
     $params = [
       'state' => $state,

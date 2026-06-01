@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,7 +37,11 @@
 class CRM_Pledge_Page_AJAX {
 
   /**
-   * Function for building Pledge Name combo box
+   * Function for building Pledge Name combo box.
+   *
+   * @param object $config
+   *
+   * @return void
    */
   public static function pledgeName(&$config) {
 

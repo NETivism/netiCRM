@@ -48,7 +48,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    *
    * @param array $params
    *
-   * @return object
+   * @return CRM_Batch_DAO_Batch
    *   $batch batch object
    */
   public static function create(&$params) {
@@ -88,8 +88,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * @param array $defaults
    *   (reference ) an assoc array to hold the flattened values.
    *
-   * @return object
-   *   CRM_Batch_BAO_Batch object on success, null otherwise
+   * @return CRM_Batch_DAO_Batch|NULL
+   *   CRM_Batch_DAO_Batch object on success, null otherwise
    */
   public static function retrieve(&$params, &$defaults) {
     $batch = new CRM_Batch_DAO_Batch();
@@ -223,7 +223,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Auto remove stuck batch
    *
-   * @return null
+   * @return void
    */
   public static function cancelStuckBatch() {
     $type = self::batchType();
@@ -290,10 +290,8 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Constructor
    *
-   * @param int
+   * @param int|null $batchId
    *   batch id to load whole batch object
-   *
-   * @return object
    */
   public function __construct($batchId = NULL) {
     self::batchType();
@@ -309,10 +307,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Create and start a batch process
    *
-   * @param array
+   * @param array $arguments
    *   information that batch process needed.
    *
-   * @return object
+   * @return CRM_Batch_DAO_Batch|bool
    *   batch object that just insert into db
    */
   public function start($arguments) {
@@ -375,10 +373,9 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Process part of batch each run
    *
-   * @param int   $batchId
-   *   an id of batch process to load
+   * @param bool $force
    *
-   * @return null
+   * @return void
    */
   public function process($force = FALSE) {
     // start processing, insert record in db to prevent duplicate running
@@ -425,10 +422,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Finish batch
    *
-   * @param int   $batchId
-   *   an id of batch process to load
-   *
-   * @return null
+   * @return void
    */
   public function finish() {
     global $civicrm_batch;
@@ -504,7 +498,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Duplicate running process check
    *
-   * @return object|bool
+   * @return CRM_Core_DAO_Sequence|bool
    */
   public function dupeCheck() {
     $dao = new CRM_Core_DAO_Sequence();
@@ -518,7 +512,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * Duplicate running object insert
    *
-   * @return object
+   * @return CRM_Core_DAO_Sequence
    */
   public function dupeInsert() {
     $dao = new CRM_Core_DAO_Sequence();
@@ -550,6 +544,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     return FALSE;
   }
 
+  /**
+   * Save current batch object to database.
+   *
+   * @return void
+   */
   public function saveBatch() {
     $params = [];
     foreach ($this->_batch as $key => $val) {

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,10 +51,9 @@ class CRM_Price_Form_DeleteSet extends CRM_Core_Form {
   protected $_title;
 
   /**
-   * set up variables to build the form
+   * Set up variables to build the form.
    *
    * @return void
-   * @acess protected
    */
   public function preProcess() {
     $this->_sid = $this->get('sid');
@@ -69,10 +66,9 @@ class CRM_Price_Form_DeleteSet extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->assign('title', $this->_title);
@@ -90,10 +86,9 @@ class CRM_Price_Form_DeleteSet extends CRM_Core_Form {
   }
 
   /**
-   * Process the form when submitted
+   * Process the form when submitted.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     if (CRM_Price_BAO_Set::deleteSet($this->_sid)) {

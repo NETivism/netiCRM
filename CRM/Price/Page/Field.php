@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * The price set group id of the field
    *
    * @var int
-   * @access protected
    */
   protected $_sid;
 
@@ -55,17 +52,13 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @access private
    */
   private static $_actionLinks;
 
   /**
    * Get the action links for this page.
    *
-   * @param null
-   *
-   * @return array  array of action links that we need to display for the browse screen
-   * @access public
+   * @return array array of action links that we need to display for the browse screen
    */
   public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
@@ -119,10 +112,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
   /**
    * Browse all price set fields.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function browse() {
 
@@ -199,15 +189,13 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
   }
 
   /**
-   * edit price data.
+   * Edit price data.
    *
-   * editing would involved modifying existing fields + adding data to new fields.
+   * Editing would involved modifying existing fields + adding data to new fields.
    *
-   * @param string  $action    the action to be invoked
-
+   * @param string $action the action to be invoked
    *
    * @return void
-   * @access public
    */
   public function edit($action) {
     // create a simple controller for editing price data
@@ -224,11 +212,9 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
   }
 
   /**
-   * This function is to make a copy of a price set, including
-   * all the fields in the page
+   * This function is to make a copy of a price set, including all the fields in the page.
    *
    * @return void
-   * @access public
    */
   public function copy() {
     $key = CRM_Utils_Request::retrieve(
@@ -274,10 +260,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function run() {
 
@@ -373,12 +356,11 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
   }
 
   /**
-   * Preview price field
+   * Preview price field.
    *
-   * @param int  $id    price field id
+   * @param int $fid price field id
    *
    * @return void
-   * @access public
    */
   public function preview($fid) {
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Form Field'), CRM_Core_Action::PREVIEW);

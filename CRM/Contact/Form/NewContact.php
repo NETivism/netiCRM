@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,10 +39,10 @@ class CRM_Contact_Form_NewContact {
   /**
    * Function used to build form element for new contact or select contact widget
    *
-   * @param object   $form form object
-   * @param int      $blocNo by default it is one, except for address block where it is
+   * @param CRM_Core_Form $form form object
+   * @param int $blockNo by default it is one, except for address block where it is
    *                 build for each block
-   * @param array    $extrProfiles extra profiles that should be included besides reserved
+   * @param array $extraProfiles extra profiles that should be included besides reserved
    *
    * @access public
    *

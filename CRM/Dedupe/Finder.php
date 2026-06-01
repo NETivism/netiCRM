@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -200,11 +198,11 @@ class CRM_Dedupe_Finder {
   /**
    * Return dupes of a given contact, using the default rule group (of a provided level).
    *
-   * @param int    $cid    contact id of the given contact
-   * @param string $level  dedupe rule group level ('Fuzzy' or 'Strict')
-   * @param string $ctype  contact type of the given contact
+   * @param int $cid contact id of the given contact
+   * @param string $level dedupe rule group level ('Fuzzy' or 'Strict')
+   * @param string $ctype contact type of the given contact
    *
-   * @return array  array of dupe contact_ids
+   * @return array array of dupe contact_ids
    */
   public function dupesOfContact($cid, $level = 'Strict', $ctype = NULL) {
     // if not provided, fetch the contact type from the database

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +35,10 @@
  * BAO object for crm_email table
  */
 class CRM_Contact_BAO_SubscriptionHistory extends CRM_Contact_DAO_SubscriptionHistory {
+
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     parent::__construct();
   }
@@ -46,7 +48,7 @@ class CRM_Contact_BAO_SubscriptionHistory extends CRM_Contact_DAO_SubscriptionHi
    *
    * @param array $params     Values for the new history record
    *
-   * @return object $history  The new history object
+   * @return CRM_Contact_BAO_SubscriptionHistory The new history object
    * @access public
    * @static
    */
@@ -63,7 +65,7 @@ class CRM_Contact_BAO_SubscriptionHistory extends CRM_Contact_DAO_SubscriptionHi
    *
    * @param int $id       The contact id
    *
-   * @return none
+   * @return void
    * @access public
    * @static
    */

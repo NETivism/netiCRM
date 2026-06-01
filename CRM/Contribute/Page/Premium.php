@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -98,7 +96,6 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
   public function run() {
@@ -135,10 +132,9 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
   }
 
   /**
+   * Browse premiums
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
     // get all custom groups sorted by weight
@@ -313,6 +309,8 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
 
   /**
    * Get user context.
+   *
+   * @param string $mode the current mode
    *
    * @return string user context.
    */

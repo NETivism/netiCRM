@@ -22,7 +22,7 @@ In the past 10+ years, "netiCRM" project also accomplish something in Taiwan:
 - Nearly 300 NPOs daily uses.
 - Improve a lot of functions. eg. referrer tracking report, billing method in Taiwan, QRCode event registration ... etc.
 - Improve security. We hired a pro ethic hacking company for penetration tests.
-- Upgrade to Drupal 9 (which we only can maintain Drupal-based CRM).
+- Upgrade to Drupal 10 (which we only can maintain Drupal-based CRM).
 - Keep netiCRM open. **Open source of course**. And also has [online documentation](https://neticrm.tw/online-learning) licensed in CC, online videos.
 
 ### Who Build This
@@ -36,9 +36,7 @@ For the last decade, we were focus on development. Sometimes we forgot to share 
 - **Community** - community is the key to survival in the Open Source area, and CiviCRM is a good example. We could do better to cooperate with the community.
 - **Scalability** - more and more large NPOs using netiCRM. We will try to improve performance and scalability in the core.
 
-You can also check [milestones](https://github.com/NETivism/netiCRM/milestones) which will address our main focus by quarter.
-
-## Release cycle
+### Release cycle
 
 The version style is [semantic versioning](https://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning) without leading v.
 ```
@@ -49,17 +47,17 @@ We have automated script release weekly base on the "hotfix" branch which will c
 We also have a highly active development "develop" branch for monthly or quarterly releases. It may change the second digit "y".
 When major change. Such as supporting new PHP / drupal versions or backward in-compatibility releases. We will change the version number first digit "x".
 
-## Security policy
+### Security policy
 
 We take the security of this project very seriously. If you believe you have found a security vulnerability, contact us through the [Security Policy](https://github.com/netivism/netiCRM/security/policy) page.
 
-## Supported Versions
+### Supported Versions
 
 Only support latest release version.
 
 ### License
 
-netiCRM is licensed under AGPL-3.0. See AGPL-3.0.txt.
+netiCRM is licensed under AGPL-3.0. See file LICENSE under this directory.
 Third-party packages licenses, please check packages/LICENSE
 
 ### How to Install

@@ -13,11 +13,13 @@ class CRM_Core_Reference_Basic implements CRM_Core_Reference_Interface {
   protected $targetKey;
 
   /**
-   * @param $refTable
-   * @param $refKey
-   * @param null $targetTable
-   * @param string $targetKey
-   * @param null $refTypeColumn
+   * Class constructor.
+   *
+   * @param string $refTable Table containing the foreign key.
+   * @param string $refKey Column containing the foreign key.
+   * @param string|null $targetTable Table containing the referenced record.
+   * @param string $targetKey Column containing the referenced record's ID.
+   * @param string|null $refTypeColumn Column containing the type of reference (for dynamic references).
    */
   public function __construct($refTable, $refKey, $targetTable = NULL, $targetKey = 'id', $refTypeColumn = NULL) {
     $this->refTable = $refTable;
@@ -28,34 +30,44 @@ class CRM_Core_Reference_Basic implements CRM_Core_Reference_Interface {
   }
 
   /**
-   * @return mixed
+   * Get the table containing the foreign key.
+   *
+   * @return string
    */
   public function getReferenceTable() {
     return $this->refTable;
   }
 
   /**
-   * @return mixed
+   * Get the column containing the foreign key.
+   *
+   * @return string
    */
   public function getReferenceKey() {
     return $this->refKey;
   }
 
   /**
-   * @return null
+   * Get the column containing the type of reference.
+   *
+   * @return string|null
    */
   public function getTypeColumn() {
     return $this->refTypeColumn;
   }
 
   /**
-   * @return null
+   * Get the table containing the referenced record.
+   *
+   * @return string|null
    */
   public function getTargetTable() {
     return $this->targetTable;
   }
 
   /**
+   * Get the column containing the referenced record's ID.
+   *
    * @return string
    */
   public function getTargetKey() {
@@ -63,7 +75,9 @@ class CRM_Core_Reference_Basic implements CRM_Core_Reference_Interface {
   }
 
   /**
-   * @param string $tableName
+   * Check if a given table is the target of this reference.
+   *
+   * @param string $tableName Table name to check.
    *
    * @return bool
    */
@@ -72,9 +86,11 @@ class CRM_Core_Reference_Basic implements CRM_Core_Reference_Interface {
   }
 
   /**
-   * @param CRM_Core_DAO $targetDao
+   * Create a query to find references to a particular record.
    *
-   * @return Object
+   * @param CRM_Core_DAO $targetDao The instance for which we want references.
+   *
+   * @return CRM_Core_DAO A query-handle.
    */
   public function findReferences($targetDao) {
     $targetColumn = $this->getTargetKey();
@@ -94,9 +110,11 @@ class CRM_Core_Reference_Basic implements CRM_Core_Reference_Interface {
   }
 
   /**
-   * @param CRM_Core_DAO $targetDao
+   * Create a query to find the number of references to a particular record.
    *
-   * @return array
+   * @param CRM_Core_DAO $targetDao The instance for which we want references.
+   *
+   * @return array Describing the reference count.
    */
   public function getReferenceCount($targetDao) {
     $targetColumn = $this->getTargetKey();

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Simple in-memory array-based cache implementation for use within a single request
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Utils_Cache_Arraycache implements CRM_Utils_Cache_Interface {
 
   /**
@@ -10,8 +17,6 @@ class CRM_Utils_Cache_Arraycache implements CRM_Utils_Cache_Interface {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
-   * @return void
    */
   public function __construct($config) {
     $this->_cache = [];

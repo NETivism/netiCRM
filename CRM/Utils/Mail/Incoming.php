@@ -26,10 +26,9 @@
 */
 
 /**
+ * Processes and parses incoming email messages for bounce handling and auto-filing
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Utils_Mail_Incoming {

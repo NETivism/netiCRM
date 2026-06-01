@@ -26,9 +26,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,7 +40,6 @@ class CRM_Contribute_Form_Task_SearchTaskHookSample extends CRM_Contribute_Form_
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -78,8 +75,7 @@ INNER JOIN civicrm_contact ct ON ( co.contact_id = ct.id )
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->addButtons(

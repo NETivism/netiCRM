@@ -77,6 +77,13 @@
            <td class="label">{$form.is_active.label}</td>
            <td>{$form.is_active.html}</td>
         </tr>
+        <tr class="crm-price-set-form-block-show_remaining">
+           <td class="label">{$form.show_remaining.label}</td>
+           <td>
+             {$form.show_remaining.html}
+             <div class="description">{ts}When enabled, remaining capacity will be shown next to each option on the frontend (e.g. "8 remaining"). Only applies to options with a maximum quantity set.{/ts}</div>
+           </td>
+        </tr>
      </table>
      <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
     

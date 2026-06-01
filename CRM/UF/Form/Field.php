@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,87 +36,84 @@
  */
 class CRM_UF_Form_Field extends CRM_Core_Form {
 
-  public $_location_types;
   /**
-   * @var mixed[]
+   * @var array
+   */
+  public $_location_types;
+
+  /**
+   * @var array
    */
   public $_website_types;
-  public $_mapperFields;
+
   /**
-   * @var never[]
+   * @var array
+   */
+  public $_mapperFields;
+
+  /**
+   * @var array
    */
   public $_defaults;
+
   /**
-   * the uf group id saved to the session for an update
+   * The uf group id saved to the session for an update.
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
   /**
-   * The field id, used when editing the field
+   * The field id, used when editing the field.
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
   /**
-   * The set of fields that we can view/edit in the user field framework
+   * The set of fields that we can view/edit in the user field framework.
    *
    * @var array
-   * @access protected
    */
   protected $_fields;
 
   /**
-   * the title for field
+   * The title for the group.
    *
-   * @var int
-   * @access protected
+   * @var string
    */
   protected $_title;
 
   /**
-   * The set of fields sent to the select element
+   * The set of fields sent to the select element.
    *
    * @var array
-   * @access protected
    */
   protected $_selectFields;
 
   /**
-   * to store fields with if locationtype exits status
+   * To store fields with if locationtype exits status.
    *
    * @var array
-   * @access protected
    */
   protected $_hasLocationTypes;
 
   /**
-   * is this profile has searchable field
-   * or is any field having in selector true.
+   * Is this profile has searchable field or is any field having in selector true.
    *
-   * @var boolean.
-   * @access protected
+   * @var bool
    */
   protected $_hasSearchableORInSelector;
 
   /**
-   * is this profile has searchable field
-   * or is any field having in selector true.
+   * Information about the UF group.
    *
-   * @var boolean.
-   * @access protected
+   * @var array
    */
   protected $_groupInfo;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @return void
-   * @access public
+   * Set variables up before form is built.
    */
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -210,10 +205,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @return void
-   * @access public
+   * Build the form.
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -720,10 +712,9 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
+   * Process the form submission.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $ids = ['uf_group' => $this->_gid];
@@ -832,17 +823,14 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * validation rule for subtype.
+   * Validation rule for subtype.
    *
-   * @param array $groupType contains all groupTypes.
-   *
-   * @param  string  $fieldType type of field.
-   *
+   * @param string $fieldType
+   *   Type of field.
+   * @param array $groupType
+   *   Contains all groupTypes.
    * @param array $errors
-   *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   *   List of errors to be posted back to the form.
    */
   public static function formRuleSubType($fieldType, $groupType, $errors) {
     if (in_array($fieldType, ['Participant', 'Contribution', 'Membership', 'Activity'])) {
@@ -875,13 +863,17 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array $fields posted values of the form
+   * @param array $fields
+   *   Posted values of the form.
+   * @param array $files
+   *   Not used.
+   * @param CRM_Core_Form $self
+   *   The form object.
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool
+   *   List of errors to be posted back to the form, or TRUE on success.
    */
   public static function formRule($fields, $files, $self) {
     $is_required = CRM_Utils_Array::value('is_required', $fields, FALSE);

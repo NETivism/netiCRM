@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,7 +42,6 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     //get the activity values
@@ -119,8 +116,7 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->addButtons(

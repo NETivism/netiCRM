@@ -52,18 +52,18 @@ class CRM_Contact_BAO_RFM {
   /**
    * Constructor
    *
-   * @param string $suffix temp table suffix of RFM
-   * @param string $dateString Date filter string
-   * @param float|int|null $rThreshold R threshold value, null means don't process
-   *                                   If negative, reverse comparison is used
-   *                                   If zero, include all data without threshold
-   * @param float|int|null $fThreshold F threshold value, null means don't process
-   *                                   If negative, reverse comparison is used
-   *                                   If zero, include all data without threshold
-   * @param float|int|null $mThreshold M threshold value, null means don't process
-   *                                   If negative, reverse comparison is used
-   *                                   If zero, include all data without threshold
-   * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
+   * @param string         $suffix        temp table suffix of RFM
+   * @param string         $dateString    Date filter string
+   * @param float|int|null $rThreshold    R threshold value, null means don't process
+   *                                      If negative, reverse comparison is used
+   *                                      If zero, include all data without threshold
+   * @param float|int|null $fThreshold    F threshold value, null means don't process
+   *                                      If negative, reverse comparison is used
+   *                                      If zero, include all data without threshold
+   * @param float|int|null $mThreshold    M threshold value, null means don't process
+   *                                      If negative, reverse comparison is used
+   *                                      If zero, include all data without threshold
+   * @param string         $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
    */
   public function __construct(string $suffix, string $dateString = '', $rThreshold = NULL, $fThreshold = NULL, $mThreshold = NULL, string $thresholdType = 'all') {
     if (empty($suffix)) {
@@ -116,8 +116,10 @@ class CRM_Contact_BAO_RFM {
    * Calculate R (Recency) metric
    *
    * @param float|int $position Threshold position percentage or specific threshold value
-   * @param bool $reverse Whether to use reverse comparison
+   * @param boolean   $reverse  Whether to use reverse comparison
+   *
    * @return array Array containing temporary table name and threshold value
+   * @access public
    */
   public function calcR($position = 0.5, bool $reverse = FALSE) {
     if ($this->_thresholds['r'] !== NULL) {
@@ -136,8 +138,10 @@ class CRM_Contact_BAO_RFM {
    * Calculate F (Frequency) metric
    *
    * @param float|int $position Threshold position percentage or specific threshold value
-   * @param bool $reverse Whether to use reverse comparison
+   * @param boolean   $reverse  Whether to use reverse comparison
+   *
    * @return array Array containing temporary table name and threshold value
+   * @access public
    */
   public function calcF($position = 0.5, bool $reverse = FALSE) {
     if ($this->_thresholds['f'] !== NULL) {
@@ -152,8 +156,10 @@ class CRM_Contact_BAO_RFM {
    * Calculate M (Monetary) metric
    *
    * @param float|int $position Threshold position percentage or specific threshold value
-   * @param bool $reverse Whether to use reverse comparison
+   * @param boolean   $reverse  Whether to use reverse comparison
+   *
    * @return array Array containing temporary table name and threshold value
+   * @access public
    */
   public function calcM($position = 0.5, bool $reverse = FALSE) {
     if ($this->_thresholds['m'] !== NULL) {
@@ -167,12 +173,14 @@ class CRM_Contact_BAO_RFM {
   /**
    * Generic metric calculation function
    *
-   * @param string $metricType Metric type (r, f, m)
-   * @param float|int $position Threshold position percentage or specific threshold value
-   * @param bool $reverse Whether to use reverse comparison
-   * @param string $columnName Column name
-   * @param string $aggregateFunc Aggregate function expression
+   * @param string    $metricType    Metric type (r, f, m)
+   * @param float|int $position      Threshold position percentage or specific threshold value
+   * @param boolean   $reverse       Whether to use reverse comparison
+   * @param string    $columnName    Column name
+   * @param string    $aggregateFunc Aggregate function expression
+   *
    * @return array Array containing temporary table name and threshold value
+   * @access protected
    */
   protected function calcMetric(string $metricType, $position, bool $reverse, string $columnName, string $aggregateFunc) {
     $order = $reverse ? 'DESC' : 'ASC';
@@ -257,12 +265,14 @@ class CRM_Contact_BAO_RFM {
   /**
    * Calculate threshold value
    *
-   * @param float|int $position Threshold position percentage or specific threshold value
-   * @param string $metricType Metric type (r, f, m)
-   * @param string $aggregateFunc Aggregate function expression
-   * @param string $dateFilterSQL Date filter SQL
-   * @param string $recurFilterSQL Recur filter SQL
+   * @param float|int $position      Threshold position percentage or specific threshold value
+   * @param string    $metricType    Metric type (r, f, m)
+   * @param string    $aggregateFunc Aggregate function expression
+   * @param string    $dateFilterSQL Date filter SQL
+   * @param string    $recurFilterSQL Recur filter SQL
+   *
    * @return float|int Calculated threshold value
+   * @access protected
    */
   protected function calculateThreshold($position, string $metricType, string $aggregateFunc, string $dateFilterSQL, string $recurFilterSQL = '') {
     if ($position >= 1) {
@@ -298,7 +308,9 @@ class CRM_Contact_BAO_RFM {
    * Get recur filter SQL based on threshold type
    *
    * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
+   *
    * @return string SQL WHERE clause for recur filtering
+   * @access protected
    */
   protected function getRecurFilterSQL(string $thresholdType): string {
     switch ($thresholdType) {
@@ -316,6 +328,7 @@ class CRM_Contact_BAO_RFM {
    * Calculate RFM intersection
    *
    * @return array Array containing temporary table name and record data
+   * @access public
    */
   public function calcRFM(): array {
     // Check if R, F, M have been calculated
@@ -388,9 +401,11 @@ class CRM_Contact_BAO_RFM {
   /**
    * Export RFM data to CSV
    *
-   * @param string $filename Custom filename (optional)
-   * @param  bool $download Bool to indicate print to browser or not
+   * @param string|null $filename Custom filename (optional)
+   * @param boolean     $download Bool to indicate print to browser or not
+   *
    * @return string Path to the exported CSV file
+   * @access public
    */
   public function exportToCSV(?string $filename = NULL, bool $download = TRUE): string {
     if (!$this->_tables['rfm']) {
@@ -433,7 +448,9 @@ class CRM_Contact_BAO_RFM {
    * Generate date filter SQL
    *
    * @param string $dateFilter Date filter string
+   *
    * @return string Date filter SQL statement
+   * @access protected
    */
   protected function getDateFilterSQL(string $dateFilter): string {
     $filter = CRM_Utils_Date::strtodate($dateFilter);
@@ -450,6 +467,7 @@ class CRM_Contact_BAO_RFM {
    * Get end date from date filter string
    *
    * @return string End date string for SQL usage, defaults to current date if no filter
+   * @access protected
    */
   protected function getEndDate(): string {
     if (!empty($this->_dateString)) {
@@ -466,9 +484,12 @@ class CRM_Contact_BAO_RFM {
   /**
    * Get default thresholds based on date range and threshold type
    *
-   * @param string $rangeString Date range string
+   * @param string $rangeString   Date range string
    * @param string $thresholdType Threshold type (recurring, non-recurring, all)
-   * @return array Array containing r, f, m thresholds
+   *
+   * @return array<string, mixed> Array containing r, f, m thresholds
+   * @static
+   * @access public
    */
   public static function defaultThresholds(string $rangeString, string $thresholdType): array {
     $filter = CRM_Utils_Date::strtodate($rangeString);

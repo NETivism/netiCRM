@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -117,6 +115,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * The _fields var can be used by sub class to set/unset/edit the
    * form fields based on their requirement
    *
+   * @return void
    */
   public function setFields() {
     $this->_fields = [
@@ -198,8 +197,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function preProcess() {
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
@@ -470,9 +468,8 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * This function sets the default values for the form. For edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if ($this->_cdType) {
@@ -600,6 +597,11 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     return $defaults;
   }
 
+  /**
+   * Function to build the form
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     if ($this->_action & (CRM_Core_Action::DELETE | CRM_Core_Action::RENEW)) {
       //enable form element (ActivityLinks sets this true)
@@ -857,13 +859,11 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Activity_Form_Activity $self additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $self) {
     // skip form rule if deleting
@@ -941,9 +941,10 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   /**
    * Function to process the form
    *
-   * @access public
+   * @param array $params
    *
-   * @return None
+   *
+   * @return array
    */
   public function postProcess($params = NULL) {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -1141,7 +1142,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   /**
    * Shorthand for getting id by display name (makes code more readable)
    *
-   * @access protected
+   * @param string $displayName
+   *
+   * @return int
    */
   protected function _getIdByDisplayName($displayName) {
     return CRM_Core_DAO::getFieldValue(
@@ -1155,7 +1158,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
   /**
    * Shorthand for getting display name by id (makes code more readable)
    *
-   * @access protected
+   * @param int $id
+   *
+   * @return string
    */
   protected function _getDisplayNameById($id) {
     return CRM_Core_DAO::getFieldValue(
@@ -1170,6 +1175,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * Function to let injecting activity type file do any processing
    * needed, before the activity is added/updated
    *
+   * @param array $params
+   *
+   * @return void
    */
   public function beginPostProcess(&$params) {
     if ($this->_activityTypeFile) {
@@ -1182,6 +1190,10 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * Function to let injecting activity type file do any processing
    * needed, after the activity has been added/updated
    *
+   * @param array $params
+   * @param CRM_Activity_BAO_Activity $activity
+   *
+   * @return void
    */
   public function endPostProcess(&$params, &$activity) {
     if ($this->_activityTypeFile) {

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Base parser for validating and processing Contribution import data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -855,6 +854,7 @@ abstract class CRM_Contribute_Import_Parser {
    * Store parser values
    *
    * @param CRM_Core_Session $store
+   * @param int $mode
    *
    * @return void
    * @access public
@@ -957,6 +957,14 @@ abstract class CRM_Contribute_Import_Parser {
     }
   }
 
+  /**
+   * Get status name
+   *
+   * @param int|null $status
+   *
+   * @return string|array
+   * @static
+   */
   public static function statusName($status = NULL) {
     if (empty(self::$_statusNames)) {
       self::$_statusNames = CRM_Import_Parser::statusName();
@@ -975,6 +983,15 @@ abstract class CRM_Contribute_Import_Parser {
     }
   }
 
+  /**
+   * Get error file name
+   *
+   * @param int $type
+   * @param string $prefix
+   *
+   * @return string
+   * @static
+   */
   public static function errorFileName($type, $prefix) {
     if (empty($prefix)) {
       $prefix = 'contribution';

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Manages option value CRUD operations within option groups
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -60,16 +59,13 @@ class CRM_Core_OptionValue {
   public static $_fields = NULL;
 
   /**
-   * Function to return option-values of a particular group
+   * Function to return option-values of a particular group.
    *
-   * @param  array     $groupParams   Array containing group fields whose option-values is to retrieved.
-   * @param  string    $orderBy       for orderBy clause
-   * @param  array     $links         has links like edit, delete, disable ..etc
+   * @param array $groupParams Array containing group fields whose option-values is to retrieved.
+   * @param array $links Has links like edit, delete, disable ..etc.
+   * @param string $orderBy For orderBy clause.
    *
    * @return array of option-values
-   *
-   * @access public
-   * @static
    */
   public static function getRows($groupParams, $links, $orderBy = 'weight') {
     $optionValue = [];
@@ -189,17 +185,14 @@ class CRM_Core_OptionValue {
   }
 
   /**
-   * Function to add/edit option-value of a particular group
+   * Function to add/edit option-value of a particular group.
    *
-   * @param  array     $params           Array containing exported values from the invoking form.
-   * @param  array     $groupParams      Array containing group fields whose option-values is to retrieved/saved.
-   * @param  string    $orderBy          for orderBy clause
-   * @param  integer   $optionValueID    has the id of the optionValue being edited, disabled ..etc
+   * @param array $params Array containing exported values from the invoking form.
+   * @param array $groupParams Array containing group fields whose option-values is to retrieved/saved.
+   * @param int $action The action to perform (e.g., ADD, UPDATE).
+   * @param int|null $optionValueID ID of the optionValue being edited.
    *
-   * @return array of option-values
-   *
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_OptionValue
    */
   public static function addOptionValue(&$params, &$groupParams, &$action, &$optionValueID) {
 
@@ -258,17 +251,15 @@ class CRM_Core_OptionValue {
   }
 
   /**
-   * Check if there is a record with the same name in the db
+   * Check if there is a record with the same name in the DB.
    *
-   * @param string $value     the value of the field we are checking
-   * @param string $daoName   the dao object name
-   * @param string $daoID     the id of the object being updated. u can change your name
-   *                          as long as there is no conflict
-   * @param string $fieldName the name of the field in the DAO
+   * @param string $value The value of the field we are checking.
+   * @param string $daoName The DAO object name.
+   * @param int|string|null $daoID The ID of the object being updated.
+   * @param int $optionGroupID The option group ID.
+   * @param string $fieldName The name of the field in the DAO.
    *
-   * @return boolean     true if object exists
-   * @access public
-   * @static
+   * @return bool True if object exists.
    */
   public static function optionExists($value, $daoName, $daoID, $optionGroupID, $fieldName = 'name') {
     $object = new $daoName();
@@ -284,17 +275,12 @@ class CRM_Core_OptionValue {
   }
 
   /**
-   * Check if there is a record with the same name in the db
+   * Get fields for option values.
    *
-   * @param string $value     the value of the field we are checking
-   * @param string $daoName   the dao object name
-   * @param string $daoID     the id of the object being updated. u can change your name
-   *                          as long as there is no conflict
-   * @param string $fieldName the name of the field in the DAO
+   * @param string $mode The mode (e.g., 'contribute').
+   * @param string $contactType The contact type.
    *
-   * @return boolean     true if object exists
-   * @access public
-   * @static
+   * @return array List of fields.
    */
   public static function getFields($mode = '', $contactType = 'Individual') {
     $key = "$mode $contactType";
@@ -377,10 +363,9 @@ class CRM_Core_OptionValue {
   }
 
   /**
-   * build select query in case of option-values
+   * Build select query in case of option-values.
    *
-   * @return void
-   * @access public
+   * @param CRM_Contact_BAO_Query $query The query object.
    */
   public static function select(&$query) {
     if (!empty($query->_params) || !empty($query->_returnProperties)) {
@@ -399,20 +384,14 @@ class CRM_Core_OptionValue {
   }
 
   /**
-   * Function to return option-values of a particular group
+   * Function to return option-values of a particular group.
    *
-   * @param  array     $groupParams   Array containing group fields
-   *                                  whose option-values is to retrieved.
-   * @param  array     $values        (referance) to the array which
-   *                                  will have the values for the group
-   * @param  string    $orderBy       for orderBy clause
+   * @param array $groupParams Array containing group fields whose option-values is to retrieved.
+   * @param array $values (reference) Array to hold the results.
+   * @param string $orderBy For orderBy clause.
+   * @param bool $isActive Whether to only return active options.
    *
-   * @param  boolean   $isActive      do you want only active option values?
-   *
-   * @return array of option-values
-   *
-   * @access public
-   * @static
+   * @return void|null
    */
   public static function getValues($groupParams, &$values, $orderBy = 'weight', $isActive = FALSE) {
     if (empty($groupParams)) {

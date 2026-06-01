@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,7 +42,6 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
   public static $_links = NULL;
   public static $_membershipTypesLinks = NULL;
@@ -53,10 +50,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   public $_contactId = NULL;
 
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function browse() {
     $links = &self::links('all', $this->_isPaymentProcessor, $this->_accessContribution);
@@ -163,10 +159,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is view
+   * This function is called when action is view.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function view() {
     // prevent contribution controller override membership button
@@ -224,10 +219,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is update or new
+   * This function is called when action is update or new.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function edit() {
     // set https for offline cc transaction
@@ -258,6 +252,11 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
@@ -290,8 +289,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   /**
    * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();
@@ -337,6 +335,13 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Set context.
+   *
+   * @param int|null $contactId
+   *
+   * @return void
+   */
   public function setContext($contactId = NULL) {
     $context = CRM_Utils_Request::retrieve(
       'context',
@@ -434,10 +439,13 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * Get action links
+   * Get action links.
+   *
+   * @param string $status
+   * @param bool|null $isPaymentProcessor
+   * @param bool|null $accessContribution
    *
    * @return array (reference) of action links
-   * @static
    */
   public static function &links($status = 'all', $isPaymentProcessor = NULL, $accessContribution = NULL) {
     if (!CRM_Utils_Array::value('view', self::$_links)) {
@@ -490,10 +498,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * Function to define action links for membership types of related organization
+   * Function to define action links for membership types of related organization.
    *
    * @return array self::$_membershipTypesLinks array of action links
-   * @access public
    */
   public static function &membershipTypesLinks() {
     if (!self::$_membershipTypesLinks) {
@@ -516,11 +523,13 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * This function is used for the to show the associated
-   * contribution for the membership
-   * @form array $form (ref.) an assoc array of name/value pairs
-   * return null
-   * @access public
+   * This function is used for the to show the associated contribution for the membership.
+   *
+   * @param int|null $contactId
+   * @param int|null $membershipId
+   * @param bool|null $is_test
+   *
+   * @return void
    */
   public function associatedContribution($contactId = NULL, $membershipId = NULL, $is_test = NULL) {
     if (!$contactId) {
@@ -558,7 +567,7 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * Get BAO Name
+   * Get BAO Name.
    *
    * @return string Classname of BAO.
    */

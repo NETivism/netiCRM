@@ -26,16 +26,22 @@
 */
 
 /**
+ * Bridges CiviCRM operations to Drupal Organic Groups synchronization
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Bridge_OG_Drupal {
 
+  /**
+   * OG nodeapi sync
+   *
+   * @param array $params
+   * @param string $op
+   *
+   * @return void
+   */
   public static function nodeapi(&$params, $op) {
-
     $transaction = new CRM_Core_Transaction();
 
     // first create or update the CiviCRM group
@@ -61,6 +67,15 @@ class CRM_Bridge_OG_Drupal {
     $transaction->commit();
   }
 
+  /**
+   * Update CiviCRM group
+   *
+   * @param array $params
+   * @param string $op
+   * @param array $groupType
+   *
+   * @return void
+   */
   public static function updateCiviGroup(&$params, $op, $groupType = NULL) {
     $abort = ($op == 'delete') ? TRUE : FALSE;
     $params['id'] = CRM_Bridge_OG_Utils::groupID($params['source'], $params['title'], $abort);
@@ -87,6 +102,14 @@ class CRM_Bridge_OG_Drupal {
     unset($params['id']);
   }
 
+  /**
+   * Update CiviCRM ACL tables
+   *
+   * @param array $aclParams
+   * @param string $op
+   *
+   * @return void
+   */
   public static function updateCiviACLTables($aclParams, $op) {
     if ($op == 'delete') {
       self::updateCiviACL($aclParams, $op);
@@ -100,6 +123,14 @@ class CRM_Bridge_OG_Drupal {
     }
   }
 
+  /**
+   * Update CiviCRM ACL role
+   *
+   * @param array $params
+   * @param string $op
+   *
+   * @return void
+   */
   public static function updateCiviACLRole(&$params, $op) {
 
     $optionGroupID = CRM_Core_DAO::getFieldValue(
@@ -146,6 +177,14 @@ SELECT v.id
     $params['acl_role_id'] = $dao->value;
   }
 
+  /**
+   * Update CiviCRM ACL entity role
+   *
+   * @param array $params
+   * @param string $op
+   *
+   * @return void
+   */
   public static function updateCiviACLEntityRole(&$params, $op) {
 
     $dao = new CRM_ACL_DAO_EntityRole();
@@ -165,6 +204,14 @@ SELECT v.id
     $params['acl_entity_role_id'] = $dao->id;
   }
 
+  /**
+   * Update CiviCRM ACL
+   *
+   * @param array $params
+   * @param string $op
+   *
+   * @return void
+   */
   public static function updateCiviACL(&$params, $op) {
 
     $dao = new CRM_ACL_DAO_ACL();
@@ -188,6 +235,14 @@ SELECT v.id
     $params['acl_id'] = $dao->id;
   }
 
+  /**
+   * OG group contact sync
+   *
+   * @param array $params
+   * @param string $op
+   *
+   * @return void
+   */
   public static function og(&$params, $op) {
     require_once 'api/v2/GroupContact.php';
 

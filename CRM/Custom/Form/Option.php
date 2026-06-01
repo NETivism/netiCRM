@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * the custom field id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -51,7 +48,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * the custom group id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -64,17 +60,13 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * The Option id, used when editing the Option
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
   /**
    * Function to set variables up before form is built
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
@@ -122,10 +114,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
   public function setDefaultValues() {
     $defaults = $fieldDefaults = [];
@@ -169,10 +158,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
@@ -263,10 +249,10 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * global validation rules for the form
    *
    * @param array $fields posted values of the form
+   * @param array $files
+   * @param CRM_Custom_Form_Option $form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
   public static function formRule($fields, $files, $form) {
     $optionLabel = CRM_Utils_Type::escape($fields['label'], 'String');
@@ -408,12 +394,8 @@ SELECT count(*)
   /**
    * Process the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
-
   public function postProcess() {
     // store the submitted values in an array
     $params = $this->controller->exportValues('Option');

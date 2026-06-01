@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +35,9 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
   public $_locales;
   public $_structure;
   public $_defaults;
+  /**
+   * Build the form object.
+   */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
     $this->_locales = array_keys($config->languageLimit);
@@ -82,10 +83,18 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
     $this->assign('context', CRM_Utils_Request::retrieve('context', 'String', $this));
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return $this->_defaults;
   }
 
+  /**
+   * Process the form submission.
+   */
   public function postProcess() {
     $values = $this->exportValues();
     $table = $values['table'];

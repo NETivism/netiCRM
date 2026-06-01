@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,7 +46,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   /**
    * Function to pre processing
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function preProcess() {
@@ -101,7 +99,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   /**
    * Function to build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -171,6 +169,12 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
     return $errors;
   }
 
+  /**
+   * Set default values
+   *
+   * @return array default values
+   * @access public
+   */
   public function setDefaultValues() {
     return $this->_defaults;
   }
@@ -178,9 +182,8 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   /**
    * Function to process the form
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     $values = $this->exportValues();

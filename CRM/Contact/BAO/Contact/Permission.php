@@ -26,10 +26,9 @@
 */
 
 /**
+ * Manages contact-level permission checks and ACL-based access control
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_Contact_Permission {
@@ -76,7 +75,7 @@ WHERE contact_a.id = %1 AND $permission";
   /**
    * fill the acl contact cache for this contact id if empty
    *
-   * @param int     $id     contact id
+   * @param int     $userID contact id
    * @param string  $type   the type of operation (view|edit)
    * @param boolean $force  should we force a recompute
    *
@@ -149,6 +148,16 @@ WHERE $permission
     return;
   }
 
+  /**
+   * Get the cache clause for a contact
+   *
+   * @param string|array $contactAlias contact alias
+   * @param int          $contactID    contact id
+   *
+   * @return array array of from and where clauses
+   * @static
+   * @access public
+   */
   public static function cacheClause($contactAlias = 'contact_a', $contactID = NULL) {
     if (CRM_Core_Permission::check('view all contacts')) {
       if (is_array($contactAlias)) {
@@ -195,12 +204,13 @@ WHERE $permission
   /**
    * Function to get the permission base on its relationship
    *
-   * @param int $selectedContactId contact id of selected contact
-   * @param int $contactId contact id of the current contact
+   * @param int $selectedContactID contact id of selected contact
+   * @param int $contactID         contact id of the current contact
    *
-   * @return booleab true if logged in user has permission to view
-   * selected contact record else false
+   * @return boolean true if logged in user has permission to view
+   *                 selected contact record else false
    * @static
+   * @access public
    */
   public static function relationship($selectedContactID, $contactID = NULL) {
     $session = CRM_Core_Session::singleton();
@@ -229,6 +239,16 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
     }
   }
 
+  /**
+   * Validate contact by checksum only
+   *
+   * @param int    $contactID contact id
+   * @param object $form      form object
+   *
+   * @return boolean true if valid checksum
+   * @static
+   * @access public
+   */
   public static function validateOnlyChecksum($contactID, &$form) {
     // check if this is of the format cs=XXX
 
@@ -244,6 +264,16 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
     return TRUE;
   }
 
+  /**
+   * Validate contact by permission or checksum
+   *
+   * @param int    $contactID contact id
+   * @param object $form      form object
+   *
+   * @return boolean true if valid
+   * @static
+   * @access public
+   */
   public static function validateChecksumContact($contactID, &$form) {
     if (!self::allow($contactID, CRM_Core_Permission::EDIT)) {
       // check if this is of the format cs=XXX

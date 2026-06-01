@@ -27,17 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,10 +45,7 @@ class CRM_Contact_Form_Edit_IM {
   /**
    * build the form elements for an IM object
    *
-   * @param CRM_Core_Form $form       reference to the form object
-   * @param array         $location   the location object to store all the form elements in
-   * @param int           $locationId the locationId we are dealing with
-   * @param int           $count      the number of blocks to create
+   * @param object $form (reference) reference to the form object
    *
    * @return void
    * @access public

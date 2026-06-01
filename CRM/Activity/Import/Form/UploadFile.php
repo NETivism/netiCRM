@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,7 +40,6 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
@@ -52,8 +49,7 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     //Setting Upload File Size
@@ -147,7 +143,6 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
    * Process the uploaded file
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $this->controller->resetPage('MapField');
@@ -191,7 +186,6 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Upload Data');

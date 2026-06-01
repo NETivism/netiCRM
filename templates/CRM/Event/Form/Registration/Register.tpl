@@ -112,7 +112,23 @@
         </div>
       </div>
     {/if}
-    {if $form.payment_processor.label}
+    {if $paymentProcessorConfigError}
+      <div class="crm-section payment_processor-section">
+        <div class="payment-processor-config-error">
+          <i class="zmdi zmdi-alert-circle error-icon"></i>
+          <div class="error-body">
+            {if $isPreviewMode}
+              <strong>{ts}Payment Processor Misconfigured{/ts}</strong>
+              {capture assign=docLink}{docURL page="CiviContribute Payment Processor Configuration" text="View Online Manual"}{/capture}
+              <p>{ts 1=$docLink}See %1 to check the configuration.{/ts}</p>
+            {else}
+              <strong>{ts}Page Error, Contact Administrator{/ts}</strong>
+              <p>{ts}Registration is currently unavailable. Please contact the website administrator for assistance.{/ts}</p>
+            {/if}
+          </div>
+        </div>
+      </div>
+    {elseif $form.payment_processor.label}
       <div class="crm-section payment_processor-section">
         <div class="label">{$form.payment_processor.label}</div>
         <div class="content">{$form.payment_processor.html}</div>
@@ -146,7 +162,23 @@
           </div>
         </div>
       {/if}
-      {if $form.payment_processor.label}
+      {if $paymentProcessorConfigError}
+        <div class="crm-section payment_processor-section">
+          <div class="payment-processor-config-error">
+            <i class="zmdi zmdi-alert-circle error-icon"></i>
+            <div class="error-body">
+              {if $isPreviewMode}
+                <strong>{ts}Payment Processor Misconfigured{/ts}</strong>
+                {capture assign=docLink}{docURL page="CiviContribute Payment Processor Configuration" text="View Online Manual"}{/capture}
+                <p>{ts 1=$docLink}See %1 to check the configuration.{/ts}</p>
+              {else}
+                <strong>{ts}Page Error, Contact Administrator{/ts}</strong>
+                <p>{ts}Registration is currently unavailable. Please contact the website administrator for assistance.{/ts}</p>
+              {/if}
+            </div>
+          </div>
+        </div>
+      {elseif $form.payment_processor.label}
         <div class="crm-section payment_processor-section">
           <div class="label">{$form.payment_processor.label}</div>
           <div class="content">{$form.payment_processor.html}</div>
@@ -171,7 +203,7 @@
     {include file='CRM/common/ReCAPTCHA.tpl'}
   {/if}
 
-  <div id="crm-submit-buttons" class="crm-submit-buttons">
+  <div id="crm-submit-buttons" class="crm-submit-buttons"{if $paymentProcessorConfigError} style="display:none;"{/if}>
     {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
 

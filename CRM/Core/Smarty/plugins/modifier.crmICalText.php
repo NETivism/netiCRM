@@ -27,21 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: modifier.crmICalText.php 30171 2010-10-14 09:11:27Z mover $
  *
  */
 
 /**
- * Format the given text in an ical suitable format
+ * Format plain text for iCalendar.
  *
- * @param string $str
+ * @param string $str the text to format
  *
- * @return string  formatted text
- * @access public
+ * @return string formatted text
  */
-
 function smarty_modifier_crmICalText($str) {
   return CRM_Utils_ICalendar::formatText($str);
 }

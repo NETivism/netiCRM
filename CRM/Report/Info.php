@@ -30,9 +30,7 @@
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Report_Info extends CRM_Core_Component_Info {
@@ -40,7 +38,11 @@ class CRM_Report_Info extends CRM_Core_Component_Info {
   // docs inherited from interface
   protected $keyword = 'report';
 
-  // docs inherited from interface
+  /**
+   * Returns component metadata for CiviReport.
+   *
+   * @return array Associative array with keys: name, translatedName, title, search, showActivitiesInCore.
+   */
   public function getInfo() {
     return ['name' => 'CiviReport',
       'translatedName' => ts('CiviReport'),
@@ -50,40 +52,71 @@ class CRM_Report_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Returns the list of permissions defined by the CiviReport component.
+   *
+   * @return string[] Array of permission string identifiers.
+   */
   public function getPermissions() {
     return ['access CiviReport', 'access Report Criteria', 'administer Reports'];
   }
 
-  // docs inherited from interface
+  /**
+   * Returns dashboard element definition. CiviReport has no dashboard element.
+   *
+   * @return null
+   */
   public function getUserDashboardElement() {
     // no dashboard element for this component
     return NULL;
   }
 
+  /**
+   * Returns dashboard object. CiviReport has no dashboard object.
+   *
+   * @return null
+   */
   public function getUserDashboardObject() {
     // no dashboard element for this component
     return NULL;
   }
 
-  // docs inherited from interface
+  /**
+   * Returns contact record tab definition. CiviReport does not use contact tabs.
+   *
+   * @return null
+   */
   public function registerTab() {
     // this component doesn't use contact record tabs
     return NULL;
   }
 
-  // docs inherited from interface
+  /**
+   * Returns advanced search pane definition. CiviReport does not use advanced search panes.
+   *
+   * @return null
+   */
   public function registerAdvancedSearchPane() {
     // this component doesn't use advanced search
     return NULL;
   }
 
-  // docs inherited from interface
+  /**
+   * Returns activity type definitions. CiviReport does not define activity types.
+   *
+   * @return null
+   */
   public function getActivityTypes() {
     return NULL;
   }
 
-  // add shortcut to Create New
+  /**
+   * Adds shortcut links to the Create New navigation menu. CiviReport has no shortcuts.
+   *
+   * @param array &$shortCuts Reference to the array of shortcut definitions to populate.
+   *
+   * @return void
+   */
   public function creatNewShortcut(&$shortCuts) {
   }
 }

@@ -11,6 +11,11 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   public $_userContext = NULL;
   public $_contribution = NULL;
 
+  /**
+   * Function to set variables up before form is built
+   *
+   * @return mixed
+   */
   public function preProcess() {
     $taxReceiptImplements = CRM_Utils_Hook::availableHooks('civicrm_validateTaxReceipt');
     $taxReceiptImplements = count($taxReceiptImplements);
@@ -62,8 +67,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     // just for display error message when issue tax receipt
@@ -124,13 +128,11 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array list of errors to be posted back to the form
    */
   public static function formRule($fields, $files, $self) {
     return $errors;
@@ -139,9 +141,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
   /**
    * Function to process the form
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
   }
@@ -151,7 +151,6 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
    * no help display needed
    *
    * @return int
-   * @access public
    */
   public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {

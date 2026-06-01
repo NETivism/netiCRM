@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,6 +36,13 @@
  */
 class CRM_Event_Form_ManageEvent_TabHeader {
 
+  /**
+   * Build
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return array
+   */
   public static function build(&$form) {
     $tabs = $form->get('tabHeader');
     if (!$tabs || !CRM_Utils_Array::value('reset', $_GET)) {
@@ -49,6 +54,13 @@ class CRM_Event_Form_ManageEvent_TabHeader {
     return $tabs;
   }
 
+  /**
+   * Process
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return array|null
+   */
   public static function process(&$form) {
     if ($form->getVar('_id') <= 0) {
       return NULL;
@@ -149,11 +161,25 @@ WHERE      e.id = %1
     return $tabs;
   }
 
+  /**
+   * Reset
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function reset(&$form) {
     $tabs = &self::process($form);
     $form->set('tabHeader', $tabs);
   }
 
+  /**
+   * Get current tab
+   *
+   * @param array $tabs
+   *
+   * @return string
+   */
   public static function getCurrentTab($tabs) {
     static $current = FALSE;
 

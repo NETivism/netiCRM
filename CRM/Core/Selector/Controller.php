@@ -34,9 +34,7 @@
  * us to automate the export process. To use this class, the object has to
  * implement the Selector/Api.interface.php class
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -177,17 +175,16 @@ class CRM_Core_Selector_Controller {
   public static $_properties = ['columnHeaders', 'rows', 'rowsEmpty'];
 
   /**
-   * Class constructor
+   * Class constructor.
    *
-   * @param CRM_Core_Selector_API $object  an object that implements the selector API
-   * @param int               $pageID  default pageID
-   * @param int               $sortID  default sortID
-   * @param int               $action  the actions to potentially support
-   * @param CRM_Core_Page|CRM_Core_Form $store   place in session to store some values
-   * @param int               $output  what do we so with the output, session/template//both
-   *
-   * @return Object
-   * @access public
+   * @param CRM_Core_Selector_API $object an object that implements the selector API
+   * @param int $pageID default page ID
+   * @param string|int|null $sortID default sort ID
+   * @param int $action the actions to potentially support
+   * @param CRM_Core_Page|CRM_Core_Form $store place in session to store some values
+   * @param int $output output target (SESSION, TEMPLATE, or both)
+   * @param string|null $prefix prefix for the selector variables
+   * @param int|null $case case ID
    */
   public function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
 
@@ -249,12 +246,11 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * have the GET vars changed, i.e. pageId or sortId that forces us to recompute the search values
+   * Check if the GET variables have changed (e.g., pageId or sortId), forcing recomputation.
    *
-   * @param int $reset are we being reset
+   * @param int $reset whether the search is being reset
    *
-   * @return boolean   if the GET params are different from the session params
-   * @access public
+   * @return bool TRUE if GET params differ from session params
    */
   public function hasChanged($reset) {
 
@@ -279,21 +275,9 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * Heart of the Controller. This is where all the action takes place
-   *
-   *   - The rows are fetched and stored depending on the type of output needed
-   *
-   *   - For export/printing all rows are selected.
-   *
-   *   - for displaying on screen paging parameters are used to display the
-   *     required rows.
-   *
-   *   - also depending on output type of session or template rows are appropriately stored in session
-   *     or template variables are updated.
-   *
+   * Heart of the Controller: fetch rows and store them based on output type.
    *
    * @return void
-   *
    */
   public function run() {
 
@@ -383,10 +367,11 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * function to retrieve rows.
+   * Retrieve rows based on current paging and sorting criteria.
    *
-   * @return array of rows
-   * @access public
+   * @param object $form (unused, should be this)
+   *
+   * @return array array of rows
    */
   public function getRows($form) {
     if ($form->_output == self::EXPORT || $form->_output == self::SCREEN) {
@@ -406,11 +391,9 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * default function for qill, if needed to be implemented, we
-   * expect the subclass to do it
+   * Default function for QILL (plain language search description).
    *
-   * @return string the status message
-   * @access public
+   * @return string|null the QILL description
    */
   public function getQill() {
     return $this->_object->getQill();
@@ -421,30 +404,27 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * getter for pager
+   * Get the pager object.
    *
-   * @return object CRM_Utils_Pager
-   * @access public
+   * @return CRM_Utils_Pager
    */
   public function getPager() {
     return $this->_pager;
   }
 
   /**
-   * getter for sort
+   * Get the sort object.
    *
-   * @return object CRM_Utils_Sort
-   * @access public
+   * @return CRM_Utils_Sort
    */
   public function getSort() {
     return $this->_sort;
   }
 
   /**
-   * Move the variables from the session to the template
+   * Move variables from the session to the template for display.
    *
-   * @return void
-   * @access public
+   * @return string|void HTML content if not embedded
    */
   public function moveFromSessionToTemplate() {
     self::$_template->assign_by_ref("{$this->_prefix}pager", $this->_pager);
@@ -481,44 +461,40 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * setter for embedded
+   * Set whether the object is being embedded in another object.
    *
-   * @param boolean $embedded
+   * @param bool $embedded
    *
    * @return void
-   * @access public
    */
   public function setEmbedded($embedded) {
     $this->_embedded = $embedded;
   }
 
   /**
-   * getter for embedded
+   * Get the embedded status.
    *
-   * @return boolean return the embedded value
-   * @access public
+   * @return bool
    */
   public function getEmbedded() {
     return $this->_embedded;
   }
 
   /**
-   * setter for print
+   * Set whether the object is in print mode.
    *
-   * @param boolean $print
+   * @param bool $print
    *
    * @return void
-   * @access public
    */
   public function setPrint($print) {
     $this->_print = $print;
   }
 
   /**
-   * getter for print
+   * Get the print mode status.
    *
-   * @return boolean return the print value
-   * @access public
+   * @return bool
    */
   public function getPrint() {
     return $this->_print;

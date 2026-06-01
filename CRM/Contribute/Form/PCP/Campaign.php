@@ -27,15 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for processing a ontribution
- *
+ * Form for setting up or editing a Personal Campaign Page (PCP).
  */
 class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   public $_elementIndex;
@@ -46,6 +43,14 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   private $_contactID;
   private $_contriPageId;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes the context, PCP page ID, contact ID, and sets the
+   * page title. It also prepares preview URLs if the PCP already exists.
+   *
+   * @return void
+   */
   public function preProcess() {
     // we do not want to display recently viewed items, so turn off
     $this->assign('displayRecent', FALSE);
@@ -96,6 +101,14 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     parent::preProcess();
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves existing PCP details (title, goal amount, active status, etc.)
+   * from the database if in edit mode.
+   *
+   * @return array the array of default values for form elements
+   */
   public function setDefaultValues() {
     $dafaults = [];
     $dao = new CRM_Contribute_DAO_PCP();
@@ -128,10 +141,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds fields for title, summary, goal amount, button text, message (WYSIWYG),
+   * image attachments, and display options (thermometer, honor roll).
+   * It also handles field freezing based on PCP status and user permissions.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $isManager = CRM_Core_Permission::check('administer CiviCRM');
@@ -227,15 +243,15 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Ensures goal amount is positive and button text length is within limits.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> true if no errors, or an array of error messages
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -250,11 +266,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Saves or updates the PCP record, handles file attachments, sends
+   * notifications to administrators and users, and manages redirections based
+   * on the submission context.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues();

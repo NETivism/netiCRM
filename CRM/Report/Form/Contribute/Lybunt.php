@@ -27,28 +27,52 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
 
+  /** @var array Column headers for report output. */
   public $_columnHeaders;
+
+  /** @var string FROM clause for the report query. */
   public $_from;
+
+  /** @var string WHERE clause for the report query. */
   public $_where;
+
+  /** @var string Additional WHERE clause for contribution status filtering. */
   public $_statusClause;
+
+  /** @var string GROUP BY clause for the report query. */
   public $_groupBy;
+
+  /** @var array Table alias mapping. */
   public $_aliases;
+
+  /** @var bool Whether to generate absolute URLs for links. */
   public $_absoluteUrl;
+
+  /** @var array Available chart types for this report. */
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
   ];
 
+  /** @var string|null FROM clause for lifetime totals query. */
   protected $lifeTime_from = NULL;
+
+  /** @var string|null WHERE clause for lifetime totals query. */
   protected $lifeTime_where = NULL;
+
+  /**
+   * Constructor for LYBUNT (Last Year But Unfortunately Not This Year) report.
+   *
+   * Initializes column definitions for contact, email, phone, and
+   * contribution tables with year-based filter options. Enables tag
+   * filter and calls parent constructor.
+   */
   public function __construct() {
     $yearsInPast = 8;
     $yearsInFuture = 2;
@@ -157,10 +181,25 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process the report form.
+   *
+   * Delegates to parent preProcess.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   *
+   * Populates $_select and $_columnHeaders. Builds columns for the
+   * previous year total and lifetime total amounts.
+   *
+   * @return void
+   */
   public function select() {
 
     $this->_columnHeaders = $select = [];

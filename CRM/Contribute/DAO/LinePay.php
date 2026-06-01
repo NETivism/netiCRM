@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -83,6 +82,12 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
    * @var int unsigned
    */
   public $id;
+  /**
+   * FK to civicrm_contribution_recur. Binds the issued preapproved payment regKey to a recurring contribution.
+   *
+   * @var int unsigned
+   */
+  public $contribution_recur_id;
   /**
    * trxn_id from contribution
    *
@@ -138,6 +143,12 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
    */
   public $void;
   /**
+   * regKey returned from /payments/{transactionId}/confirm when payType is PREAPPROVED. Used by /payments/preapprovedPay/{regKey}/* APIs for recurring charges.
+   *
+   * @var string
+   */
+  public $reg_key;
+  /**
    * response of /payments/preapprovedPay/{regKey}/payment
    *
    * @var text
@@ -156,18 +167,43 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
    */
   public $recurring_expire;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_linepay
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_linepay
+   */
   public function __construct() {
     parent::__construct();
+  }
+
+  /**
+   * return foreign links
+   *
+   * @return array
+   */
+  public function &links() {
+    if (!(self::$_links)) {
+      self::$_links = [
+        'contribution_recur_id' => 'civicrm_contribution_recur:id',
+      ];
+    }
+    return self::$_links;
+  }
+  /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns() {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_recur_id', 'civicrm_contribution_recur', 'id');
+    }
+    return Civi::$statics[__CLASS__]['links'];
   }
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -178,81 +214,96 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('LinePay ID') ,
           'required' => TRUE,
-                  ] ,
+        ],
+        'contribution_recur_id' => [
+          'name' => 'contribution_recur_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Contribution Recur ID') ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
+        ],
         'contribution_trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Trxn ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'transaction_id' => [
           'name' => 'transaction_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'query' => [
           'name' => 'query',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Query') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'request' => [
           'name' => 'request',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'confirm' => [
           'name' => 'confirm',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Confirm') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'refund' => [
           'name' => 'refund',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Refund') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'authorization' => [
           'name' => 'authorization',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Authorization') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'capture' => [
           'name' => 'capture',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Capture') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'void' => [
           'name' => 'void',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Void') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
+        'reg_key' => [
+          'name' => 'reg_key',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Preapproved Payment regKey') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
         'recurring_payment' => [
           'name' => 'recurring_payment',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Payment') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'recurring_check' => [
           'name' => 'recurring_check',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Check') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'recurring_expire' => [
           'name' => 'recurring_expire',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Expire') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
       ];
     }
     return self::$_fields;
@@ -260,7 +311,6 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -269,7 +319,6 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -278,8 +327,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -301,8 +349,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

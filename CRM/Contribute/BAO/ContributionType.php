@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -57,7 +55,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contribute_BAO_ContributionType object
+   * @return CRM_Contribute_BAO_ContributionType|null CRM_Contribute_BAO_ContributionType object
    * @access public
    * @static
    */
@@ -77,7 +75,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
   public static function setIsActive($id, $is_active) {
@@ -93,7 +91,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    *
-   * @return object
+   * @return CRM_Contribute_BAO_ContributionType
    */
   public static function add(&$params, &$ids) {
 
@@ -119,9 +117,10 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * Function to delete contribution Types
    *
    * @param int $contributionTypeId
+   *
+   * @return void|string
    * @static
    */
-
   public static function del($contributionTypeId) {
     //checking if contribution type is present
     $check = FALSE;
@@ -159,12 +158,70 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
   }
 
   /**
-   * Function to see if contritbution type is deductible
+   * Get all contribution pages and events that use the given contribution type.
+   *
+   * @param int $contributionTypeId
+   *
+   * @return array Each entry has: id, title, is_active (bool), type ('contribute'|'event'), url
+   */
+  public static function getUsedPagesAndEvents($contributionTypeId) {
+    $pages = [];
+
+    $dao = CRM_Core_DAO::executeQuery(
+      "SELECT id, title, is_active FROM civicrm_contribution_page WHERE contribution_type_id = %1 ORDER BY title",
+      [1 => [$contributionTypeId, 'Integer']]
+    );
+    while ($dao->fetch()) {
+      $pages[] = [
+        'id' => $dao->id,
+        'title' => $dao->title,
+        'is_active' => (bool) $dao->is_active,
+        'type' => 'contribute',
+        'url' => CRM_Utils_System::url('civicrm/admin/contribute/amount', "reset=1&action=update&id={$dao->id}"),
+      ];
+    }
+
+    $dao = CRM_Core_DAO::executeQuery(
+      "SELECT id, title, is_active FROM civicrm_event WHERE contribution_type_id = %1 AND (is_template IS NULL OR is_template = 0) ORDER BY title",
+      [1 => [$contributionTypeId, 'Integer']]
+    );
+    while ($dao->fetch()) {
+      $pages[] = [
+        'id' => $dao->id,
+        'title' => $dao->title,
+        'is_active' => (bool) $dao->is_active,
+        'type' => 'event',
+        'url' => CRM_Utils_System::url('civicrm/event/manage/fee', "reset=1&action=update&id={$dao->id}"),
+      ];
+    }
+
+    return $pages;
+  }
+
+  /**
+   * Check whether any contribution of this type has a non-empty receipt_id.
+   *
+   * Includes cancelled contributions because the receipt serial already exists
+   * in financial records once a receipt_id is assigned.
+   *
+   * @param int $contributionTypeId
+   * @return bool
+   */
+  public static function hasReceiptsIssued($contributionTypeId) {
+    $count = CRM_Core_DAO::singleValueQuery(
+      "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_type_id = %1 AND receipt_id IS NOT NULL AND receipt_id != ''",
+      [1 => [$contributionTypeId, 'Integer']]
+    );
+    return (int) $count > 0;
+  }
+
+  /**
+   * Function to see if contribution type is deductible
    *
    * @param int $contributionTypeId contribution type id to retrieve
    * @param boolean $all default FALSE. TRUE will return type even type is not active.
    *
-   * @return numeric when contribution type found. FALSE when not found.
+   * @return int|false when contribution type found. FALSE when not found.
    */
   public static function deductible($contributionTypeId, $all = FALSE) {
     $types = [];

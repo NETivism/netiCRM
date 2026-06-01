@@ -12,16 +12,13 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
   }
 
   /**
+   * Add or update a page visit track record.
    *
-   * The function extracts all the params it needs to create a
-   * track object. the params array contains additional unused name/value
-   * pairs
+   * Handles session-based visit logic and triggers pre/post hooks.
    *
-   * @param array  $params         (reference) an assoc array of name/value pairs
+   * @param array &$params associative array of track data
    *
-   * @return object    CRM_Core_DAO_Track object on success, otherwise null
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_Track|bool|null the track object, or FALSE on error
    */
   public static function add(&$params) {
     if (empty($params['page_type']) || empty($params['page_id'])) {
@@ -92,7 +89,9 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
   }
 
   /**
-   * Function to receive json object
+   * Handle AJAX requests for page visit tracking.
+   *
+   * @return void
    */
   public static function ajax() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -148,6 +147,16 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Get track statistics grouped by referrer type for a specific page.
+   *
+   * @param string $pageType name of the page table
+   * @param int $pageId ID of the page record
+   * @param string|null $start optional start date filter
+   * @param string|null $end optional end date filter
+   *
+   * @return array associative array of statistics
+   */
   public static function referrerTypeByPage($pageType, $pageId, $start = NULL, $end = NULL) {
     $params = [
       'pageType' => $pageType,
@@ -194,6 +203,14 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     return $return;
   }
 
+  /**
+   * Get track data for a specific entity.
+   *
+   * @param string $entityTable name of the entity table
+   * @param int $entityId entity ID
+   *
+   * @return array|null associative array of track fields
+   */
   public static function getTrack($entityTable, $entityId) {
     if (!empty($entityTable) && is_numeric($entityId)) {
       $params = [
@@ -222,6 +239,14 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     }
   }
 
+  /**
+   * Comparison helper for sorting referrer statistics by count.
+   *
+   * @param array $a
+   * @param array $b
+   *
+   * @return int
+   */
   public static function cmp($a, $b) {
     if ($a['count'] == $b['count']) {
       return 0;

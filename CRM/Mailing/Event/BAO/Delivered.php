@@ -27,29 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
 class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Create a new delivery event
+   * Create a new delivery event.
    *
-   * @param array $params     Associative array of delivery event values
+   * @param array $params Associative array of delivery event values.
    *
-   * @return void
-   * @access public
-   * @static
+   * @return CRM_Mailing_Event_BAO_Delivered|null The created delivery event object or null on failure.
    */
   public static function &create(&$params) {
     $q = &CRM_Mailing_Event_BAO_Queue::verify(
@@ -84,15 +80,13 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
   }
 
   /**
-   * Get row count for the event selector
+   * Get row count for the event selector.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           Optional ID of a job to filter on
-   * @param boolean $is_distinct  Group by queue ID?
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of a job to filter on.
+   * @param bool $is_distinct Group by queue ID?
    *
-   * @return int                  Number of rows in result set
-   * @access public
-   * @static
+   * @return int|null Number of rows in result set.
    */
   public static function getTotalCount(
     $mailing_id,
@@ -141,18 +135,16 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
   }
 
   /**
-   * Get rows for the event browser
+   * Get rows for the event browser.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           optional ID of the job
-   * @param boolean $is_distinct  Group by queue id?
-   * @param int $offset           Offset
-   * @param int $rowCount         Number of rows
-   * @param array $sort           sort array
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of the job.
+   * @param bool $is_distinct Group by queue id?
+   * @param int|null $offset Offset for the query.
+   * @param int|null $rowCount Number of rows to return.
+   * @param CRM_Utils_Sort|string|null $sort Sort object or string.
    *
-   * @return array                Result set
-   * @access public
-   * @static
+   * @return array Result set of delivery events.
    */
   public static function &getRows(
     $mailing_id,
@@ -238,6 +230,14 @@ class CRM_Mailing_Event_BAO_Delivered extends CRM_Mailing_Event_DAO_Delivered {
     return $results;
   }
 
+  /**
+   * Bulk create delivery events.
+   *
+   * @param array $eventQueueIDs Array of event queue IDs.
+   * @param string|null $time Optional timestamp.
+   *
+   * @return void
+   */
   public static function bulkCreate($eventQueueIDs, $time = NULL) {
     if (!$time) {
       $time = date('YmdHis');

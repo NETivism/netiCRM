@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -62,7 +60,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
   protected $_gid;
 
   /**
-   * Get BAO Name
+   * Get BAO Name.
    *
    * @return string Classname of BAO.
    */
@@ -71,18 +69,17 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Get action Links.
    *
-   * @return array (reference) of action links
+   * @return array
    */
   public function &links() {
   }
 
   /**
-   * Browse all rule groups
+   * Browse all rule groups.
    *
    * @return void
-   * @access public
    */
   public function run() {
     set_time_limit(self::RUNNING_TIME_LIMIT);
@@ -279,10 +276,9 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all rule groups
+   * Browse all rule groups.
    *
    * @return void
-   * @access public
    */
   public function browse() {
     $this->assign('main_contacts', $this->_mainContacts);
@@ -297,45 +293,69 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Get name of edit form.
    *
-   * @return string  classname of edit form
+   * @return string classname of edit form
    */
   public function editForm() {
     return 'CRM_Contact_Form_DedupeFind';
   }
 
   /**
-   * Get edit form name
+   * Get edit form name.
    *
-   * @return string  name of this page
+   * @return string name of this page
    */
   public function editName() {
     return 'DedupeFind';
   }
 
   /**
-   * Get user context
+   * Get user context.
    *
-   * @return string  user context
+   * @param int $mode
+   *
+   * @return string user context
    */
   public function userContext($mode = NULL) {
     return 'civicrm/contact/dedupefind';
   }
 
+  /**
+   * Store found dupes.
+   *
+   * @param array $dupes
+   *
+   * @return void
+   */
   public function storeFoundDupes($dupes) {
     CRM_Core_BAO_Cache::setItem($dupes, 'Dedupe Found Dupes', $this->_cachePath);
   }
 
+  /**
+   * Get found dupes.
+   *
+   * @return mixed
+   */
   public function getFoundDupes() {
     $createdTime = CRM_REQUEST_TIME - 3600 * 6; // 6 hours
     return CRM_Core_BAO_Cache::getItem('Dedupe Found Dupes', $this->_cachePath, NULL, $createdTime);
   }
 
+  /**
+   * Purge found dupes.
+   *
+   * @return mixed
+   */
   public function purgeFoundDupes() {
     return CRM_Core_BAO_Cache::deleteItem('Dedupe Found Dupes', $this->_cachePath);
   }
 
+  /**
+   * Batch merge dupes.
+   *
+   * @return array
+   */
   public function batchMergeDupes() {
     $foundDupes = $this->getFoundDupes();
     $merged = $skipped = [];
@@ -383,6 +403,13 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     ];
   }
 
+  /**
+   * Pager.
+   *
+   * @param int $total
+   *
+   * @return void
+   */
   public function pager($total) {
     $params = [];
     $params['status'] = '';
@@ -399,6 +426,11 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->assign_by_ref('pager', $this->_pager);
   }
 
+  /**
+   * Check if dedupe is running.
+   *
+   * @return bool
+   */
   public static function dedupeRunning() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
@@ -412,6 +444,11 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     return FALSE;
   }
 
+  /**
+   * Start dedupe.
+   *
+   * @return CRM_Core_DAO_Sequence
+   */
   public function dedupeStart() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
@@ -428,6 +465,11 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     return $dao;
   }
 
+  /**
+   * End dedupe.
+   *
+   * @return bool
+   */
   public function dedupeEnd() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;

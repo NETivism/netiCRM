@@ -27,12 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
+/**
+ * form to process actions on the widget section of Contribution Page
+ */
 class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_ContributionPage {
   public $_fields;
   public $_colorFields;
@@ -41,6 +42,15 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
 
   protected $_widget;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes the widget data from the database, sets up iframe
+   * code for previewing the widget, and defines the available fields and color
+   * settings for the widget.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
 
@@ -140,6 +150,14 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     ];
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves existing widget settings from the database or initializes them with
+   * defaults defined in `preProcess`.
+   *
+   * @return array the array of default values for form elements
+   */
   public function setDefaultValues() {
     $defaults = [];
     // check if there is a widget already created
@@ -166,6 +184,14 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return $defaults;
   }
 
+  /**
+   * Actually build the form components.
+   *
+   * Adds fields for enabling the widget, introductory text (WYSIWYG), title,
+   * logo URL, button title, and various color pickers.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Widget');
 
@@ -212,13 +238,16 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Function for validation
+   * Global form rule for validation.
    *
-   * @param array $params (ref.) an assoc array of name/value pairs
+   * Ensures that title, about text, and all color fields are provided if
+   * the widget is enabled.
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @param array $params an assoc array of name/value pairs submitted by the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return mixed true if no errors, or an array of error messages
    */
   public static function formRule($params, $files, $self) {
     $errors = [];
@@ -239,6 +268,14 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Process the form submission.
+   *
+   * Saves or updates the `civicrm_widget` record associated with the current
+   * contribution page.
+   *
+   * @return void
+   */
   public function postProcess() {
     //to reset quickform elements of next (pcp) page.
     if ($this->controller->getNextName('Widget') == 'PCP') {
@@ -266,10 +303,9 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Widget Settings');

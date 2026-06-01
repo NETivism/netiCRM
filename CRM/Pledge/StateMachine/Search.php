@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,7 +42,10 @@ class CRM_Pledge_StateMachine_Search extends CRM_Core_StateMachine {
   protected $_task;
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param CRM_Core_Controller $controller
+   * @param int $action
    */
   public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
@@ -72,14 +73,15 @@ class CRM_Pledge_StateMachine_Search extends CRM_Core_StateMachine {
   }
 
   /**
-   * Determine the form name based on the action. This allows us
-   * to avoid using  conditional state machine, much more efficient
-   * and simpler
+   * Determine the form name based on the action.
+   *
+   * This allows us to avoid using conditional state machine, much more efficient
+   * and simpler.
    *
    * @param CRM_Core_Controller $controller the controller object
+   * @param string $formName
    *
-   * @return string the name of the form that will handle the task
-   * @access protected
+   * @return array|string the name of the form that will handle the task
    */
   public function taskName($controller, $formName = 'Search') {
     // total hack, check POST vars and then session to determine stuff
@@ -98,10 +100,9 @@ class CRM_Pledge_StateMachine_Search extends CRM_Core_StateMachine {
   }
 
   /**
-   * return the form name of the task
+   * Return the form name of the task.
    *
    * @return string
-   * @access public
    */
   public function getTaskFormName() {
     return CRM_Utils_String::getClassName($this->_task);

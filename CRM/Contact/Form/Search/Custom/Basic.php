@@ -26,16 +26,22 @@
 */
 
 /**
+ * Custom search form providing basic contact search with standard criteria
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_query;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -76,7 +82,7 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
    * multiple purposes (queries, save/edit etc)
    *
    * @return void
-   * @access private
+   * @access public
    */
   public function normalize() {
     $contactType = CRM_Utils_Array::value('contact_type', $this->_formValues);
@@ -100,6 +106,14 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     return;
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     $contactTypes = ['' => ts('- any contact type -')] + CRM_Contact_BAO_ContactType::getSelectElements();
     $form->add('select', 'contact_type', ts('Find...'), $contactTypes);
@@ -118,10 +132,27 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     $form->assign('elements', ['sort_name', 'contact_type', 'group', 'tag']);
   }
 
+  /**
+   * Get count
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     return $this->_query->searchQuery(0, 0, NULL, TRUE);
   }
 
+  /**
+   * Get all
+   *
+   * @param int $offset
+   * @param int $rowCount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function all(
     $offset = 0,
     $rowCount = 0,
@@ -140,10 +171,24 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     );
   }
 
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
   public function from() {
     return $this->_query->_fromClause;
   }
 
+  /**
+   * Get where
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     if ($whereClause = $this->_query->whereClause()) {
       return $whereClause;
@@ -151,6 +196,12 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     return ' (1) ';
   }
 
+  /**
+   * Get template file
+   *
+   * @return string
+   * @access public
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Basic.tpl';
   }

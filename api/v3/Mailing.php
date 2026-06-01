@@ -34,7 +34,6 @@
  * @package CiviCRM_APIv3
  * @subpackage API_Mailing
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Factory class for creating Contact DAO and BAO instances based on class name mappings
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 class CRM_Contact_DAO_Factory {
 

@@ -25,10 +25,16 @@
  +--------------------------------------------------------------------+
 */
 
+/**
+ * Base class representing a single field definition used during data import operations
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Import_Field {
 
   /**#@+
-   * @access protected
    * @var string
    */
 
@@ -120,6 +126,22 @@ class CRM_Import_Field {
    */
   public $_relatedContactPhoneType;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $name
+   * @param string $title
+   * @param int $type
+   * @param string $columnPattern
+   * @param string $dataPattern
+   * @param int $hasLocationType
+   * @param string $phoneType
+   * @param string $related
+   * @param string $relatedContactType
+   * @param string $relatedContactDetails
+   * @param int $relatedContactLocType
+   * @param string $relatedContactPhoneType
+   */
   public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $columnPattern = '//', $dataPattern = '//', $hasLocationType = NULL, $phoneType = NULL, $related = NULL, $relatedContactType = NULL, $relatedContactDetails = NULL, $relatedContactLocType = NULL, $relatedContactPhoneType = NULL) {
     $this->_name = $name;
     $this->_title = $title;
@@ -137,6 +159,11 @@ class CRM_Import_Field {
     $this->_value = NULL;
   }
 
+  /**
+   * Reset field value.
+   *
+   * @return void
+   */
   public function resetValue() {
     $this->_value = NULL;
   }
@@ -144,11 +171,20 @@ class CRM_Import_Field {
   /**
    * the value is in string format. convert the value to the type of this field
    * and set the field value with the appropriate type
+   *
+   * @param mixed $value
+   *
+   * @return void
    */
   public function setValue($value) {
     $this->_value = $value;
   }
 
+  /**
+   * Validate the field value.
+   *
+   * @return bool
+   */
   public function validate() {
     //  echo $this->_value."===========<br>";
     $message = '';

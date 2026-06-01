@@ -3,6 +3,11 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
 
   public $_exportParams;
   public $_additionalIds;
+  /**
+   * Build all the data structures needed to build the form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
     $this->_exportParams = [];
@@ -46,12 +51,22 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     parent::buildQuickForm();
     $this->addDate('datetime', ts('Verification Date'), TRUE, ['formatType' => 'searchDate']);
     $this->addYesNo('is_overwrite', ts('overwrite').'?');
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, string>
+   */
   public function setDefaultValues() {
     $defaults = [
       'datetime' => date('Y-m-d'),
@@ -59,10 +74,24 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     return $defaults;
   }
 
+  /**
+   * Form rule.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     return parent::formRule($fields, $files, $self);
   }
 
+  /**
+   * Validate the form.
+   *
+   * @return bool
+   */
   public function validate() {
     $pass = TRUE;
     $values = $this->exportValues();
@@ -86,6 +115,11 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     return $pass;
   }
 
+  /**
+   * Process the form after the input has been submitted and validated.
+   *
+   * @return void
+   */
   public function postProcess() {
     // $this->_contactIds  <== contact id
     // $this->_additionalIds <== recurring id

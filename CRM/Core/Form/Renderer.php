@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -64,9 +62,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   ];
 
   /**
-   * Constructor
-   *
-   * @access public
+   * Class constructor.
    */
   public function __construct() {
     $template = CRM_Core_Smarty::singleton();
@@ -74,9 +70,9 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   }
 
   /**
-   * Static instance provider.
+   * Static instance provider (Singleton pattern).
    *
-   * Method providing static instance of as in Singleton pattern.
+   * @return CRM_Core_Form_Renderer
    */
   public static function &singleton() {
     if (!isset(self::$_singleton)) {
@@ -86,18 +82,15 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   }
 
   /**
-   * Creates an array representing an element containing
-   * the key for storing this. We allow the parent to do most of the
-   * work, but then we add some CiviCRM specific enhancements to
-   * make the html compliant with our css etc
+   * Represent an element as an array for Smarty.
    *
-   * @access private
+   * Adds CiviCRM-specific enhancements to make the HTML compliant with CSS standards.
    *
-   * @param  object    An HTML_QuickForm_element object
-   * @param  bool      Whether an element is required
-   * @param  string    Error associated with the element
+   * @param HTML_QuickForm_element &$element the form element object
+   * @param bool $required whether the element is required
+   * @param string|null $error error message associated with the element
    *
-   * @return array
+   * @return array associative array representing the element
    */
   public function _elementToArray(&$element, $required, $error) {
     self::updateAttributes($element, $required, $error);
@@ -125,16 +118,15 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   }
 
   /**
-   * Update the attributes of this element and add a few CiviCRM
-   * based attributes so we can style this form element better
+   * Update the attributes of an element for better styling.
    *
-   * @access private
+   * Adds IDs and CSS classes based on element type and validation status.
    *
-   * @param  object    An HTML_QuickForm_element object
-   * @param  bool      Whether an element is required
-   * @param  string    Error associated with the element
+   * @param HTML_QuickForm_element &$element the form element object
+   * @param bool $required whether the element is required
+   * @param string|null $error error message
    *
-   * @return array
+   * @return void
    */
   public static function updateAttributes(&$element, $required, $error) {
     // lets create an id for all input elements, so we can generate nice label tags
@@ -179,8 +171,12 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   }
 
   /**
-   * @param array $el
-   * @param HTML_QuickForm_element $field
+   * Append an "unselect" link to radio group elements.
+   *
+   * @param array &$el element array for Smarty
+   * @param HTML_QuickForm_element $field the form element object
+   *
+   * @return void
    */
   public function appendUnselectButton(&$el, $field) {
     // Initially hide if not needed

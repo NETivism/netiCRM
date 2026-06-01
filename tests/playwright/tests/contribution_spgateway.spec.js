@@ -1,3 +1,4 @@
+// Test donation payment flow via NewebPay (SPGateway) payment gateway
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

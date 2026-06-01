@@ -1,3 +1,4 @@
+// Test donation payment flow via ECPay (AllPay) credit card method
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

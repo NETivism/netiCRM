@@ -1,6 +1,7 @@
 <?php
 /**
  * Standalone api without extends from class
+ * @package CiviCRM_PaymentProcessor
  */
 
 class CRM_Core_Payment_TapPayAPI {
@@ -48,10 +49,9 @@ class CRM_Core_Payment_TapPayAPI {
   protected $_apiMethod; // In Tappay , Always Use POST.
 
   /**
-   * $apiParams must has these fields:
-   *   apiType
-   *   partnerKey
-   *   isTest
+   * Class constructor.
+   *
+   * @param array $apiParams API configuration parameters (apiType, partnerKey, isTest)
    */
   public function __construct($apiParams) {
     extract($apiParams);
@@ -72,6 +72,13 @@ class CRM_Core_Payment_TapPayAPI {
     }
   }
 
+  /**
+   * Send a request to the TapPay API.
+   *
+   * @param array $params request parameters
+   *
+   * @return object|bool API response object or FALSE on failure
+   */
   public function request($params) {
     $allowedFields = self::fields($this->_apiType);
     $post = [];
@@ -158,6 +165,14 @@ class CRM_Core_Payment_TapPayAPI {
     }
   }
 
+  /**
+   * Save API request/response log data to the database.
+   *
+   * @param int|null $logId log record ID (use NULL for new record)
+   * @param array $data data to be recorded
+   *
+   * @return int record ID
+   */
   public static function writeRecord($logId, $data = []) {
     $recordType = ['contribution_id', 'url', 'date', 'post_data', 'return_data'];
 
@@ -174,6 +189,11 @@ class CRM_Core_Payment_TapPayAPI {
     return $record->id;
   }
 
+  /**
+   * Execute the API request using cURL.
+   *
+   * @return array [success => bool, status => int, curlError => array]
+   */
   private function _curl() {
     $this->_success = FALSE;
     if (!empty(getenv('CIVICRM_TEST_DSN'))) {
@@ -245,6 +265,15 @@ class CRM_Core_Payment_TapPayAPI {
     return $return;
   }
 
+  /**
+   * Save core TapPay data (token, key, expiry) to the database.
+   *
+   * @param int|null $contributionId contribution ID
+   * @param object $response API response object
+   * @param string $apiType API type
+   *
+   * @return void
+   */
   public static function saveTapPayData($contributionId, $response, $apiType = '') {
     $tappay = new CRM_Contribute_DAO_TapPay();
     if ($contributionId) {
@@ -307,7 +336,12 @@ class CRM_Core_Payment_TapPayAPI {
   }
 
   /**
-   * API query fields
+   * Get the allowed or required fields for a given API type.
+   *
+   * @param string $apiType API type
+   * @param bool $is_required whether to return only required fields
+   *
+   * @return array allowed field names
    */
   public static function fields($apiType, $is_required = FALSE) {
     $fields = [];
@@ -345,6 +379,13 @@ class CRM_Core_Payment_TapPayAPI {
     return $fields;
   }
 
+  /**
+   * Get the error message corresponding to a TapPay error code.
+   *
+   * @param string $code error code
+   *
+   * @return string|false translated error message or FALSE if not found
+   */
   public static function errorMessage($code) {
     $code = (string) $code;
 

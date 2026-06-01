@@ -11,7 +11,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
 
@@ -794,6 +793,21 @@ class CRM_Utils_System_Drupal8 {
    */
   public function getRoleNames() {
     return user_role_names();
+  }
+
+  /**
+   * Get the last login timestamp for a Drupal 8/10 user.
+   *
+   * @param int $ufId Drupal user ID
+   * @return int|null Unix timestamp, or NULL if not found
+   */
+  public function getLastLoginTime($ufId) {
+    $account = \Drupal\user\Entity\User::load($ufId);
+    if ($account) {
+      $loginTime = $account->getLastLoginTime();
+      return $loginTime ?: NULL;
+    }
+    return NULL;
   }
 
   /**

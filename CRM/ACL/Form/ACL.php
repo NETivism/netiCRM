@@ -27,17 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_Form_ACL extends CRM_Admin_Form {
@@ -45,9 +41,8 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
   /**
    * This function sets the default values for the form.
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
@@ -115,8 +110,7 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -193,6 +187,13 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     $this->addFormRule(['CRM_ACL_Form_ACL', 'formRule']);
   }
 
+  /**
+   * Form rule for ACL
+   *
+   * @param array $params
+   *
+   * @return array|bool
+   */
   public static function formRule($params) {
     $showHide = new CRM_Core_ShowHideBlocks();
 
@@ -264,9 +265,8 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

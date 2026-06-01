@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -177,6 +175,12 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     parent::preProcess();
   }
 
+  /**
+   * Get the form values
+   *
+   * @return array
+   * @access public
+   */
   public function &getFormValues() {
     return $this->_formValues;
   }
@@ -240,7 +244,7 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
    * multiple purposes (queries, save/edit etc)
    *
    * @return void
-   * @access private
+   * @access public
    */
   public function normalizeFormValues() {
     $contactType = CRM_Utils_Array::value('contact_type', $this->_formValues);
@@ -271,6 +275,12 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
   /**
    * Add a form rule for this form. If Go is pressed then we must select some checkboxes
    * and an action
+   *
+   * @param array $fields
+   *
+   * @return mixed true or array of errors
+   * @access public
+   * @static
    */
   public static function formRule($fields) {
     // check actionName and if next, then do not repeat a search, since we are going to the next page
@@ -299,6 +309,12 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     return TRUE;
   }
 
+  /**
+   * Get the title
+   *
+   * @return string
+   * @access public
+   */
   public function getTitle() {
     return ts('Find Contacts');
   }

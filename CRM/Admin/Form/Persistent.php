@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,6 +41,11 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
    * @var string
    */
   public $_config;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     $this->_indexID = CRM_Utils_Request::retrieve('id', 'Integer', $this, FALSE);
     $this->_config = CRM_Utils_Request::retrieve('config', 'Integer', $this, 0);
@@ -54,6 +57,11 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
     parent::preProcess();
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
 
     $defaults = [];
@@ -68,6 +76,11 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
     return $defaults;
   }
 
+  /**
+   * Builds the form.
+   *
+   * @return void Builds the form.
+   */
   public function buildQuickForm() {
     $this->add('text', 'context', ts('Context:'), NULL, TRUE);
     $this->add('text', 'name', ts('Name:'), NULL, TRUE);
@@ -85,6 +98,11 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void Processes the submitted form values.
+   */
   public function postProcess() {
 
     $params = $ids = [];

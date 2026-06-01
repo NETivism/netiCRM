@@ -1,4 +1,10 @@
 <?php
+/**
+ * Drupal 7 specific system utilities for bootstrapping and user authentication
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 class CRM_Utils_System_Drupal7 {
 
@@ -316,6 +322,22 @@ class CRM_Utils_System_Drupal7 {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Get the last login timestamp for a Drupal 7 user.
+   *
+   * @param int $ufId Drupal user ID
+   * @return int|null Unix timestamp, or NULL if not found
+   */
+  public function getLastLoginTime($ufId) {
+    if (function_exists('user_load')) {
+      $account = user_load($ufId);
+      if ($account && isset($account->login)) {
+        return (int)$account->login ?: NULL;
+      }
+    }
+    return NULL;
   }
 
   /**

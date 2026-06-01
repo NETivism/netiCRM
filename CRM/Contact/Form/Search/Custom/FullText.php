@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for full-text searching across contacts, activities, contributions, and more
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -59,6 +58,11 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
 
   protected $_foundRows = [];
 
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     $formValues['table'] = $this->getFieldValue($formValues, 'table', 'String');
     $this->_table = $formValues['table'];
@@ -114,10 +118,11 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
   /**
    * Get a value from $formValues. If missing, get it from the request.
    *
-   * @param $formValues
-   * @param $field
-   * @param $type
-   * @param null $default
+   * @param array $formValues
+   * @param string $field
+   * @param string $type
+   * @param mixed $default
+   *
    * @return mixed|null
    */
   public function getFieldValue($formValues, $field, $type, $default = NULL) {
@@ -128,9 +133,15 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
     return $value;
   }
 
+  /**
+   * Class destructor.
+   */
   public function __destruct() {
   }
 
+  /**
+   * Build the temporary tables required for the search.
+   */
   public function buildTempTable() {
     $randomNum = md5(uniqid());
     $this->_tableName = "civicrm_temp_custom_details_{$randomNum}";
@@ -206,6 +217,9 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
     CRM_Core_DAO::executeQuery($sql);
   }
 
+  /**
+   * Fill the temporary table with search results from various components.
+   */
   public function fillTable() {
 
     $config = CRM_Core_Config::singleton();
@@ -257,6 +271,9 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
     $this->filterACLContacts();
   }
 
+  /**
+   * Filter the results to respect ACLs.
+   */
   public function filterACLContacts() {
     if (CRM_Core_Permission::check('view all contacts')) {
       CRM_Core_DAO::executeQuery("DELETE FROM {$this->_tableName} WHERE contact_id IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)");
@@ -303,6 +320,12 @@ WHERE      t.table_name = 'Activity' AND
     CRM_Core_DAO::executeQuery($sql, $params);
   }
 
+  /**
+   * Find searchable custom fields and add them to the tables/fields to be searched.
+   *
+   * @param array $tables
+   * @param string $extends
+   */
   public function fillCustomInfo(
     &$tables,
     $extends
@@ -333,6 +356,11 @@ AND        cf.html_type IN ( 'Text', 'TextArea', 'RichTextEditor' )
     }
   }
 
+  /**
+   * Build and execute queries for the given tables and fields.
+   *
+   * @param array $tables
+   */
   public function runQueries(&$tables) {
     $sql = "TRUNCATE {$this->_entityIDTableName}";
     CRM_Core_DAO::executeQuery($sql);
@@ -397,6 +425,9 @@ AND     {$tableValues['id']} IS NOT NULL
     $this->_foundRows[ucfirst(str_replace('civicrm_', '', $tableKey[0]))] = $maxRowCount;
   }
 
+  /**
+   * Define tables/fields for contact search and run the queries.
+   */
   public function fillContactIDs() {
     $tables = ['civicrm_contact' => ['id' => 'id',
         'fields' => ['sort_name' => NULL,
@@ -432,6 +463,9 @@ AND     {$tableValues['id']} IS NOT NULL
     $this->runQueries($tables);
   }
 
+  /**
+   * Populate the search results for Contacts.
+   */
   public function fillContact() {
 
     $this->fillContactIDs();
@@ -440,6 +474,9 @@ AND     {$tableValues['id']} IS NOT NULL
     $this->moveEntityToDetail('Contact');
   }
 
+  /**
+   * Define tables/fields for activity search and run the queries.
+   */
   public function fillActivityIDs() {
     $contactSQL = [];
 
@@ -504,6 +541,9 @@ AND (ca.is_deleted = 0 OR ca.is_deleted IS NULL OR
     $this->runQueries($tables);
   }
 
+  /**
+   * Populate the search results for Activities.
+   */
   public function fillActivity() {
 
     $this->fillActivityIDs();
@@ -512,6 +552,9 @@ AND (ca.is_deleted = 0 OR ca.is_deleted IS NULL OR
     $this->moveEntityToDetail('Activity');
   }
 
+  /**
+   * Populate the search results for Cases.
+   */
   public function fillCase() {
     $maxRowCount = 0;
     $sql = "
@@ -551,6 +594,9 @@ WHERE     cc.id = {$this->_textID}
     $this->_foundRows['Case'] = $maxRowCount;
   }
 
+  /**
+   * Populate the search results for Contributions.
+   */
   public function fillContribution() {
 
     //get contribution ids in entity table.
@@ -561,7 +607,7 @@ WHERE     cc.id = {$this->_textID}
   }
 
   /**
-   * get contribution ids in entity tables.
+   * Define tables/fields for contribution search and run the queries.
    */
   public function fillContributionIDs() {
     $contactSQL = [];
@@ -594,6 +640,9 @@ WHERE      c.sort_name LIKE {$this->_text}
     $this->runQueries($tables);
   }
 
+  /**
+   * Populate the search results for Participants.
+   */
   public function fillParticipant() {
     //get participant ids in entity table.
     $this->fillParticipantIDs();
@@ -603,7 +652,7 @@ WHERE      c.sort_name LIKE {$this->_text}
   }
 
   /**
-   * get participant ids in entity tables.
+   * Define tables/fields for participant search and run the queries.
    */
   public function fillParticipantIDs() {
     $contactSQL = [];
@@ -633,6 +682,9 @@ WHERE      c.sort_name LIKE {$this->_text}
     $this->runQueries($tables);
   }
 
+  /**
+   * Populate the search results for Memberships.
+   */
   public function fillMembership() {
 
     //get membership ids in entity table.
@@ -643,7 +695,7 @@ WHERE      c.sort_name LIKE {$this->_text}
   }
 
   /**
-   * get membership ids in entity tables.
+   * Define tables/fields for membership search and run the queries.
    */
   public function fillMembershipIDs() {
     $contactSQL = [];
@@ -664,6 +716,11 @@ WHERE      c.sort_name LIKE {$this->_text}
     $this->runQueries($tables);
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
 
     $config = CRM_Core_Config::singleton();
@@ -707,6 +764,11 @@ WHERE      c.sort_name LIKE {$this->_text}
     $form->assign('csID', CRM_Utils_Array::value('customSearchID', $this->_formValues));
   }
 
+  /**
+   * Getter for the columns to be displayed.
+   *
+   * @return array
+   */
   public function &columns() {
     $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Name') => 'sort_name',
@@ -715,6 +777,11 @@ WHERE      c.sort_name LIKE {$this->_text}
     return $this->_columns;
   }
 
+  /**
+   * Compile a summary of the search results.
+   *
+   * @return array
+   */
   public function summary() {
     $summary = ['Contact' => [],
       'Activity' => [],
@@ -770,6 +837,11 @@ WHERE      c.sort_name LIKE {$this->_text}
     return $summary;
   }
 
+  /**
+   * Get the total number of found items.
+   *
+   * @return int
+   */
   public function count() {
     if ($this->_table) {
       return $this->_foundRows[$this->_table];
@@ -779,10 +851,32 @@ WHERE      c.sort_name LIKE {$this->_text}
     }
   }
 
+  /**
+   * Get the contact ID of the first search result.
+   *
+   * Note: This method currently only returns the first ID due to its implementation,
+   * despite the plural name.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string $sort
+   *
+   * @return int|null
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return CRM_Core_DAO::singleValueQuery("SELECT contact_id FROM {$this->_tableName}");
   }
 
+  /**
+   * Get the SQL query for all results.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -800,28 +894,56 @@ FROM
     return $sql;
   }
 
+  /**
+   * Get the FROM clause for the search query.
+   *
+   * @return null
+   */
   public function from() {
     return NULL;
   }
 
+  /**
+   * Get the WHERE clause for the search query.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return null
+   */
   public function where($includeContactIDs = FALSE) {
     return NULL;
   }
 
+  /**
+   * Get the path to the template file for this search.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/FullText.tpl';
   }
 
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return [];
   }
 
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
   }
 
   /**
-   * get entity id retrieve related data from db and move all data to detail table.
+   * Given a set of entity IDs, retrieve the related data and populate the main details temp table.
    *
+   * @param string $tableName
    */
   public function moveEntityToDetail($tableName) {
     $sql = NULL;

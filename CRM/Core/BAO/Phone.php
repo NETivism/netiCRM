@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,11 @@
 class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
 
   /**
-   * takes an associative array and adds phone
+   * Add or update a phone record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of phone data
    *
-   * @return object       CRM_Core_BAO_Phone object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_Phone the created/updated phone object
    */
   public static function add(&$params) {
     $phone = new CRM_Core_DAO_Phone();
@@ -56,14 +52,11 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch phone values based on entity criteria.
    *
-   * @param array entityBlock input parameters to find object
+   * @param array $entityBlock associative array containing entity identifying fields
    *
-   * @return array    array of phone objects
-   * @access public
-   * @static
+   * @return array array of phone data arrays
    */
   public static function &getValues($entityBlock) {
     $getValues = &CRM_Core_BAO_Block::getValues('phone', $entityBlock);
@@ -71,15 +64,13 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
   }
 
   /**
-   * Get all the phone numbers for a specified contact_id, with the primary being first
+   * Get all phone numbers for a specified contact, ordered by primary phone first.
    *
-   * @param int $id the contact id
-   * @param boolean $updateBlankLocInfo
-   * @param string $type Phone type name
+   * @param int $id contact ID
+   * @param bool $updateBlankLocInfo if TRUE, return indexed sequentially; otherwise by ID
+   * @param string|null $type optional phone type filter
    *
-   * @return array  the array of phone ids which are potential numbers
-   * @access public
-   * @static
+   * @return array array of phone details
    */
   public static function allPhones($id, $updateBlankLocInfo = FALSE, $type = NULL) {
     if (!$id) {
@@ -129,14 +120,12 @@ ORDER BY civicrm_phone.is_primary DESC,  phone_id ASC ";
   }
 
   /**
-   * Get all the phone numbers for a specified location_block id, with the primary phone being first
+   * Get all phone numbers for a specified entity via its location block.
    *
-   * @param array $entityElements the array containing entity_id and
-   * entity_table name
+   * @param array $entityElements array containing 'entity_id' and 'entity_table'
+   * @param string|null $type optional phone type filter
    *
-   * @return array  the array of phone ids which are potential numbers
-   * @access public
-   * @static
+   * @return array|null array of phone details
    */
   public static function allEntityPhones($entityElements, $type = NULL) {
     if (empty($entityElements)) {
@@ -179,12 +168,11 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
   }
 
   /**
-   * Set NULL to phone, mapping, uffield
+   * Set phone_type_id to NULL in related tables when an option is deleted.
    *
-   * @param $optionId value of option to be deleted
+   * @param int $optionId ID of the phone type option being deleted
    *
-   * return void
-   * @static
+   * @return void
    */
   public static function setOptionToNull($optionId) {
     if (!$optionId) {
@@ -201,11 +189,12 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
   }
 
   /**
-   * Get current exists id from value(phone)
+   * Check if a phone number already exists for a contact and set the 'id' parameter.
    *
-   * Only effect when phone id not provided. Id will be added into params before add.
+   * Only performs lookup if 'id' is not provided and phone/contact_id are present.
    *
-   * @param array $params referenced array to be add exists phone id
+   * @param array &$params associative array of phone fields (passed by reference)
+   *
    * @return void
    */
   public static function valueExists(&$params) {

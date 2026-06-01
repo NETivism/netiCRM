@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -55,10 +53,7 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
   /**
    * set up variables to build the form
    *
-   * @param null
-   *
    * @return void
-   * @acess protected
    */
   public function preProcess() {
     $this->_id = $this->get('id');
@@ -76,10 +71,7 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
 
@@ -99,10 +91,7 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
   /**
    * Process the form when submitted
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $field = new CRM_Core_DAO_CustomField();

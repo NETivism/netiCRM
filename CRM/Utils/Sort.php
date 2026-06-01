@@ -27,100 +27,97 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
+ * Base class to provide generic sort functionality for tabular data.
  *
- * Base class to provide generic sort functionality. Note that some ideas
- * have been borrowed from the drupal tablesort.inc code. Also note that
- * since the Pager and Sort class are similar, do match the function names
- * if introducing additional functionality
+ * Inspired by Drupal's tablesort.inc. Since CRM_Utils_Pager and this class
+ * share similar patterns, method names should be kept consistent when
+ * introducing additional functionality.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
- *
  */
 class CRM_Utils_Sort {
 
   /**
-   * constants to determine what direction each variable
-   * is to be sorted
+   * Sort direction constants.
    *
    * @var int
    */
   public const ASCENDING = 1, DESCENDING = 2, DONTCARE = 4,
 
     /**
-     * the name for the sort GET/POST param
+     * GET/POST parameter names for sort state.
      *
      * @var string
      */
     SORT_ID = 'crmSID', SORT_DIRECTION = 'crmSortDirection', SORT_ORDER = 'crmSortOrder';
 
   /**
-   * name of the sort function. Used to isolate session variables
+   * Name of the sort instance, used to isolate session variables.
+   *
    * @var string
    */
   protected $_name;
 
   /**
-   * array of variables that influence the query
+   * Array of sortable column definitions, keyed by weight/index.
    *
-   * @var array
+   * Each entry contains 'name' (column), 'direction' (int), and 'title' (label).
+   *
+   * @var array<int, array{name: string, direction: int, title: string}>
    */
   public $_vars;
 
   /**
-   * the newly formulated base url to be used as links
-   * for various table elements
+   * Base URL used for generating sort links in table headers.
    *
    * @var string
    */
   protected $_link;
 
   /**
-   * what's the name of the sort variable in a REQUEST
+   * Name of the URL query parameter used for the sort identifier.
    *
    * @var string
    */
   protected $_urlVar;
 
   /**
-   * What variable are we currently sorting on
+   * Index of the column currently being sorted on.
    *
-   * @var string
+   * @var int
    */
   protected $_currentSortID;
 
   /**
-   * What direction are we sorting on
+   * Current sort direction (ASCENDING, DESCENDING, or DONTCARE).
    *
-   * @var string
+   * @var int
    */
   protected $_currentSortDirection;
 
   /**
-   * The output generated for the current form
+   * Generated sort link HTML for each sortable column, keyed by column name.
    *
-   * @var array
+   * @var array<string, array{link: string}>
    */
   public $_response;
 
   /**
-   * The constructor takes an assoc array
-   * key names of variable (which should be the same as the column name)
-   * value: ascending or descending
+   * Constructor.
    *
-   * @param mixed  $vars             - assoc array as described above
-   * @param string $defaultSortOrder - order to sort
+   * Initializes sortable columns and determines the current sort state
+   * from the request or the given default sort order.
    *
-   * @return void
-   * @access public
+   * @param array       $vars             Array of sortable column definitions, each
+   *                                      containing 'sort' (column name), 'name'
+   *                                      (display title), and optionally 'direction'.
+   * @param string|null $defaultSortOrder  Default sort identifier (e.g., '1_u') to
+   *                                      use when none is provided via GET parameters.
    */
   public function __construct(&$vars, $defaultSortOrder = NULL) {
     $this->_vars = [];
@@ -145,10 +142,10 @@ class CRM_Utils_Sort {
   }
 
   /**
-   * Function returns the string for the order by clause
+   * Build and return the SQL ORDER BY clause based on the current sort state.
    *
-   * @return string the order by clause
-   * @access public
+   * @return string The ORDER BY clause (e.g., 'column_name asc'), or empty string
+   *                if the current sort ID is not valid.
    */
   public function orderBy() {
     if (!CRM_Utils_Array::value($this->_currentSortID, $this->_vars)) {
@@ -168,26 +165,27 @@ class CRM_Utils_Sort {
   }
 
   /**
-   * create the sortID string to be used in the GET param
+   * Create the sort ID string to be used as a GET parameter value.
    *
-   * @param int $index the field index
-   * @param int $dir   the direction of the sort
+   * @param int $index The column index.
+   * @param int $dir   The sort direction constant (ASCENDING or DESCENDING).
    *
-   * @return string  the string to append to the url
-   * @static
-   * @access public
+   * @return string The sort ID string (e.g., '2_d' or '1_u').
    */
   public static function sortIDValue($index, $dir) {
     return ($dir == self::DESCENDING) ? $index . '_d' : $index . '_u';
   }
 
   /**
-   * init the sort ID values in the object
+   * Initialize the current sort ID and direction from the GET request.
    *
-   * @param string $defaultSortOrder the sort order to use by default
+   * Parses the sort parameter (e.g., '2_d') from $_GET to determine
+   * which column and direction to sort by. Falls back to the given
+   * default sort order if no GET parameter is present.
    *
-   * @return returns null if $url- (sort url) is not found
-   * @access public
+   * @param string|null $defaultSortOrder The default sort identifier (e.g., '1_u').
+   *
+   * @return void
    */
   public function initSortID($defaultSortOrder) {
     $url = CRM_Utils_Array::value(self::SORT_ID, $_GET, $defaultSortOrder);
@@ -219,12 +217,14 @@ class CRM_Utils_Sort {
   }
 
   /**
-   * init the object
+   * Initialize sort state and build the response array of sort links.
    *
-   * @param string $defaultSortOrder the sort order to use by default
+   * Calls initSortID() then generates HTML links for each sortable column
+   * with appropriate CSS classes (sorting_asc, sorting_desc, sorting).
+   *
+   * @param string|null $defaultSortOrder The default sort identifier (e.g., '1_u').
    *
    * @return void
-   * @access public
    */
   public function initialize($defaultSortOrder) {
     $this->initSortID($defaultSortOrder);
@@ -255,30 +255,32 @@ class CRM_Utils_Sort {
   }
 
   /**
-   * getter for currentSortID
+   * Get the index of the column currently being sorted on.
    *
-   * @return int returns of the current sort id
-   * @acccess public
+   * @return int The current sort column index.
    */
   public function getCurrentSortID() {
     return $this->_currentSortID;
   }
 
   /**
-   * getter for currentSortDirection
+   * Get the current sort direction.
    *
-   * @return int returns of the current sort direction
-   * @acccess public
+   * @return int The current sort direction constant (ASCENDING, DESCENDING, or DONTCARE).
    */
   public function getCurrentSortDirection() {
     return $this->_currentSortDirection;
   }
 
   /**
-   * Universal callback function for sorting by weight
+   * Comparison callback function for sorting items by their 'weight' key.
    *
-   * @return array of items sorted by weight
-   * @access public
+   * Intended for use with usort() or similar array sorting functions.
+   *
+   * @param array $a First item with a 'weight' key.
+   * @param array $b Second item with a 'weight' key.
+   *
+   * @return int -1 if $a weight is less than or equal to $b weight, 1 otherwise.
    */
   public static function cmpFunc($a, $b) {
     return ($a['weight'] <= $b['weight']) ? -1 : 1;

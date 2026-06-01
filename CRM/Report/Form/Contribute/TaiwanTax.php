@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -59,6 +57,9 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   protected $_receiptSerial = NULL;
   protected $_columnSort = NULL;
 
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $config = CRM_Core_Config::singleton();
     $contactTypes = CRM_Contact_BAO_ContactType::basicTypePairs();
@@ -197,10 +198,20 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $columnHeaders = [];
@@ -302,6 +313,11 @@ END)
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Modify column headers.
+   *
+   * @return void
+   */
   public function modifyColumnHeaders() {
     $this->_columnHeaders["civicrm_contribution_total_amount"]['type'] = 1;
     $this->_columnHeaders["civicrm_contribution_receive_date"]['type'] = 1;
@@ -309,12 +325,26 @@ END)
     $this->_columnHeaders["receipt_serial"]['type'] = 1;
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array{}
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
 
     return $errors;
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
 FROM civicrm_contribution {$this->_aliases['civicrm_contribution']}
@@ -322,6 +352,11 @@ INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']}
 ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $params = $this->_params;
 
@@ -343,20 +378,42 @@ ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribut
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "
 GROUP BY receipt_title, receipt_serial";
   }
 
+  /**
+   * Set order by clause.
+   *
+   * @return void
+   */
   public function orderBy() {
     $this->_orderBy = " ORDER BY receipt_title ASC";
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
+  /**
+   * End post-process form.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function endPostProcess(&$rows = NULL) {
     if ($this->_outputMode == 'csv') {
       $year = $rows[0]['civicrm_contribution_receive_date'];
@@ -367,6 +424,13 @@ GROUP BY receipt_title, receipt_serial";
     }
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // change columnheader
     $columnHeaders = $this->_columnHeaders;
@@ -419,6 +483,13 @@ GROUP BY receipt_title, receipt_serial";
     }
   }
 
+  /**
+   * Convert date to Chinese year.
+   *
+   * @param string $date
+   *
+   * @return string
+   */
   public function _chineseYear($date) {
     $year = (int) date('Y', strtotime($date));
     $year -= 1911;

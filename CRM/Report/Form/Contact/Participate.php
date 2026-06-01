@@ -27,31 +27,86 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
-  public $_aliases;
-  public $_from;
-  public $_where;
   /**
-   * @var never[]
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * The SQL WHERE clause built by where().
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_groupBy;
-  public $groupBy;
+
   /**
+   * The SQL GROUP BY clause built by groupBy().
+   *
+   * @var string|string[]
+   */
+  public $_groupBy;
+
+  /**
+   * Legacy alias for $_groupBy (unused).
+   *
+   * @var string
+   */
+  public $groupBy;
+
+  /**
+   * The SQL ORDER BY clause built by orderBy().
+   *
    * @var string
    */
   public $_orderBy;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
 
+  /**
+   * Entity type whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
   protected $_customGroupExtends = ['Participant'];
+
+  /**
+   * Initialises column definitions for contact, email, address, participant, event,
+   * and line item tables.
+   */
   public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
@@ -191,11 +246,23 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
-  //Add The statistics
+  /**
+   * Computes report statistics by delegating to the parent, then adds a 'Total Participants'
+   * count derived from a separate COUNT query on the assembled FROM/WHERE clauses.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array with 'counts' and 'filters' entries.
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
     $avg = NULL;
@@ -215,6 +282,12 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Builds the SELECT clause from selected and required fields, then appends a
+   * COUNT(participant.id) as participant_count column. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -237,11 +310,26 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Form validation callback. No validation rules for this report.
+   *
+   * @param array $fields Submitted form values (unused).
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contact_Participate $self The form instance (unused).
+   *
+   * @return array Empty array (no errors).
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
+  /**
+   * Builds the FROM clause joining contact to participant, event, address, and email tables.
+   * Non-template events are excluded via the is_template condition. Populates $_from.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
        FROM civicrm_contact {$this->_aliases['civicrm_contact']}
@@ -258,6 +346,14 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 							  {$this->_aliases['civicrm_email']}.is_primary = 1)";
   }
 
+  /**
+   * Builds the WHERE clause from submitted filter values. The 'rid' (role ID) filter uses
+   * a REGEXP match against a separator-delimited field. The participant_count filter is
+   * handled in groupBy() via HAVING, not here. Always excludes test participants.
+   * Appends ACL restrictions. Populates $_where.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -316,6 +412,13 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Builds the GROUP BY clause grouping by participant contact_id. When a participant_count
+   * filter is provided, appends a HAVING clause comparing COUNT(participant.id) to the
+   * specified value. Populates $_groupBy.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "";
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
@@ -348,10 +451,21 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Builds the ORDER BY clause sorting by participant_count descending. Populates $_orderBy.
+   *
+   * @return void
+   */
   public function orderBy() {
     $this->_orderBy = " ORDER BY participant_count DESC ";
   }
 
+  /**
+   * Builds the ACL clause, assembles and runs the query, formats and assigns
+   * result rows to the template, then finalises the output.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     // get ready with post process params
@@ -376,6 +490,15 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Post-processes result rows to linkify contact names and participant IDs,
+   * resolve event IDs (with link to income report), event type IDs,
+   * participant status IDs, and participant role IDs to human-readable labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
 
     $entryFound = FALSE;

@@ -15,6 +15,12 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
    */
   protected $_itemValues = [];
 
+  /**
+   * Pre-process the form.
+   *
+   * @return void
+   * @throws CRM_Core_Exception
+   */
   public function preProcess() {
     $this->_id = $this->get('id');
     if (empty($this->_id)) {
@@ -34,6 +40,15 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
     $this->addFormRule(['CRM_AI_Form_AICompletion', 'formRule'], $this);
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields The input form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The current form object.
+   *
+   * @return bool|array True if no errors, else an array of errors.
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!empty($fields['is_template']) && empty($fields['template_title'])) {
@@ -48,7 +63,7 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array<string, mixed> The default values.
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -61,7 +76,7 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -82,10 +97,11 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
   }
 
   /**
+   * Process the form submission.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // store the submitted values in an array

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -114,6 +112,14 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
   /**
    * class constructor
+   *
+   * @param array $mapperKeys
+   * @param array|null $mapperSoftCredit
+   * @param array|null $mapperLocType
+   * @param array|null $mapperPhoneType
+   * @param array|null $mapperWebsiteType
+   * @param array|null $mapperImProvider
+   * @param array|null $mapperPCP
    */
   public function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL, $mapperPCP = NULL) {
     parent::__construct();
@@ -308,7 +314,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean
+   * @return int
    * @access public
    */
   public function mapField(&$values) {
@@ -320,7 +326,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
+   * @return int      the result of this processing
    * @access public
    */
   public function preview(&$values) {
@@ -332,7 +338,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
+   * @return int      the result of this processing
    * @access public
    */
   public function summary(&$values) {
@@ -500,7 +506,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @param int $onDuplicate the code for what action to take on duplicates
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
+   * @return int      the result of this processing
    * @access public
    */
   public function import($onDuplicate, &$values) {
@@ -856,6 +862,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
 
   /**
    *  Function to process pledge payments
+   *
+   * @param array $formatted
+   *
+   * @return int
    */
   public function processPledgePayments(&$formatted) {
     $statusFieldName = $this->_statusFieldName;
@@ -895,7 +905,10 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    * import contribution wrapper
    *
-   * @return array
+   * @param array $formatted
+   * @param array $values
+   *
+   * @return int
    * @access public
    */
   public function importContribution($formatted, &$values) {

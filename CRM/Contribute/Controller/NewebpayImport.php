@@ -4,6 +4,10 @@ class CRM_Contribute_Controller_NewebpayImport extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string|null $title
+   * @param int $action
+   * @param boolean $modal
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);

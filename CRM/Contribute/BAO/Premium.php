@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,7 +50,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contribute_BAO_ManagePremium object
+   * @return CRM_Contribute_DAO_Product|null CRM_Contribute_DAO_Product object
    * @access public
    * @static
    */
@@ -72,7 +70,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
   public static function setIsActive($id, $is_active) {
@@ -80,12 +78,13 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   }
 
   /**
-   * Function to delete contribution Types
+   * Function to delete premium
    *
-   * @param int $contributionTypeId
+   * @param int $premiumID
+   *
+   * @return void
    * @static
    */
-
   public static function del($premiumID) {
     //check dependencies
 
@@ -97,9 +96,15 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   }
 
   /**
-   * Function to build Premium Block im Contribution Pages
+   * Function to build Premium Block in Contribution Pages
    *
-   * @param int $pageId
+   * @param CRM_Core_Form $form
+   * @param int $pageID
+   * @param boolean $formItems
+   * @param int|null $selectedProductID
+   * @param string|null $selectedOption
+   *
+   * @return void
    * @static
    */
   public static function buildPremiumBlock(&$form, $pageID, $formItems = FALSE, $selectedProductID = NULL, $selectedOption = NULL) {
@@ -128,6 +133,15 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
 
   /**
    * Build combination premium block
+   *
+   * @param CRM_Core_Form $form
+   * @param int $premiumID
+   * @param boolean $formItems
+   * @param int|null $selectedProductID
+   * @param string|null $selectedOption
+   *
+   * @return void
+   * @static
    */
   public static function buildCombinationBlock(&$form, $premiumID, $formItems, $selectedProductID = NULL, $selectedOption = NULL) {
     $dao = new CRM_Contribute_DAO_Premium();
@@ -211,6 +225,16 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
 
   /**
    * Build regular premium block
+   *
+   * @param CRM_Core_Form $form
+   * @param int $premiumID
+   * @param boolean $formItems
+   * @param int|null $selectedProductID
+   * @param string|null $selectedOption
+   * @param array $premiumBlock
+   *
+   * @return void
+   * @static
    */
   public static function buildRegularPremiumBlock(&$form, $premiumID, $formItems, $selectedProductID, $selectedOption, $premiumBlock) {
     $dao = new CRM_Contribute_DAO_PremiumsProduct();
@@ -299,9 +323,13 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   }
 
   /**
-   * Function to build Premium B im Contribution Pages
+   * Function to build Premium Preview block in Contribution Pages
    *
-   * @param int $pageId
+   * @param CRM_Core_Form $form
+   * @param int|null $productID
+   * @param int|null $premiumProductID
+   *
+   * @return void
    * @static
    */
   public static function buildPremiumPreviewBlock($form, $productID, $premiumProductID = NULL) {
@@ -341,8 +369,10 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   /**
    * Function to build Premium Combination Preview Block
    *
-   * @param $form
-   * @param $combinationID
+   * @param CRM_Core_Form $form
+   * @param int $combinationID
+   *
+   * @return void
    * @static
    */
   public static function buildCombinationPreviewBlock($form, $combinationID) {
@@ -369,7 +399,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   /**
    * Function to delete premium associated w/ contribution page.
    *
-   * @param int $contribution page id
+   * @param int $contributionPageID contribution page id
+   *
+   * @return void
    * @static
    */
   public static function deletePremium($contributionPageID) {
@@ -401,6 +433,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   /**
    * Restock contribution products based on expired/failed online payments
    *
+   * @return array
    * @static
    */
   public static function restockContributionProducts() {
@@ -469,6 +502,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $nonCreditCardDays Days for non-credit card transactions
    * @param int $convenienceStoreDays Days for convenience store barcode transactions
    * @param array $checkStatuses Statuses to check for
+   *
    * @return array
    * @static
    */
@@ -506,14 +540,15 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$creditCardIds})
+          AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
-            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            (c.expire_date IS NOT NULL AND c.expire_date < DATE_SUB(NOW(), INTERVAL %1 DAY))
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
           )
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer'], 2 => [$creditCardDays + 30, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -538,14 +573,15 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$nonCreditCardIds})
+          AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
-            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            (c.expire_date IS NOT NULL AND c.expire_date < DATE_SUB(NOW(), INTERVAL %1 DAY))
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
           )
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer'], 2 => [$nonCreditCardDays + 30, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -570,14 +606,15 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$barcodeIds})
+          AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
-            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            (c.expire_date IS NOT NULL AND c.expire_date < DATE_SUB(NOW(), INTERVAL %1 DAY))
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
           )
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer'], 2 => [$convenienceStoreDays + 30, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -601,6 +638,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    *
    * @param int $contributionId The contribution ID
    * @param string $source The source of this restock
+   *
+   * @return void
    * @static
    */
   public static function restockPremiumInventory($contributionId, $source) {
@@ -861,6 +900,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $contributionId The contribution ID
    *
    * @return array Array of stock log entries grouped by timestamp
+   * @static
    */
   public static function getStockLogs($contributionId) {
     $logs = [];

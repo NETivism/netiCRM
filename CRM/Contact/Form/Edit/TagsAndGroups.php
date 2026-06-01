@@ -26,10 +26,9 @@
 */
 
 /**
+ * Handles building and processing of Tags and Groups fields in contact edit forms.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,16 +49,17 @@ class CRM_Contact_Form_Edit_TagsandGroups {
 
   /**
    * This function is to build form elements
-   * params object $form object of the form
    *
-   * @param Object  $form        the form object that we are operating on
+   * @param object  $form        (reference) the form object that we are operating on
    * @param int     $contactId   contact id
    * @param int     $type        what components are we interested in
    * @param boolean $visibility  visibility of the field
+   * @param boolean $isRequired  is the field required
    * @param string  $groupName   if used for building group block
    * @param string  $tagName     if used for building tag block
    * @param string  $fieldName   this is used in batch profile(i.e to build multiple blocks)
    *
+   * @return void
    * @static
    * @access public
    */
@@ -245,9 +245,12 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
+   * @param object $form     (reference) form object
+   * @param array  $defaults (reference) defaults array
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function setDefaultValues(&$form, &$defaults) {
     $contactEditOptions = $form->get('contactEditOptions');

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,24 +40,22 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * membership types
    * @var array
-   * @static
    */
   private static $membershipType;
 
   /**
    * membership types
    * @var array
-   * @static
    */
   private static $membershipStatus;
 
   /**
-   * Get all the membership types
+   * Get all the membership types.
    *
-   * @access public
+   * @param int|null $id
+   * @param bool $force
    *
-   * @return array - array reference of all membership types if any
-   * @static
+   * @return array|string|null - array reference of all membership types if any
    */
   public static function &membershipType($id = NULL, $force = FALSE) {
     if (!self::$membershipType || $force) {
@@ -86,12 +82,13 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all the membership status
+   * Get all the membership status.
    *
-   * @access public
+   * @param int|null $id
+   * @param string|null $cond
+   * @param string $column
    *
-   * @return array - array reference of all membership statuss if any
-   * @static
+   * @return array|string|null - array reference of all membership statuss if any
    */
   public static function &membershipStatus($id = NULL, $cond = NULL, $column = 'name') {
     if (self::$membershipStatus === NULL) {
@@ -126,12 +123,13 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Alias of membershipStatus for getoptions API
+   * Alias of membershipStatus for getoptions API.
    *
-   * @access public
+   * @param int|null $id
+   * @param string|null $cond
+   * @param string $column
    *
-   * @return array - array reference of all membership statuss if any
-   * @static
+   * @return array|string|null - array reference of all membership statuss if any
    */
   public static function &status($id = NULL, $cond = NULL, $column = 'label') {
     return self::membershipStatus($id, $cond, $column);

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,12 +41,17 @@
  */
 class CRM_UF_Page_Field extends CRM_Core_Page {
 
+  /**
+   * The user framework group object.
+   *
+   * @var array
+   */
   public $_ufGroup;
+
   /**
    * The group id of the field
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -56,15 +59,14 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @access private
    */
   private static $_actionLinks;
 
   /**
    * Get the action links for this page.
    *
-   * @return array $_actionLinks
-   *
+   * @return array
+   *   A reference to the array of action links.
    */
   public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
@@ -108,8 +110,6 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
    * Browse all CiviCRM Profile group fields.
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
     $ufField = [];
@@ -223,14 +223,14 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
   }
 
   /**
-   * edit CiviCRM Profile data.
+   * Edit CiviCRM Profile data.
    *
-   * editing would involved modifying existing fields + adding data to new fields.
+   * Editing would involved modifying existing fields + adding data to new fields.
    *
-   * @param string $action the action to be invoked
+   * @param string $action
+   *   The action to be invoked.
    *
    * @return void
-   * @access public
    */
   public function edit($action) {
     // create a simple controller for editing CiviCRM Profile data
@@ -255,8 +255,6 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
    * type of action and executes that action.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     // get the group id
@@ -317,12 +315,14 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
   }
 
   /**
-   * Preview custom field
+   * Preview CiviCRM profile field.
    *
-   * @param int $id custom field id
+   * @param int $fieldId
+   *   The profile field id.
+   * @param int $groupId
+   *   The profile group id.
    *
    * @return void
-   * @access public
    */
   public function preview($fieldId, $groupId) {
     $controller = new CRM_Core_Controller_Simple('CRM_UF_Form_Preview', ts('Preview Custom Data'), CRM_Core_Action::PREVIEW);

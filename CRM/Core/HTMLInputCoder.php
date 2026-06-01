@@ -34,9 +34,7 @@
  * This class should be short-lived -- 4.3 should introduce an alternative
  * escaping scheme and consequently remove HTMLInputCoder.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
@@ -51,6 +49,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   private static $_singleton = NULL;
 
   /**
+   * Get the singleton instance of HTMLInputCoder.
    *
    * @return CRM_Core_HTMLInputCoder
    */
@@ -62,6 +61,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
+   * Get the list of fields that should skip HTML encoding.
    *
    * @return array<string> list of field names
    */
@@ -121,8 +121,9 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
+   * Check if a field should skip HTML encoding.
    *
-   * @param string $fldName
+   * @param string $fldName The name of the field.
    *
    * @return bool TRUE if encoding should be skipped for this field
    */
@@ -156,6 +157,12 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
     }
   }
 
+  /**
+   * Undo the partial HTML encoding for output.
+   *
+   * @param array|string $values The values to decode.
+   * @param bool $castToString If TRUE, all scalars will be filtered (and therefore cast to strings). If FALSE, then non-string values will be preserved.
+   */
   public static function decodeOutput(&$values, $castToString = TRUE) {
     if (is_array($values)) {
       foreach ($values as &$value) {
@@ -168,7 +175,11 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
-   * {@inheritDoc}
+   * Filter the submitted values across XSS vulnerability from API input.
+   *
+   * @param array $apiRequest The API request.
+   *
+   * @return array The filtered API request.
    */
   public function fromApiInput($apiRequest) {
     $lowerAction = strtolower($apiRequest['action']);
@@ -193,7 +204,12 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
-   * {@inheritDoc}
+   * Undo the partial HTML encoding for API output.
+   *
+   * @param array $apiRequest The API request.
+   * @param array $result The result array.
+   *
+   * @return array The decoded result.
    */
   public function toApiOutput($apiRequest, $result) {
     $lowerAction = strtolower($apiRequest['action']);
@@ -211,8 +227,11 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
   }
 
   /**
+   * Check if a field is an API control field (contains a dot).
    *
-   * @return bool
+   * @param string $key The field name.
+   *
+   * @return bool True if it is a control field.
    */
   protected function isApiControlField($key) {
     return (FALSE !== strpos($key, '.'));

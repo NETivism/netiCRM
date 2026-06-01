@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching contributions by price set line items
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,6 +46,11 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
 
   public static $_isExportFileDirectly = TRUE;
 
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_price_set_id = CRM_Utils_Array::value('price_set_id', $this->_formValues);
@@ -59,6 +63,9 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
     $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
   }
 
+  /**
+   * Build the temporary table for storing search results.
+   */
   public function buildTempTable() {
     $randomNum = md5($this->_formValues['price_set_id']);
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
@@ -87,6 +94,9 @@ UNIQUE INDEX unique_entity ( entity_table, entity_id )
     CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
   }
 
+  /**
+   * Populate the temporary table with contribution and contact data.
+   */
   public function fillTable() {
     $sql = "
 SELECT c.id as contact_id,
@@ -157,6 +167,13 @@ ORDER BY l.entity_table, l.entity_id ASC
     }
   }
 
+  /**
+   * Get the DAO for price sets.
+   *
+   * @param int|null $price_set_id
+   *
+   * @return CRM_Core_DAO
+   */
   public function priceSetDAO($price_set_id = NULL) {
     // get all the events that have a price set associated with it
     $sql = "
@@ -181,6 +198,13 @@ WHERE p.extends LIKE '%2%'
     return $dao;
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function buildForm(&$form) {
     $dao = $this->priceSetDAO();
 
@@ -215,6 +239,13 @@ WHERE p.extends LIKE '%2%'
     $form->assign('elements', ['price_set_id']);
   }
 
+  /**
+   * Set up the columns for the result display.
+   *
+   * This is dynamic, adding columns for each field and option in the selected price set.
+   *
+   * @return void
+   */
   public function setColumns() {
     $this->_columns = [
       ts('Contact Id') => 'contact_id',
@@ -265,10 +296,20 @@ WHERE p.extends LIKE '%2%'
     }
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
   public function count() {
     if (!$this->_filled) {
       $this->fillTable();
@@ -278,6 +319,16 @@ WHERE p.extends LIKE '%2%'
     return $value;
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
     $selectClause = "
 contact_a.id             as contact_id  ,
@@ -303,22 +354,49 @@ contact_a.display_name   as display_name";
     return $sql;
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     return "FROM civicrm_contact contact_a INNER JOIN {$this->_tableName} tempTable ON contact_a.id = tempTable.contact_id";
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     return ' ( 1 ) ';
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return [];
   }
 
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     $action = [

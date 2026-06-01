@@ -27,19 +27,16 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
 
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function browse() {
     // get the primary city, state and zip for the contact
@@ -60,8 +57,7 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
    * This function is the main function that is called when the page loads,
    * it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();

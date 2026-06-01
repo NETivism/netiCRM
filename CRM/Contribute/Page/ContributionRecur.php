@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
@@ -53,7 +51,6 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * View details of a recurring contribution
    *
    * @return void
-   * @access public
    */
   public function view() {
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -238,8 +235,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
   /**
    * This function is called when action is update
    *
-   * return null
-   * @access public
+   * @return mixed
    */
   public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionRecur', 'Create Contribution', $this->_action);
@@ -260,6 +256,11 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return $controller->run();
   }
 
+  /**
+   * Pre process the page
+   *
+   * @return void
+   */
   public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'view');
@@ -294,8 +295,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * This function is the main function that is called when the page loads,
    * it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return mixed
    */
   public function run() {
     $this->preProcess();
@@ -313,6 +313,13 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Get diff of contribution recur log
+   *
+   * @param string|array $data the log data or serialized log data
+   *
+   * @return array
+   */
   public static function _diff_contribute_recur_log($data) {
     $allFields = CRM_Contribute_DAO_ContributionRecur::$_fields;
     if (is_string($data)) {

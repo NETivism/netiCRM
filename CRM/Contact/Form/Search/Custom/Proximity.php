@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for finding contacts within a geographic proximity radius
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,6 +39,12 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
   protected $_latitude = NULL;
   protected $_longitude = NULL;
   protected $_distance = NULL;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -91,6 +96,11 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
     ];
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
@@ -166,6 +176,16 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
       ]);
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -193,6 +213,11 @@ country.name           as country
     );
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     $f = "
 FROM      civicrm_contact contact_a
@@ -217,6 +242,13 @@ LEFT JOIN civicrm_group_contact cgc ON ( cgc.contact_id = contact_a.id AND cgc.s
     return $f;
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     $params = [];
     $clause = [];
@@ -242,10 +274,20 @@ AND cgc.group_id = {$this->_group}
     return $this->whereClause($where, $params);
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/Proximity.tpl';
   }
 
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array|null
+   */
   public function setDefaultValues() {
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
@@ -264,6 +306,11 @@ AND cgc.group_id = {$this->_group}
     return NULL;
   }
 
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
   }
 }

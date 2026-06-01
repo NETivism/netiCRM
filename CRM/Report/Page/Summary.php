@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -330,6 +328,14 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Converts a two-element array of values [online, offline] into a cumulative donut
+   * format expected by the chart library: [online, online+offline].
+   *
+   * @param array $data Numeric array; only the first two elements are used.
+   *
+   * @return string JSON-encoded array of cumulative values.
+   */
   private static function getDonutData($data) {
     $i = 0;
     $returnData = [];
@@ -348,6 +354,17 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return json_encode($returnData);
   }
 
+  /**
+   * Builds chart definitions for the "show hidden" section of the summary page.
+   * Prepares bar charts for participant online/offline, contribution recur, contribution
+   * times, and contribution/application fee breakdowns, then assigns them to the template
+   * as 'showhiddenChart'.
+   *
+   * @param array $data The full allData array as stored in cache, containing contacts,
+   *   contribute, participant, and mailing sub-arrays.
+   *
+   * @return void
+   */
   private function showhiddenall($data) {
     $contacts = $data['contacts'];
     $contribute = $data['contribute'];
@@ -426,6 +443,15 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $this->assign('showhiddenChart', $return_array);
   }
 
+  /**
+   * Builds a single bar chart definition array for the hidden debug section.
+   *
+   * @param string $name Unique chart identifier used as the HTML element ID suffix.
+   * @param array $data Series data in the format expected by the chart library (array of arrays).
+   * @param array $labels Array of label strings for the X axis.
+   *
+   * @return array<string, string|bool> Chart definition array with keys: name, id, selector, type, labels, series, withToolTip.
+   */
   private function showhidden($name, $data, $labels) {
     $chart = [
       'name' => $name,
@@ -440,6 +466,17 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return $chart;
   }
 
+  /**
+   * Extracts only the specified type sub-arrays from a chart-ready pivoted array.
+   * For each requested type, collects values across all labels into a flat array.
+   * Returns an array of arrays, one per requested type.
+   *
+   * @param array $arr Chart-ready array with parallel keys (label, count, people, sum, ...).
+   * @param string[] $types Keys to extract from $arr (default: ['count', 'people']).
+   *
+   * @return array Array of arrays: each inner array contains values for one type across all labels.
+   *   Returns $arr unchanged if it is not an array.
+   */
   private static function arrayRemoveKey($arr, $types = ['count','people']) {
     $return = [];
     if (!is_array($arr)) {
@@ -460,22 +497,18 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
   }
 
   /**
-   * Let array(
-   * 'name1' => array('count' => 1, 'people' => 1),
-   * 'name2' => array('count' => 10, 'people' => 11),
-   * 'name3' => array('count' => 100,'people' => 111),
-   * 'name4' => array('count' => 1000,'people' => 1111),
-   * )
+   * Transposes a named associative array of data objects into parallel indexed arrays,
+   * one per requested type. For example:
    *
-   * Become
+   * Input:
+   *   ['name1' => ['count' => 1, 'people' => 1], 'name2' => ['count' => 10, 'people' => 11]]
+   * Output (types = ['count', 'people']):
+   *   [[1, 10], [1, 11]]
    *
-   * array(
-   *   array(1,10,100,1000),
-   *   array(1,11,111,1111),
-   * )
-   * @param  [type] $arr   [description]
-   * @param  array  $types [description]
-   * @return [type]        [description]
+   * @param array $arr Associative array where each value is a data array keyed by type.
+   * @param string[] $types Keys to extract from each value (default: ['count', 'people']).
+   *
+   * @return array Array of arrays: each inner array contains all values for one type.
    */
   private static function dataTransferShowHidden($arr, $types = ['count','people']) {
     $return = [];

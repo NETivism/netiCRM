@@ -26,10 +26,9 @@
 */
 
 /**
+ * Utility methods for contribution processing including transaction handling and receipts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contribute_BAO_Contribution_Utils {
@@ -37,16 +36,14 @@ class CRM_Contribute_BAO_Contribution_Utils {
   /**
    * Function to process payment after confirmation
    *
-   * @param object  $form   form object
-   * @param array   $paymentParams   array with payment related key
-   * value pairs
-   * @param array   $premiumParams   array with premium related key
-   * value pairs
-   * @param int     $contactID       contact id
-   * @param int     $contributionTypeId   contribution type id
-   * @param int     $component   component id
+   * @param CRM_Core_Form $form form object
+   * @param array $paymentParams array with payment related key
+   * @param array $premiumParams array with premium related key
+   * @param int $contactID contact id
+   * @param int $contributionTypeId contribution type id
+   * @param string $component component name
    *
-   * @return false|array FALSE when failed, associated array when success.
+   * @return array|false FALSE when failed, associated array when success.
    *
    * @static
    * @access public
@@ -304,7 +301,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
    * Function to get the contribution details by month
    * of the year
    *
-   * @param int     $param year
+   * @param int|null $param year
    *
    * @return array associated array
    *
@@ -348,7 +345,7 @@ INNER JOIN   civicrm_contact AS contact ON ( contact.id = contrib.contact_id )
   /**
    * Function to get the contribution details by year
    *
-   * @return array associated array
+   * @return array|null associated array
    *
    * @static
    * @access public
@@ -375,6 +372,16 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     return $params;
   }
 
+  /**
+   * Create CMS user for a contact
+   *
+   * @param array $params
+   * @param int $contactID
+   * @param string $mail
+   *
+   * @return void
+   * @static
+   */
   public static function createCMSUser(&$params, $contactID, $mail) {
     // lets ensure we only create one CMS user
     static $created = FALSE;
@@ -393,6 +400,15 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
   }
 
+  /**
+   * Fill common parameters for API contribution processing
+   *
+   * @param array $params
+   * @param string $type
+   *
+   * @return boolean
+   * @static
+   */
   public static function _fillCommonParams(&$params, $type = 'paypal') {
     if (CRM_Utils_Array::arrayKeyExists('transaction', $params)) {
       $transaction = &$params['transaction'];
@@ -459,6 +475,17 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     return TRUE;
   }
 
+  /**
+   * Format API parameters based on processor type
+   *
+   * @param array $apiParams
+   * @param array $mapper
+   * @param string $type
+   * @param boolean $category
+   *
+   * @return array|false
+   * @static
+   */
   public static function formatAPIParams($apiParams, $mapper, $type = 'paypal', $category = TRUE) {
     $type = strtolower($type);
 
@@ -610,6 +637,14 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     }
   }
 
+  /**
+   * Process contribution from API
+   *
+   * @param array $params
+   *
+   * @return boolean
+   * @static
+   */
   public static function processAPIContribution($params) {
     if (empty($params) || CRM_Utils_Array::arrayKeyExists('error', $params)) {
       return FALSE;
@@ -698,9 +733,13 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
   /**
    * Payment result message after submit contribution
    *
-   * @param object  $form   form object
-   * @param array   $params array with contribution related field to find contribution
-   * @param int     $status contribution status for indicate message type
+   * @param CRM_Core_Form $form form object
+   * @param array $params array with contribution related field to find contribution
+   * @param int|null $status contribution status for indicate message type
+   * @param string|null $message
+   *
+   * @return int
+   * @static
    */
   public static function paymentResultType(&$form, $params, $status = NULL, $message = NULL) {
     if (empty($status)) {
@@ -758,9 +797,13 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
   }
 
   /**
-   * Payment result message after submit contribution
+   * Get invoice link for a contribution
    *
-   * @param int     $contribution_id
+   * @param int $contribution_id
+   * @param boolean $check
+   *
+   * @return string|false
+   * @static
    */
   public static function invoiceLink($contribution_id, $check = FALSE) {
     if ($check) {
@@ -786,6 +829,9 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
 
   /**
    * Purge one time link record in database
+   *
+   * @return void
+   * @static
    */
   public static function clearDonateAgainLink() {
     $aweekbefore = CRM_REQUEST_TIME - 86400 * 7;

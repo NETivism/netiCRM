@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,11 +47,9 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * funtion to add activity target
    *
-   * @param array  $activity_id           (reference ) an assoc array of name/value pairs
-   * @param array  $target_contact_id     (reference ) the array that holds all the db ids
+   * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object activity type of object that is added
-   * @access public
+   * @return CRM_Activity_BAO_ActivityTarget activity type of object that is added
    *
    */
   public static function create(&$params) {
@@ -75,11 +71,10 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * function to retrieve id of target contact by activity_id
    *
-   * @param int    $id  ID of the activity
+   * @param int $activity_id ID of the activity
    *
-   * @return mixed
+   * @return array
    *
-   * @access public
    *
    */
   public static function retrieveTargetIdsByActivityId($activity_id) {
@@ -105,11 +100,10 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * function to retrieve names of target contact by activity_id
    *
-   * @param int    $id  ID of the activity
+   * @param int $activityID ID of the activity
    *
    * @return array
    *
-   * @access public
    *
    */
   public static function getTargetNames($activityID) {

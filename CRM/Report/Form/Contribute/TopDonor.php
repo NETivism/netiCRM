@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,6 +56,9 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -157,16 +158,31 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Build quick form.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     parent::buildQuickForm();
 
     $this->getElement('total_range_op')->freeze();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -224,6 +240,15 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->_select = " SELECT * FROM ( SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array<string, mixed>
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
 
@@ -240,6 +265,11 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     return $errors;
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
@@ -260,6 +290,11 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     $this->_tempClause = $this->_outerCluase = '';
@@ -313,10 +348,20 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id ";
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     $this->beginPostProcess();
@@ -361,6 +406,13 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Set limit.
+   *
+   * @param int $rowCount
+   *
+   * @return void
+   */
   public function limit($rowCount = CRM_Report_Form::ROW_COUNT_LIMIT) {
 
     // lets do the pager if in html mode
@@ -387,6 +439,13 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
 

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Custom search for first-time donors.
+ *
+ * Finds contacts whose first completed contribution falls within
+ * the specified date range, excluding membership and participant payments.
+ */
 class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   /**
@@ -10,16 +16,76 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
    * @var mixed[]
    */
   public $_contributionType;
+
+  /**
+   * Query column mapping (SQL expression => alias).
+   *
+   * @var string[]
+   */
   public $_queryColumns;
+
+  /**
+   * Whether this is an export context.
+   *
+   * @var bool
+   */
   public $_isExport;
+
+  /**
+   * Submitted form values.
+   *
+   * @var array
+   */
   protected $_formValues;
+
+  /**
+   * Contribution status labels.
+   *
+   * @var array|null
+   */
   protected $_cstatus = NULL;
+
+  /**
+   * CiviCRM config singleton.
+   *
+   * @var CRM_Core_Config
+   */
   protected $_config;
+
+  /**
+   * Temporary table name.
+   *
+   * @var string|null
+   */
   protected $_tableName = NULL;
+
+  /**
+   * Whether the temp table has been filled.
+   *
+   * @var bool|null
+   */
   protected $_filled = NULL;
+
+  /**
+   * Recurring status options.
+   *
+   * @var string[]
+   */
   protected $_recurringStatus = [];
+
+  /**
+   * Contribution page options.
+   *
+   * @var array|null
+   */
   protected $_contributionPage = NULL;
 
+  /**
+   * Constructor.
+   *
+   * @param array $formValues
+   *   Submitted form values.
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -46,6 +112,11 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
     }
   }
 
+  /**
+   * Build query columns and display columns.
+   *
+   * @return void
+   */
   public function buildColumn() {
     $this->_queryColumns = [
       'contact.id' => 'id',
@@ -69,6 +140,12 @@ class CRM_Contact_Form_Search_Custom_FirstTimeDonor extends CRM_Contact_Form_Sea
       ts('Created Date') => 'receive_date',
     ];
   }
+
+  /**
+   * Create the temporary table for storing search results.
+   *
+   * @return void
+   */
   public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
@@ -97,13 +174,23 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
+
+  /**
+   * Drop the temporary table.
+   *
+   * @return void
+   */
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
 
   /**
-   * fill temp table for further use
+   * Fill temp table for further use.
+   *
+   * Builds the temp table, runs the query and inserts matching rows.
+   *
+   * @return void
    */
   public function fillTable() {
     $this->buildTempTable();
@@ -142,6 +229,12 @@ GROUP BY contact.id
     }
   }
 
+  /**
+   * Build the FROM clause for the temp table query.
+   *
+   * @return string
+   *   SQL FROM clause.
+   */
   public function tempFrom() {
     $sub_where_clauses = [];
     $sub_where_clauses[] = 'co.is_test = 0';
@@ -160,7 +253,12 @@ GROUP BY contact.id
   }
 
   /**
-   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   * Build the WHERE clause for the temp table query.
+   *
+   * Filters by receive date range based on form values.
+   *
+   * @return string
+   *   SQL WHERE clause.
    */
   public function tempWhere() {
     $clauses = [];
@@ -178,6 +276,14 @@ GROUP BY contact.id
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Build the search form.
+   *
+   * @param CRM_Core_Form $form
+   *   The form object.
+   *
+   * @return void
+   */
   public function buildForm(&$form) {
     // Define the search form fields here
 
@@ -189,6 +295,12 @@ GROUP BY contact.id
     $form->assign('elements', ['receive_date', 'recurring', 'contribution_page_id']);
   }
 
+  /**
+   * Set default form values.
+   *
+   * @return array
+   *   Default values keyed by form element name.
+   */
   public function setDefaultValues() {
     return [
       'receive_date_from' => date('Y-m-01', time() - 86400 * 90),
@@ -196,6 +308,12 @@ GROUP BY contact.id
     ];
   }
 
+  /**
+   * Get the qill (query detail) for display.
+   *
+   * @return array<int, array<string, string>>
+   *   Qill array describing the active search criteria.
+   */
   public function qill() {
     $qill = [];
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
@@ -218,10 +336,21 @@ GROUP BY contact.id
     return $qill;
   }
 
+  /**
+   * Set the breadcrumb for this search.
+   *
+   * @return void
+   */
   public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
+  /**
+   * Get the count of matching records.
+   *
+   * @return int
+   *   Number of matching records.
+   */
   public function count() {
     if (!$this->_filled) {
       $this->fillTable();
@@ -236,7 +365,21 @@ GROUP BY contact.id
   }
 
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   *   Starting row offset.
+   * @param int $rowcount
+   *   Number of rows to return.
+   * @param string|CRM_Utils_Sort|null $sort
+   *   Sort clause or object.
+   * @param bool $includeContactIDs
+   *   Whether to include selected contact IDs in the WHERE clause.
+   * @param bool $onlyIDs
+   *   If TRUE, return only contact IDs.
+   *
+   * @return string
+   *   SQL query string.
    */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
@@ -248,6 +391,25 @@ GROUP BY contact.id
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
+  /**
+   * Build the full SQL query.
+   *
+   * @param string $selectClause
+   *   The SELECT clause.
+   * @param int $offset
+   *   Starting row offset.
+   * @param int $rowcount
+   *   Number of rows to return.
+   * @param string|CRM_Utils_Sort|null $sort
+   *   Sort clause or object.
+   * @param bool $includeContactIDs
+   *   Whether to include selected contact IDs.
+   * @param string|null $groupBy
+   *   Optional GROUP BY clause.
+   *
+   * @return string
+   *   SQL query string.
+   */
   public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
@@ -259,12 +421,26 @@ GROUP BY contact.id
   }
 
   /**
-   * Functions below generally don't need to be modified
+   * Build the FROM clause.
+   *
+   * @return string
+   *   SQL FROM clause.
    */
   public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * Applies date range, recurring and contribution page filters.
+   *
+   * @param bool $includeContactIDs
+   *   Whether to include selected contact IDs.
+   *
+   * @return string
+   *   SQL WHERE clause.
+   */
   public function where($includeContactIDs = FALSE) {
     $receive_date_from = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
     $receive_date_to = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
@@ -303,10 +479,28 @@ GROUP BY contact.id
     return $sql;
   }
 
+  /**
+   * Get the HAVING clause.
+   *
+   * @return string
+   *   Empty string (no HAVING clause).
+   */
   public function having() {
     return '';
   }
 
+  /**
+   * Append selected contact IDs to the SQL WHERE clause.
+   *
+   * @param string $sql
+   *   SQL string to modify (passed by reference).
+   * @param array $formValues
+   *   Submitted form values (passed by reference).
+   * @param bool $isExport
+   *   Whether this is an export context.
+   *
+   * @return void
+   */
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
@@ -322,10 +516,22 @@ GROUP BY contact.id
     }
   }
 
+  /**
+   * Get the column headers for search results.
+   *
+   * @return array
+   *   Column headers keyed by label => field name.
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get summary information for the search results.
+   *
+   * @return array|null
+   *   Summary data including total amount and average.
+   */
   public function summary() {
     if (!$this->_filled) {
       $this->fillTable();
@@ -355,6 +561,16 @@ GROUP BY contact.id
     return $summary;
   }
 
+  /**
+   * Modify a result row before display.
+   *
+   * Formats amounts, resolves IDs to labels, and adds links.
+   *
+   * @param array $row
+   *   The result row (passed by reference).
+   *
+   * @return void
+   */
   public function alterRow(&$row) {
     if (!empty($row['amount']) && empty($this->_isExport)) {
       $row['amount'] = CRM_Utils_Money::format($row['amount']);
@@ -393,11 +609,27 @@ GROUP BY contact.id
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   *   Template file path.
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/FirstTimeDonor.tpl';
   }
 
+  /**
+   * Get contact IDs matching the search criteria.
+   *
+   * @param int $offset
+   *   Starting row offset.
+   * @param int $rowcount
+   *   Number of rows to return.
+   * @param string|CRM_Utils_Sort|null $sort
+   *   Sort clause or object.
+   *
+   * @return string
+   *   SQL query returning contact IDs.
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }

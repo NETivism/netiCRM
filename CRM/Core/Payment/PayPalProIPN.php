@@ -26,11 +26,11 @@
 */
 
 /**
+ * Handles PayPal Pro Instant Payment Notification (IPN) callbacks
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
+ * @package CiviCRM_PaymentProcessor
  */
 
 class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {

@@ -103,6 +103,11 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     );
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, numeric-string|int|float>
+   */
   public function setDefaultValues() {
     $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
@@ -110,11 +115,11 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $searchOption = $this->controller->exportValues($this->_name);
