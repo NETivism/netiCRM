@@ -47,8 +47,11 @@
     },
 
     getCurrentContent: async function(el, type) {
-      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[el.name]) {
-        return window.CKEDITOR.instances[el.name].getData();
+      // CKE4 keys instances by element id (bracketed names like
+      // email[1][signature_html] become ids email_1_signature_html).
+      var cke4Key = el.id || el.name;
+      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[cke4Key]) {
+        return window.CKEDITOR.instances[cke4Key].getData();
       } else if (type === 'cke5') {
         const container = el.nextElementSibling;
         if (container && container.classList.contains('ck-editor')) {
@@ -62,8 +65,9 @@
     },
 
     destroyEditor: async function(el, type) {
-      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[el.name]) {
-        window.CKEDITOR.instances[el.name].destroy();
+      var cke4Key = el.id || el.name;
+      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[cke4Key]) {
+        window.CKEDITOR.instances[cke4Key].destroy();
         cj(el).removeClass('ckeditor-processed');
       } else if (type === 'cke5') {
         const container = el.nextElementSibling;
@@ -111,8 +115,9 @@
           cke4Config.filebrowserImageBrowseUrl = config.imceUrl + '&type=Images';
         }
 
-        // Pass configuration object directly to replace()
-        const instance = window.CKEDITOR.replace(el.name, cke4Config);
+        // Pass the DOM element (not the bracketed name) so the instance is
+        // keyed consistently by element id.
+        const instance = window.CKEDITOR.replace(el, cke4Config);
         
         instance.on('key', function(evt) {
           window.global_formNavigate = false;

@@ -94,6 +94,10 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
               $fullPage = "editor.config.fullPage = false;";
             }
             $name = $this->getAttribute('name');
+            // QuickForm sanitizes bracketed names (e.g. email[1][signature_html])
+            // into valid ids (e.g. email_1_signature_html). CKEditor keys the
+            // instance by element id, so we must resolve and look up by id.
+            $elementId = $this->getAttribute('id');
             $html = '';
             $html .= parent::toHtml();
             if (empty($GLOBALS['civcirm_ckeditor_script'])) {
@@ -111,14 +115,19 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             $html .= "<script type='text/javascript'>
 ".implode("\n", $extraPlugins)."
 cj( function( ) {
-  if (cj('#{$name}').hasClass('ckeditor-processed')) {
+  // Resolve the element by id (bracketed names are not valid id/jQuery
+  // selectors); fall back to name lookup when no id is present.
+  var element = document.getElementById('{$elementId}') || document.getElementsByName('{$name}')[0];
+  if (!element) {
     return;
   }
-  else {
-    cj('#{$name}').addClass('ckeditor-processed');
+  if (cj(element).hasClass('ckeditor-processed')) {
+    return;
   }
-  CKEDITOR.replace('{$name}');
-  var editor = CKEDITOR.instances['{$name}'];
+  cj(element).addClass('ckeditor-processed');
+  // Capture the instance from replace() directly; CKEDITOR.instances is keyed
+  // by element id, not by the bracketed field name.
+  var editor = CKEDITOR.replace(element);
   if ( editor ) {
     editor.on( 'key', function( evt ){
       global_formNavigate = false;
