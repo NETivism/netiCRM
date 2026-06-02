@@ -2876,7 +2876,7 @@ msgid "Could not get a contact_id and/or contact_type"
 msgstr "無法取得聯絡人系統編號或聯絡人類別"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image."
+msgid "Are you sure you want to delete contact image?"
 msgstr "您確定要刪除聯絡人頭像？"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php

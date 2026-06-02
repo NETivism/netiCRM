@@ -1551,14 +1551,11 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     }
 
     if ($fieldName == 'image_URL' && $mode == CRM_Profile_Form::MODE_EDIT) {
-      $deleteExtra = ts('Are you sure you want to delete contact image.');
       $deleteURL = [CRM_Core_Action::DELETE =>
         [
           'name' => ts('Delete Contact Image'),
           'url' => 'civicrm/contact/image',
           'qs' => 'reset=1&id=%%id%%&gid=%%gid%%&action=delete',
-          'extra' =>
-          'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
         ],
       ];
       $deleteURL = CRM_Core_Action::formLink(

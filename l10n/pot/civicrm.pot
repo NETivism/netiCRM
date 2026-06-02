@@ -2853,7 +2853,7 @@ msgid "Could not get a contact_id and/or contact_type"
 msgstr ""
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image."
+msgid "Are you sure you want to delete contact image?"
 msgstr ""
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
