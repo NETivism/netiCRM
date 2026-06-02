@@ -11,7 +11,7 @@ class CRM_Core_Page_AJAX_ShortenURLBatchInfo {
    * shows at most 30 rows per accordion, so 60 leaves some headroom while
    * still keeping the request small.
    */
-  const MAX_URLS = 60;
+  public const MAX_URLS = 60;
 
   /**
    * AJAX entry point.

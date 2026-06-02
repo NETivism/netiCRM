@@ -465,7 +465,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
     $allowedPageTables = array_keys($this->_pageTypes);
     foreach ($pageTables as $table => $pages) {
-      if (!in_array($table, $allowedPageTables, true)) {
+      if (!in_array($table, $allowedPageTables, TRUE)) {
         continue;
       }
       $pageDAO = CRM_Core_DAO::executeQuery("SELECT id, title FROM $table WHERE id IN(".CRM_Utils_Array::implode(',', array_keys($pages)).")");
@@ -478,7 +478,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
     $allowedRecordTables = array_keys($this->_referencedRecordType);
     foreach ($recordTables as $table => $records) {
-      if (!in_array($table, $allowedRecordTables, true)) {
+      if (!in_array($table, $allowedRecordTables, TRUE)) {
         continue;
       }
       if ($table === 'civicrm_contact') {
@@ -547,7 +547,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     // Batch-fetch page titles to avoid N+1 queries
     $allowedPageTables = array_keys($this->_pageTypes);
     foreach ($pageTables as $table => $pages) {
-      if (!in_array($table, $allowedPageTables, true)) {
+      if (!in_array($table, $allowedPageTables, TRUE)) {
         continue;
       }
       $pageIds = CRM_Utils_Array::implode(',', array_map('intval', array_keys($pages)));
@@ -565,7 +565,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     // Batch-fetch contact IDs (no sort_name to avoid PII in plain export)
     $allowedRecordTables = array_keys($this->_referencedRecordType);
     foreach ($recordTables as $table => $records) {
-      if (!in_array($table, $allowedRecordTables, true)) {
+      if (!in_array($table, $allowedRecordTables, TRUE)) {
         continue;
       }
       $entityIds = CRM_Utils_Array::implode(',', array_map('intval', array_keys($records)));
@@ -845,7 +845,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
                 $filters[$name]['value_display'] = $value;
               }
               break;
-            // no break
             case 'referrer_url':
             case 'landing':
             case 'page_title':

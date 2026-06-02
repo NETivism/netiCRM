@@ -33,15 +33,15 @@ class SmartyFetchTest extends TestCase {
     $base = sys_get_temp_dir() . '/smarty_fetch_test_' . uniqid();
     $this->tplDir    = $base . '/templates';
     $this->compileDir = $base . '/templates_c';
-    mkdir($this->tplDir,    0755, true);
-    mkdir($this->compileDir, 0755, true);
+    mkdir($this->tplDir, 0755, TRUE);
+    mkdir($this->compileDir, 0755, TRUE);
 
     $this->smarty = new Smarty();
     $this->smarty->template_dir  = $this->tplDir;
     $this->smarty->compile_dir   = $this->compileDir;
     $this->smarty->plugins_dir   = [SMARTY_DIR . 'plugins'];
-    $this->smarty->caching       = false;
-    $this->smarty->compile_check = true;
+    $this->smarty->caching       = FALSE;
+    $this->smarty->compile_check = TRUE;
   }
 
   protected function tearDown(): void {
@@ -210,19 +210,21 @@ class SmartyFetchTest extends TestCase {
 
   public function testIfTrue() {
     $this->writeTpl('if.tpl', '{if $x}yes{else}no{/if}');
-    $this->assertSame('yes', $this->fetch('if.tpl', ['x' => true]));
+    $this->assertSame('yes', $this->fetch('if.tpl', ['x' => TRUE]));
   }
 
   public function testIfFalse() {
     $this->writeTpl('ifno.tpl', '{if $x}yes{else}no{/if}');
-    $this->assertSame('no', $this->fetch('ifno.tpl', ['x' => false]));
+    $this->assertSame('no', $this->fetch('ifno.tpl', ['x' => FALSE]));
   }
 
   public function testIfElseif() {
-    $this->writeTpl('elseif.tpl',
-      '{if $n == 1}one{elseif $n == 2}two{else}other{/if}');
-    $this->assertSame('one',   $this->fetch('elseif.tpl', ['n' => 1]));
-    $this->assertSame('two',   $this->fetch('elseif.tpl', ['n' => 2]));
+    $this->writeTpl(
+      'elseif.tpl',
+      '{if $n == 1}one{elseif $n == 2}two{else}other{/if}'
+    );
+    $this->assertSame('one', $this->fetch('elseif.tpl', ['n' => 1]));
+    $this->assertSame('two', $this->fetch('elseif.tpl', ['n' => 2]));
     $this->assertSame('other', $this->fetch('elseif.tpl', ['n' => 9]));
   }
 
@@ -236,9 +238,9 @@ class SmartyFetchTest extends TestCase {
   public function testIfNested() {
     $tpl = '{if $a}{if $b}both{else}a only{/if}{else}neither{/if}';
     $this->writeTpl('nested_if.tpl', $tpl);
-    $this->assertSame('both',    $this->fetch('nested_if.tpl', ['a' => true, 'b' => true]));
-    $this->assertSame('a only',  $this->fetch('nested_if.tpl', ['a' => true, 'b' => false]));
-    $this->assertSame('neither', $this->fetch('nested_if.tpl', ['a' => false, 'b' => true]));
+    $this->assertSame('both', $this->fetch('nested_if.tpl', ['a' => TRUE, 'b' => TRUE]));
+    $this->assertSame('a only', $this->fetch('nested_if.tpl', ['a' => TRUE, 'b' => FALSE]));
+    $this->assertSame('neither', $this->fetch('nested_if.tpl', ['a' => FALSE, 'b' => TRUE]));
   }
 
   // ---------------------------------------------------------------------------
@@ -258,8 +260,10 @@ class SmartyFetchTest extends TestCase {
   }
 
   public function testForeachElse() {
-    $this->writeTpl('feelse.tpl',
-      '{foreach from=$list item=v}{$v}{foreachelse}empty{/foreach}');
+    $this->writeTpl(
+      'feelse.tpl',
+      '{foreach from=$list item=v}{$v}{foreachelse}empty{/foreach}'
+    );
     $this->assertSame('empty', $this->fetch('feelse.tpl', ['list' => []]));
   }
 
@@ -288,27 +292,35 @@ class SmartyFetchTest extends TestCase {
   // ---------------------------------------------------------------------------
 
   public function testSectionBasic() {
-    $this->writeTpl('sec.tpl',
-      '{section name=i loop=$arr}{$arr[i]},{/section}');
+    $this->writeTpl(
+      'sec.tpl',
+      '{section name=i loop=$arr}{$arr[i]},{/section}'
+    );
     $this->assertSame('x,y,z,', $this->fetch('sec.tpl', ['arr' => ['x', 'y', 'z']]));
   }
 
   public function testSectionIndex() {
-    $this->writeTpl('secidx.tpl',
-      '{section name=i loop=$arr}{$smarty.section.i.index},{/section}');
+    $this->writeTpl(
+      'secidx.tpl',
+      '{section name=i loop=$arr}{$smarty.section.i.index},{/section}'
+    );
     $this->assertSame('0,1,2,', $this->fetch('secidx.tpl', ['arr' => ['a', 'b', 'c']]));
   }
 
   public function testSectionRownum() {
     // rownum is 1-based
-    $this->writeTpl('secrow.tpl',
-      '{section name=i loop=$arr}{$smarty.section.i.rownum},{/section}');
+    $this->writeTpl(
+      'secrow.tpl',
+      '{section name=i loop=$arr}{$smarty.section.i.rownum},{/section}'
+    );
     $this->assertSame('1,2,3,', $this->fetch('secrow.tpl', ['arr' => ['a', 'b', 'c']]));
   }
 
   public function testSectionElse() {
-    $this->writeTpl('secelse.tpl',
-      '{section name=i loop=$arr}{$arr[i]}{sectionelse}empty{/section}');
+    $this->writeTpl(
+      'secelse.tpl',
+      '{section name=i loop=$arr}{$arr[i]}{sectionelse}empty{/section}'
+    );
     $this->assertSame('empty', $this->fetch('secelse.tpl', ['arr' => []]));
   }
 
@@ -322,20 +334,26 @@ class SmartyFetchTest extends TestCase {
   }
 
   public function testAssignTagOverwrite() {
-    $this->writeTpl('assign2.tpl',
-      '{assign var="v" value="first"}{assign var="v" value="second"}{$v}');
+    $this->writeTpl(
+      'assign2.tpl',
+      '{assign var="v" value="first"}{assign var="v" value="second"}{$v}'
+    );
     $this->assertSame('second', $this->fetch('assign2.tpl'));
   }
 
   public function testCaptureTag() {
-    $this->writeTpl('capture.tpl',
-      '{capture name="block"}captured content{/capture}[{$smarty.capture.block}]');
+    $this->writeTpl(
+      'capture.tpl',
+      '{capture name="block"}captured content{/capture}[{$smarty.capture.block}]'
+    );
     $this->assertSame('[captured content]', $this->fetch('capture.tpl'));
   }
 
   public function testCaptureTagWithModifier() {
-    $this->writeTpl('cap_mod.tpl',
-      '{capture name="c"}hello{/capture}{$smarty.capture.c|upper}');
+    $this->writeTpl(
+      'cap_mod.tpl',
+      '{capture name="c"}hello{/capture}{$smarty.capture.c|upper}'
+    );
     $this->assertSame('HELLO', $this->fetch('cap_mod.tpl'));
   }
 
@@ -365,27 +383,33 @@ class SmartyFetchTest extends TestCase {
 
   public function testCounterFunction() {
     // Use unique counter names to avoid static-state cross-test interference
-    $this->writeTpl('counter.tpl',
+    $this->writeTpl(
+      'counter.tpl',
       '{counter name="fetch_c1" start=1}'
       . '{counter name="fetch_c1"}'
-      . '{counter name="fetch_c1"}');
+      . '{counter name="fetch_c1"}'
+    );
     $this->assertSame('123', $this->fetch('counter.tpl'));
   }
 
   public function testCounterSkip() {
-    $this->writeTpl('counter_skip.tpl',
+    $this->writeTpl(
+      'counter_skip.tpl',
       '{counter name="fetch_skip" start=0 skip=5}'
       . '{counter name="fetch_skip"}'
-      . '{counter name="fetch_skip"}');
+      . '{counter name="fetch_skip"}'
+    );
     $this->assertSame('0510', $this->fetch('counter_skip.tpl'));
   }
 
   public function testCycleFunction() {
-    $this->writeTpl('cycle.tpl',
+    $this->writeTpl(
+      'cycle.tpl',
       '{cycle name="fetch_cy1" values="red,blue,green"}'
       . '{cycle name="fetch_cy1"}'
       . '{cycle name="fetch_cy1"}'
-      . '{cycle name="fetch_cy1"}');
+      . '{cycle name="fetch_cy1"}'
+    );
     $this->assertSame('redbluegreen' . 'red', $this->fetch('cycle.tpl'));
   }
 
@@ -404,17 +428,23 @@ class SmartyFetchTest extends TestCase {
 
   public function testIncludeSubTemplate() {
     $this->writeTpl('_sub.tpl', 'Hello from sub: {$subvar}');
-    $this->writeTpl('parent.tpl',
-      'Before. {include file="_sub.tpl" subvar="included!"} After.');
-    $this->assertSame('Before. Hello from sub: included! After.',
-      $this->fetch('parent.tpl'));
+    $this->writeTpl(
+      'parent.tpl',
+      'Before. {include file="_sub.tpl" subvar="included!"} After.'
+    );
+    $this->assertSame(
+      'Before. Hello from sub: included! After.',
+      $this->fetch('parent.tpl')
+    );
   }
 
   public function testIncludeInheritsParentVars() {
     $this->writeTpl('_child.tpl', '[{$shared}]');
     $this->writeTpl('main.tpl', 'X{include file="_child.tpl"}X');
-    $this->assertSame('X[parentval]X',
-      $this->fetch('main.tpl', ['shared' => 'parentval']));
+    $this->assertSame(
+      'X[parentval]X',
+      $this->fetch('main.tpl', ['shared' => 'parentval'])
+    );
   }
 
   // ---------------------------------------------------------------------------
@@ -427,22 +457,22 @@ class SmartyFetchTest extends TestCase {
    */
   public function testComprehensiveOrderTemplate() {
     $tpl = <<<'TPL'
-{* Order summary template *}
-<h1>{$title|escape:"html"|upper}</h1>
-{assign var="total" value=0}
-{if $items}
-<ul>
-{foreach from=$items item=item}
-  <li>{$item.name|escape:"html"|capitalize} — ${$item.price|string_format:"%.2f"}{if $item.qty > 1} x{$item.qty}{/if}</li>
-{assign var="total" value=$total+$item.price*$item.qty}
-{/foreach}
-</ul>
-<p>Total: ${$total|string_format:"%.2f"}</p>
-{else}
-<p>No items.</p>
-{/if}
-{if $note}<p class="note">{$note|escape:"html"}</p>{/if}
-TPL;
+    {* Order summary template *}
+    <h1>{$title|escape:"html"|upper}</h1>
+    {assign var="total" value=0}
+    {if $items}
+    <ul>
+    {foreach from=$items item=item}
+      <li>{$item.name|escape:"html"|capitalize} — ${$item.price|string_format:"%.2f"}{if $item.qty > 1} x{$item.qty}{/if}</li>
+    {assign var="total" value=$total+$item.price*$item.qty}
+    {/foreach}
+    </ul>
+    <p>Total: ${$total|string_format:"%.2f"}</p>
+    {else}
+    <p>No items.</p>
+    {/if}
+    {if $note}<p class="note">{$note|escape:"html"}</p>{/if}
+    TPL;
 
     $this->writeTpl('order.tpl', $tpl);
 
@@ -481,16 +511,16 @@ TPL;
    */
   public function testComprehensiveOrderTemplateEmpty() {
     $tpl = <<<'TPL'
-{* Order summary template *}
-<h1>{$title|upper}</h1>
-{if $items}
-<ul>
-{foreach from=$items item=item}<li>{$item.name}</li>{/foreach}
-</ul>
-{else}
-<p>No items.</p>
-{/if}
-TPL;
+    {* Order summary template *}
+    <h1>{$title|upper}</h1>
+    {if $items}
+    <ul>
+    {foreach from=$items item=item}<li>{$item.name}</li>{/foreach}
+    </ul>
+    {else}
+    <p>No items.</p>
+    {/if}
+    TPL;
 
     $this->writeTpl('order_empty.tpl', $tpl);
     $result = $this->fetch('order_empty.tpl', ['title' => 'empty', 'items' => []]);

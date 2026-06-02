@@ -301,15 +301,15 @@ class SmartyCompilerTest extends TestCase {
 
   public function testParseModifiersWithPhpFunction() {
     // Pre-register a PHP built-in as a modifier
-    $this->compiler->_plugins['modifier']['upper'] = ['strtoupper', null, null, false];
+    $this->compiler->_plugins['modifier']['upper'] = ['strtoupper', NULL, NULL, FALSE];
     $output = "\$this->_tpl_vars['name']";
     $this->compiler->_parse_modifiers($output, 'upper');
     $this->assertStringContainsString('strtoupper', $output);
   }
 
   public function testParseModifiersChained() {
-    $this->compiler->_plugins['modifier']['trim_mod'] = ['trim', null, null, false];
-    $this->compiler->_plugins['modifier']['upper'] = ['strtoupper', null, null, false];
+    $this->compiler->_plugins['modifier']['trim_mod'] = ['trim', NULL, NULL, FALSE];
+    $this->compiler->_plugins['modifier']['upper'] = ['strtoupper', NULL, NULL, FALSE];
     $output = "\$this->_tpl_vars['val']";
     $this->compiler->_parse_modifiers($output, 'trim_mod|upper');
     $this->assertStringContainsString('strtoupper', $output);
@@ -317,9 +317,9 @@ class SmartyCompilerTest extends TestCase {
   }
 
   public function testParseModifiersWithArgument() {
-    $this->compiler->_plugins['modifier']['truncate'] = ['smarty_modifier_truncate', null, null, false];
+    $this->compiler->_plugins['modifier']['truncate'] = ['smarty_modifier_truncate', NULL, NULL, FALSE];
     // Register manually without needing the plugin file
-    $this->compiler->_plugins['modifier']['substr'] = ['substr', null, null, false];
+    $this->compiler->_plugins['modifier']['substr'] = ['substr', NULL, NULL, FALSE];
     $output = "\$this->_tpl_vars['text']";
     $this->compiler->_parse_modifiers($output, 'substr:0:5');
     $this->assertStringContainsString('substr', $output);
@@ -360,7 +360,7 @@ class SmartyCompilerTest extends TestCase {
   }
 
   public function testGetAutoIdNone() {
-    $this->assertNull($this->compiler->_get_auto_id(null, null));
+    $this->assertNull($this->compiler->_get_auto_id(NULL, NULL));
   }
 
   // ---------------------------------------------------------------------------

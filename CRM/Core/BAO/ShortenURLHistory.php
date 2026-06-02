@@ -13,13 +13,13 @@ class CRM_Core_BAO_ShortenURLHistory {
    * Suffix appended to a page type to form the entity_table value.
    * Using a "." keeps the value distinct from any real table name.
    */
-  const ENTITY_TABLE_SUFFIX = '.shortenurl';
+  public const ENTITY_TABLE_SUFFIX = '.shortenurl';
 
   /**
    * Page types that may have shortened URL history.
    * Kept in sync with the whitelist used by CRM_Core_Page_AJAX_SaveShortenURL.
    */
-  const ALLOWED_PAGE_TYPES = [
+  public const ALLOWED_PAGE_TYPES = [
     'civicrm_contribution_page',
     'civicrm_pcp',
     'civicrm_event.info',
@@ -30,7 +30,7 @@ class CRM_Core_BAO_ShortenURLHistory {
   /**
    * UTM keys carried in the JSON payload.
    */
-  const UTM_KEYS = [
+  public const UTM_KEYS = [
     'utm_source',
     'utm_medium',
     'utm_term',
