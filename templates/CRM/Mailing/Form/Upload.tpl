@@ -246,7 +246,15 @@
           var data = e.data;
           cj('.externalSite').dialog('close')
           cj("#compose_id")[0].scrollIntoView();
-          CKEDITOR.instances['html_message'].setData(data);
+          // Insert online-template content into whichever editor is active
+          // (CKEditor 5 / CKEditor 4 / plain textarea). ref #45339
+          if (window.CiviCKEditor5 && window.CiviCKEditor5.getEditorInstance('html_message')) {
+            window.CiviCKEditor5.setData('html_message', data);
+          } else if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['html_message']) {
+            CKEDITOR.instances['html_message'].setData(data);
+          } else {
+            cj('#html_message').val(data);
+          }
         }
       }
 
@@ -329,7 +337,12 @@
           // Because both Quill and CKEditor have "contenteditable"
           // disableAutoInline of CKEditor must be enabled to avoid conflicts
           // https://ckeditor.com/docs/ckeditor4/latest/guide/dev_inline.html#enabling-inline-editing
-          CKEDITOR.disableAutoInline = true;
+          // Only applies to CKEditor 4; under CKEditor 5 window.CKEDITOR is
+          // undefined (namespace swap), so guard to avoid a ReferenceError
+          // that would also abort the Quill subject editor setup. ref #45339
+          if (typeof CKEDITOR !== 'undefined') {
+            CKEDITOR.disableAutoInline = true;
+          }
 
           // Replace <p> with <div>
           var quillBlock = Quill.import("blots/block");

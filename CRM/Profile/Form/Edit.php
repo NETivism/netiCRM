@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,14 +47,9 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
   protected $_blockNo;
 
   /**
-   * pre processing work done here.
-   *
-   * @param
+   * Pre-process form.
    *
    * @return void
-   *
-   * @access public
-   *
    */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
@@ -141,10 +134,9 @@ SELECT module
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // add gid to hidden field prevent session lost
@@ -238,8 +230,6 @@ SELECT module
   /**
    * Process the user submitted custom data values.
    *
-   * @access public
-   *
    * @return void
    */
   public function postProcess() {
@@ -279,17 +269,15 @@ SELECT module
   }
 
   /**
-   * Function to intercept QF validation and do our own redirection
+   * Function to intercept QF validation and do our own redirection.
    *
    * We use this to send control back to the user for a user formatted page
    * This allows the user to maintain the same state and display the error messages
-   * in their own theme along with any modifications
+   * in their own theme along with any modifications.
    *
-   * This is a first version and will be tweaked over a period of time
+   * This is a first version and will be tweaked over a period of time.
    *
-   * @access    public
-   *
-   * @return    boolean   true if no error found
+   * @return bool true if no error found
    */
   public function validate() {
     $errors = parent::validate();

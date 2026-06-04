@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,6 +38,9 @@ class CRM_Report_Form_Contribute_Repeat extends CRM_Report_Form {
   public $_from;
   public $_where;
   public $_absoluteUrl;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -206,14 +207,31 @@ contribution2_total_amount_count, contribution2_total_amount_sum',
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Set default values.
+   *
+   * @param bool $freeze
+   *
+   * @return array
+   */
   public function setDefaultValues($freeze = TRUE) {
     return parent::setDefaultValues($freeze);
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = $uni = [];
     $append = NULL;
@@ -279,6 +297,13 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @param bool $tableCol
+   *
+   * @return void|array
+   */
   public function groupBy($tableCol = FALSE) {
     $this->_groupBy = [];
     if (is_array($this->_params['group_bys']) &&
@@ -303,6 +328,11 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     }
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     foreach (['receive_date1', 'receive_date2'] as $fieldName) {
       $relative = CRM_Utils_Array::value("{$fieldName}_relative", $this->_params);
@@ -370,6 +400,11 @@ LEFT  JOIN (
 ";
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses[] = "!(contribution1_total_amount_count IS NULL AND contribution2_total_amount_count IS NULL)";
 
@@ -406,6 +441,15 @@ LEFT  JOIN (
     }
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array|bool
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = $checkDate = $errorCount = [];
 
@@ -539,11 +583,23 @@ LEFT  JOIN (
     return $errors;
   }
 
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
     return $statistics;
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $this->beginPostProcess();
 
@@ -623,6 +679,13 @@ LEFT  JOIN (
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     list($from1, $to1) = $this->getFromTo(

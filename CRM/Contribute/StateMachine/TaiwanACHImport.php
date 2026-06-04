@@ -5,10 +5,10 @@ class CRM_Contribute_StateMachine_TaiwanACHImport extends CRM_Core_StateMachine 
   /**
    * class constructor
    *
-   * @param object  CRM_Import_Controller
-   * @param int     $action
+   * @param CRM_Core_Controller $controller
+   * @param int $action
    *
-   * @return object CRM_Import_StateMachine
+   * @return CRM_Contribute_StateMachine_TaiwanACHImport
    */
   public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);

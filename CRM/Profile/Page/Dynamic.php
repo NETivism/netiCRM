@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * The contact id of the person we are viewing
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
@@ -55,7 +52,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * the profile group are are interested in
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -63,7 +59,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * The profile types we restrict this page to display
    *
    * @var string
-   * @access protected
    */
   protected $_restrict;
 
@@ -71,7 +66,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * Should we bypass permissions
    *
    * @var boolean
-   * @access prootected
    */
   protected $_skipPermission;
 
@@ -87,13 +81,14 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
   protected $_setTitle;
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param int $id  the contact id
+   * @param int $id the contact id
    * @param int $gid the group id
-   *
-   * @return void
-   * @access public
+   * @param string $restrict the profile types we restrict this page to display
+   * @param bool $skipPermission should we bypass permissions
+   * @param array|null $profileIds profile ids
+   * @param bool $setTitle set title on page
    */
   public function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL, $setTitle = TRUE) {
     $this->_id = $id;
@@ -113,8 +108,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
   /**
    * Get the action links for this page.
    *
-   * @return array $_actionLinks
-   *
+   * @return array|null
    */
   public function &actionLinks() {
     return NULL;
@@ -126,9 +120,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    *
-   * @return void
-   * @access public
-   *
+   * @return string
    */
   public function run() {
     $template = CRM_Core_Smarty::singleton();
@@ -243,6 +235,11 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
     return trim($template->fetch($this->getHookedTemplateFileName()));
   }
 
+  /**
+   * Get template file name.
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Page/{$this->_gid}/Dynamic.tpl";

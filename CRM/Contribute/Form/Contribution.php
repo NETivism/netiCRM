@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -169,7 +167,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
   protected $_cdType;
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process the form
    *
    * @return void
    * @access public
@@ -544,6 +542,12 @@ WHERE  contribution_id = {$this->_id}
     $this->assign('lineItem', empty($this->_lineItems) ? FALSE : $this->_lineItems);
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
@@ -715,9 +719,9 @@ WHERE  contribution_id = {$this->_id}
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -914,6 +918,9 @@ WHERE  contribution_id = {$this->_id}
     );
     $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
     $this->assign('deductible_type_ids', CRM_Utils_Array::implode(',', array_keys($deductibleType)));
+    $allContributionTypes = CRM_Contribute_PseudoConstant::contributionType();
+    $nonDeductibleTypeIds = array_keys(array_diff_key($allContributionTypes, $deductibleType));
+    $this->assign('non_deductible_type_ids', CRM_Utils_Array::implode(',', $nonDeductibleTypeIds));
     if ($this->_online) {
       // $element->freeze( );
     }
@@ -1228,9 +1235,9 @@ WHERE  contribution_id = {$this->_id}
    *
    * @param array $fields  the input form values
    * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param CRM_Contribute_Form_Contribution $self
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -1299,9 +1306,8 @@ WHERE  contribution_id = {$this->_id}
   /**
    * Function to process the form
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -1801,6 +1807,14 @@ WHERE  contribution_id = {$this->_id}
         $formValues['contribution_id'] = $contribution->id;
         $formValues['contribution_page_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'contribution_page_id');
         $formValues['is_test'] = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $contribution->id, 'is_test');
+        if (!empty($formValues['is_attach_receipt'])) {
+          $typeId = $formValues['contribution_type_id'];
+          $taxreceiptTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_taxreceipt');
+          $deductibleTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
+          if (!array_key_exists($typeId, $taxreceiptTypes) && !array_key_exists($typeId, $deductibleTypes)) {
+            $formValues['is_attach_receipt'] = 0;
+          }
+        }
         $sendReceipt = CRM_Contribute_Form_AdditionalInfo::emailReceipt($this, $formValues);
       }
 
@@ -1887,6 +1901,12 @@ WHERE  contribution_id = {$this->_id}
 
   /**
    * This function process contribution related objects.
+   *
+   * @param int $contributionId
+   * @param int $statusId
+   * @param int|null $previousStatusId
+   *
+   * @return string|null
    */
   public function updateRelatedComponent($contributionId, $statusId, $previousStatusId = NULL) {
     $statusMsg = NULL;

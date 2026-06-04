@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,6 +45,11 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   protected $_config = NULL;
 
   protected $_params = NULL;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     $this->_contactID = CRM_Utils_Request::retrieve(
       'cid',
@@ -103,6 +106,13 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'));
   }
 
+  /**
+   * Sets default values for checkboxes.
+   *
+   * @param array $defaults The default values.
+   *
+   * @return void Sets default values for checkboxes.
+   */
   public function cbsDefaultValues(&$defaults) {
 
     foreach ($this->_cbs as $name => $title) {
@@ -124,10 +134,9 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -168,11 +177,9 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     foreach ($this->_cbs as $name => $title) {

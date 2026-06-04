@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2013
- * $Id$
  *
  */
 class CRM_Contact_Page_View_ContactSmartGroup extends CRM_Core_Page {
@@ -41,10 +39,9 @@ class CRM_Contact_Page_View_ContactSmartGroup extends CRM_Core_Page {
   public $_contactId;
 
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function browse() {
     $in = CRM_Contact_BAO_GroupContact::getContactGroup($this->_contactId, 'Added');
@@ -86,6 +83,11 @@ class CRM_Contact_Page_View_ContactSmartGroup extends CRM_Core_Page {
     }
   }
 
+  /**
+   * Build all the data structures needed to build the page.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
@@ -103,8 +105,7 @@ class CRM_Contact_Page_View_ContactSmartGroup extends CRM_Core_Page {
    * when the page loads, it decides the which action has
    * to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();

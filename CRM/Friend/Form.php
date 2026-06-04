@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,7 +48,6 @@ class CRM_Friend_Form extends CRM_Core_Form {
    * the id of the entity that we are proceessing
    *
    * @var int
-   * @protected
    */
   protected $_entityId;
 
@@ -58,7 +55,6 @@ class CRM_Friend_Form extends CRM_Core_Form {
    * the table name of the entity that we are proceessing
    *
    * @var string
-   * @protected
    */
   protected $_entityTable;
 
@@ -66,10 +62,14 @@ class CRM_Friend_Form extends CRM_Core_Form {
    * the contact ID
    *
    * @var int
-   * @protected
    */
   protected $_contactID;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this);
     $this->_entityId = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);
@@ -125,9 +125,8 @@ class CRM_Friend_Form extends CRM_Core_Form {
   /**
    * This function sets the default values for the form.
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -153,8 +152,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     // Details of User
@@ -209,11 +207,9 @@ class CRM_Friend_Form extends CRM_Core_Form {
   /**
    * Function for validation
    *
-   * @param array $params (ref.) an assoc array of name/value pairs
+   * @param array $fields (ref.) an assoc array of name/value pairs
    *
    * @return mixed true or array of errors
-   * @access public
-   * @static
    */
   public static function formRule($fields) {
 
@@ -248,9 +244,8 @@ class CRM_Friend_Form extends CRM_Core_Form {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // get the submitted form values.

@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -114,18 +113,17 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
    */
   public $name;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_dedupe_rule_group
-  */
+   * class constructor
+   *
+   * @return civicrm_dedupe_rule_group
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -135,36 +133,36 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'contact_type' => [
           'name' => 'contact_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Contact Type') ,
-                   'enumValues' => 'Individual, Organization, Household',
-         ] ,
+          'enumValues' => 'Individual, Organization, Household',
+        ],
         'threshold' => [
           'name' => 'threshold',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Threshold') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'level' => [
           'name' => 'level',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Level') ,
-                   'enumValues' => 'Strict, Fuzzy',
-         ] ,
+          'enumValues' => 'Strict, Fuzzy',
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
       ];
     }
     return self::$_fields;
@@ -172,7 +170,6 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -181,7 +178,6 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -190,8 +186,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -213,8 +208,7 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
@@ -240,9 +234,9 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
    */
   public static function &getEnums() {
     static $enums = [
-                                'contact_type',
-                                      'level',
-                                        ];
+        'contact_type',
+        'level',
+    ];
     return $enums;
   }
   /**
@@ -257,16 +251,16 @@ class CRM_Dedupe_DAO_RuleGroup extends CRM_Core_DAO {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                'contact_type' => [
-                  'Individual' => ts('Individual'),
-                  'Organization' => ts('Organization'),
-                  'Household' => ts('Household'),
-                ],
-                                      'level' => [
-                  'Strict' => ts('Strict'),
-                  'Fuzzy' => ts('Fuzzy'),
-                ],
-                                          ];
+        'contact_type' => [
+          'Individual' => ts('Individual'),
+          'Organization' => ts('Organization'),
+          'Household' => ts('Household'),
+        ],
+        'level' => [
+          'Strict' => ts('Strict'),
+          'Fuzzy' => ts('Fuzzy'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }

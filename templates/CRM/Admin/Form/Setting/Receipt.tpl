@@ -84,6 +84,12 @@
               <span class="description">{ts}This name will be used when donor selects "I don't agree to disclose name". Examples: "Anonymous", "Kind-hearted Person", etc.{/ts}</span>
             </td>
         </tr>
+        <tr class="crm-form-block-useReceiptTitleForDonorCredit">
+            <td class="label">{$form.useReceiptTitleForDonorCredit.label}</td>
+            <td>{$form.useReceiptTitleForDonorCredit.html} {ts}Use receipt title as default for donor credit name{/ts}<br />
+              <span class="description">{ts}If checked, when donors select "Full Name" or "Partial Name" for donor credit, the system will fill in the receipt title. If unchecked, the contact name will be used.{/ts}</span>
+            </td>
+        </tr>
         <script type="text/javascript">
         {literal}
           cj(function($){

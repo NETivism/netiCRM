@@ -27,17 +27,23 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Page for displaying list of Reprot templates available
+ * Page for displaying the list of registered report templates.
  */
 class CRM_Report_Page_TemplateList extends CRM_Core_Page {
 
+  /**
+   * Retrieves report template entries from the 'report_template' option group,
+   * grouped by component name. Skips templates for disabled components.
+   * Translates simple ASCII labels and descriptions via ts().
+   * When the 'all' GET parameter is set, includes inactive templates as well.
+   *
+   * @return array Nested array: componentName => [ optionValue => [ title, description, url, instanceUrl? ] ].
+   */
   public static function &info() {
     $all = CRM_Utils_Request::retrieve(
       'all',

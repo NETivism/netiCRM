@@ -27,23 +27,22 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for Contribution Type
- *
+ * This class generates form components for Contribution Type management.
  */
 class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
 
   /**
-   * Function to build the form
+   * Build the quick form components.
    *
-   * @return None
-   * @access public
+   * Adds fields for contribution type name, description, accounting code,
+   * tax rate, deductibility, and tax receipt settings.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -53,11 +52,26 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'name'), TRUE);
+
+    $nameAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'name') ?: [];
+    $accountingCodeAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code') ?: [];
+    $hasReceiptsLocked = FALSE;
+
+    if ($this->_action == CRM_Core_Action::UPDATE && $this->_id) {
+      $isReserved = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved');
+      if (!$isReserved && CRM_Contribute_BAO_ContributionType::hasReceiptsIssued($this->_id)) {
+        $hasReceiptsLocked = TRUE;
+        $nameAttr = array_merge($nameAttr, ['readonly' => 'readonly']);
+        $accountingCodeAttr = array_merge($accountingCodeAttr, ['readonly' => 'readonly']);
+      }
+    }
+    $this->assign('hasReceiptsLocked', $hasReceiptsLocked);
+
+    $this->add('text', 'name', ts('Name'), $nameAttr, TRUE);
     $this->addRule('name', ts('A contribution type with this name already exists. Please select another name.'), 'objectExists', ['CRM_Contribute_DAO_ContributionType', $this->_id]);
 
     $this->add('text', 'description', ts('Description'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'description'));
-    $this->add('text', 'accounting_code', ts('Accounting Code'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code'));
+    $this->add('text', 'accounting_code', ts('Accounting Code'), $accountingCodeAttr);
     $this->add('text', 'tax_rate', ts('Tax Rate'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'tax_rate'));
 
     $this->add('checkbox', 'is_deductible', ts('Tax-deductible?'));
@@ -68,17 +82,34 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     ];
     $this->addRadio('is_taxreceipt', ts('Tax Receipt Type'), $taxReceiptType);
     $this->add('checkbox', 'is_active', ts('Enabled?'));
-    if ($this->_action == CRM_Core_Action::UPDATE && CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {
-      $this->freeze(['name', 'description', 'is_active']);
+    if ($this->_action == CRM_Core_Action::UPDATE) {
+      if (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {
+        $this->freeze(['name', 'description', 'is_active']);
+      }
+      else {
+        $usedPages = CRM_Contribute_BAO_ContributionType::getUsedPagesAndEvents($this->_id);
+        $hasActivePages = FALSE;
+        foreach ($usedPages as $page) {
+          if ($page['is_active']) {
+            $hasActivePages = TRUE;
+            break;
+          }
+        }
+        if ($hasActivePages) {
+          $this->freeze(['is_active']);
+          $this->assign('isActivePageLocked', TRUE);
+        }
+      }
     }
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Handles deletion of a contribution type or adding/updating a record based
+   * on the submitted values.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Mail store implementation for reading messages from a Maildir format directory
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -45,8 +44,6 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
    * Connect to the supplied dir and make sure the two mail dirs exist
    *
    * @param string $dir  dir to operate upon
-   *
-   * @return void
    */
   public function __construct($dir) {
     $this->_dir = $dir;

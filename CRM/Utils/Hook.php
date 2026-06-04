@@ -54,7 +54,10 @@ class CRM_Utils_Hook {
    * This will return implemented module of hook
    *
    * @param string $hook
-   *   hook name with civicrm to search
+   *   Hook name with civicrm to search (e.g., 'civicrm_pre').
+   *
+   * @return array
+   *   Array of module names implementing the given hook.
    */
   public static function availableHooks($hook) {
     $config = CRM_Core_Config::singleton();
@@ -63,12 +66,16 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is called when dao->find triggered
+   * This hook is called when dao->find() is triggered.
    *
-   * @param bool $fetch Wheather the dao->find want to fetch first result
-   * @param object $dao The fetched object which can be alter
-   * @param int $num Number of rows after dao->find
-   * @return void
+   * @param bool $fetch
+   *   Whether dao->find() was called to fetch the first result.
+   * @param CRM_Core_DAO &$dao
+   *   The DAO object on which find() was called, passed by reference.
+   * @param int $numRows
+   *   Number of rows returned after dao->find().
+   *
+   * @return null
    */
   public static function get($fetch, &$dao, $numRows) {
     $className = CRM_Core_Config::singleton()->userHookClass;
@@ -78,15 +85,17 @@ class CRM_Utils_Hook {
 
   /**
    * This hook is called before a db write on some core objects.
-   * This hook does not allow the abort of the operation
    *
-   * @param string $op         the type of operation being performed
-   * @param string $objectName the name of the object
-   * @param object $id         the object id if available
-   * @param array  $params     the parameters used for object creation / editing
+   * @param string $op
+   *   The type of operation being performed. One of: 'create', 'edit', 'delete'.
+   * @param string $objectName
+   *   The name of the object (e.g., 'Contribution', 'Contact', 'Membership').
+   * @param int|null $id
+   *   The object ID if available. NULL for 'create' operations.
+   * @param array &$params
+   *   The parameters used for object creation or editing, passed by reference.
    *
-   * @return null the return value is ignored
-   * @access public
+   * @return null
    */
   public static function pre($op, $objectName, $id, &$params) {
     $config = CRM_Core_Config::singleton();
@@ -97,14 +106,16 @@ class CRM_Utils_Hook {
   /**
    * This hook is called after a db write on some core objects.
    *
-   * @param string $op         the type of operation being performed
-   * @param string $objectName the name of the object
-   * @param int    $objectId   the unique identifier for the object
-   * @param object $objectRef  the reference to the object if available
+   * @param string $op
+   *   The type of operation that was performed. One of: 'create', 'edit', 'delete'.
+   * @param string $objectName
+   *   The name of the object (e.g., 'Contribution', 'Contact', 'Membership').
+   * @param int $objectId
+   *   The unique identifier for the object.
+   * @param CRM_Core_DAO &$objectRef
+   *   Reference to the DAO object, passed by reference.
    *
-   * @return mixed             based on op. pre-hooks return a boolean or
-   *                           an error message which aborts the operation
-   * @access public
+   * @return null
    */
   public static function post($op, $objectName, $objectId, &$objectRef) {
     $config = CRM_Core_Config::singleton();
@@ -113,17 +124,20 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook retrieves links from other modules and injects it into
-   * the view contact tabs
+   * This hook retrieves links from other modules and injects them into the view contact tabs.
    *
-   * @param string $op         the type of operation being performed
-   * @param string $objectName the name of the object
-   * @param int    $objectId   the unique identifier for the object
-   * @params array $links      (optional ) the links array (introduced in v3.2)
+   * @param string $op
+   *   A string describing the context (e.g., 'view.contact.activity', 'create.new.shortcuts').
+   * @param string|null $objectName
+   *   The name of the object (e.g., 'Contact'), or NULL if not applicable.
+   * @param int|null &$objectId
+   *   The unique identifier for the object, passed by reference. May be NULL or a
+   *   CRM_Core_DAO null placeholder when not applicable.
+   * @param array &$links
+   *   The links array to be modified, passed by reference. Each element is an
+   *   associative array with keys: 'id', 'url', 'img', 'title', 'weight'.
    *
-   * @return array|null        an array of arrays, each element is a tuple consisting of id, url, img, title, weight
-   *
-   * @access public
+   * @return null
    */
   public static function links($op, $objectName, &$objectId, &$links) {
     $config = CRM_Core_Config::singleton();
@@ -132,16 +146,18 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is invoked *before* building a CiviCRM form
+   * This hook is invoked *before* building a CiviCRM form.
    *
-   * After form preprocessed, form already prepared to be build
-   * Use this hook to add more preparation before adding element.
-   * After this, we will invoke buildQuickForm in Core/Form
+   * Called after preProcess() on the form. Use this hook to add preparation
+   * logic before form elements are added. buildQuickForm() is invoked after this.
    *
-   * @param string $formName the name of the form
-   * @param object $form     reference to the form object
+   * @param string $formName
+   *   The fully qualified class name of the form (e.g., 'CRM_Contribute_Form_Contribution'),
+   *   obtained via get_class($this).
+   * @param CRM_Core_Form &$form
+   *   Reference to the form object, passed by reference.
    *
-   * @return null the return value is ignored
+   * @return null
    */
   public static function preProcess($formName, &$form) {
     $config = CRM_Core_Config::singleton();
@@ -151,13 +167,17 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is invoked *after* building a CiviCRM form. This hook should also
-   * be used to set the default values of a form element
+   * This hook is invoked *after* building a CiviCRM form.
    *
-   * @param string $formName the name of the form
-   * @param object $form     reference to the form object
+   * Use this hook to add custom form elements or set their default values.
    *
-   * @return null the return value is ignored
+   * @param string $formName
+   *   The fully qualified class name of the form (e.g., 'CRM_Contribute_Form_Contribution'),
+   *   obtained via get_class($this).
+   * @param CRM_Core_Form &$form
+   *   Reference to the form object, passed by reference.
+   *
+   * @return null
    */
   public static function buildForm($formName, &$form) {
     $config = CRM_Core_Config::singleton();
@@ -166,13 +186,18 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is invoked when a CiviCRM form is before submit. If the module has injected
-   * any form elements, this hook should save the values in the database
+   * This hook is invoked just before a CiviCRM form is submitted.
    *
-   * @param string $formName the name of the form
-   * @param object $form     reference to the form object
+   * If the module has injected custom form elements, use this hook to
+   * persist those values to the database before the main form submission runs.
    *
-   * @return null the return value is ignored
+   * @param string $formName
+   *   The fully qualified class name of the form (e.g., 'CRM_Contribute_Form_Contribution'),
+   *   obtained via get_class($this).
+   * @param CRM_Core_Form &$form
+   *   Reference to the form object, passed by reference.
+   *
+   * @return null
    */
   public static function preSave($formName, &$form) {
     $config = CRM_Core_Config::singleton();
@@ -181,13 +206,18 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is invoked when a CiviCRM form is submitted. If the module has injected
-   * any form elements, this hook should save the values in the database
+   * This hook is invoked after a CiviCRM form has been submitted.
    *
-   * @param string $formName the name of the form
-   * @param object $form     reference to the form object
+   * If the module has injected custom form elements, use this hook to
+   * persist those values to the database after the main form submission runs.
    *
-   * @return null the return value is ignored
+   * @param string $formName
+   *   The fully qualified class name of the form (e.g., 'CRM_Contribute_Form_Contribution'),
+   *   obtained via get_class($this).
+   * @param CRM_Core_Form &$form
+   *   Reference to the form object, passed by reference.
+   *
+   * @return null
    */
   public static function postProcess($formName, &$form) {
     $config = CRM_Core_Config::singleton();
@@ -196,18 +226,23 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is invoked during all CiviCRM form validation. An array of errors
-   * detected is returned. Else we assume validation succeeded.
+   * This hook is invoked during CiviCRM form validation.
    *
-   * @param string $formName the name of the form
-   * @param array  &$fields   the POST parameters as filtered by QF
-   * @param array  &$files    the FILES parameters as sent in by POST
-   * @param array  &$form     the form object
-   * @param array  $
+   * Return an array of error messages to report validation failures,
+   * or an empty value to indicate that validation passed.
    *
-   * @return mixed             formRule hooks return a boolean or
-   *                           an array of error messages which display a QF Error
-   * @access public
+   * @param string $formName
+   *   The fully qualified class name of the form (e.g., 'CRM_Contribute_Form_Contribution'),
+   *   obtained via get_class($this).
+   * @param array &$fields
+   *   The POST parameters as filtered by QuickForm ($this->_submitValues),
+   *   passed by reference.
+   * @param array &$files
+   *   The FILES parameters as sent by POST ($this->_submitFiles), passed by reference.
+   * @param CRM_Core_Form &$form
+   *   Reference to the form object, passed by reference.
+   *
+   * @return null
    */
   public static function validate($formName, &$fields, &$files, &$form) {
     $config = CRM_Core_Config::singleton();
@@ -216,15 +251,18 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * This hook is called before a db write on a custom table
+   * This hook is called after a db write on a custom table.
    *
-   * @param string $op         the type of operation being performed
-   * @param string $groupID    the custom group ID
-   * @param object $entityID   the entityID of the row in the custom table
-   * @param array  $params     the parameters that were sent into the calling function
+   * @param string $op
+   *   The type of operation being performed. One of: 'create', 'edit', 'delete'.
+   * @param int $groupID
+   *   The custom group ID of the custom data being written.
+   * @param int $entityID
+   *   The entity ID of the row in the custom table (e.g., contact ID, contribution ID).
+   * @param array &$params
+   *   The parameters that were sent into the calling function, passed by reference.
    *
-   * @return null the return value is ignored
-   * @access public
+   * @return null
    */
   public static function custom($op, $groupID, $entityID, &$params) {
     $config = CRM_Core_Config::singleton();
@@ -286,10 +324,15 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * Change menu item xml
+   * This hook is called when building the navigation menu items.
    *
-   * @param $items
-   *   Contribution id
+   * Allows modules to add, modify, or remove items from the CiviCRM
+   * navigation menu before it is rendered.
+   *
+   * @param array &$items
+   *   Associative array of menu item definitions, passed by reference for modification.
+   *
+   * @return null the return value is ignored
    */
   public static function menuItems(&$items) {
     $config = CRM_Core_Config::singleton();
@@ -339,13 +382,13 @@ class CRM_Utils_Hook {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
-    return $className::invoke(1, $null, $null, $null, $null, $null, 'civicrm_recent');
+    return $className::invoke(1, $recentArray, $null, $null, $null, $null, 'civicrm_recent');
   }
 
   /**
    * This hook is called when building the amount structure for a Contribution or Event Page
    *
-   * @param int    $pageType - is this a contribution or event page
+   * @param string    $pageType - is this a contribution or event page
    * @param object $form     - reference to the form object
    * @param array  $amount   - the amount structure to be displayed
    *
@@ -442,6 +485,34 @@ class CRM_Utils_Hook {
     return $className::invoke(2, $objectName, $object, $null, $null, $null, 'civicrm_copy');
   }
 
+  /**
+   * Dispatch a hook invocation to the registered hook function.
+   *
+   * This is the underlying dispatcher used by all specific hook methods.
+   * It calls the hook function named "{$fnPrefix}_{$fnSuffix}" with up to
+   * 5 parameters based on $numParams. Includes the custom PHP file from
+   * $config->customPHPPathDir if the function is not yet defined.
+   *
+   * @param int $numParams
+   *   Number of arguments to pass to the hook function (1–5).
+   * @param mixed &$arg1
+   *   First argument passed by reference to the hook function.
+   * @param mixed &$arg2
+   *   Second argument passed by reference to the hook function.
+   * @param mixed &$arg3
+   *   Third argument passed by reference to the hook function.
+   * @param mixed &$arg4
+   *   Fourth argument passed by reference to the hook function.
+   * @param mixed &$arg5
+   *   Fifth argument passed by reference to the hook function.
+   * @param string $fnSuffix
+   *   The hook name suffix (e.g., 'civicrm_pre'). Combined with $fnPrefix to form the function name.
+   * @param string $fnPrefix
+   *   Optional prefix prepended to $fnSuffix when building the function name.
+   *
+   * @return mixed
+   *   TRUE if the hook function returns an empty result, otherwise the hook's return value.
+   */
   public static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $included = FALSE;
 
@@ -486,6 +557,24 @@ class CRM_Utils_Hook {
     return empty($result) ? TRUE : $result;
   }
 
+  /**
+   * This hook is called to alter the options for a custom field.
+   *
+   * Allows modules to add, remove, or modify the selectable options for a
+   * custom field before they are displayed to the user.
+   *
+   * @param int $customFieldID
+   *   The ID of the custom field whose options are being retrieved.
+   * @param array &$options
+   *   Associative array of option values passed by reference for modification.
+   *   When $detailedFormat is FALSE, keys are option values and values are labels.
+   *   When $detailedFormat is TRUE, each entry contains detailed metadata.
+   * @param bool $detailedFormat
+   *   If TRUE, $options contains detailed metadata per option (id, label, value, etc.).
+   *   If FALSE (default), a simple value-to-label mapping is used.
+   *
+   * @return null the return value is ignored
+   */
   public static function customFieldOptions($customFieldID, &$options, $detailedFormat = FALSE) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -493,6 +582,22 @@ class CRM_Utils_Hook {
     return $className::invoke(3, $customFieldID, $options, $detailedFormat, $null, $null, 'civicrm_customFieldOptions');
   }
 
+  /**
+   * This hook is called when building the list of bulk-action tasks for a search result set.
+   *
+   * Allows modules to add, remove, or modify the task options available in the
+   * task dropdown for search results of a given entity type.
+   *
+   * @param string $objectType
+   *   The type of entity being searched. One of: 'contact', 'contribution',
+   *   'event', 'membership', 'activity', 'grant', 'case', 'pledge', 'campaign'.
+   * @param array &$tasks
+   *   Associative array of task definitions passed by reference, keyed by task
+   *   constant. Each entry contains 'title' (string), 'class' (string or array),
+   *   and optionally 'result' (bool).
+   *
+   * @return null the return value is ignored
+   */
   public static function searchTasks($objectType, &$tasks) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -500,6 +605,21 @@ class CRM_Utils_Hook {
     return $className::invoke(2, $objectType, $tasks, $null, $null, $null, 'civicrm_searchTasks');
   }
 
+  /**
+   * This hook is called during event registration to allow applying custom discounts.
+   *
+   * Called from the event registration confirmation form, allowing modules to
+   * apply custom discount logic and modify registration fee parameters.
+   *
+   * @param CRM_Core_Form &$form
+   *   Reference to the event registration form object (typically
+   *   CRM_Event_Form_Registration_Confirm), passed by reference.
+   * @param array &$params
+   *   Array of registration parameters (e.g., participant details, fees),
+   *   passed by reference for modification.
+   *
+   * @return null the return value is ignored
+   */
   public static function eventDiscount(&$form, &$params) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -507,6 +627,24 @@ class CRM_Utils_Hook {
     return $className::invoke(2, $form, $params, $null, $null, $null, 'civicrm_eventDiscount');
   }
 
+  /**
+   * This hook is called when building the recipient group selector for a mailing.
+   *
+   * Allows modules to add, remove, or modify the available groups and completed
+   * mailings that can be selected as mailing recipients in the mailing form.
+   *
+   * @param CRM_Core_Form &$form
+   *   Reference to the mailing group form object (CRM_Mailing_Form_Group),
+   *   passed by reference.
+   * @param array &$groups
+   *   Associative array of available groups keyed by group ID with group label
+   *   as value (e.g., from CRM_Core_PseudoConstant::group()), passed by reference.
+   * @param array &$mailings
+   *   Associative array of completed mailings keyed by mailing ID with mailing
+   *   name as value, passed by reference for modification.
+   *
+   * @return null the return value is ignored
+   */
   public static function mailingGroups(&$form, &$groups, &$mailings) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -514,6 +652,22 @@ class CRM_Utils_Hook {
     return $className::invoke(3, $form, $groups, $mailings, $null, $null, 'civicrm_mailingGroups');
   }
 
+  /**
+   * This hook is called when building the list of available membership types for a form.
+   *
+   * Allows modules to alter the membership type data displayed on membership
+   * sign-up and renewal forms, such as modifying fees or filtering types.
+   *
+   * @param CRM_Core_Form &$form
+   *   Reference to the form object requesting the membership types, passed by reference.
+   * @param array &$membershipTypes
+   *   Associative array of membership type data keyed by type ID. Each entry
+   *   contains keys such as 'id' (int), 'name' (string), 'minimum_fee' (float),
+   *   'is_active' (bool), 'description' (string), and 'contribution_type_id' (int).
+   *   Passed by reference for modification.
+   *
+   * @return null the return value is ignored
+   */
   public static function membershipTypeValues(&$form, &$membershipTypes) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -524,11 +678,16 @@ class CRM_Utils_Hook {
   /**
    * This hook is called when rendering the contact summary
    *
-   * @param int $contactID - the contactID for whom the summary is being rendered
-   * @param int $contentPlacement - (output parameter) where should the hook content be displayed relative to the existing content
+   * @param int $contactID
+   *   The contactID for whom the summary is being rendered.
+   * @param string &$content
+   *   The HTML content to be displayed in the summary, passed by reference for modification.
+   * @param int &$contentPlacement
+   *   (output parameter) Where the hook content should be displayed relative to the
+   *   existing content. Use self::SUMMARY_BELOW (default), self::SUMMARY_ABOVE,
+   *   or self::SUMMARY_REPLACE.
    *
-   * @return string the html snippet to include in the contact summary
-   * @access public
+   * @return null the return value is ignored
    */
   public static function summary($contactID, &$content, &$contentPlacement = self::SUMMARY_BELOW) {
     $config = CRM_Core_Config::singleton();
@@ -537,6 +696,25 @@ class CRM_Utils_Hook {
     return $className::invoke(3, $contactID, $content, $contentPlacement, $null, $null, 'civicrm_summary');
   }
 
+  /**
+   * This hook is called when building the SQL query for the contact list autocomplete lookup.
+   *
+   * Allows modules to modify the SQL SELECT query used for contact name searches,
+   * enabling custom filtering, scoping, or result ordering.
+   *
+   * @param string &$query
+   *   The SQL SELECT query string used to retrieve matching contacts, passed by
+   *   reference for modification.
+   * @param string $name
+   *   The search term entered by the user to match against contact names.
+   * @param string|null $context
+   *   Optional context string describing where the lookup is being called from
+   *   (e.g., from a $_GET or API parameter).
+   * @param int|null $id
+   *   Optional entity ID to filter or scope the contact list query.
+   *
+   * @return null the return value is ignored
+   */
   public static function contactListQuery(&$query, $name, $context, $id) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -553,13 +731,14 @@ class CRM_Utils_Hook {
    *                                                     &$rawParams, &$cookedParams);
    *
    * @param string $paymentObj
-   *    instance of payment class of the payment processor invoked (e.g., 'CRM_Core_Payment_Dummy')
+   *   Instance of payment class of the payment processor invoked (e.g., 'CRM_Core_Payment_Dummy').
    * @param array &$rawParams
-   *    array of params as passed to to the processor
-   * @params array  &$cookedParams
-   *     params after the processor code has translated them into its own key/value pairs
+   *   Array of params as passed to the processor, passed by reference for modification.
+   * @param array &$cookedParams
+   *   Params after the processor code has translated them into its own key/value pairs,
+   *   passed by reference for modification.
    *
-   * @return void
+   * @return null the return value is ignored
    */
 
   public static function alterPaymentProcessorParams(
@@ -573,6 +752,22 @@ class CRM_Utils_Hook {
     return $className::invoke(3, $paymentObj, $rawParams, $cookedParams, $null, $null, 'civicrm_alterPaymentProcessorParams');
   }
 
+  /**
+   * This hook is called before an outgoing email is sent, allowing modification of mail parameters.
+   *
+   * Implementations can inspect or alter any mail parameter (from, to, subject,
+   * body, attachments, etc.) before the message is dispatched. The 'alterTag'
+   * key in $params indicates the mail context: 'mail' for transactional system
+   * mails, 'transactional' for transactional mailings, or 'civimail' for bulk
+   * mailing. The 'alterTag' key is removed by the caller after this hook returns.
+   *
+   * @param array &$params
+   *   Associative array of mail parameters passed by reference. Common keys include:
+   *   'from', 'toEmail', 'toName', 'Subject', 'text', 'html', 'attachments',
+   *   'images', 'alterTag', and 'returnPath'.
+   *
+   * @return null the return value is ignored
+   */
   public static function alterMailParams(&$params) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -595,12 +790,42 @@ class CRM_Utils_Hook {
     return $className::invoke(1, $caseID, $null, $null, $null, $null, 'civicrm_caseSummary');
   }
 
+  /**
+   * This hook is called at the end of CRM_Core_Config initialization.
+   *
+   * Allows modules to inspect or modify the global CiviCRM configuration object
+   * immediately after it has been fully initialized. Use this hook to override
+   * configuration settings at runtime.
+   *
+   * @param CRM_Core_Config &$config
+   *   Reference to the CiviCRM configuration singleton object, passed by reference
+   *   so hook implementations can alter configuration properties.
+   *
+   * @return null the return value is ignored
+   */
   public static function config(&$config) {
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(1, $config, $null, $null, $null, $null, 'civicrm_config');
   }
 
+  /**
+   * This hook is called after a CiviCRM record has been enabled or disabled.
+   *
+   * Allows modules to react to is_active toggle events on CiviCRM records,
+   * such as updating related data or triggering notifications. Typically
+   * invoked via AJAX from the contact or admin pages.
+   *
+   * @param string $recordBAO
+   *   The BAO class name of the record being toggled
+   *   (e.g., 'CRM_Contribute_BAO_Contribution').
+   * @param int $recordID
+   *   The ID of the record being enabled or disabled.
+   * @param bool $isActive
+   *   TRUE if the record is being enabled, FALSE if being disabled.
+   *
+   * @return null the return value is ignored
+   */
   public static function enableDisable($recordBAO, $recordID, $isActive) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
@@ -611,10 +836,13 @@ class CRM_Utils_Hook {
   /**
    * This hooks allows to change option values
    *
-   * @param $options associated array of option values / id
-   * @param $name    option group name
+   * @param array &$options
+   *   Associative array of option values indexed by option value/ID,
+   *   passed by reference for modification.
+   * @param string $name
+   *   The option group name (e.g., 'case_activity_type').
    *
-   * @access public
+   * @return null the return value is ignored
    */
   public static function optionValues(&$options, $name) {
     $config = &CRM_Core_Config::singleton();
@@ -626,8 +854,11 @@ class CRM_Utils_Hook {
   /**
    * This hook allows modification of the navigation menu.
    *
-   * @param $params associated array of navigation menu entry to Modify/Add
-   * @access public
+   * @param array &$params
+   *   Associative array of navigation menu entries to modify or add to,
+   *   passed by reference for modification.
+   *
+   * @return null the return value is ignored
    */
   public static function navigationMenu(&$params) {
     $config = &CRM_Core_Config::singleton();
@@ -639,13 +870,18 @@ class CRM_Utils_Hook {
   /**
    * This hook allows modification of the data used to perform merging of duplicates.
    *
-   * @param string $type the type of data being passed (cidRefs|eidRefs|relTables|sqls)
-   * @param array $data  the data, as described in $type
-   * @param int $mainId  contact_id of the contact that survives the merge
-   * @param int $otherId contact_id of the contact that will be absorbed and deleted
-   * @param array $tables when $type is "sqls", an array of tables as it may have been handed to the calling function
+   * @param string $type
+   *   The type of data being passed (cidRefs|eidRefs|relTables|sqls).
+   * @param array &$data
+   *   The data, as described by $type, passed by reference for modification.
+   * @param int|null $mainId
+   *   contact_id of the contact that survives the merge.
+   * @param int|null $otherId
+   *   contact_id of the contact that will be absorbed and deleted.
+   * @param array|null $tables
+   *   When $type is "sqls", an array of tables as it may have been handed to the calling function.
    *
-   * @access public
+   * @return null the return value is ignored
    */
   public static function merge($type, &$data, $mainId = NULL, $otherId = NULL, $tables = NULL) {
     $config = &CRM_Core_Config::singleton();
@@ -656,9 +892,10 @@ class CRM_Utils_Hook {
   /**
    * This hook provides a way to override the default privacy behavior for notes.
    *
-   * @param array $note (reference) Associative array of values for this note
+   * @param array &$noteValues
+   *   Associative array of values for this note, passed by reference for modification.
    *
-   * @access public
+   * @return null the return value is ignored
    */
   public static function notePrivacy(&$noteValues) {
     $config = &CRM_Core_Config::singleton();
@@ -670,13 +907,18 @@ class CRM_Utils_Hook {
   /**
    * This hook is called before record is exported as CSV
    *
-   * @param string $exportTempTable - name of the temporary export table used during export
-   * @param array  $headerRows      - header rows for output
-   * @param array  $sqlColumns      - SQL columns
-   * @param int    $exportMode      - export mode ( contact, contribution, etc...)
+   * @param string &$exportTempTable
+   *   Name of the temporary export table used during export.
+   * @param array &$headerRows
+   *   Header rows for the CSV output, passed by reference for modification.
+   * @param array &$sqlColumns
+   *   SQL column definitions for the export query, passed by reference for modification.
+   * @param int &$exportMode
+   *   Export mode constant (e.g., CRM_Export_Form_Select::CONTACT_EXPORT).
+   * @param int|null $mappingId
+   *   Optional mapping ID used for the export, or NULL if none.
    *
-   * @return void
-   * @access public
+   * @return null the return value is ignored
    */
   public static function export(&$exportTempTable, &$headerRows, &$sqlColumns, &$exportMode, $mappingId) {
     $config = CRM_Core_Config::singleton();
@@ -688,11 +930,14 @@ class CRM_Utils_Hook {
   /**
    * This hook allows modification of the queries constructed from dupe rules.
    *
-   * @param string $obj object of rulegroup class
-   * @param string $type type of queries e.g table / threshold
-   * @param array  $query set of queries
+   * @param string $obj
+   *   Object of rulegroup class.
+   * @param string $type
+   *   Type of queries, e.g., 'table' or 'threshold'.
+   * @param array &$query
+   *   Set of queries, passed by reference for modification.
    *
-   * @access public
+   * @return null the return value is ignored
    */
   public static function dupeQuery($obj, $type, &$query) {
     $config = &CRM_Core_Config::singleton();
@@ -705,7 +950,7 @@ class CRM_Utils_Hook {
    * This hook is called after a row has been processed and the
    * record (and associated records imported
    *
-   * @param string  $object     - object being imported (for now Contact only, later Contribution, Activity, Participant and Member)
+   * @param string  $entity - entity type being imported, case insensitive
    * @param string  $usage      - hook usage/location (for now process only, later mapping and others)
    * @param string  $objectRef  - import record object
    * @param array   $params     - array with various key values: currently
@@ -715,24 +960,30 @@ class CRM_Utils_Hook {
    *                  fieldHeaders    - field headers
    *                  fields          - import fields
    *
-   * @return void
-   * @access public
+   * @return null the return value is ignored
    */
-  public static function import($object, $usage, &$objectRef, &$params) {
+  public static function import($entity, $usage, &$objectRef, &$params) {
     $config = CRM_Core_Config::singleton();
+    $entity = strtolower($entity);
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
-    return $className::invoke(4, $object, $usage, $objectRef, $params, $null, 'civicrm_import');
+    return $className::invoke(4, $entity, $usage, $objectRef, $params, $null, 'civicrm_import');
   }
 
   /**
    * This hook is called when API permissions are checked (cf. civicrm_api3_api_check_permission()
    * in api/v3/utils.php and _civicrm_api3_permissions() in CRM/Core/DAO/.permissions.php).
    *
-   * @param string $entity       the API entity (like contact)
-   * @param string $action       the API action (like get)
-   * @param array &$params       the API parameters
-   * @param array &$permisisons  the associative permissions array (probably to be altered by this hook)
+   * @param string $entity
+   *   The API entity (e.g., 'contact').
+   * @param string $action
+   *   The API action (e.g., 'get').
+   * @param array &$params
+   *   The API parameters, passed by reference.
+   * @param array &$permissions
+   *   The associative permissions array, passed by reference for modification.
+   *
+   * @return null the return value is ignored
    */
   public static function alterAPIPermissions($entity, $action, &$params, &$permissions) {
     $config = CRM_Core_Config::singleton();
@@ -757,7 +1008,7 @@ class CRM_Utils_Hook {
    * @param array  &$rows      the list of values, an associate array with fields that are displayed for that component
    * @param array  &$seletor   the selector object. Allows you access to the context of the search
    *
-   * @return void  modify the header and values object to pass the data u need
+   * @return null the return value is ignored
    */
   public static function searchColumns($objectName, &$headers, &$rows, &$selector) {
     $config = CRM_Core_Config::singleton();
@@ -767,7 +1018,14 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * Alter receipt id prefix
+   * This hook allows modification of the receipt ID prefix before it is applied to a contribution.
+   *
+   * @param string &$prefix
+   *   The receipt ID prefix string (e.g., a date-formatted string), passed by reference for modification.
+   * @param CRM_Contribute_DAO_Contribution &$object
+   *   The contribution object for which the receipt ID is being generated, passed by reference.
+   *
+   * @return null the return value is ignored
    */
   public static function alterReceiptId(&$prefix, &$object) {
     $config = CRM_Core_Config::singleton();
@@ -777,7 +1035,22 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * BaseIPN pre hook
+   * This hook is called before the BaseIPN processes a payment notification (IPN).
+   *
+   * @param string $type
+   *   The type of payment notification being processed.
+   *   One of: 'failed', 'pending', 'cancelled', 'complete'.
+   * @param array &$objects
+   *   Associative array of CiviCRM DAO objects involved in the IPN transaction
+   *   (e.g., 'contribution', 'membership', 'participant', 'event', 'contact').
+   * @param array|null &$input
+   *   Payment input data passed from the payment processor, or NULL for status-only notifications.
+   * @param array|null &$ids
+   *   Associative array of entity IDs related to this transaction, or NULL.
+   * @param array|null &$values
+   *   Additional values array for the transaction, or NULL.
+   *
+   * @return null the return value is ignored
    */
   public static function ipnPre($type, &$objects, &$input = NULL, &$ids = NULL, &$values = NULL) {
     $config = CRM_Core_Config::singleton();
@@ -786,7 +1059,22 @@ class CRM_Utils_Hook {
     return $className::invoke(5, $type, $objects, $input, $ids, $values, 'civicrm_ipnPre');
   }
   /**
-   * BaseIPN post hook
+   * This hook is called after the BaseIPN processes a payment notification (IPN).
+   *
+   * @param string $type
+   *   The type of payment notification that was processed.
+   *   One of: 'failed', 'pending', 'cancelled', 'complete'.
+   * @param array &$objects
+   *   Associative array of CiviCRM DAO objects involved in the IPN transaction
+   *   (e.g., 'contribution', 'membership', 'participant', 'event', 'contact').
+   * @param array|null &$input
+   *   Payment input data passed from the payment processor, or NULL for status-only notifications.
+   * @param array|null &$ids
+   *   Associative array of entity IDs related to this transaction, or NULL.
+   * @param array|null &$values
+   *   Additional values array for the transaction, or NULL.
+   *
+   * @return null the return value is ignored
    */
   public static function ipnPost($type, &$objects, &$input = NULL, &$ids = NULL, &$values = NULL) {
     $config = CRM_Core_Config::singleton();
@@ -798,16 +1086,16 @@ class CRM_Utils_Hook {
   /**
    * This hooks allows alteration of generated page content.
    *
-   * @param $content
-   *   Previously generated content.
-   * @param $context
-   *   Context of content - page or form.
-   * @param $tplName
-   *   The file name of the tpl.
-   * @param $object
-   *   A reference to the page or form object.
+   * @param string &$content
+   *   Previously generated HTML content, passed by reference for modification.
+   * @param string $context
+   *   Context of content — 'page' or 'form'.
+   * @param string $tplName
+   *   The file name of the Smarty template that generated the content.
+   * @param CRM_Core_Page|CRM_Core_Form &$object
+   *   Reference to the page or form object that rendered the content.
    *
-   * @return mixed
+   * @return null the return value is ignored
    */
   public static function alterContent(&$content, $context, $tplName, &$object) {
     $config = CRM_Core_Config::singleton();
@@ -820,16 +1108,16 @@ class CRM_Utils_Hook {
    * This hooks allows alteration of the tpl file used to generate content. It differs from the
    * altercontent hook as the content has already been rendered through the tpl at that point
    *
-   * @param $formName
-   *   Previously generated content.
-   * @param $form
-   *   Reference to the form object.
-   * @param $context
-   *   Context of content - page or form.
-   * @param $tplName
-   *   Reference the file name of the tpl.
+   * @param string $formName
+   *   The name of the form or page class (e.g., 'CRM_Contact_Form_Contact').
+   * @param CRM_Core_Form|CRM_Core_Page &$form
+   *   Reference to the form or page object.
+   * @param string $context
+   *   Context of content — 'page' or 'form'.
+   * @param string &$tplName
+   *   The file name of the Smarty template, passed by reference for modification.
    *
-   * @return mixed
+   * @return null the return value is ignored
    */
   public static function alterTemplateFile($formName, &$form, $context, &$tplName) {
     $config = CRM_Core_Config::singleton();
@@ -843,12 +1131,12 @@ class CRM_Utils_Hook {
    * It differs from the alterContent hook as the content has already been rendered
    * through the tpl at that point
    *
-   * @param $resourceName
-   *   Previously generated content.
-   * @param $vars
-   *   Variables before render template.
+   * @param string &$resourceName
+   *   The Smarty template resource name, passed by reference for modification.
+   * @param array &$vars
+   *   Associative array of Smarty template variables, passed by reference for modification.
    *
-   * @return mixed
+   * @return null the return value is ignored
    */
   public static function alterTemplateVars(&$resourceName, &$vars) {
     $config = CRM_Core_Config::singleton();
@@ -860,12 +1148,15 @@ class CRM_Utils_Hook {
   /**
    * This hooks allows other module prepare variable to pass into invoice
    *
-   * @param $contribution_id
-   *   Contribution id
-   * @param $tplParams
-   *   Variable to save variables
+   * @param int $contribution_id
+   *   Contribution ID.
+   * @param array &$tplParams
+   *   Template variables array passed by reference, for adding or modifying
+   *   variables used in the invoice template.
+   * @param string $message
+   *   Additional message or context string passed to the invoice hook.
    *
-   * @return mixed
+   * @return null the return value is ignored
    */
   public static function prepareInvoice($contribution_id, &$tplParams, $message) {
     $config = CRM_Core_Config::singleton();
@@ -877,16 +1168,17 @@ class CRM_Utils_Hook {
   /**
    * This hooks allows other module invoke tax receipt info
    *
-   * @param $contributionId
-   *   Contribution id
-   * @param $tplParams
-   *   Prepare template printing element
-   * @param $taxReceipt
-   *   TaxReceipt object return from contribution
-   * @param $object
-   *   Variable to save variables
+   * @param int $contributionId
+   *   Contribution ID.
+   * @param array &$tplParams
+   *   Template variables array passed by reference for the tax receipt template.
+   * @param mixed &$taxReceipt
+   *   TaxReceipt is null when prepared by contribution, passed by reference for further modification
+   * @param mixed &$object
+   *   Additional variable passed by reference for saving data.
    *
-   * @return mixed
+   * @return null the return value is ignored
+   *
    */
   public static function prepareTaxReceipt($contributionId, &$tplParams, &$taxReceipt, &$object) {
     $config = CRM_Core_Config::singleton();
@@ -896,12 +1188,15 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * validate tax receipt info
+   * Validate tax receipt info before it is submitted.
    *
-   * @param $contributionId
-   *   Contribution id
-   * @param $receipt
-   *   Receipt object stored here.
+   * @param int $contributionId
+   *   Contribution ID.
+   * @param mixed &$receipt
+   *   Receipt object or data array passed by reference. Hook implementations
+   *   for further validation.
+   *
+   * @return null the return value is ignored
    */
   public static function validateTaxReceipt($contributionId, &$receipt) {
     $config = CRM_Core_Config::singleton();
@@ -914,24 +1209,49 @@ class CRM_Utils_Hook {
   }
 
   /**
-   * Add registration validation here
+   * This hook is called during event registration to validate whether a contact may register.
    *
-   * @param $contributionId
+   * @param int|null $contactID
+   *   The contact ID of the registrant, or NULL if not yet identified.
+   * @param array|null $fields
+   *   Array of form field values submitted during registration, or NULL.
+   * @param CRM_Core_Form|CRM_Core_Page $form
+   *   The form or page object handling the registration (e.g.,
+   *   CRM_Event_Form_Registration_Register or CRM_Event_Page_EventInfo).
+   * @param bool $isAdditional
+   *   TRUE if this is an additional (non-primary) participant registration.
+   * @param bool|null &$overrideCheck
+   *   Output parameter passed by reference. Hook implementations can set this
+   *   to TRUE to force-allowed registration, NULL to neutual and skill hook, FALSE force to block it.
+   *
+   * @return null the return value is ignored
    */
-  public static function checkRegistration($contactID, $fields, $self, $isAdditional, &$result) {
+  public static function checkRegistration($contactID, $fields, $form, $isAdditional, &$overrideCheck) {
     $config = CRM_Core_Config::singleton();
     require_once(str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
 
     return call_user_func_array([$config->userHookClass, 'invoke'], [
-      5, &$contactID, &$fields, &$self, &$isAdditional, &$result, 'civicrm_checkRegistration'
+      5, &$contactID, &$fields, &$form, &$isAdditional, &$overrideCheck, 'civicrm_checkRegistration'
     ]);
   }
 
   /**
-   * Modify params when save payment result data
+   * This hook is called after receiving a TapPay payment gateway API response.
    *
-   * @param $contributionId
+   * Allows modules to modify or react to the raw API response data before it
+   * is processed and saved to the database.
+   *
+   * @param stdClass $response
+   *   The JSON-decoded response object returned by the payment gateway API.
+   * @param CRM_Contribute_DAO_TapPay &$object
+   *   The TapPay DAO object being updated, passed by reference.
+   * @param string $provider
+   *   The payment provider name (default: 'TapPay').
+   * @param string $apiType
+   *   The type of API call that produced this response.
+   *
+   * @return null the return value is ignored
    */
   public static function alterTapPayResponse($response, &$object, $provider = 'TapPay', $apiType = '') {
     $config = CRM_Core_Config::singleton();
@@ -946,9 +1266,16 @@ class CRM_Utils_Hook {
   /**
    * Change validation result of coupon
    *
-   * @param array   $coupon coupon array from CRM_Coupon_BAO::getCoupon
-   * @param boolean $valid  will pass previous validation result. Can be modify by hook.
-   * @param string  $phase  validation phase. For example, event have 2 phase. first is code, second is available events
+   * @param array &$coupon
+   *   Coupon array from CRM_Coupon_BAO::getCoupon, passed by reference for modification.
+   * @param bool &$valid
+   *   Previous validation result, passed by reference. Hook implementations can
+   *   modify this to override the default validation outcome.
+   * @param string $phase
+   *   Validation phase. For example, event validation has two phases:
+   *   first is 'code' (coupon code check), second is 'event' (available events check).
+   *
+   * @return null the return value is ignored
    */
   public static function validateCoupon(&$coupon, &$valid, $phase) {
     $config = CRM_Core_Config::singleton();
@@ -960,10 +1287,16 @@ class CRM_Utils_Hook {
   /**
    * Modifies the API response content before it is returned.
    *
-   * @param string $entity  The entity being called by this api.
-   * @param string $action  The action being performed (e.g. GET, CREATE, DELETE).
-   * @param array  $params  The query parameters sent with the API request.
-   * @param array  $result The API response data, passed by reference for modification.
+   * @param string $entity
+   *   The entity being called by this API (e.g., 'Contact', 'Contribution').
+   * @param string $action
+   *   The action being performed (e.g., 'get', 'create', 'delete').
+   * @param array $params
+   *   The query parameters sent with the API request.
+   * @param array &$result
+   *   The API response data, passed by reference for modification.
+   *
+   * @return null the return value is ignored
    */
   public static function alterAPIResult($entity, $action, $params, &$result) {
     $config = CRM_Core_Config::singleton();
@@ -975,11 +1308,17 @@ class CRM_Utils_Hook {
   /**
    * Alter query of CRM_Contact_BAO_Query
    *
-   * @param int Mode of query component, check constant of CRM_Contact_BAO_Query::MODE_
-   * @param string $part Query component to alter in lower case. Available: select, from, where, having
-   * @param object $object Query object of CRM_Contact_BAO_Query
-   * @param array $additional Additional parameter for alter query
-   *   - part == 'from', use $additional['tables'] to alter query
+   * @param int $mode
+   *   Mode of query component. Check constants of CRM_Contact_BAO_Query::MODE_*.
+   * @param string $part
+   *   Query component to alter in lower case. Available: 'select', 'from', 'where', 'having'.
+   * @param CRM_Contact_BAO_Query &$object
+   *   Query object of CRM_Contact_BAO_Query, passed by reference for modification.
+   * @param array &$additional
+   *   Additional parameters for alter query. When $part is 'from', use
+   *   $additional['tables'] to alter the query, passed by reference.
+   *
+   * @return null the return value is ignored
    */
   public static function alterQuery($mode, $part, &$object, &$additional) {
     $config = CRM_Core_Config::singleton();

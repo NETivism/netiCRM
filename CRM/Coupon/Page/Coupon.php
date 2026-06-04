@@ -3,7 +3,7 @@
 class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
 
   /**
-   * The action links that we need to display for the browse screen
+   * The action links that we need to display for the browse screen.
    *
    * @var array
    */
@@ -12,11 +12,9 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   protected $_pager = NULL;
 
   /**
-   * Get the action links for this page.
+   * Get the action links available for the coupon listing page.
    *
-   * @param null
-   *
-   * @return  array   array of action links that we need to display for the browse screen
+   * @return array An array of action links (Edit, Copy, Disable, Enable, Delete).
    * @access public
    */
   public function &actionLinks() {
@@ -62,6 +60,10 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     return self::$_actionLinks;
   }
 
+  /**
+   * Executes the main logic for the coupon page based on the action parameter.
+   * Handles browsing, editing, copying, deleting, and exporting coupons.
+   */
   public function run() {
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
 
@@ -109,6 +111,10 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     parent::run();
   }
 
+  /**
+   * Displays a browseable list of coupons, with filtering and pagination.
+   * Fetches coupon data, applies filters, and assigns them to the template.
+   */
   public function browse() {
     // get all coupon
     $coupon = [];
@@ -224,6 +230,10 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     return $coupon;
   }
 
+  /**
+   * Exports coupon data to an Excel file (.xlsx format).
+   * Applies current filters and generates a downloadable report.
+   */
   public function export() {
     $filter = [];
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
@@ -285,6 +295,12 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $writer->close();
   }
 
+  /**
+   * Handles the editing or adding of a coupon using a simple controller.
+   *
+   * @param int $id The ID of the coupon to edit, or 0 for adding a new one.
+   * @param int $action The action to perform (UPDATE or ADD).
+   */
   public function edit($id, $action) {
     // create a simple controller for editing price sets
     $controller = new CRM_Core_Controller_Simple('CRM_Coupon_Form_Coupon', ts('Coupon'), $action);
@@ -299,10 +315,9 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   }
 
   /**
-   * This function is to make a copy of a coupon, including
-   * all the fields in the page
+   * Creates a copy of an existing coupon, including all its associated fields.
+   * Redirects after successful copy.
    *
-   * @return void
    * @access public
    */
   public function copy() {
@@ -334,6 +349,11 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
   }
 
+  /**
+   * Initializes and assigns a pager object for managing large lists of coupons.
+   *
+   * @param int $total The total number of items to paginate.
+   */
   public function pager($total) {
     $params = [];
     $params['status'] = '';

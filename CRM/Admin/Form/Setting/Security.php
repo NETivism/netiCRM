@@ -3,10 +3,9 @@
 class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Website Security'));
@@ -71,6 +70,11 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
     return $defaults;
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $params = $this->controller->exportValues($this->_name);

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Drupal 7 specific system utilities for bootstrapping and user authentication
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 class CRM_Utils_System_Drupal7 {
 

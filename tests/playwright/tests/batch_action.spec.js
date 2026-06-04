@@ -1,3 +1,4 @@
+// Test batch actions on contacts: merge duplicates, delete, and add to group
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

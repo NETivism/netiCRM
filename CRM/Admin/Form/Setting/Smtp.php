@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,10 +39,9 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
   protected $_testButtonName;
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
@@ -69,11 +66,9 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
@@ -181,13 +176,11 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param   array  $fields   posted values of the form
+   * @param array $fields
    *
-   * @return  array  list of errors to be posted back to the form
-   * @static
-   * @access  public
+   * @return bool|array
    */
   public static function formRule($fields) {
     if ($fields['outBound_option'] == 0) {
@@ -219,12 +212,9 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * This function sets the default values for the form.
-   * default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if (!$this->_defaults) {

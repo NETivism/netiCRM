@@ -1,4 +1,8 @@
 <?php
+/**
+ * Flydove smart marketing integration for syncing contact groups to the Flydove API
+ *
+ */
 
 class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_SmartMarketing {
   public const API_BASE_PATH = 'https://api.flydove.net/index.php?r=api/';

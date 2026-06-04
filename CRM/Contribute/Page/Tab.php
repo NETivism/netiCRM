@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,7 +54,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    *
    * @return array
    * @access public
-   *
+   * @static
    */
   public static function &honorLinks() {
     if (!(self::$_links)) {
@@ -95,7 +93,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    *
    * @return array
    * @access public
-   *
+   * @static
    */
   public static function &recurLinks() {
     if (!(self::$_links) && CRM_Core_Permission::check('access CiviContribute')) {
@@ -129,7 +127,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is browse
    *
-   * return null
+   * @return void
    * @access public
    */
   public function browse() {
@@ -249,7 +247,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is view
    *
-   * return null
+   * @return void
    * @access public
    */
   public function view() {
@@ -263,7 +261,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is update or new
    *
-   * return null
+   * @return void
    * @access public
    */
   public function edit() {
@@ -285,6 +283,12 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
+  /**
+   * Pre-process the page
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
@@ -351,6 +355,12 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Set context for redirection
+   *
+   * @return void
+   * @access public
+   */
   public function setContext() {
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     $context = CRM_Utils_Request::retrieve(

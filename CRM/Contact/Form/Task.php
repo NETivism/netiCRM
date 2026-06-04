@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -82,9 +80,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
   protected $_componentIds;
 
   /**
-   * build all the data structures needed to build the form
-   *
-   * @param
+   * Build all the data structures needed to build the form.
    *
    * @return void
    * @access public
@@ -93,6 +89,15 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     self::preProcessCommon($this);
   }
 
+  /**
+   * Common pre-processing for all task forms.
+   *
+   * This method determines the set of contact IDs to operate on,
+   * handling 'all' or 'selected' records from a search result.
+   *
+   * @param CRM_Core_Form $form
+   * @param bool $useTable Should the contact IDs be stored in a temp table?
+   */
   public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_contactIds = [];
     $form->_contactTypes = [];
@@ -293,7 +298,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return void
+   * @return array{}
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -331,11 +336,13 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
   //end of function
 
   /**
-   * simple shell that derived classes can call to add buttons to
-   * the form with a customized title for the main Submit
+   * Simple shell that derived classes can call to add buttons to
+   * the form with a customized title for the main Submit.
    *
    * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
+   * @param string $nextType button type for the form after processing
+   * @param string $backType
+   * @param bool|null $submitOnce
    *
    * @return void
    * @access public

@@ -1,3 +1,4 @@
+// Test donation payment flow via ECPay (AllPay) ATM virtual account transfer
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

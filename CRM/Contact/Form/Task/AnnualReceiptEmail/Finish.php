@@ -60,17 +60,22 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_Finish extends CRM_Contact_Form_T
     );
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array{}
+   */
   public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
   }

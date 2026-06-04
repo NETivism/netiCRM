@@ -3,7 +3,6 @@
 /**
  * This class handles MCP (Model Context Protocol) requests.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
  *
  */

@@ -12,7 +12,7 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    * Create image generation record
    *
    * @param array $data Record data
-   * @return CRM_AI_BAO_AIImageGeneration
+   * @return CRM_AI_DAO_AIImageGeneration The created record object.
    * @throws CRM_Core_Exception
    */
   public static function create(&$data) {
@@ -67,7 +67,7 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    * @param array $params      (reference) an assoc array of name/value pairs
    * @param array $defaults    (reference) an assoc array to hold the flattened values
    *
-   * @return object   CRM_AI_BAO_AIImageGeneration object
+   * @return CRM_AI_DAO_AIImageGeneration|null CRM_AI_DAO_AIImageGeneration object
    * @access public
    * @static
    */
@@ -103,7 +103,8 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    * Save generation record with full workflow
    *
    * @param array $data Complete generation data
-   * @return CRM_AI_BAO_AIImageGeneration
+   * @return CRM_AI_DAO_AIImageGeneration The saved record object.
+   * @throws CRM_Core_Exception
    */
   public function saveGenerationRecord($data) {
     return self::create($data);

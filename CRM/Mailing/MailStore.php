@@ -26,10 +26,9 @@
 */
 
 /**
+ * Abstract base class for mail store implementations that retrieve and process inbound email
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 

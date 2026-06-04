@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,13 +36,11 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
   public $_contactId;
   public $_action;
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function browse() {
-
     $count = CRM_Contact_BAO_GroupContact::getContactGroup($this->_contactId, NULL, NULL, TRUE);
 
     $in = &CRM_Contact_BAO_GroupContact::getContactGroup($this->_contactId, 'Added');
@@ -58,12 +54,11 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is update
+   * This function is called when action is update.
    *
-   * @param int    $groupID group id
+   * @param int $groupId group id
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function edit($groupId = NULL) {
     $controller = new CRM_Core_Controller_Simple(
@@ -92,6 +87,11 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     $controller->run();
   }
 
+  /**
+   * Build all the data structures needed to build the page.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
@@ -109,8 +109,7 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
    * when the page loads, it decides the which action has
    * to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();
@@ -141,12 +140,13 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
   }
 
   /**
-   * function to remove/ rejoin the group
+   * Function to remove/ rejoin the group.
    *
    * @param int $groupContactId id of crm_group_contact
    * @param string $status this is the status that should be updated.
+   * @param int $contactID
    *
-   * $access public
+   * @return bool|void
    */
   public static function del($groupContactId, $status, $contactID) {
     $groupId = CRM_Contact_BAO_GroupContact::getGroupId($groupContactId);

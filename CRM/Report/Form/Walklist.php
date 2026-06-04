@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -55,6 +53,9 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
   protected $_summary = NULL;
 
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -127,10 +128,20 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
 
@@ -160,6 +171,11 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(",\n", $select) . " ";
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = NULL;
 
@@ -179,6 +195,11 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     }
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -225,6 +246,11 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     }
   }
 
+  /**
+   * Set order by clause.
+   *
+   * @return void
+   */
   public function orderBy() {
     $this->_orderBy = "";
     foreach ($this->_columns as $tableName => $table) {
@@ -237,12 +263,24 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     $this->_orderBy = "ORDER BY " . CRM_Utils_Array::implode(', ', $this->_orderBy) . " ";
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

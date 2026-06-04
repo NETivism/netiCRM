@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,6 +56,9 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Membership'];
   protected $_customGroupGroupBy = FALSE;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -180,11 +181,21 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->assign('reportTitle', ts('Membership Detail Report'));
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = $this->_columnHeaders = [];
 
@@ -214,6 +225,11 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = NULL;
 
@@ -252,6 +268,11 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -297,10 +318,20 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_contact']}.id, {$this->_aliases['civicrm_membership']}.membership_type_id";
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     $this->beginPostProcess();
@@ -317,6 +348,13 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

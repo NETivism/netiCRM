@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -113,18 +112,17 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
    */
   public $assoc_type;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_openid_associations
-  */
+   * class constructor
+   *
+   * @return civicrm_openid_associations
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -134,41 +132,41 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'server_url' => [
           'name' => 'server_url',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Server Url') ,
-                  ] ,
+        ],
         'handle' => [
           'name' => 'handle',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Handle') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'secret' => [
           'name' => 'secret',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Secret') ,
-                  ] ,
+        ],
         'issued' => [
           'name' => 'issued',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Issued') ,
-                  ] ,
+        ],
         'lifetime' => [
           'name' => 'lifetime',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Lifetime') ,
-                  ] ,
+        ],
         'assoc_type' => [
           'name' => 'assoc_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Assoc Type') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
       ];
     }
     return self::$_fields;
@@ -176,7 +174,6 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -185,7 +182,6 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -194,8 +190,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -217,8 +212,7 @@ class CRM_Standalone_OpenID_DAO_Associations extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

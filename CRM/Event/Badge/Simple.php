@@ -33,7 +33,6 @@
 
 /**
  *
- * @package CRM
  *
  */
 
@@ -42,6 +41,9 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
   public $tMarginName;
   public $pdf;
   public $border;
+  /**
+   * class constructor
+   */
   public function __construct() {
     parent::__construct();
     $config = CRM_Core_Config::singleton();
@@ -57,6 +59,13 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
     $this->tMarginName = 20;
   }
 
+  /**
+   * Generate label
+   *
+   * @param array $participant
+   *
+   * @return void
+   */
   public function generateLabel($participant) {
     $x = $this->pdf->GetAbsX();
     $y = $this->pdf->GetY();

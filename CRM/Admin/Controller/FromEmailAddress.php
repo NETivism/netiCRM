@@ -4,6 +4,10 @@ class CRM_Admin_Controller_FromEmailAddress extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string $title
+   * @param int $action
+   * @param bool $modal
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);

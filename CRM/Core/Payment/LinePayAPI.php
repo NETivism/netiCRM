@@ -1,6 +1,7 @@
 <?php
 /**
  * Standalone api without extends from class
+ * @package CiviCRM_PaymentProcessor
  */
 class CRM_Core_Payment_LinePayAPI {
   public const LINEPAY_TEST = 'https://sandbox-api-pay.line.me';
@@ -109,6 +110,11 @@ class CRM_Core_Payment_LinePayAPI {
   protected $_apiGetMethodTypes = ['query', 'authorization', 'recurring/check'];
   protected $_apiMethod;
 
+  /**
+   * Class constructor.
+   *
+   * @param array $apiParams API configuration parameters (channelId, channelSecret, isTest, apiType)
+   */
   public function __construct($apiParams) {
     extract($apiParams);
     if (empty($channelId) || empty($channelSecret) || is_null($isTest) || empty($apiType)) {
@@ -133,6 +139,13 @@ class CRM_Core_Payment_LinePayAPI {
     }
   }
 
+  /**
+   * Send a request to the LinePay API.
+   *
+   * @param array $params request parameters
+   *
+   * @return object|bool API response object or FALSE on failure
+   */
   public function request($params) {
     $orderId = $transactionId = NULL;
     $allowedFields = self::fields($this->_apiType);
@@ -231,6 +244,15 @@ class CRM_Core_Payment_LinePayAPI {
     }
   }
 
+  /**
+   * Save API request/response data to the database.
+   *
+   * @param string|null $orderId contribution trxn_id
+   * @param string|null $transactionId LinePay transaction ID
+   * @param mixed $data data to be recorded
+   *
+   * @return CRM_Contribute_DAO_LinePay|bool DAO object or FALSE on failure
+   */
   public function writeRecord($orderId = NULL, $transactionId = NULL, $data = NULL) {
     if (empty($orderId) && empty($transactionId)) {
       return FALSE;
@@ -263,6 +285,11 @@ class CRM_Core_Payment_LinePayAPI {
     return $record;
   }
 
+  /**
+   * Execute the API request using cURL.
+   *
+   * @return array<string, bool|int|string[]> [success => bool, status => int, curlError => array]
+   */
   private function _curl() {
     $this->_success = FALSE;
     $ch = curl_init($this->_apiURL);
@@ -313,7 +340,12 @@ class CRM_Core_Payment_LinePayAPI {
   }
 
   /**
-   * API query fields
+   * Get the allowed or required fields for a given API type.
+   *
+   * @param string $apiType API type
+   * @param bool $isResponse whether to return response fields (unused)
+   *
+   * @return array allowed field names
    */
   public static function fields($apiType, $isResponse = FALSE) {
     $fields = [];
@@ -331,6 +363,13 @@ class CRM_Core_Payment_LinePayAPI {
     return $fields;
   }
 
+  /**
+   * Get the error message corresponding to a LinePay error code.
+   *
+   * @param string $code error code
+   *
+   * @return string|false translated error message or FALSE if not found
+   */
   public static function errorMessage($code) {
     $code = (string) $code;
 

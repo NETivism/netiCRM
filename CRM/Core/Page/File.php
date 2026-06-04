@@ -27,13 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Core_Page_File extends CRM_Core_Page {
+  /**
+   * Run the page flow.
+   *
+   * Handles file retrieval, downloading, and deletion based on request parameters.
+   *
+   * @return void
+   */
   public function run() {
 
     $entityId = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);

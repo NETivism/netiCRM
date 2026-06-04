@@ -1,3 +1,4 @@
+// Test that registration pages for all event types (unlimited, limited, waitlist, approval) are accessible
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,11 +42,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   protected $_isEdit = FALSE;
 
   /**
-   * Function to pre process the form
+   * Function to pre process the form.
    *
-   * @access public
+   * This method retrieves the combination ID and action from the request,
+   * determines if it's an edit mode, and loads available combinations if adding to a page.
    *
-   * @return None
+   * @return void
    */
   public function preProcess() {
     parent::preProcess();
@@ -72,12 +71,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * This function sets the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
+   * It handles different scenarios: editing existing, selecting existing, or creating new.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -100,7 +99,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * load Combination Defaults
+   * Load default values for an existing combination.
+   *
+   * Fetches combination details including name, description, SKU, amounts, images,
+   * and associated products from the database.
+   *
+   * @return array the array of combination details
    */
   private function _loadCombinationDefaults() {
     $defaults = [];
@@ -149,7 +153,11 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * load Selection Defaults
+   * Load defaults when selecting an existing combination for a page.
+   *
+   * Retrieves the ID and weight of the selected combination.
+   *
+   * @return array<string, mixed> the array containing ID and weight
    */
   private function _loadSelectionDefaults() {
     $defaults = [];
@@ -163,7 +171,11 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * load New Combination Defaults
+   * Load defaults for a brand new combination.
+   *
+   * Sets initial values for installments, activity status, and currency.
+   *
+   * @return array<string, int> the array of new combination defaults
    */
   private function _loadNewCombinationDefaults() {
     $defaults = [];
@@ -176,7 +188,14 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * set Default Weight
+   * Set the default weight for the combination.
+   *
+   * Calculates the next available weight for the combination within the context
+   * of the current contribution page.
+   *
+   * @param array $defaults the current default values array
+   *
+   * @return array the updated defaults array with weight set
    */
   private function _setDefaultWeight($defaults) {
     if (!isset($defaults['weight']) || !$defaults['weight']) {
@@ -198,10 +217,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * This method handles DELETE and PREVIEW actions, or builds either the
+   * full combination creation form or the selection form for existing combinations.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // Handle DELETE and PREVIEW actions using parent logic
@@ -223,7 +244,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Handle DELETE, PREVIEW action
+   * Handle special actions like DELETE or PREVIEW.
+   *
+   * Sets up the confirmation buttons for deletion or the preview block
+   * for the selected combination.
+   *
+   * @return void
    */
   private function _handleSpecialActions() {
     $urlParams = 'civicrm/admin/contribute/premium';
@@ -284,7 +310,11 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * build Selection Form
+   * Build the selection form for existing combinations.
+   *
+   * Adds a dropdown to select a combination and a weight input field.
+   *
+   * @return void
    */
   private function _buildSelectionForm() {
     $session = CRM_Core_Session::singleton();
@@ -298,7 +328,11 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * add Combination Buttons
+   * Add buttons for the combination edit form.
+   *
+   * Includes weight field and standard Save/Cancel buttons.
+   *
+   * @return void
    */
   private function _addCombinationButtons() {
     $session = CRM_Core_Session::singleton();
@@ -325,10 +359,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Build form for editing combination details
+   * Build the form for editing combination details.
+   *
+   * Adds fields for combination name, SKU, description, images, amounts,
+   * calculate mode, and associated product selections.
    *
    * @return void
-   * @access private
    */
   private function _buildCombinationForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -438,14 +474,15 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Function for validation
+   * Validation rule for the form.
    *
-   * @param array $params (ref.) an assoc array of name/value pairs
-   * @param $files
+   * Ensures at least one product is selected and image URLs are provided if
+   * the thumbnail option is chosen.
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @param array $params an assoc array of name/value pairs submitted by the form
+   * @param array $files the uploaded files array
+   *
+   * @return mixed true if no errors, or an array of error messages
    */
   public static function formRule($params, $files) {
     $errors = [];
@@ -480,10 +517,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Delegates the actual processing to specific methods based on the action
+   * (PREVIEW, DELETE, EDIT, or SELECTION).
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -506,12 +545,22 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     }
   }
 
+  /**
+   * Redirect back to the premiums page after preview.
+   *
+   * @return void
+   */
   private function _handlePreviewAction() {
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
     CRM_Utils_System::redirect($url);
   }
 
+  /**
+   * Perform the actual deletion of a combination.
+   *
+   * @return void
+   */
   private function _handleDeleteAction() {
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
@@ -520,6 +569,15 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     CRM_Utils_System::redirect($url);
   }
 
+  /**
+   * Process the submitted data for editing or creating a combination.
+   *
+   * Identifies the related premium ID and saves the combination details.
+   *
+   * @param array $params the submitted form values
+   *
+   * @return void
+   */
   private function _processCombinationEdit($params) {
     $pageID = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
 
@@ -537,6 +595,15 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     CRM_Utils_System::redirect($url);
   }
 
+  /**
+   * Process the selection of an existing combination for a page.
+   *
+   * Updates the combination record to associate it with the current premium setup.
+   *
+   * @param array $params the submitted form values
+   *
+   * @return void
+   */
   private function _processCombinationSelection($params) {
     $pageID = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, 0);
     $urlParams = 'civicrm/admin/contribute/premium';
@@ -561,13 +628,15 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Save combination details including products and images
+   * Save combination details including products and images.
    *
-   * @param array $params
-   * @param int $premiumID
+   * Handles image resizing, cleaning money fields, and updating the database
+   * for the combination and its related products.
+   *
+   * @param array $params the submitted form values
+   * @param int $premiumID the ID of the related premium set
    *
    * @return void
-   * @access private
    */
   private function _saveCombinationDetails($params, $premiumID) {
     $params = $this->controller->exportValues($this->_name);
@@ -660,16 +729,14 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Resize a premium image to a different size
+   * Resize a premium image to a different size.
    *
-   * @access private
+   * @param string $fileName the path to the original image
+   * @param string $resizedName the path to save the resized image
+   * @param int $w the target width
+   * @param int $h the target height
    *
-   * @param string $filename
-   * @param string $resizedName
-   * @param $width
-   * @param $height
-   *
-   * @return Path to image
+   * @return string the URL to the resized image
    */
   private function _resizeImage($fileName, $resizedName, $w, $h) {
     $image = new CRM_Utils_Image($fileName, $resizedName);
@@ -679,10 +746,9 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Add Premium Combination to Contribution Page');

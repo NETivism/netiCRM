@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,14 +38,12 @@
 class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
 
   /**
-   * Validate a value against a CustomField type
+   * Validate a value against a CustomField type.
    *
-   * @param string $type  The type of the data
-   * @param string $value The data to be validated
+   * @param string $type The type of the data (e.g., 'Memo', 'String', 'Int')
+   * @param mixed $value The data to be validated
    *
-   * @return boolean True if the value is of the specified type
-   * @access public
-   * @static
+   * @return bool True if the value is of the specified type
    */
   public static function typecheck($type, $value) {
 
@@ -125,19 +121,17 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
           }
           return file_exists($file_path);
         }
-        return;
+        return FALSE;
     }
     return FALSE;
   }
 
   /**
-   * given a 'civicrm' type string, return the mysql data store area
+   * Given a 'civicrm' type string, return the MySQL data store column prefix.
    *
-   * @param string $type the civicrm type string
+   * @param string $type the CiviCRM type string
    *
-   * @return the mysql data store placeholder
-   * @access public
-   * @static
+   * @return string|null the MySQL data store placeholder
    */
   public static function typeToField($type) {
     switch ($type) {
@@ -172,6 +166,15 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
     }
   }
 
+  /**
+   * Fix memo type fields by adding wildcards if they are missing.
+   *
+   * Also handles ID mapping for ContactReference fields.
+   *
+   * @param array &$formValues associative array of form values
+   *
+   * @return void
+   */
   public static function fixFieldValueOfTypeMemo(&$formValues) {
     if (empty($formValues)) {
       return NULL;
@@ -210,13 +213,12 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
   }
 
   /**
-   * Function to delet option value give an option value and custom group id
+   * Delete a custom value record from the corresponding custom value table.
    *
    * @param int $customValueID custom value ID
    * @param int $customGroupID custom group ID
    *
    * @return void
-   * @static
    */
   public static function deleteCustomValue($customValueID, $customGroupID) {
     // first we need to find custom value table, from custom group ID

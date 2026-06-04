@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
@@ -40,7 +39,9 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
-   * @return null|string
+   * Active provider count.
+   *
+   * @return int|null|string
    */
   public static function activeProviderCount() {
     $activeProviders = CRM_Core_DAO::singleValueQuery(
@@ -53,12 +54,9 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   /**
    * Retrieves the list of providers from the database.
    *
-   * $selectArr array of coloumns to fetch
-   * $getActive boolean to get active providers
-   *
-   * @param null $selectArr
-   * @param null $filter
-   * @param bool $getActive
+   * @param array|null $selectArr array of columns to fetch
+   * @param array|null $filter
+   * @param bool $getActive boolean to get active providers
    * @param string $orderBy
    *
    * @return array
@@ -95,9 +93,11 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
-   * Create or Update an SMS provider
+   * Create or Update an SMS provider.
+   *
    * @param array $params
-   * @return array saved values
+   *
+   * @return CRM_SMS_DAO_Provider saved values
    */
   public static function create(&$params) {
     $id = CRM_Utils_Array::value('id', $params);
@@ -132,8 +132,10 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
+   * Set is_active flag.
+   *
    * @param int $id
-   * @param $is_active
+   * @param bool $is_active
    *
    * @return bool
    */
@@ -143,9 +145,11 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
+   * Delete SMS provider.
+   *
    * @param int $providerID
    *
-   * @return null
+   * @return void|null
    * @throws Exception
    */
   public static function del($providerID) {
@@ -161,11 +165,12 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
     }
     $dao->delete();
   }
-
   /**
+   * Get provider info.
+   *
    * @param int $providerID
-   * @param null $returnParam
-   * @param null $returnDefaultString
+   * @param string|null $returnParam
+   * @param string|null $returnDefaultString
    *
    * @return mixed
    */

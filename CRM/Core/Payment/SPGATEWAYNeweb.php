@@ -1,13 +1,20 @@
 <?php
+/**
+ * Handles IPN transfer callbacks from SPGATEWAY (Neweb Pay) for recurring and one-time payment notifications.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 class CRM_Core_Payment_SPGATEWAYNeweb {
 
   /**
    * Migrate from civicrm_spgateway_neweb_transfer
    *
-   * @param array $post
-   * @param array $get
-   * @param bool $print
-   * @param bool $isTest
+   * @param array $args Arguments
+   * @param array|null $post POST data
+   * @param array|null $get GET data
+   * @param bool $print Whether to print the response
+   * @param bool $isTest Whether in test mode
    * @return void
    */
   public static function transfer($args, $post = NULL, $get = NULL, $print = TRUE, $isTest = FALSE) {
@@ -129,9 +136,9 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
   /**
    * Migrate from civicrm_spgateway_neweb_resync
    *
-   * @param bool $ppid_new
-   * @param string $day
-   * @param array $recurNo
+   * @param int $ppid_new Payment processor ID
+   * @param string $day Cycle day
+   * @param array $recurNo Recurring IDs
    * @return void
    */
   public static function resync($ppid_new, $day = '', $recurNo = []) {

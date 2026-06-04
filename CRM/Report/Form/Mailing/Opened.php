@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -62,6 +60,9 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
   ];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = [];
 
@@ -150,11 +151,21 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->assign('chartSupported', TRUE);
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -188,11 +199,25 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     //print_r($this->_select);
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}";
@@ -217,6 +242,11 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     //print_r($this->_from);
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -267,6 +297,11 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_mailing']}.id";
@@ -276,6 +311,11 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     $this->beginPostProcess();
@@ -295,6 +335,13 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Build chart.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function buildChart(&$rows) {
     if (empty($rows)) {
       return;
@@ -314,6 +361,13 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     $this->assign('chartType', $this->_params['charts']);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
@@ -356,6 +410,11 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Get mailing options for select.
+   *
+   * @return array
+   */
   public function mailing_select() {
 
     $data = [];

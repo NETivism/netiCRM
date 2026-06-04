@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -39,7 +37,7 @@ require_once 'ezc/autoload/mail_autoload.php';
 class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
@@ -48,13 +46,12 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   /**
    * Register a reply event.
    *
-   * @param int $job_id       The job ID of the reply
-   * @param int $queue_id     The queue event id
-   * @param string $hash      The hash
+   * @param int $job_id The job ID of the reply.
+   * @param int $queue_id The queue event id.
+   * @param string $hash The hash.
+   * @param string|null $replyto Optional reply-to address.
    *
-   * @return object|null      The mailing object, or null on failure
-   * @access public
-   * @static
+   * @return CRM_Mailing_BAO_Mailing|null The mailing object, or null on failure.
    */
   public static function &reply($job_id, $queue_id, $hash, $replyto = NULL) {
     /* First make sure there's a matching queue event */
@@ -94,18 +91,16 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   }
 
   /**
-   * Forward a mailing reply
+   * Forward a mailing reply.
    *
-   * @param int $queue_id     Queue event ID of the sender
-   * @param string $mailing   The mailing object
-   * @param string $bodyTxt   text part of the body (ignored if $fullEmail provided)
-   * @param string $replyto   Reply-to of the incoming message
-   * @param string $bodyHTML  HTML part of the body (ignored if $fullEmail provided)
-   * @param string $fullEmail whole email to forward in one string
+   * @param int $queue_id Queue event ID of the sender.
+   * @param CRM_Mailing_BAO_Mailing $mailing (reference) The mailing object.
+   * @param string $bodyTxt (reference) Text part of the body.
+   * @param string $replyto Reply-to of the incoming message.
+   * @param string|null $bodyHTML (reference) HTML part of the body.
+   * @param string|null $fullEmail (reference) Whole email to forward in one string.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function send($queue_id, &$mailing, &$bodyTxt, $replyto, &$bodyHTML = NULL, &$fullEmail = NULL) {
     $domain = CRM_Core_BAO_Domain::getDomain();
@@ -195,15 +190,13 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   }
 
   /**
-   * Send an automated response
+   * Send an automated response.
    *
-   * @param object $mailing       The mailing object
-   * @param int $queue_id         The queue ID
-   * @param string $replyto       Optional reply-to from the reply
+   * @param CRM_Mailing_BAO_Mailing $mailing (reference) The mailing object.
+   * @param int $queue_id The queue ID.
+   * @param string $replyto Optional reply-to from the reply.
    *
    * @return void
-   * @access private
-   * @static
    */
   private static function autoRespond(&$mailing, $queue_id, $replyto) {
     $config = CRM_Core_Config::singleton();
@@ -284,15 +277,13 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   }
 
   /**
-   * Get row count for the event selector
+   * Get row count for the event selector.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           Optional ID of a job to filter on
-   * @param boolean $is_distinct  Group by queue ID?
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of a job to filter on.
+   * @param bool $is_distinct Group by queue ID?
    *
-   * @return int                  Number of rows in result set
-   * @access public
-   * @static
+   * @return int|null Number of rows in result set.
    */
   public static function getTotalCount(
     $mailing_id,
@@ -337,18 +328,16 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   }
 
   /**
-   * Get rows for the event browser
+   * Get rows for the event browser.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           optional ID of the job
-   * @param boolean $is_distinct  Group by queue id?
-   * @param int $offset           Offset
-   * @param int $rowCount         Number of rows
-   * @param array $sort           sort array
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of the job.
+   * @param bool $is_distinct Group by queue id?
+   * @param int|null $offset Offset for the query.
+   * @param int|null $rowCount Number of rows to return.
+   * @param CRM_Utils_Sort|string|null $sort Sort object or string.
    *
-   * @return array                Result set
-   * @access public
-   * @static
+   * @return array Result set of reply events.
    */
   public static function &getRows(
     $mailing_id,

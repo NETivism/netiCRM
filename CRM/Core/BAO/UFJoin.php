@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,11 @@
 class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
 
   /**
-   * takes an associative array and creates a uf join object
+   * Create, update, or delete a UF join record.
    *
-   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array $params associative array of UF join data
    *
-   * @return object CRM_Core_DAO_UFJoin object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_UFJoin the join object
    */
   public static function &create($params) {
     // see if a record exists with the same weight
@@ -66,6 +62,13 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
     return $dao;
   }
 
+  /**
+   * Delete all UF join records for a specific module and entity.
+   *
+   * @param array &$params associative array containing 'module', 'entity_table', and 'entity_id'
+   *
+   * @return void
+   */
   public static function &deleteAll(&$params) {
     $module = CRM_Utils_Array::value('module', $params);
     $entityTable = CRM_Utils_Array::value('entity_table', $params);
@@ -86,14 +89,11 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
   }
 
   /**
-   * Given an assoc list of params, find if there is a record
-   * for this set of params
+   * Find the ID of an existing UF join record based on parameters.
    *
-   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array &$params associative array of identifying fields
    *
-   * @return int or null
-   * @access public
-   * @static
+   * @return int|null join record ID if found, otherwise NULL
    */
   public static function findJoinEntryId(&$params) {
     if (CRM_Utils_Array::value('id', $params)) {
@@ -123,14 +123,11 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
   }
 
   /**
-   * Given an assoc list of params, find if there is a record
-   * for this set of params and return the group id
+   * Find the UF group ID for a specific join record.
    *
-   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array &$params associative array of identifying fields
    *
-   * @return int or null
-   * @access public
-   * @static
+   * @return int|null UF group ID if found, otherwise NULL
    */
   public static function findUFGroupId(&$params) {
 
@@ -148,6 +145,13 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
     return NULL;
   }
 
+  /**
+   * Get the primary and secondary UF group IDs associated with an entity.
+   *
+   * @param array &$params associative array identifying the entity
+   *
+   * @return array [first_gid, second_gid, first_active, second_active]
+   */
   public static function getUFGroupIds(&$params) {
 
     $dao = new CRM_Core_DAO_UFJoin();

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,7 +38,10 @@
 class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Pre-processes the merge task.
+   *
+   * This method validates the selection and then redirects to the appropriate
+   * merge UI (either the simple 2-contact merge or the multi-contact dedupe screen).
    *
    * @return void
    * @access public

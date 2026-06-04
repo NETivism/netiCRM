@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,10 +47,9 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   }
 
   /**
-   * Return the DAO object containing to the default row of
-   * civicrm_mail_settings and cache it for further calls
+   * Get the default mail settings DAO object.
    *
-   * @return object  DAO with the default mail settings set
+   * @return CRM_Core_BAO_MailSettings default mail settings object
    */
   public static function &defaultDAO() {
     static $dao = NULL;
@@ -75,44 +72,39 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   }
 
   /**
-   * Return the domain from the default set of settings
+   * Get the default domain for mail settings.
    *
-   * @return string  default domain
+   * @return string|null default domain
    */
   public static function defaultDomain() {
     return self::defaultDAO()->domain;
   }
 
   /**
-   * Return the localpart from the default set of settings
+   * Get the default localpart for mail settings.
    *
-   * @return string  default localpart
+   * @return string|null default localpart
    */
   public static function defaultLocalpart() {
     return self::defaultDAO()->localpart;
   }
 
   /**
-   * Return the return path from the default set of settings
+   * Get the default return path for mail settings.
    *
-   * @return string  default return path
+   * @return string|null default return path
    */
   public static function defaultReturnPath() {
     return self::defaultDAO()->return_path;
   }
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * mail settings id. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a mail settings record based on provided parameters.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object CRM_Core_BAO_MailSettings object
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_MailSettings|null matching mail settings object
    */
   public static function retrieve(&$params, &$defaults) {
     $mailSettings = new CRM_Core_DAO_MailSettings();
@@ -136,14 +128,11 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   }
 
   /**
-   * function to add new mail Settings.
+   * Add a new mail settings record.
    *
-   * @param array $params reference array contains the values submitted by the form
+   * @param array $params associative array of mail settings data
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Core_DAO_MailSettings|null created mail settings object
    */
   public static function add(&$params) {
     $result = NULL;
@@ -169,13 +158,11 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   }
 
   /**
-   * takes an associative array and creates a mail settings object
+   * Create or update a mail settings record using a transaction.
    *
-   * @param array $params (reference ) an assoc array of name/value pairs
+   * @param array $params associative array of mail settings data
    *
-   * @return object CRM_Core_BAO_MailSettings object
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_MailSettings|CRM_Core_Error created/updated object or error
    */
   public static function &create(&$params) {
 
@@ -193,13 +180,11 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   }
 
   /**
-   * Function to delete the mail settings.
+   * Delete a mail settings record.
    *
-   * @param int $id mail settings id
+   * @param int $id mail settings ID
    *
-   * @access public
-   * @static
-   *
+   * @return bool TRUE on success, FALSE otherwise
    */
   public static function deleteMailSettings($id) {
     $results = NULL;

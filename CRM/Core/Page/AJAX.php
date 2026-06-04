@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
@@ -39,10 +37,12 @@
 class CRM_Core_Page_AJAX {
 
   /**
-   * function to call generic ajax forms
+   * Main entry point to call generic AJAX forms or methods.
    *
-   * @static
-   * @access public
+   * Extracts class_name, type, and fn_name from request parameters,
+   * performs authorization checks, and executes the requested logic.
+   *
+   * @return void
    */
   public static function run() {
     $className = CRM_Utils_Type::escape($_REQUEST['class_name'], 'String');
@@ -91,10 +91,11 @@ class CRM_Core_Page_AJAX {
   }
 
   /**
-   * function to change is_quick_config priceSet to complex
+   * Change a price set's 'is_quick_config' flag to 0 (complex).
    *
-   * @static
-   * @access public
+   * Expects 'id' and 'context' in the GET parameters.
+   *
+   * @return void|bool FALSE if ID is missing
    */
   public static function setIsQuickConfig() {
     if (!$id = CRM_Utils_Array::value('id', $_GET)) {
@@ -115,9 +116,11 @@ class CRM_Core_Page_AJAX {
   /**
    * Determine whether the request is for a valid class/method name.
    *
-   * @param string $type 'method'|'class'|''
-   * @param string $className 'Class_Name'
-   * @param string $fnName method name
+   * @param string $type the request type ('method', 'page', 'class', or empty)
+   * @param string $className the CiviCRM class name to check
+   * @param string|null $fnName the method name if type is 'method'
+   *
+   * @return bool TRUE if authorized, FALSE otherwise
    */
   public static function checkAuthz($type, $className, $fnName = NULL) {
     switch ($type) {
@@ -145,7 +148,11 @@ class CRM_Core_Page_AJAX {
     }
   }
   /**
-   * Guards against CSRF by validating the request method appears to be an ajax request
+   * Guard against CSRF by validating that the request is a web service request.
+   *
+   * @throws CRM_Core_Exception if the request method is invalid
+   *
+   * @return void
    */
   public static function validateAjaxRequestMethod() {
     if (!CRM_Utils_REST::isWebServiceRequest()) {

@@ -26,8 +26,8 @@
 */
 
 /**
+ * Checks for available CiviCRM version updates from the upstream release feed
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
@@ -44,41 +44,34 @@ class CRM_Utils_VersionCheck {
     CACHEFILE_EXPIRE = 604800;
 
   /**
-   * We only need one instance of this object, so we use the
-   * singleton pattern and cache the instance in this variable
+   * Singleton instance of this class.
    *
-   * @var object
-   * @static
+   * @var CRM_Utils_VersionCheck|null
    */
   private static $_singleton = NULL;
 
   /**
-   * The version of the current (local) installation
+   * The version of the current (local) installation.
    *
-   * @var string
+   * @var string|null
    */
   public $localVersion = NULL;
 
   /**
-   * The latest version of CiviCRM
+   * The latest version of CiviCRM.
    *
-   * @var string
+   * @var string|null
    */
   public $latestVersion = NULL;
 
   /**
-   * Class constructor
-   *
-   * @access private
+   * Class constructor.
    */
   public function __construct() {
   }
 
   /**
-   * Static instance provider
-   *
-   * Method providing static instance of CRM_Utils_VersionCheck,
-   * as in Singleton pattern
+   * Return the singleton instance of CRM_Utils_VersionCheck.
    *
    * @return CRM_Utils_VersionCheck
    */
@@ -90,16 +83,21 @@ class CRM_Utils_VersionCheck {
   }
 
   /**
-   * Get the latest version number if it's newer than the local one
+   * Get the latest version number if it is newer than the local one.
    *
-   * @return string|null  returns the newer version's number or null if the versions are equal
+   * @return string|null The newer version string, or NULL if versions are equal or unknown.
    */
   public function newerVersion() {
     return NULL;
   }
 
   /**
-   * A dummy function required for suppressing download errors
+   * Error handler callback used to suppress download errors.
+   *
+   * @param int    $errorNumber The error level.
+   * @param string $errorString The error message.
+   *
+   * @return void
    */
   public static function downloadError($errorNumber, $errorString) {
     return;

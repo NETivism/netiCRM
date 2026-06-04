@@ -1,3 +1,4 @@
+// Test creating a CiviCRM profile with various field types and verifying frontend display
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

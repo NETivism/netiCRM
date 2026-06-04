@@ -3,12 +3,10 @@
 class CRM_Admin_StateMachine_FromEmailAddress extends CRM_Core_StateMachine {
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param object  CRM_Import_Controller
-   * @param int     $action
-   *
-   * @return object CRM_Import_StateMachine
+   * @param object $controller
+   * @param int $action
    */
   public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);

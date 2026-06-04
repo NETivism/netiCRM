@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -120,7 +118,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   /**
    * build all the data structures needed to build the form
    *
-   * @return void
+   * @return void|boolean
    * @access public
    */
   public function preProcess() {
@@ -355,9 +353,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
+   * @return array defaults array
    * @access public
-   *
-   * @return None
    */
   public function setDefaultValues() {
     $defaults = $this->_values;
@@ -496,11 +493,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return $defaults;
   }
 
-  /*
-     * do the set default related to location type id,
-     * primary location,  default country
-     *
-     */
+  /**
+   * Set location type and country to default for each block
+   *
+   * @param array $defaults (reference) defaults array
+   *
+   * @return void
+   * @access public
+   */
   public function blockSetDefaults(&$defaults) {
     $locationTypeKeys = array_filter(array_keys(CRM_Core_PseudoConstant::locationType()), 'is_int');
     sort($locationTypeKeys);
@@ -621,9 +621,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * This function is used to add the rules (mainly global rules) for form.
    * All local rules are added near the element
    *
-   * @return None
+   * @return void
    * @access public
-   * @see valid_date
    */
   public function addRules() {
     // skip adding formRules when custom data is build
@@ -642,11 +641,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   /**
    * global validation rules for the form
    *
-   * @param array $fields     posted values of the form
-   * @param array $errors     list of errors to be posted back to the form
-   * @param int   $contactId  contact id if doing update.
+   * @param array $fields    posted values of the form
+   * @param array $errors    list of errors to be posted back to the form
+   * @param int   $contactId contact id if doing update.
    *
-   * @return $primaryID emal/openId
+   * @return string|boolean emal/openId or TRUE
    * @static
    * @access public
    */
@@ -785,7 +784,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -901,9 +900,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   /**
    * Form submission of new/edit contact is processed.
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     // check if dedupe button, if so return.
@@ -1127,7 +1125,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   /**
    * is there any real significant data in the hierarchical location array
    *
-   * @param array $fields the hierarchical value representation of this location
+   * @param array $fields (reference) the hierarchical value representation of this location
    *
    * @return boolean true if data exists, false otherwise
    * @static
@@ -1171,10 +1169,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   /**
    * Function to that checks for duplicate contacts
    *
-   *  @param array  $fields      fields array which are submitted
-   *  @param array  $error       error message array
-   *  @param int    $contactID   contact id
-   *  @param string $contactType contact type
+   * @param array  $fields      (reference) fields array which are submitted
+   * @param array  $errors      (reference) error message array
+   * @param int    $contactID   contact id
+   * @param string $contactType contact type
+   *
+   * @return void
+   * @static
+   * @access public
    */
   public static function checkDuplicateContacts(&$fields, &$errors, $contactID, $contactType) {
     // if this is a forced save, ignore find duplicate rule
@@ -1234,6 +1236,12 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Get template file name
+   *
+   * @return string template file name
+   * @access public
+   */
   public function getTemplateFileName() {
     if ($this->_contactSubType) {
       $templateFile = "CRM/Contact/Form/Edit/SubType/{$this->_contactSubType}.tpl";
@@ -1245,15 +1253,17 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return parent::getTemplateFileName();
   }
 
-  /* Parse all address blocks present in given params
-     * and return parse result for all address blocks,
-     * This function either parse street address in to child
-     * elements or build street address from child elements.
-     *
-     * @params $params an array of key value consist of address  blocks.
-     *
-     * @return $parseSuccess as array of sucess/fails for every address block.
-     */
+  /**
+   * Parse all address blocks present in given params
+   * and return parse result for all address blocks,
+   * This function either parse street address in to child
+   * elements or build street address from child elements.
+   *
+   * @param array $params (reference) an array of key value consist of address blocks.
+   *
+   * @return array parseSuccess as array of sucess/fails for every address block.
+   * @access public
+   */
   public function parseAddress(&$params) {
     $parseSuccess = $parsedFields = [];
     if (!is_array($params['address']) ||
@@ -1332,13 +1342,15 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return $parseSuccess;
   }
 
-  /* check parse result and if some address block fails then this
-     * function return the status message for all address blocks.
-     *
-     * @param  $parseResult an array of address blk instance and its status.
-     *
-     * @return $statusMsg   string status message for all address blocks.
-     */
+  /**
+   * check parse result and if some address block fails then this
+   * function return the status message for all address blocks.
+   *
+   * @param array $parseResult an array of address blk instance and its status.
+   *
+   * @return string|null status message for all address blocks.
+   * @access public
+   */
   public function parseAddressStatusMsg($parseResult) {
     $statusMsg = NULL;
     if (!is_array($parseResult) || empty($parseResult)) {
@@ -1362,14 +1374,15 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return $statusMsg;
   }
 
-  /*
-     * Convert normal number to ordinal number format.
-     * like 1 => 1st, 2 => 2nd and so on...
-     *
-     * @param  $number int number to convert in to ordinal number.
-     *
-     * @return ordinal number for given number.
-     */
+  /**
+   * Convert normal number to ordinal number format.
+   * like 1 => 1st, 2 => 2nd and so on...
+   *
+   * @param int $number number to convert in to ordinal number.
+   *
+   * @return string|null ordinal number for given number.
+   * @access public
+   */
   public function ordinalNumber($number) {
     if (empty($number)) {
       return NULL;
@@ -1397,13 +1410,15 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return "$number$str";
   }
 
-  /* Update membership status to deceased
-     * function return the status message for updated membership.
-     *
-     * @param  $deceasedParams array  having contact id and deceased value.
-     *
-     * @return $updateMembershipMsg string  status message for updated membership.
-     */
+  /**
+   * Update membership status to deceased
+   * function return the status message for updated membership.
+   *
+   * @param array $deceasedParams array having contact id and deceased value.
+   *
+   * @return string|null status message for updated membership.
+   * @access public
+   */
   public function updateMembershipStatus($deceasedParams) {
     $updateMembershipMsg = NULL;
     $contactId = CRM_Utils_Array::value('contact_id', $deceasedParams);

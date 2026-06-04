@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching contacts by group membership with inclusion and exclusion
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,6 +47,12 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
   protected $_tableName = NULL;
 
   protected $_where = ' (1) ';
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     $this->_formValues = $formValues;
     $this->_columns = [ts('Contact Id') => 'contact_id',
@@ -88,12 +93,24 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     }
   }
 
+  /**
+   * Destructor.
+   *
+   * mysql drops the tables when connection is terminated
+   * cannot drop tables here, since the search might be used
+   * in other parts after the object is destroyed
+   */
   public function __destruct() {
     // mysql drops the tables when connectiomn is terminated
     // cannot drop tables here, since the search might be used
     // in other parts after the object is destroyed
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
 
     $groups = &CRM_Core_PseudoConstant::group();
@@ -168,6 +185,17 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $form->assign('elements', ['includeGroups', 'excludeGroups', 'andOr', 'includeTags', 'excludeTags']);
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $justIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -230,6 +258,13 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $sql;
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * This involves creating and populating a number of temp tables.
+   *
+   * @return string
+   */
   public function from() {
 
     //define table name
@@ -767,6 +802,13 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $from;
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
 
     if ($includeContactIDs) {
@@ -792,9 +834,11 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $where;
   }
 
-  /*
-     * Functions below generally don't need to be modified
-     */
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
   public function count() {
     $sql = $this->all();
 
@@ -802,18 +846,42 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $dao->N;
   }
 
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
+  /**
+   * Getter for columns.
+   *
+   * @return array
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }

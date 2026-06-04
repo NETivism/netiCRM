@@ -1,3 +1,4 @@
+// Batch-check all admin and CiviCRM backend pages for successful loading
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

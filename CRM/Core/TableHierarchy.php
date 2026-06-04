@@ -29,9 +29,7 @@
 /**
  * Class representing the table relationships
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_TableHierarchy {
@@ -80,6 +78,11 @@ class CRM_Core_TableHierarchy {
 
   ];
 
+  /**
+   * Returns the table hierarchy information.
+   *
+   * @return array
+   */
   public static function &info() {
     //get the campaign related tables.
 

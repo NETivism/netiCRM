@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,7 +37,7 @@
 class CRM_Report_Page_Instance extends CRM_Core_Page {
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run this page (figure out the action needed and perform it).
    *
    * @return void
    */

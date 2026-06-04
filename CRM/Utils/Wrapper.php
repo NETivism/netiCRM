@@ -32,7 +32,6 @@
  * The key elements of the wrapper are the controller and the
  * run method as explained below.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
@@ -50,16 +49,24 @@ class CRM_Utils_Wrapper {
   protected $_controller;
 
   /**
-   * Run.
+   * Instantiate and run the simple controller for the given form.
    *
-   * The heart of the callback processing is done by this method.
-   * forms are of different type and have different operations.
+   * This is the main callback entry point invoked by the CiviCRM menu router.
+   * It creates a CRM_Core_Controller_Simple instance, copies URL parameters
+   * into the session when requested, and then processes and renders the form.
    *
-   * @param string  formName    name of the form processing this action
-   * @param string  formLabel   label for the above form
+   * @param string     $formName   Fully-qualified class name of the form to run.
+   * @param string     $formLabel  Human-readable label displayed as the page title.
+   * @param array|null $arguments  Optional configuration array supporting keys:
+   *   - mode         (int)    Controller mode constant.
+   *   - imageUpload  (bool)   Enable image upload handling.
+   *   - addSequence  (bool)   Add a sequence number to the controller key.
+   *   - ignoreKey    (bool)   Ignore the form key validation.
+   *   - attachUpload (bool)   Enable attachment upload handling.
+   *   - urlToSession (array)  List of URL-variable-to-session mappings.
+   *   - setEmbedded  (bool)   Render the form in embedded (no-wrapper) mode.
    *
-   * @return none.
-   * @access public
+   * @return void
    */
   public function run($formName, $formLabel, $arguments = NULL) {
     if (is_array($arguments)) {

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Utility methods for PDF generation and manipulation
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Utils_PDF_Utils {

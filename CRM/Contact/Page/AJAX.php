@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
@@ -36,6 +35,14 @@
  * This class contains all contact related functions that are called using AJAX (jQuery)
  */
 class CRM_Contact_Page_AJAX {
+
+  /**
+   * AJAX callback to retrieve contact list for autocomplete.
+   *
+   * Outputs pipe-delimited contact list and exits.
+   *
+   * @return void
+   */
   public static function getContactList() {
 
     $perm = CRM_Core_Permission::check('access CiviCRM');
@@ -221,7 +228,11 @@ class CRM_Contact_Page_AJAX {
   }
 
   /**
-   * Function to fetch the values
+   * AJAX callback to fetch autocomplete values for custom fields.
+   *
+   * Outputs pipe-delimited option values and exits.
+   *
+   * @return void
    */
   public static function autocomplete() {
     $fieldID = CRM_Utils_Type::escape($_GET['cfid'], 'Integer');
@@ -257,6 +268,13 @@ class CRM_Contact_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * AJAX callback to create or update a relationship from case view.
+   *
+   * Outputs JSON response with relationship data and status, then exits.
+   *
+   * @return void
+   */
   public static function relationship() {
     // CRM_Core_Error::debug_var( 'GET' , $_GET , true, true );
     // CRM_Core_Error::debug_var( 'POST', $_POST, true, true );
@@ -309,7 +327,11 @@ class CRM_Contact_Page_AJAX {
   }
 
   /**
-   * Function to fetch the custom field help
+   * AJAX callback to fetch the custom field help text.
+   *
+   * Outputs the help_post value for the given custom field and exits.
+   *
+   * @return void
    */
   public static function customField() {
     $fieldId = CRM_Utils_Type::escape($_POST['id'], 'Integer');
@@ -324,7 +346,11 @@ class CRM_Contact_Page_AJAX {
   }
 
   /**
-   * Function to obtain list of permissioned employer for the given contact-id.
+   * AJAX callback to obtain list of permissioned employers for the given contact ID.
+   *
+   * Outputs pipe-delimited employer names and exits.
+   *
+   * @return void
    */
   public static function getPermissionedEmployer() {
     $session = CRM_Core_Session::singleton();
@@ -345,6 +371,11 @@ class CRM_Contact_Page_AJAX {
     }
   }
 
+  /**
+   * AJAX callback to output group nesting cache as JSON.
+   *
+   * @return void
+   */
   public static function groupTree() {
     $gids = CRM_Utils_Type::escape($_GET['gids'], 'String');
 
@@ -353,7 +384,11 @@ class CRM_Contact_Page_AJAX {
   }
 
   /**
-   * Function for building contact combo box
+   * AJAX callback for building contact combo box / autocomplete search.
+   *
+   * Outputs JSON or pipe-delimited contact data and exits.
+   *
+   * @return void
    */
   public static function search() {
     $json = TRUE;
@@ -531,11 +566,13 @@ ORDER BY sort_name ";
     CRM_Utils_System::civiExit();
   }
 
-  /*
-     * Function to check how many contact exits in db for given criteria,
-     * if one then return contact id else null
-     */
-
+  /**
+   * AJAX callback to check how many contacts exist for given criteria.
+   *
+   * If exactly one contact is found, outputs the contact ID and exits.
+   *
+   * @return void
+   */
   public static function contact() {
     $name = CRM_Utils_Type::escape($_GET['name'], 'String');
 
@@ -554,8 +591,11 @@ WHERE sort_name LIKE '%$name%'";
   }
 
   /**
-   * Function to delete custom value
+   * AJAX callback to delete a custom value.
    *
+   * Outputs updated count component if contact ID is provided.
+   *
+   * @return void
    */
   public static function deleteCustomValue() {
     $customValueID = CRM_Utils_Type::escape($_POST['valueID'], 'Positive');
@@ -573,8 +613,11 @@ WHERE sort_name LIKE '%$name%'";
   }
 
   /**
-   * Function to perform enable / disable actions on record.
+   * AJAX callback to perform enable or disable actions on a record.
    *
+   * Outputs JSON response with status and exits.
+   *
+   * @return void
    */
   public static function enableDisable() {
     $op = CRM_Utils_Type::escape($_POST['op'], 'String');

@@ -26,14 +26,18 @@
 */
 
 /**
+ * Provides internationalized pseudo-constant (option value) lookups
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Core_I18n_PseudoConstant {
+  /**
+   * Get all languages.
+   *
+   * @return array
+   */
   public static function &languages() {
     static $languages = NULL;
     if ($languages === NULL) {
@@ -48,11 +52,23 @@ class CRM_Core_I18n_PseudoConstant {
     return $languages;
   }
 
+  /**
+   * Get long name for short locale.
+   *
+   * @param string $short Short locale name (e.g., 'en').
+   *
+   * @return string|null Long locale name (e.g., 'en_US').
+   */
   public static function longForShort($short) {
     $longForShortMapping = &self::longForShortMapping();
     return $longForShortMapping[$short];
   }
 
+  /**
+   * Get long name for short locale mapping.
+   *
+   * @return array
+   */
   public static function &longForShortMapping() {
     static $longForShortMapping = NULL;
     if ($longForShortMapping === NULL) {
@@ -73,6 +89,13 @@ class CRM_Core_I18n_PseudoConstant {
     return $longForShortMapping;
   }
 
+  /**
+   * Get short name for long locale.
+   *
+   * @param string $long Long locale name (e.g., 'en_US').
+   *
+   * @return string Short locale name (e.g., 'en').
+   */
   public static function shortForLong($long) {
     return substr($long, 0, 2);
   }

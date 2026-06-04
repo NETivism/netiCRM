@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -71,7 +69,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     /*
@@ -113,7 +110,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
   /**
    * Build the form
    *
-   * @access public
    *
    * @return void
    */
@@ -242,9 +238,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
   /**
    * This function sets the default values for the form.
    *
-   * @access public
    *
-   * @return None
+   * @return array|null
    */
   public function setDefaultValues() {
     if (empty($this->_fields)) {
@@ -280,9 +275,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
   /**
    * process the form after the input has been submitted and validated
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -351,6 +345,14 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
   }
   //end of function
 
+  /**
+   * Update pending online contribution
+   *
+   * @param int $participantId
+   * @param int $statusId
+   *
+   * @return int|null
+   */
   public static function updatePendingOnlineContribution($participantId, $statusId) {
     if (!$participantId || !$statusId) {
       return;

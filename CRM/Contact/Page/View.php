@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -76,8 +74,6 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
     // process url params
@@ -229,8 +225,9 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
   /**
    * Get meta details of the contact.
    *
-   * @return void
-   * @access public
+   * @param int $contactId
+   *
+   * @return array
    */
   public static function getContactDetails($contactId) {
     return list($displayName,
@@ -241,6 +238,11 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     ) = CRM_Contact_BAO_Contact::getDisplayAndImage($contactId, TRUE);
   }
 
+  /**
+   * Get the search URL.
+   *
+   * @return string
+   */
   public function getSearchURL() {
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
@@ -292,6 +294,13 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     return CRM_Utils_System::url($urlString, $urlParams);
   }
 
+  /**
+   * Check user permission for the page.
+   *
+   * @param CRM_Core_Page $page
+   *
+   * @return void
+   */
   public static function checkUserPermission($page) {
     // check for permissions
     $page->_permission = NULL;
@@ -323,6 +332,14 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     }
   }
 
+  /**
+   * Set page title.
+   *
+   * @param int $contactId
+   * @param bool $isDeleted
+   *
+   * @return void
+   */
   public static function setTitle($contactId, $isDeleted = FALSE) {
     static $contactDetails;
     $displayName = $contactImage = NULL;

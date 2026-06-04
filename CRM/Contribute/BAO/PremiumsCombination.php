@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -74,7 +72,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    *
-   * @return object
+   * @return CRM_Contribute_DAO_PremiumsCombination
    */
   public static function add(&$params, &$ids) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
@@ -98,7 +96,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    *
    * @param array $params associated array of fields
    *
-   * @return object|null object on success, null otherwise
+   * @return CRM_Contribute_DAO_PremiumsCombination|CRM_Core_Error object on success, error otherwise
    * @access public
    * @static
    */
@@ -124,6 +122,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    *
+   * @return boolean
    */
   public static function del($id) {
     $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
@@ -141,6 +140,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @param array $defaults associated array of default values
    * @param int   $id       premium combination id
    *
+   * @return array
    * @access public
    * @static
    */
@@ -163,6 +163,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    *
    * @param int $premiumsId
    * @param boolean $onlyActive
+   * @param boolean $unassignedOnly
    *
    * @return array
    * @access public

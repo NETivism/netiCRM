@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -168,7 +166,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
    *
    * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if (empty($this->_fields)) {
@@ -194,11 +192,14 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
+   * Checks for duplicate external identifiers.
    *
-   * @return true if no errors, else array of errors
+   * @param array $fields The input form values.
+   *
+   * @return array
+   *   true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -222,11 +223,11 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();

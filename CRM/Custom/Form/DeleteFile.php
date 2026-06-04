@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,6 +54,11 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
    */
   protected $_fid;
 
+  /**
+   * Pre process
+   *
+   * @return void
+   */
   public function preProcess() {
 
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
@@ -66,8 +69,7 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
@@ -87,7 +89,6 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
    * Process the form when submitted
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
 

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching contributions by contact tag
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +36,12 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
 
   public $_columns;
   protected $_formValues;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
@@ -52,6 +57,11 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
     ];
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     /**
      * Define the search form fields here
@@ -70,14 +80,26 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
   public function all(
     $offset = 0,
@@ -130,6 +152,11 @@ GROUP BY civicrm_contact.id
     return $sql;
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     return "
       civicrm_contribution,
@@ -140,10 +167,16 @@ GROUP BY civicrm_contact.id
 ";
   }
 
-  /*
-  * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
-  *
-  */
+  /**
+   * Build the WHERE clause.
+   *
+   * WHERE clause is an array built from any required JOINS plus conditional
+   * filters based on search criteria field values.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
@@ -186,9 +219,11 @@ GROUP BY civicrm_contact.id
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /*
-     * Functions below generally don't need to be modified
-     */
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
   public function count() {
     $sql = $this->all();
 
@@ -199,14 +234,33 @@ GROUP BY civicrm_contact.id
     return $dao->N;
   }
 
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
   public function summary() {
     return NULL;
   }

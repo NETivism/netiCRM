@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,6 +56,13 @@ class CRM_Contact_Task {
    */
   public static $_optionalTasks = NULL;
 
+  /**
+   * Initialize tasks.
+   *
+   * @param array $addTask
+   *
+   * @return void
+   */
   public static function initTasks($addTask = NULL) {
     if (!self::$_tasks) {
       self::$_tasks = [
@@ -244,11 +249,9 @@ class CRM_Contact_Task {
 
   /**
    * These tasks are the core set of tasks that the user can perform
-   * on a contact / group of contacts
+   * on a contact / group of contacts.
    *
    * @return array the set of tasks for a group of contacts
-   * @static
-   * @access public
    */
   public static function &taskTitles() {
     self::initTasks();
@@ -289,14 +292,13 @@ class CRM_Contact_Task {
   }
 
   /**
-   * show tasks selectively based on the permission level
-   * of the user
+   * Show tasks selectively based on the permission level
+   * of the user.
    *
    * @param int $permission
-   * @param bool $deletedContacts  are these tasks for operating on deleted contacts?
+   * @param bool $deletedContacts are these tasks for operating on deleted contacts?
    *
    * @return array set of tasks that are valid for the user
-   * @access public
    */
   public static function &permissionedTaskTitles($permission, $deletedContacts = FALSE) {
     $tasks = [];
@@ -340,11 +342,11 @@ class CRM_Contact_Task {
   }
 
   /**
-   * These tasks get added based on the context the user is in
+   * These tasks get added based on the context the user is in.
    *
-   * @return array the set of optional tasks for a group of contacts
-   * @static
-   * @access public
+   * @param array $tasks
+   *
+   * @return void
    */
   public static function &optionalTaskTitle(&$tasks) {
     $task = self::$_tasks[14];
@@ -356,6 +358,13 @@ class CRM_Contact_Task {
     }
   }
 
+  /**
+   * Get task class and result.
+   *
+   * @param int $value
+   *
+   * @return array
+   */
   public static function getTask($value) {
     self::initTasks();
 

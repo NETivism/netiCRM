@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,6 +43,11 @@ class CRM_Contact_Form_Task_EmailCommon {
   public $_allContactDetails = [];
   public $_toContactEmails = [];
 
+  /**
+   * Pre-process and build the list of available 'From' email addresses.
+   *
+   * @param CRM_Core_Form $form
+   */
   public static function preProcessFromAddress(&$form) {
     $form->_single = FALSE;
     $className = CRM_Utils_System::getClassName($form);
@@ -245,13 +248,14 @@ class CRM_Contact_Form_Task_EmailCommon {
   }
 
   /**
-   * form rule
+   * Form rule.
    *
-   * @param array $fields    the input form values
-   * @param array $dontCare
-   * @param array $self      additional values form 'this'
+   * @param array $fields The input form values.
+   * @param array $dontCare (not used)
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else array of errors
+   * @return bool|array
+   *   true if no errors, else array of errors.
    * @access public
    *
    */
@@ -277,11 +281,13 @@ class CRM_Contact_Form_Task_EmailCommon {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
+   * @param CRM_Contact_Form_Task_Email|CRM_Activity_Form_Task_Email $form
+   *
+   * @return void
    * @access public
    *
-   * @return None
    */
   public static function postProcess(&$form) {
     if (count($form->_contactIds) > self::MAX_EMAILS_KILL_SWITCH) {

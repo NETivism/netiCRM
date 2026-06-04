@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,6 +51,12 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    * @var int
    */
   protected $_contactId;
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
 
     $this->_contactId = $this->get('contactId');
@@ -61,12 +65,10 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. GroupContact that in edit/view mode
-   * the default values are retrieved from the database
+   * This function sets the default values for the form.
    *
+   * @return array{} defaults array
    * @access public
-   *
-   * @return None
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -78,7 +80,7 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   /**
    * This function is used to add the rules for form.
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function addRules() {
@@ -87,7 +89,7 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -137,10 +139,10 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   }
 
   /**
+   * Process the form when submitted
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     $contactID = [$this->_contactId];

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +35,11 @@
  * Page for displaying list of categories for Settings
  */
 class CRM_Admin_Page_Setting extends CRM_Core_Page {
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
   public function run() {
     if (defined('CIVICRM_SITE_KEY')) {
       $this->assign("site_key", CIVICRM_SITE_KEY);

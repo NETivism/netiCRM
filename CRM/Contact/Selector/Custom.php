@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Selector.php 11510 2007-09-18 09:21:34Z lobo $
  *
@@ -41,7 +40,13 @@
  */
 class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  /**
+   * Whether to include contact IDs in the query.
+   *
+   * @var bool
+   */
   public $_includeContactIds;
+
   /**
    * This defines two actions- View and Edit.
    *
@@ -90,6 +95,11 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    */
   protected $_action;
 
+  /**
+   * The query object.
+   *
+   * @var CRM_Contact_BAO_Query
+   */
   protected $_query;
 
   /**
@@ -105,17 +115,32 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    */
   public $_search;
 
+  /**
+   * The custom search class name.
+   *
+   * @var string
+   */
   public $_customSearchClass;
 
   /**
-   * Class constructor
+   * Class constructor.
    *
-   * @param array $formValues array of form values imported
-   * @param array $params     array of parameters for query
-   * @param int   $action - action of search basic or advanced.
-   *
-   * @return CRM_Contact_Selector
-   * @access public
+   * @param string $customSearchClass
+   *   The custom search class name or extension key.
+   * @param array|null $formValues
+   *   Array of form values imported.
+   * @param array|null $params
+   *   Array of parameters for query.
+   * @param array|null $returnProperties
+   *   Array of return properties for query.
+   * @param int $action
+   *   Action of search basic or advanced.
+   * @param bool $includeContactIds
+   *   Whether to include contact IDs.
+   * @param bool $searchChildGroups
+   *   Whether to search child groups.
+   * @param string $searchContext
+   *   The search context.
    */
   public function __construct(
     $customSearchClass,
@@ -198,10 +223,14 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   //end of function
 
   /**
-   * getter for array of the parameters required for creating pager.
+   * Getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param string $action
+   *   The action being performed.
+   * @param array $params
+   *   Reference to the pager parameters array to populate.
+   *
+   * @return void
    */
   public function getPagerParams($action, &$params) {
     $params['status'] = ts('Contact %%StatusMessage%%');
@@ -214,14 +243,16 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   //end of function
 
   /**
-   * returns the column headers as an array of tuples:
-   * (name, sortName (key to the sort array))
+   * Returns the column headers as an array of tuples:
+   * (name, sortName (key to the sort array)).
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param string|null $action
+   *   The action being performed.
+   * @param int|null $output
+   *   What should the result set include (web/email/csv).
    *
-   * @return array the column headers that need to be displayed
-   * @access public
+   * @return array
+   *   The column headers that need to be displayed.
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     $columns = $this->_search->columns();
@@ -253,25 +284,32 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   /**
    * Returns total number of rows for the query.
    *
-   * @param
+   * @param string $action
+   *   The action being performed.
    *
-   * @return int Total number of rows
-   * @access public
+   * @return int
+   *   Total number of rows.
    */
   public function getTotalCount($action) {
     return $this->_search->count();
   }
 
   /**
-   * returns all the rows in the given offset and rowCount
+   * Returns all the rows in the given offset and rowCount.
    *
-   * @param enum   $action   the action being performed
-   * @param int    $offset   the row number to start from
-   * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param int $action
+   *   The action being performed.
+   * @param int $offset
+   *   The row number to start from.
+   * @param int $rowCount
+   *   The number of rows to return.
+   * @param string $sort
+   *   The SQL string that describes the sort order.
+   * @param int|null $output
+   *   What should the result set include (web/email/csv).
    *
-   * @return int   the total number of rows for this action
+   * @return array
+   *   The rows matching the given criteria.
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
@@ -361,13 +399,10 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   }
 
   /**
-   * Given the current formValues, gets the query in local
-   * language
+   * Gets the query in local language (QILL).
    *
-   * @param  array(reference)   $formValues   submitted formValues
-   *
-   * @return array              $qill         which contains an array of strings
-   * @access public
+   * @return array|null
+   *   The QILL array containing query description strings, or NULL.
    */
   public function getQILL() {
     if (method_exists($this->_search, 'qill')) {
@@ -376,6 +411,12 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     return NULL;
   }
 
+  /**
+   * Gets the summary data for the custom search results.
+   *
+   * @return array|null
+   *   The summary data array, or NULL if not available.
+   */
   public function getSummary() {
     if (method_exists($this->_search, 'summary')) {
       return $this->_search->summary();
@@ -394,10 +435,22 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     return ts('CiviCRM Custom Search');
   }
 
+  /**
+   * Get the alphabet query for contact filtering.
+   *
+   * @return null
+   *   Always returns NULL for custom searches.
+   */
   public function alphabetQuery() {
     return NULL;
   }
 
+  /**
+   * Execute the contact ID query for the custom search.
+   *
+   * @return CRM_Core_DAO
+   *   The DAO result object containing contact IDs.
+   */
   public function &contactIDQuery() {
     $params = [];
     $sql = $this->_search->contactIDs($params);
@@ -405,6 +458,15 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     return CRM_Core_DAO::executeQuery($sql, $params);
   }
 
+  /**
+   * Execute the contact additional ID query for the custom search.
+   *
+   * Uses contactAdditionalIDs() if available, otherwise falls back
+   * to contactIDs().
+   *
+   * @return CRM_Core_DAO
+   *   The DAO result object containing contact IDs.
+   */
   public function contactAdditionalIDQuery() {
     $params = [];
     if (method_exists($this->_search, 'contactAdditionalIDs')) {

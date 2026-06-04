@@ -28,9 +28,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 require_once __DIR__.'/extern.inc';

@@ -26,14 +26,19 @@
 */
 
 /**
+ * Custom search form for finding contacts within a zip code range
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -44,6 +49,11 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Searc
     ];
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     $form->add(
       'text',
@@ -71,11 +81,26 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Searc
     $form->assign('elements', ['postal_code_low', 'postal_code_high']);
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return array{}
+   */
   public function summary() {
     $summary = [];
     return $summary;
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -98,6 +123,11 @@ address.postal_code    as postal_code
     );
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     return "
 FROM      civicrm_contact contact_a
@@ -108,6 +138,13 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
 ";
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string|void
+   */
   public function where($includeContactIDs = FALSE) {
     $params = [];
 
@@ -141,10 +178,20 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
     return $this->whereClause($where, $params);
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return [];
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }

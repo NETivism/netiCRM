@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Resource URLs'));
@@ -64,6 +61,13 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields
+   *
+   * @return bool|array
+   */
   public static function formRule($fields) {
     if (isset($fields['enableSSL']) &&
       $fields['enableSSL']
@@ -91,6 +95,11 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     return TRUE;
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
   public function postProcess() {
     parent::postProcess();
 

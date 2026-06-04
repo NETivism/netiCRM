@@ -37,7 +37,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
   public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
@@ -58,6 +58,11 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
   }
 
+  /**
+   * Builds the form.
+   *
+   * @return void None.
+   */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->assign('email', $this->_values['email']);
@@ -77,6 +82,11 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void None.
+   */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_OptionValue::del($this->_id);
@@ -84,6 +94,11 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Saves values.
+   *
+   * @return void None.
+   */
   public function saveValues() {
     $saved = self::saveEmailAddress($this->_action, $this->_id, $this->_values);
     if ($this->_action & CRM_Core_Action::ADD && !empty($saved->id)) {
@@ -95,8 +110,8 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   /**
    * Load email address from option
    *
-   * @param int $id
-   * @return void
+   * @param int $id The option value ID.
+   * @return array The email address values.
    */
   public static function loadEmailAddress($id) {
     $values = [];
@@ -122,7 +137,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *   'is_active' => 1,
    *   'filter' => logic combination of self::VALID_EMAIL / self::VALID_SPF / self::VALID_DKIM
    *   'description' => 'description of this email'
-   * @return object
+   * @return object The saved option value object.
    */
   public static function saveEmailAddress($action, $id, $params) {
     $groupParams = ['name' => ('from_email_address')];
@@ -138,7 +153,10 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *
    * Include one-time validation link to verify owner of email address.
    *
-   * @return void
+   * @param string $email The email address to validate.
+   * @param int $id The option value ID.
+   *
+   * @return void None.
    * @static
    */
   public static function sendValidationEmail($email, $id) {
@@ -199,6 +217,13 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Verifies email address.
+   *
+   * @param int $id The option value ID.
+   *
+   * @return void None.
+   */
   public static function verifyEmail($id) {
     $key = CRM_Utils_Request::retrieve('k', 'String', CRM_Core_DAO::$_nullObject, TRUE);
     $id = CRM_Utils_Request::retrieve('id', 'Integer', CRM_Core_DAO::$_nullObject, TRUE);

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -138,24 +136,27 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
   }
   //end of function
 
   /**
-   * assign smarty variables to the template that will be used by google api to plot the contacts
+   * Assign smarty variables to the template that will be used by google api to plot the contacts.
    *
-   * @param array $contactIds list of contact ids that we need to plot
-   * @param int   $locationId location_id
+   * @param array|int $ids list of contact or event ids that we need to plot
+   * @param int $locationId location_id
+   * @param CRM_Core_Form|CRM_Core_Page $page
+   * @param bool $addBreadCrumb
+   * @param string $type
    *
-   * @return string           the location of the file we have created
-   * @access protected
+   * @return void
+   * @access public
    */
   public static function createMap($ids, $locationId, &$page, $addBreadCrumb, $type = 'Contact') {
     $config = CRM_Core_Config::singleton();

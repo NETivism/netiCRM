@@ -26,10 +26,9 @@
 */
 
 /**
+ * Handles mailing list resubscription events and confirmation processing
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -38,13 +37,11 @@ class CRM_Mailing_Event_BAO_Resubscribe {
   /**
    * Resubscribe a contact to the groups, he/she was unsubscribed from.
    *
-   * @param int $job_id       The job ID
-   * @param int $queue_id     The Queue Event ID of the recipient
-   * @param string $hash      The hash
+   * @param int $job_id The job ID.
+   * @param int $queue_id The Queue Event ID of the recipient.
+   * @param string $hash The hash.
    *
-   * @return array|null $groups    Array of all groups to which the contact was added, or null if the queue event could not be found.
-   * @access public
-   * @static
+   * @return array|null Array of all groups to which the contact was added, or null if the queue event could not be found.
    */
   public static function &resub_to_mailing($job_id, $queue_id, $hash) {
     /* First make sure there's a matching queue event */
@@ -180,17 +177,14 @@ class CRM_Mailing_Event_BAO_Resubscribe {
   }
 
   /**
-   * Send a reponse email informing the contact of the groups to which he/she
-   * has been resubscribed.
+   * Send a response email informing the contact of the groups to which he/she has been resubscribed.
    *
-   * @param string $queue_id      The queue event ID
-   * @param array $groups         List of group IDs
-   * @param bool $is_domain       Is this domain-level?
-   * @param int $job              The job ID
+   * @param int $queue_id The queue event ID.
+   * @param array $groups List of group IDs.
+   * @param bool $is_domain Is this domain-level?
+   * @param int $job The job ID.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function send_resub_response($queue_id, $groups, $is_domain, $job) {
     // param is_domain is not supported as of now.

@@ -8,7 +8,9 @@
 class CRM_Core_Reference_Dynamic extends CRM_Core_Reference_Basic {
 
   /**
-   * @param string $tableName
+   * Check if a given table is the target of this reference.
+   *
+   * @param string $tableName Table name to check.
    *
    * @return bool
    */

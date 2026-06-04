@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,6 +38,11 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   protected $_stringName = NULL;
 
   protected $_defaults = NULL;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_soInstance = CRM_Utils_Array::value('instance', $_GET);
     $this->assign('soInstance', $this->_soInstance);
@@ -53,6 +56,11 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     if ($this->_defaults !== NULL) {
       return $this->_defaults;
@@ -103,10 +111,9 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
@@ -158,13 +165,11 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array $values posted values of the form
+   * @param array $values
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return bool|array
    */
   public static function formRule($values) {
     $errors = [];
@@ -191,11 +196,9 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);

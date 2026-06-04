@@ -26,14 +26,22 @@
 */
 
 /**
+ * Builds search criteria form elements for the advanced contact search
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_Form_Search_Criteria {
 
+  /**
+   * Build basic search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function basic(&$form) {
     $form->addElement('hidden', 'hidden_basic', 1);
 
@@ -250,6 +258,15 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addDateTime('contact_modified_date_high', ts('and'), FALSE, ['formatType' => 'searchDate']);
   }
 
+  /**
+   * Build location search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function location(&$form) {
     $form->addElement('hidden', 'hidden_location', 1);
 
@@ -376,12 +393,30 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
+  /**
+   * Build activity search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function activity(&$form) {
     $form->add('hidden', 'hidden_activity', 1);
 
     CRM_Activity_BAO_Query::buildSearchForm($form);
   }
 
+  /**
+   * Build change log search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function changeLog(&$form) {
     $form->add('hidden', 'hidden_changeLog', 1);
 
@@ -393,6 +428,15 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addDateTime('log_date_high', ts('and'), FALSE, ['formatType' => 'searchDate']);
   }
 
+  /**
+   * Build task search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function task(&$form) {
     $form->add('hidden', 'hidden_task', 1);
 
@@ -407,6 +451,15 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
+  /**
+   * Build relationship search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function relationship(&$form) {
     $form->add('hidden', 'hidden_relationship', 1);
 
@@ -442,6 +495,15 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
+  /**
+   * Build demographics search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function demographics(&$form) {
     $form->add('hidden', 'hidden_demographics', 1);
     // radio button for gender
@@ -463,6 +525,15 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addNumber('age_high', ts('To'), $attribute);
   }
 
+  /**
+   * Build notes search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function notes(&$form) {
     $form->add('hidden', 'hidden_notes', 1);
 
@@ -514,6 +585,15 @@ class CRM_Contact_Form_Search_Criteria {
     //TODO: validate for only one state if prox_distance isset
   }
 
+  /**
+   * Build CiviCase search criteria
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function CiviCase(&$form) {
     //Looks like obsolete code, since CiviCase is a component, but might be used by HRD
     $form->add('hidden', 'hidden_CiviCase', 1);

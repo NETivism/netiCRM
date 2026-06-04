@@ -26,10 +26,9 @@
 */
 
 /**
+ * Manages report instance summary data and report listing display
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,14 +41,11 @@ class CRM_Report_BAO_Summary {
     CONTRIBUTION_RECEIVE_DATE = 3;
 
   /**
-   * 1. Summary
-   * 2. Contact source
-   * 3. Contribution by Instruments
-   * 4. Contact by Contribute times
-   * 5. Mailing Summary
-   * 6. Contribution Summary ( Table )
+   * Retrieves aggregated mailing statistics including send count, deliveries,
+   * open count, click count, and total mailings. Builds funnel data for chart display.
+   *
+   * @return array Nested array with chart-ready keys: label, count, people, sum, funnel.
    */
-
   public static function getMailingData() {
     $allData = [];
     $allData['Sended Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_event_queue meq");
@@ -64,6 +60,14 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
+  /**
+   * Retrieves aggregated participant statistics, including total events,
+   * online vs. non-online registration counts, and distinct participant counts.
+   *
+   * Note: method name has a typo ("Paritcipant"); kept as-is to preserve backwards compatibility.
+   *
+   * @return array Nested array with chart-ready keys: label, count, people.
+   */
   public static function getParitcipantData() {
     $allData = [];
     $allData['Event Total'] = self::parseDataFromSql("SELECT count(e.id) count FROM civicrm_event e");
@@ -76,6 +80,15 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
+  /**
+   * Retrieves aggregated contribution statistics broken down by online/offline source,
+   * contribution type, payment instrument, recurring status, and first-time vs. repeat donors.
+   * Also builds table-formatted rows for contribution type and recurring contribution summaries.
+   *
+   * @return array Nested chart-ready array with keys for online_offline, contribution_type,
+   *   instruments, recur, times, total_contribute, total_application_fee, total_amount,
+   *   contribution_type_table, and recur_table.
+   */
   public static function getContributionData() {
     $allData = [];
     $allData['online_offline'] = [];
@@ -123,6 +136,14 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
+  /**
+   * Retrieves funnel data for contacts who first contributed then registered for an event.
+   * Returns event registration count, online contribution count, and the count of contacts
+   * whose earliest non-event contribution predates their earliest event registration.
+   *
+   * @return array<string, mixed[]|null> Associative array with keys: 'Event Registration', 'Contribution',
+   *   and 'apply_after_contributed' (each as a data array with count/people keys).
+   */
   public static function getConToPartData() {
     $allData = [];
     $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
@@ -141,6 +162,14 @@ WHERE
     return $allData;
   }
 
+  /**
+   * Retrieves funnel data for contacts who first registered for an event then contributed.
+   * Returns event registration count, online contribution count, and the count of contacts
+   * whose earliest event registration predates their earliest non-event contribution.
+   *
+   * @return array<string, mixed[]|null> Associative array with keys: 'Event Registration', 'Contribution',
+   *   and 'contribute_after_applied' (each as a data array with count/people keys).
+   */
   public static function getPartToConData() {
     $allData = [];
     $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
@@ -158,6 +187,14 @@ WHERE
     return $allData;
   }
 
+  /**
+   * Retrieves funnel data correlating mailing deliveries/clicks to event registrations.
+   * Tracks recipients who received a mailing with an event URL, clicked it, and subsequently
+   * registered for an event (including a 1-hour attribution window variant).
+   *
+   * @return array<string, mixed[]|null> Associative array with mailing-to-participant funnel keys, each containing
+   *   count and people sub-keys.
+   */
   public static function getMailToPartData() {
     $allData = [];
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
@@ -194,6 +231,14 @@ WHERE p.register_date > mm.time_stamp AND p.register_date < DATE_ADD(mm.time_sta
     return $allData;
   }
 
+  /**
+   * Retrieves funnel data correlating mailing deliveries/clicks to contributions.
+   * Tracks recipients who received a mailing with a contribution URL, clicked it, and subsequently
+   * made a contribution (including a 1-hour attribution window variant).
+   *
+   * @return array<string, mixed[]|null> Associative array with mailing-to-contribution funnel keys, each containing
+   *   count and people sub-keys.
+   */
   public static function getMailToConData() {
     $allData = [];
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
@@ -229,6 +274,13 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
+  /**
+   * Returns participant counts attributed to a mailing at four time intervals:
+   * 1 hr, 1 day, 3 days, and 7 days after the mailing was opened.
+   *
+   * @return array Associative array keyed by human-readable interval label,
+   *   each value being a data array with a 'people' key.
+   */
   public static function getPartAfterMailData() {
     $allData = [];
     $allData['1'.ts('hr')] = self::getPartAfterMailFromSql(1);
@@ -239,6 +291,13 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
+  /**
+   * Returns contribution counts attributed to a mailing at four time intervals:
+   * 1 hr, 1 day, 3 days, and 7 days after the mailing was opened.
+   *
+   * @return array Associative array keyed by human-readable interval label,
+   *   each value being a data array with a 'people' key.
+   */
   public static function getConAfterMailData() {
     $allData = [];
     $allData['1'.ts('hr')] = self::getConAfterMailFromSql(1);
@@ -249,6 +308,13 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
+  /**
+   * Retrieves a breakdown of non-deleted contacts by acquisition source:
+   * those whose first action was a contribution, an event registration, or other.
+   *
+   * @return array<string, mixed> Associative array with keys 'all' (total contact count)
+   *   and 'filtered' (chart-ready array with label, count, people sub-keys).
+   */
   public static function getContactSource() {
     $allData = [];
     $all = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact WHERE is_deleted = 0");
@@ -267,10 +333,21 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
   }
 
   /**
-   * Get statistics by condition such as gender, age and province.
-   * @param  Constant $group_by such as self::GENDER, self::AGE, self::PROVINCE
-   * @param  Array    $params
-   * @return Array
+   * Retrieves contact/contribution statistics grouped by a demographic condition.
+   *
+   * @param int $group_by Grouping dimension constant: self::GENDER, self::AGE,
+   *   self::PROVINCE, or self::CONTRIBUTION_RECEIVE_DATE.
+   * @param array $params Configuration options:
+   *   - 'contribution' (bool): Whether to join contribution data.
+   *   - 'interval' (int|string): For AGE, the year-range bucket size (default 10);
+   *     for CONTRIBUTION_RECEIVE_DATE, the date granularity ('DAY'|'MONTH'|'WEEK', default 'DAY').
+   *   - 'seperate_other' (bool): For PROVINCE, whether to keep all provinces individually
+   *     instead of grouping beyond top 5 into "Other".
+   * @param array $filter Optional contribution date/field filters:
+   *   - 'contribution' (array): Sub-array with optional keys 'start_date', 'end_date',
+   *     and arbitrary field => value pairs for additional WHERE conditions.
+   *
+   * @return array Chart-ready array with keys: label, count, people, sum.
    */
   public static function getStaWithCondition($group_by, $params, $filter = []) {
     switch ($group_by) {
@@ -393,6 +470,14 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return self::convertArrayToChartUse($returnArray);
   }
 
+  /**
+   * Executes the SQL query that counts distinct participants who registered within
+   * a specified number of hours after their most recent mailing open event.
+   *
+   * @param int $hour Number of hours for the attribution window.
+   *
+   * @return array Data array with a 'people' key containing the matched contact count.
+   */
   private static function getPartAfterMailFromSql($hour) {
     $sql = 'SELECT COUNT(DISTINCT contact_id) people FROM (SELECT pp.*,mm.time_stamp FROM 
   (SELECT contact_id, register_date FROM civicrm_participant ORDER BY register_date) pp 
@@ -403,6 +488,15 @@ WHERE pp.register_date > mm.time_stamp AND pp.register_date < DATE_ADD(mm.time_s
     return self::parseDataFromSql($sql);
   }
 
+  /**
+   * Executes the SQL query that counts distinct contributors who made their first
+   * non-event contribution within a specified number of hours after their most
+   * recent mailing open event.
+   *
+   * @param int $hour Number of hours for the attribution window.
+   *
+   * @return array Data array with a 'people' key containing the matched contact count.
+   */
   private static function getConAfterMailFromSql($hour) {
     $sql = 'SELECT COUNT(DISTINCT contact_id) people FROM (SELECT cc.*,mm.time_stamp FROM 
   (SELECT ccc.contact_id, ccc.receive_date FROM civicrm_contribution ccc LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ccc.id WHERE pp.contribution_id IS NULL AND ccc.receive_date IS NOT NULL ORDER BY ccc.receive_date) cc 
@@ -413,6 +507,17 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     return self::parseDataFromSql($sql);
   }
 
+  /**
+   * Recursively converts a nested associative data array into a chart-friendly format.
+   * If the input is already in data format (keys: sum/people/count), it is returned as-is.
+   * If the input is a flat associative array of data-format items, it is pivoted into
+   * parallel arrays: label[], count[], people[], sum[].
+   * Otherwise, recurses into each sub-array.
+   *
+   * @param array $origArray Nested data array to transform.
+   *
+   * @return array Chart-ready array, or the original array if no transformation applies.
+   */
   private static function convertArrayToChartUse($origArray) {
     if (is_array($origArray)) {
       if (self::isArrayDataFormat($origArray)) {
@@ -454,6 +559,16 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     }
   }
 
+  /**
+   * Converts a chart-ready pivoted array into table rows suitable for display.
+   * Each row contains: label, formatted total amount, percentage of grand total,
+   * average amount per contribution, count, and distinct people count.
+   * A totals row is appended at the end.
+   *
+   * @param array $origArray Chart-ready array with parallel keys: label, sum, count, people.
+   *
+   * @return array Array of numeric-indexed row arrays ready for template rendering.
+   */
   private static function convertArrayToTableUse($origArray) {
     $returnArray = [];
     $sum_sum = array_sum($origArray['sum']);
@@ -475,6 +590,13 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     return $returnArray;
   }
 
+  /**
+   * Checks whether an array uses the standard data format with only the keys sum, people, count.
+   *
+   * @param mixed $origArray Value to check.
+   *
+   * @return bool TRUE if the array contains only sum/people/count keys; FALSE otherwise.
+   */
   private static function isArrayDataFormat($origArray) {
     $flag = TRUE;
     if (is_array($origArray)) {
@@ -497,6 +619,19 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     return $flag;
   }
 
+  /**
+   * Executes a SQL query and extracts sum, people, and count from the first result row.
+   * Supports {JOIN}, {AND}, {WHERE}, and {baseurl} placeholders in the SQL string:
+   * - {JOIN}: Replaced with an INNER JOIN to civicrm_contact for deleted-contact filtering.
+   * - {AND}: Replaced with 'AND contact.is_deleted = 0'.
+   * - {WHERE}: Replaced with 'WHERE contact.is_deleted = 0'.
+   * - {baseurl}: Replaced with the Drupal $base_url global value.
+   *
+   * @param string $sql SQL query string, optionally containing template placeholders.
+   *
+   * @return array|null Associative array with available keys from: sum, people, count.
+   *   Returns null if no rows are returned.
+   */
   private static function parseDataFromSql($sql) {
     if (strpos($sql, '{JOIN}')) {
       if (strpos($sql, 'civicrm_participant p')) {
@@ -537,6 +672,14 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     }
   }
 
+  /**
+   * Executes a SQL query and collects mailing summary rows into an array.
+   * Each row is expected to have columns: id, title, time, delivered, opened, clicked.
+   *
+   * @param string $sql Raw SQL query string (no placeholders).
+   *
+   * @return array Array of associative arrays, each representing one mailing row.
+   */
   private static function parseMailDataFromSql($sql) {
     $dao = CRM_Core_DAO::executeQuery($sql);
     $alldata = [];
@@ -553,6 +696,15 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
     return $alldata;
   }
 
+  /**
+   * Converts a sequential array of totals into a two-series funnel dataset.
+   * The first series contains values from index 1 onward (the "reached" counts),
+   * and the second series contains the difference from the previous step (the "drop-off" counts).
+   *
+   * @param array $arr Numeric array of totals in descending order (e.g. sent, delivered, opened, clicked).
+   *
+   * @return array<int, non-empty-list> Two-element array: [0] => reached values, [1] => drop-off values.
+   */
   private static function parseArrayToFunnel($arr) {
     $rtnArr = [[],[]];
     for ($i = 1; $i < count($arr); $i++) {

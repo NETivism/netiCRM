@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -111,12 +109,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
    *
    * gets session variables for table name, id of entity in table, type of entity and stores them.
    *
-   * @param
-   *
    * @return void
-   *
    * @access public
-   *
    */
   public function preProcess() {
 
@@ -181,9 +175,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
   /**
    * Set the default form values
    *
-   * @access protected
-   *
    * @return array the default array reference
+   * @access protected
    */
   public function &setDefaultValues() {
     if ($this->_cdType) {
@@ -223,9 +216,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
   /**
    * Process the user submitted custom data values.
    *
-   * @access public
-   *
    * @return void
+   * @access public
    */
   public function postProcess() {
     // Get the form values and groupTree

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -90,6 +88,9 @@ class CRM_Core_Config_Defaults {
    * @var int
    */
   public $maxImportFileSize;
+  /**
+   * Set core variables based on CiviCRM root.
+   */
   public function setCoreVariables() {
     global $civicrm_root;
     $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
@@ -152,15 +153,10 @@ class CRM_Core_Config_Defaults {
   }
 
   /**
-   * Function to set the default values
+   * Function to set the default values for configuration settings.
    *
-   * @param array   $defaults  associated array of form elements
-   * @param boolena $formMode  this funtion is called to set default
-   *                           values in an empty db, also called when setting component using GUI
-   *                           this variable is set true for GUI
-   *                           mode (eg: Global setting >> Components)
-   *
-   * @access public
+   * @param array $defaults The associative array of settings to be updated.
+   * @param bool $formMode Whether the function is called during GUI setting operations.
    */
   public static function setValues(&$defaults, $formMode = FALSE) {
     global $civicrm_root;

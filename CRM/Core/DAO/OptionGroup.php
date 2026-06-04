@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -114,18 +113,17 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_option_group
-  */
+   * class constructor
+   *
+   * @return civicrm_option_group
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -135,37 +133,37 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Group Name') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -173,7 +171,6 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -183,7 +180,6 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -192,8 +188,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -215,8 +210,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

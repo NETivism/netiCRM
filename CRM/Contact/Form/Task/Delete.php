@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -57,7 +55,12 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
   protected $_sharedAddressMessage = NULL;
 
   /**
-   * build all the data structures needed to build the form
+   * Pre-process the form.
+   *
+   * - Check permissions.
+   * - Determine the mode (delete, permanent delete, or restore).
+   * - Get the set of contact IDs.
+   * - Check for shared addresses that will be affected.
    *
    * @return void
    * @access public
@@ -223,11 +226,11 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $session = CRM_Core_Session::singleton();

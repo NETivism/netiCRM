@@ -26,8 +26,7 @@
 */
 
 /**
- *  Class to print labels in Avery or custom formats
- * functionality and smarts to the base PDF_Label.
+ * Class to print labels in Avery or custom formats, extending TCPDF with label layout functionality.
  *
  * @copyright CiviCRM LLC (c) 2004-2010
  *

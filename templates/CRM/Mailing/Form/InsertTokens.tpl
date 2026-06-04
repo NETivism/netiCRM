@@ -132,6 +132,8 @@ function selectValue( val, prefix) {
         if ( editor == "ckeditor" ) {
             oEditor = CKEDITOR.instances[html_message];
             oEditor.setData('');
+        } else if ( editor == "ckeditor5" ) {
+            window.CiviCKEditor5.setData(html_message, '');
         } else if ( editor == "joomlaeditor" ) { 
             document.getElementById(html_message).value = '' ;
             tinyMCE.execCommand('mceSetContent',false, '');               
@@ -198,6 +200,8 @@ function selectValue( val, prefix) {
         if ( editor == "ckeditor" ) {
             oEditor = CKEDITOR.instances[html_message];
             oEditor.setData( html_body );
+        } else if ( editor == "ckeditor5" ) {
+            window.CiviCKEditor5.setData(html_message, html_body);
         } else if ( editor == "joomlaeditor" ) { 
             cj("#"+ html_message).val( html_body );
             tinyMCE.execCommand('mceSetContent',false, html_body);           
@@ -322,6 +326,8 @@ if ( isMailing ) {
         } else if ( editor == "ckeditor" ) {
             oEditor = CKEDITOR.instances[html_message];
             oEditor.insertHtml(token2.toString() );
+        } else if ( editor == "ckeditor5" ) {
+            window.CiviCKEditor5.insertHtml(html_message, token2.toString());
         } else {
             cj( "#"+ html_message ).replaceSelection( token2 );
         }

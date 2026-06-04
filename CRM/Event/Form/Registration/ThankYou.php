@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,7 +54,6 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -153,7 +150,6 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    * no help display needed
    *
    * @return int
-   * @access public
    */
   public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
@@ -167,8 +163,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->assignToTemplate();
@@ -292,9 +287,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
   }
@@ -304,7 +298,6 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Complete');

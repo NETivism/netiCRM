@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -68,6 +66,9 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   protected $_charts = ['' => 'Tabular',
     'bar_3dChart' => 'Bar Chart',
   ];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = [];
 
@@ -263,6 +264,11 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Get mailing options for select.
+   *
+   * @return array
+   */
   public function mailing_select() {
 
     $data = [];
@@ -278,12 +284,21 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     return $data;
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->assign('chartSupported', TRUE);
     parent::preProcess();
   }
 
-  // manipulate the select function to query count functions
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
 
     $count_tables = [
@@ -350,6 +365,11 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     //print_r($this->_select);
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
 
     $this->_from = "
@@ -374,6 +394,11 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     //print_r($this->_from);
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -424,14 +449,29 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     // }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_mailing']}.id";
   }
 
+  /**
+   * Set order by clause.
+   *
+   * @return void
+   */
   public function orderBy() {
     $this->_orderBy = " ORDER BY {$this->_aliases['civicrm_mailing_job']}.end_date DESC ";
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     $this->beginPostProcess();
@@ -451,6 +491,11 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Get chart criteria.
+   *
+   * @return array
+   */
   public static function getChartCriteria() {
     return ['civicrm_mailing_event_delivered_delivered_count' => ts('Delivered'),
       'civicrm_mailing_event_bounce_bounce_count' => ts('Bounce'),
@@ -460,6 +505,15 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     ];
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
 
@@ -482,6 +536,13 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     return $errors;
   }
 
+  /**
+   * Build chart.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function buildChart(&$rows) {
     if (empty($rows)) {
       return;
@@ -518,6 +579,13 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
     $this->assign('chartType', $this->_params['charts']);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

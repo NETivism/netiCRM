@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -95,8 +93,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
   /**
    * Attempt to resolve the header with our mapper fields
    *
-   * @param header
-   * @param mapperFields
+   * @param string $columnName
+   * @param array $patterns
    *
    * @return string
    * @access public
@@ -129,8 +127,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
   /**
    * Guess at the field names given the data and patterns from the schema
    *
-   * @param patterns
-   * @param index
+   * @param array $patterns
+   * @param int $index
    *
    * @return string
    * @access public
@@ -646,8 +644,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * global validation rules for the form
    *
    * @param array $fields posted values of the form
+   * @param array $files
+   * @param CRM_Contribute_Import_Form_MapField $self
    *
-   * @return array list of errors to be posted back to the form
+   * @return array|boolean list of errors to be posted back to the form
    * @static
    * @access public
    */

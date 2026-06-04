@@ -24,6 +24,11 @@
 class CRM_Core_TemporaryErrorScope {
   public static $oldFrames;
 
+  /**
+   * Temporarily switch to exception-based error handling.
+   *
+   * @return CRM_Core_TemporaryErrorScope
+   */
   public static function useException() {
     $newFrame = [
       '_PEAR_default_error_mode' => PEAR_ERROR_CALLBACK,
@@ -33,18 +38,28 @@ class CRM_Core_TemporaryErrorScope {
     return new CRM_Core_TemporaryErrorScope($newFrame);
   }
 
+  /**
+   * Class constructor.
+   *
+   * @param array $newFrame The new error handling settings.
+   */
   public function __construct($newFrame) {
     self::$oldFrames[] = self::getActive();
     self::setActive($newFrame);
   }
 
+  /**
+   * Class destructor. Restores previous error handling settings.
+   */
   public function __destruct() {
     $oldFrame = array_pop(self::$oldFrames);
     self::setActive($oldFrame);
   }
 
   /**
-   * Read the active error-handler settings
+   * Read the active error-handler settings.
+   *
+   * @return array
    */
   public static function getActive() {
     return [
@@ -55,7 +70,9 @@ class CRM_Core_TemporaryErrorScope {
   }
 
   /**
-   * Set the active error-handler settings
+   * Set the active error-handler settings.
+   *
+   * @param array $frame The error handling settings to apply.
    */
   public static function setActive($frame) {
     $GLOBALS['_PEAR_default_error_mode'] = $frame['_PEAR_default_error_mode'];

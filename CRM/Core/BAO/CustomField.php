@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -64,13 +62,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   public static $_importFields = NULL;
 
   /**
-   * Build and retrieve the list of data types and descriptions
+   * Build and retrieve the list of data types and descriptions.
    *
-   * @param NULL
-   *
-   * @return array        Data type => Description
-   * @access public
-   * @static
+   * @return array Data type => Description
    */
   public static function &dataType() {
     if (!(self::$_dataType)) {
@@ -92,6 +86,11 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     return self::$_dataType;
   }
 
+  /**
+   * Return a mapping of data types to their valid HTML types.
+   *
+   * @return array multidimensional array of data types and their supported HTML input types
+   */
   public static function dataToHtml() {
     if (!self::$_dataToHtml) {
       self::$_dataToHtml = [
@@ -119,15 +118,13 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * takes an associative array and creates a custom field object
+   * Create a custom field object.
    *
-   * This function is invoked from within the web form layer and also from the api layer
+   * This function is invoked from within the web form layer and also from the API layer.
    *
-   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array &$params associative array of name/value pairs (passed by reference)
    *
-   * @return object CRM_Core_DAO_CustomField object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_CustomField the created custom field object
    */
   public static function create(&$params) {
     if (!isset($params['id']) && !isset($params['column_name'])) {
@@ -309,33 +306,24 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a custom field object based on criteria.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array &$params associative array of name/value pairs
+   * @param array &$defaults associative array to hold the flattened values
    *
-   * @return object CRM_Core_DAO_CustomField object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_CustomField|null the matching DAO object, or NULL if not found
    */
   public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_CustomField', $params, $defaults);
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag for a custom field in the database.
    *
-   * @param int      $id         Id of the database record
-   * @param boolean  $is_active  Value we want to set the is_active field
+   * @param int $id ID of the database record
+   * @param bool $is_active TRUE if the field should be active, otherwise FALSE
    *
-   * @return   Object            DAO object on sucess, null otherwise
-   *
-   * @access public
-   * @static
+   * @return bool the result of the update operation
    */
   public static function setIsActive($id, $is_active) {
     CRM_Utils_System::flushCache();
@@ -346,15 +334,11 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Get the field title.
+   * Get the label/title of a custom field.
    *
-   * @param int $id id of field.
+   * @param int $id ID of the field
    *
-   * @return string name
-   *
-   * @access public
-   * @static
-   *
+   * @return string the label of the custom field
    */
   public static function getTitle($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField', $id, 'label');
@@ -363,17 +347,16 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   /**
    * Store and return an array of all active custom fields.
    *
-   * @param string      $customDataType      type of Custom Data
-   * @param boolean     $showAll             If true returns all fields (includes disabled fields)
-   * @param boolean     $inline              If true returns all inline fields (includes disabled fields)
-   * @param int         $customDataSubType   Custom Data sub type value
-   * @param int         $customDataSubName   Custom Data sub name value
-   * @param boolean     $onlyParent          return only top level custom data, for eg, only Participant and ignore subname and subtype
+   * @param string|array $customDataType type of Custom Data
+   * @param bool $showAll If TRUE returns all fields (includes disabled fields)
+   * @param bool $inline If TRUE returns all inline fields
+   * @param int|array|null $customDataSubType Custom Data sub type value
+   * @param int|null $customDataSubName Custom Data sub name value
+   * @param bool $onlyParent return only top level custom data
+   * @param bool $onlySubType return only fields strictly for the subtype
+   * @param bool $checkPermission whether to check permissions
    *
-   * @return array      $fields - an array of active custom fields.
-   *
-   * @access public
-   * @static
+   * @return array an array of custom fields.
    */
   public static function &getFields(
     $customDataType = 'Individual',
@@ -573,15 +556,13 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Return the field ids and names (with groups) for import purpose.
+   * Return the field IDs and names (with groups) for import purpose.
    *
-   * @param int      $contactType   Contact type
-   * @param boolean  $showAll       If true returns all fields (includes disabled fields)
+   * @param string $contactType contact type
+   * @param bool $showAll If TRUE returns all fields (includes disabled fields)
+   * @param bool $onlyParent whether to only return parent fields
    *
-   * @return array   $fields -
-   *
-   * @access public
-   * @static
+   * @return array an associative array of importable custom fields
    */
   public static function &getFieldsForImport($contactType = 'Individual', $showAll = FALSE, $onlyParent = FALSE) {
     // Note: there are situations when we want getFieldsForImport() return fields related
@@ -622,13 +603,12 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Get the field id from an import key
+   * Get the field ID from an import key.
    *
-   * @param string $key       The key to parse
+   * @param string $key the key to parse (e.g., 'custom_123')
+   * @param bool $all whether to return all parts of the key
    *
-   * @return int|null         The id (if exists)
-   * @access public
-   * @static
+   * @return int|array|null the ID (if it exists) or an array of parts
    */
   public static function getKeyID($key, $all = FALSE) {
     $match = [];
@@ -646,17 +626,17 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * This function for building custom fields
+   * Add a custom field's form element to a QuickForm object.
    *
-   * @param object  $qf             form object (reference)
-   * @param string  $elementName    name of the custom field
-   * @param boolean $inactiveNeeded
-   * @param boolean $userRequired   true if required else false
-   * @param boolean $search         true if used for search else false
-   * @param string  $label          label for custom field
+   * @param CRM_Core_Form &$qf the form object (passed by reference)
+   * @param string $elementName name of the form element
+   * @param int $fieldId the ID of the custom field
+   * @param bool $inactiveNeeded (unused)
+   * @param bool $useRequired whether to enforce the 'required' attribute
+   * @param bool $search whether the element is being used in a search form
+   * @param string|null $label the label for the form element
    *
-   * @access public
-   * @static
+   * @return void
    */
   public static function addQuickFormElement(
     &$qf,
@@ -1044,15 +1024,11 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Delete the Custom Field.
+   * Delete a custom field and all its associated data.
    *
-   * @param   object $field - the field object
+   * @param CRM_Core_DAO_CustomField $field the field object to delete
    *
-   * @return  boolean
-   *
-   * @access public
-   * @static
-   *
+   * @return void
    */
   public static function deleteField($field) {
     CRM_Utils_System::flushCache();
@@ -1081,17 +1057,15 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Given a custom field value, its id and the set of options
-   * find the display value for this field
+   * Get the display value for a custom field.
    *
-   * @param mixed  $value     the custom field value
-   * @param int    $id        the custom field id
-   * @param int    $options   the assoc array of option name/value pairs
+   * @param mixed $value the stored value
+   * @param int $id the custom field ID
+   * @param array &$options the associative array of custom field definitions/options
+   * @param int|null $contactID optional contact ID
+   * @param bool $exportMode whether we are in export mode
    *
-   * @return  string   the display value
-   *
-   * @static
-   * @access public
+   * @return string the formatted display value
    */
   public static function getDisplayValue($value, $id, &$options, $contactID = NULL, $exportMode = FALSE) {
     $option = &$options[$id];
@@ -1111,6 +1085,19 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     );
   }
 
+  /**
+   * Common logic to format a custom field value for display.
+   *
+   * @param mixed $value the stored value
+   * @param array &$option associative array of options for the field
+   * @param string $html_type HTML type of the field
+   * @param string $data_type data type of the field
+   * @param string|null $format (unused)
+   * @param int|null $contactID optional contact ID
+   * @param bool $exportMode whether we are in export mode
+   *
+   * @return string formatted display value
+   */
   public static function getDisplayValueCommon(
     $value,
     &$option,
@@ -1299,16 +1286,15 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Function to set default values for custom data used in profile
+   * Set default values for custom fields used in a profile.
    *
-   * @params int    $customFieldId custom field id
-   * @params string $elementName   custom field name
-   * @params array  $defaults      associated array of fields
-   * @params int    $contactId     contact id
-   * @param  int    $mode          profile mode
+   * @param int $customFieldId custom field ID
+   * @param string $elementName name of the form element
+   * @param array &$defaults associative array to store default values (passed by reference)
+   * @param int|null $contactId optional contact ID
+   * @param int|null $mode profile mode (e.g., CRM_Profile_Form::MODE_CREATE)
    *
-   * @static
-   * @access public
+   * @return void
    */
   public static function setProfileDefaults(
     $customFieldId,
@@ -1394,6 +1380,15 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     }
   }
 
+  /**
+   * Get the URL and metadata for a file associated with a custom field.
+   *
+   * @param int $contactID contact ID
+   * @param int $cfID custom field ID
+   * @param int|null $fileID optional file ID (if already known)
+   *
+   * @return array|null associative array containing 'file_id' and 'file_url', or NULL
+   */
   public static function getFileURL($contactID, $cfID, $fileID = NULL) {
     if ($contactID) {
       if (!$fileID) {
@@ -1461,17 +1456,17 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
   }
 
   /**
-   * Format custom fields before inserting
+   * Format custom field values for database insertion.
    *
-   * @param int    $customFieldId       custom field id
-   * @param array  $customFormatted     formatted array
-   * @param mix    $value               value of custom field
-   * @param string $customFieldExtend   custom field extends
-   * @param int    $customValueId custom option value id
-   * @param int    $entityId            entity id (contribution, membership...)
+   * @param int $customFieldId custom field ID
+   * @param array &$customFormatted array to store formatted values (passed by reference)
+   * @param mixed $value the value to format
+   * @param string|array $customFieldExtend what the custom field extends
+   * @param int|null $customValueId ID of the custom value (if updating)
+   * @param int|null $entityId ID of the entity (e.g., contact_id, contribution_id)
+   * @param bool $inline whether the field is inline
    *
-   * @return array $customFormatted formatted custom field array
-   * @static
+   * @return array|void the formatted custom field array, or NULL if field view-only/invalid
    */
   public static function formatCustomField(
     $customFieldId,
@@ -1733,6 +1728,13 @@ SELECT $columnName
     return $customFormatted;
   }
 
+  /**
+   * Return the default schema for a custom data table.
+   *
+   * @param array &$params associative array containing 'name', 'is_multiple', and 'extends_name'
+   *
+   * @return array<string, mixed> the table schema definition
+   */
   public static function &defaultCustomTableSchema(&$params) {
     // add the id and extends_id
     $table = ['name' => $params['name'],
@@ -1767,6 +1769,15 @@ SELECT $columnName
     return $table;
   }
 
+  /**
+   * Create, modify, or delete a field in a custom value table.
+   *
+   * @param CRM_Core_DAO_CustomField $field the field object
+   * @param string $operation the operation to perform ('add', 'modify', 'delete')
+   * @param bool $indexExist whether an index already exists for this field
+   *
+   * @return void
+   */
   public static function createField($field, $operation, $indexExist = FALSE) {
 
     $tableName = CRM_Core_DAO::getFieldValue(
@@ -1826,6 +1837,14 @@ SELECT $columnName
     CRM_Core_BAO_SchemaHandler::alterFieldSQL($params, $indexExist);
   }
 
+  /**
+   * Get the table name, column name, and group ID for a custom field.
+   *
+   * @param int $fieldID custom field ID
+   * @param bool $force whether to bypass the cache
+   *
+   * @return array [table_name, column_name, group_id]
+   */
   public static function getTableColumnGroup($fieldID, $force = FALSE) {
     $cacheKey = __CLASS__ . '::' . __FUNCTION__ . '--' . $fieldID;
     $cache = CRM_Utils_Cache::singleton();
@@ -1854,16 +1873,12 @@ AND    cf.id = %1";
   /**
    * Function to get custom option groups
    *
-   * @params array $includeFieldIds ids of custom fields for which
-   * option groups must be included.
-   *
    * Currently this is required in the cases where option groups are to be included
    * for inactive fields : CRM-5369
    *
-   * @access public
+   * @param array|null $includeFieldIds ids of custom fields for which option groups must be included.
    *
-   * @return $customOptionGroup
-   * @static
+   * @return array associative array of (option_group_id => label)
    */
   public static function &customOptionGroup($includeFieldIds = NULL) {
     static $customOptionGroup = NULL;
@@ -1900,15 +1915,12 @@ INNER JOIN  civicrm_custom_field f ON ( g.id = f.option_group_id )
   }
 
   /**
-   * Function to fix orphan groups
+   * Fix potential orphan option groups when a custom field's option group is changed.
    *
-   * @params int $customFieldId custom field id
-   * @params int $optionGroupId option group id
-   *
-   * @access public
+   * @param int $customFieldId custom field ID
+   * @param int $optionGroupId new option group ID
    *
    * @return void
-   * @static
    */
   public static function fixOptionGroups($customFieldId, $optionGroupId) {
     // check if option group belongs to any custom Field else delete
@@ -1929,13 +1941,11 @@ INNER JOIN  civicrm_custom_field f ON ( g.id = f.option_group_id )
   }
 
   /**
-   * Function to check if option group is related to more than one
-   * custom field
+   * Check if an option group is still in use and delete it if it's an orphan.
    *
-   * @params int $optionGroupId option group id
+   * @param int $optionGroupId option group ID
    *
-   * @return
-   * @static
+   * @return void
    */
   public static function checkOptionGroup($optionGroupId) {
     $query = "
@@ -1952,6 +1962,14 @@ WHERE  option_group_id = {$optionGroupId}";
     }
   }
 
+  /**
+   * Get the default value for an option group, potentially converting it based on HTML type.
+   *
+   * @param int $optionGroupId option group ID
+   * @param string $htmlType HTML type of the custom field
+   *
+   * @return string|null the default value
+   */
   public static function getOptionGroupDefault($optionGroupId, $htmlType) {
     $query = "
 SELECT   default_value, html_type
@@ -1994,6 +2012,17 @@ ORDER BY html_type";
     return $defaultValue;
   }
 
+  /**
+   * Post-process form parameters to format custom field data for saving.
+   *
+   * @param array &$params associative array of form field values
+   * @param array &$customFields (unused)
+   * @param int $entityID ID of the entity (e.g., contact_id)
+   * @param string|array $customFieldExtends what the custom field extends
+   * @param bool $inline whether the fields are inline
+   *
+   * @return array formatted custom field data
+   */
   public static function postProcess(
     &$params,
     &$customFields,
@@ -2030,6 +2059,14 @@ ORDER BY html_type";
     return $customData;
   }
 
+  /**
+   * Build the option list for a custom field.
+   *
+   * @param array $field associative array of custom field metadata
+   * @param array &$options array to store the options (passed by reference)
+   *
+   * @return void
+   */
   public static function buildOption($field, &$options) {
     $options['attributes'] = ['label' => $field['label'],
       'data_type' => $field['data_type'],
@@ -2076,6 +2113,14 @@ SELECT label, value
     }
   }
 
+  /**
+   * Get custom field ID from label and optional custom group title.
+   *
+   * @param string $fieldLabel label of the custom field
+   * @param string|null $groupTitle optional title of the custom group
+   *
+   * @return int|null custom field ID, or NULL if not found or not unique
+   */
   public static function getCustomFieldID($fieldLabel, $groupTitle = NULL) {
     $params = [1 => [$fieldLabel, 'String']];
     if ($groupTitle) {
@@ -2108,8 +2153,11 @@ WHERE      ( f.label = %1 OR f.name = %1 )
   }
 
   /**
-   * Given ID of a custom field, return its name as well as the name of the custom group it belongs to.
+   * Given ID(s) of custom field(s), return metadata including field and group names.
    *
+   * @param int|int[] $ids custom field ID or array of IDs
+   *
+   * @return array associative array of metadata keyed by field ID
    */
   public static function getNameFromID($ids) {
     if (is_array($ids)) {
@@ -2135,13 +2183,11 @@ WHERE      f.id IN ($ids)";
   }
 
   /**
-   * Validate custom data.
+   * Validate custom data based on its data type and profile requirements.
    *
-   * @param array $params custom data submitted.
-   * ie array( 'custom_1' => 'validate me' );
+   * @param array $params custom data submitted (e.g., ['custom_1' => 'value'])
    *
-   * @return array $errors validation errors.
-   * @static
+   * @return array array of validation errors
    */
   public static function validateCustomData($params) {
     $errors = [];

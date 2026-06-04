@@ -35,10 +35,14 @@ jobs:
           docker exec neticrm-ci bash -c "cd /var/www/html && drush status | grep version"
           docker exec neticrm-ci bash -c "php -v"
 
+      - name: Independent Unit Test - Smarty
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit Packages/Smarty"
       - name: Unit Test - Type test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
       - name: Unit Test - Contribution - Duplicate receipt id test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
+      - name: Unit Test - Concurrent IPN test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BaseIPNTest.php"
       - name: Payment Test - ALLPAY
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
       - name: Payment Test - Neweb(new)
@@ -153,10 +157,14 @@ jobs:
           docker exec neticrm-ci bash -c "cd /var/www/html && drush status | grep version"
           docker exec neticrm-ci bash -c "php -v"
 
+      - name: Independent Unit Test - Smarty
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit Packages/Smarty"
       - name: Unit Test - Type test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
       - name: Unit Test - Contribution - Duplicate receipt id test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
+      - name: Unit Test - Concurrent IPN test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BaseIPNTest.php"
       - name: Payment Test - ALLPAY
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
       - name: Payment Test - Neweb(new)
@@ -271,10 +279,14 @@ jobs:
           docker exec neticrm-ci bash -c "cd /var/www/html && drush status | grep version"
           docker exec neticrm-ci bash -c "php -v"
 
+      - name: Independent Unit Test - Smarty
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit Packages/Smarty"
       - name: Unit Test - Type test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php"
       - name: Unit Test - Contribution - Duplicate receipt id test
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php"
+      - name: Unit Test - Concurrent IPN test
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BaseIPNTest.php"
       - name: Payment Test - ALLPAY
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php"
       - name: Payment Test - Neweb(new)

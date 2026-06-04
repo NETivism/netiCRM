@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,13 @@
 class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
 
   /**
-   * low level logic of create email
+   * Low-level logic to add or update an email record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * Normalizes the email address to lowercase before saving.
    *
-   * @return object       CRM_Core_BAO_Email object on success, null otherwise
-   * @access public
-   * @static
+   * @param array &$params associative array of name/value pairs
+   *
+   * @return CRM_Core_DAO_Email the created/updated email object
    */
   public static function add(&$params) {
     $email = new CRM_Core_DAO_Email();
@@ -59,13 +57,14 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
   }
 
   /**
-   * Business logic of create email
+   * Business logic to create or update an email record.
    *
-   * @param array $params
+   * Handles primary email logic, bulkmail uniqueness per contact,
+   * and triggers hooks.
    *
-   * @return object CRM_Core_BAO_Email object on success, null otherwise
-   * @access public
-   * @static
+   * @param array $params associative array of email data
+   *
+   * @return CRM_Core_DAO_Email the created/updated email object
    */
   public static function create(&$params) {
     CRM_Core_BAO_Block::handlePrimary($params, 'CRM_Core_BAO_Email');
@@ -99,27 +98,23 @@ contact_id = {$params['contact_id']}";
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch email values based on entity criteria.
    *
-   * @param array $entityBlock   input parameters to find object
+   * @param array $entityBlock associative array containing 'contact_id' or 'entity_table'/'entity_id'
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return array|null array of email data arrays
    */
   public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('email', $entityBlock);
   }
 
   /**
-   * Get all the emails for a specified contact_id, with the primary email being first
+   * Get all emails for a specified contact, ordered by primary email first.
    *
-   * @param int $id the contact id
+   * @param int $id the contact ID
+   * @param bool $updateBlankLocInfo if TRUE, return indexed sequentially; otherwise by ID
    *
-   * @return array  the array of email id's
-   * @access public
-   * @static
+   * @return array array of email details
    */
   public static function allEmails($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
@@ -162,14 +157,11 @@ ORDER BY
   }
 
   /**
-   * Get all the emails for a specified location_block id, with the primary email being first
+   * Get all emails for a specified entity via its location block.
    *
-   * @param array $entityElements the array containing entity_id and
-   * entity_table name
+   * @param array &$entityElements array containing 'entity_id' and 'entity_table'
    *
-   * @return array  the array of email id's
-   * @access public
-   * @static
+   * @return array|null array of email details
    */
   public static function allEntityEmails(&$entityElements) {
     if (empty($entityElements)) {
@@ -205,12 +197,11 @@ ORDER BY e.is_primary DESC, email_id ASC ";
   }
 
   /**
-   * Function to set / reset hold status for an email
+   * Set or reset the 'on_hold' status for an email and record dates.
    *
-   * @param object $email  email object
+   * @param CRM_Core_DAO_Email &$email email object (passed by reference)
    *
    * @return void
-   * @static
    */
   public static function holdEmail(&$email) {
     //check for update mode
@@ -241,11 +232,12 @@ ORDER BY e.is_primary DESC, email_id ASC ";
   }
 
   /**
-   * Get current exists id from value(email)
+   * Check if an email value already exists for a contact and set the 'id' parameter.
    *
-   * Only effect when phone id not provided. Id will be added into params before add.
+   * Only performs lookup if 'id' is not provided and email/contact_id are present.
    *
-   * @param array $params referenced array to be add exists phone id
+   * @param array &$params associative array of email fields (passed by reference)
+   *
    * @return void
    */
   public static function valueExists(&$params) {

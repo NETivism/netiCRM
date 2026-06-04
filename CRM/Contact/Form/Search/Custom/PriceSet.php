@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching event participants by price set selections
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,6 +43,12 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
   public static $_primaryIDName = 'id';
 
   protected $_pstatus = NULL;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -62,6 +67,9 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
     }
   }
 
+  /**
+   * Destructor.
+   */
   public function __destruct() {
     /*
         if ( $this->_eventID ) {
@@ -72,6 +80,9 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
         */
   }
 
+  /**
+   * Build the temporary table for storing search results.
+   */
   public function buildTempTable() {
     $randomNum = md5(uniqid());
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
@@ -104,6 +115,9 @@ UNIQUE INDEX unique_participant_id ( participant_id )
     );
   }
 
+  /**
+   * Populate the temporary table with participant and price set data.
+   */
   public function fillTable() {
     $sql = "
 REPLACE INTO {$this->_tableName}
@@ -169,6 +183,13 @@ WHERE participant_id = $participantID;
     }
   }
 
+  /**
+   * Get the DAO for event price sets.
+   *
+   * @param int|null $eventID
+   *
+   * @return CRM_Core_DAO
+   */
   public function priceSetDAO($eventID = NULL) {
 
     // get all the events that have a price set associated with it
@@ -196,6 +217,11 @@ AND    p.entity_id    = e.id
     return $dao;
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     $dao = $this->priceSetDAO();
 
@@ -225,6 +251,9 @@ AND    p.entity_id    = e.id
     $form->setTitle(ts('Price Set Export') .' - '. ts('Event'));
   }
 
+  /**
+   * Set up the columns for the result display.
+   */
   public function setColumns() {
     $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Participant Id') => 'participant_id',
@@ -268,10 +297,20 @@ AND    p.entity_id    = e.id
     }
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Get the count of participants found.
+   *
+   * @return int
+   */
   public function count() {
     if (!$this->_filled) {
       $this->fillTable();
@@ -281,6 +320,16 @@ AND    p.entity_id    = e.id
     return $value;
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -311,6 +360,11 @@ contact_a.display_name   as display_name";
     );
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     return "
 FROM       civicrm_contact contact_a
@@ -318,26 +372,56 @@ INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.i
 ";
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     return ' ( 1 ) ';
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return [];
   }
 
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
     $row['status_id'] = $this->_pstatus[$row['status_id']];
   }
 
   /**
-   * This will call by search tasks
-   * Which not only provide contact id, but also provide additional id
-   * Mostly used by custom search support multiple record of one contact
+   * Get the SQL for retrieving contact IDs and additional IDs.
+   *
+   * This will be called by search tasks which not only need contact id,
+   * but also provide additional id. Mostly used by custom search
+   * supporting multiple records of one contact.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
    */
   public function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     $fields = "contact_a.id AS contact_id, participant_id" ;

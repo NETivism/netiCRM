@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -59,6 +57,12 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @const
    */
   public const LOCATION_BLOCKS = 1;
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
 
     CRM_Utils_System::setTitle(ts('Domain Information'));
@@ -77,13 +81,13 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     CRM_Contact_Form_Location::preProcess($this);
   }
 
-  /*
-     * This function sets the default values for the form.
-     * the default values are retrieved from the database
-     *
-     * @access public
-     * @return None
-     */
+  /**
+   * This function sets the default values for the form.
+   * the default values are retrieved from the database
+   *
+   * @return array defaults array
+   * @access public
+   */
   public function setDefaultValues() {
 
     $defaults = [];
@@ -140,10 +144,9 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
-
   public function buildQuickForm() {
 
     $this->add('text', 'name', ts('Domain Name'), ['size' => 25], TRUE);
@@ -179,9 +182,8 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
   /**
    * Add local and global form rules
    *
-   * @access protected
-   *
    * @return void
+   * @access public
    */
   public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Domain', 'formRule']);
@@ -192,7 +194,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    *
    * @param array $fields posted values of the form
    *
-   * @return array list of errors to be posted back to the form
+   * @return array|boolean list of errors to be posted back to the form or true
    * @static
    * @access public
    */
@@ -216,7 +218,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @return void
    * @access public
    */
-
   public function postProcess() {
 
     $params = [];

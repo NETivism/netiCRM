@@ -29,9 +29,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,7 +39,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    * static field for all the participant information that we can potentially import
    *
    * @var array
-   * @static
    */
   public static $_importableFields = NULL;
 
@@ -49,7 +46,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    * static field for all the participant information that we can potentially export
    *
    * @var array
-   * @static
    */
   public static $_exportableFields = NULL;
 
@@ -57,7 +53,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    * static array for valid status transitions rules
    *
    * @var array
-   * @static
    */
   public static $_statusTransitionsRules = [
     'Pending from pay later' => ['Registered', 'Cancelled'],
@@ -66,6 +61,9 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     'Awaiting approval' => ['Cancelled', 'Pending from approval'],
     'Pending from approval' => ['Registered', 'Cancelled'],
   ];
+  /**
+   * class constructor
+   */
   public function __construct() {
     parent::__construct();
   }
@@ -77,12 +75,9 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    * participant object. the params array could contain additional unused name/value
    * pairs
    *
-   * @param array  $params (reference ) an assoc array of name/value pairs
-   * @param array $ids    the array that holds all the db ids
+   * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Event_BAO_Participant object
-   * @access public
-   * @static
+   * @return CRM_Event_BAO_Participant object
    */
   public static function &add(&$params) {
 
@@ -154,10 +149,9 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    *
    * @param array $params input parameters to find object
    * @param array $values output values of the object
+   * @param array $ids
    *
-   * @return CRM_Event_BAO_Participant|null the found object or null
-   * @access public
-   * @static
+   * @return array|null the found object or null
    */
   public static function getValues(&$params, &$values, &$ids) {
     if (empty($params)) {
@@ -179,13 +173,9 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    * takes an associative array and creates a participant object
    *
    * @param array $params (reference ) an assoc array of name/value pairs
-   * @param array $ids    the array that holds all the db ids
    *
-   * @return object CRM_Event_BAO_Participant object
-   * @access public
-   * @static
+   * @return CRM_Event_BAO_Participant|CRM_Core_Error object
    */
-
   public static function &create(&$params) {
 
     $transaction = new CRM_Core_Transaction();
@@ -338,19 +328,19 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    * Check whether the event is full for participation and return as
    * per requirements.
    *
-   * @param int      $eventId            event id.
-   * @param boolean  $returnEmptySeats   are we require number if empty seats.
-   * @param boolean  $includeWaitingList consider waiting list in event full
+   * @param int $eventId event id.
+   * @param bool $returnEmptySeats are we require number if empty seats.
+   * @param bool $includeWaitingList consider waiting list in event full
    *                 calculation or not. (it is for cron job  purpose)
+   * @param bool $returnWaitingCount
+   * @param bool $considerTestParticipant
    *
-   * @return
+   * @return bool|null|string|int
    * 1. false                 => If event having some empty spaces.
    * 2. null                  => If no registration yet or no limit.
    * 3. Event Full Message    => If event is full.
    * 4. Number of Empty Seats => If we are interested in empty spaces.( w/ include/exclude waitings. )
    *
-   * @static
-   * @access public
    */
   public static function eventFull(
     $eventId,
@@ -504,13 +494,13 @@ SELECT  event.event_full_text,
    * Return the array of all price set field options,
    * with total participant count that field going to carry.
    *
-   * @param int     $eventId          event id.
-   * @param array   $skipParticipants an array of participant ids those we should skip.
-   * @param int     $isTest           would you like to consider test participants.
+   * @param int $eventId event id.
+   * @param array $skipParticipantIds an array of participant ids those we should skip.
+   * @param bool $considerCounted
+   * @param bool $considerWaiting
+   * @param bool $considerTestParticipants would you like to consider test participants.
    *
    * @return array $optionsCount an array of each option id and total count
-   * @static
-   * @access public
    */
   public static function priceSetOptionsCount(
     $eventId,
@@ -588,11 +578,9 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
    * Get the empty spaces for event those we can allocate
    * to pending participant to become confirm.
    *
-   * @param int  $eventId event id.
+   * @param int $eventId event id.
    *
-   * @return int $spaces  Number of Empty Seats/null.
-   * @static
-   * @access public
+   * @return int|null $spaces Number of Empty Seats/null.
    */
   public static function pendingToConfirmSpaces($eventId) {
     $emptySeats = 0;
@@ -651,8 +639,11 @@ GROUP BY  participant.event_id
   /**
    * combine all the importable fields from the lower levels object
    *
+   * @param string $contactType
+   * @param bool $status
+   * @param bool $onlyParticipant
+   *
    * @return array array of importable Fields
-   * @access public
    */
   public static function &importableFields($contactType = 'Individual', $status = TRUE, $onlyParticipant = FALSE) {
     if (empty($contactType)) {
@@ -750,7 +741,6 @@ GROUP BY  participant.event_id
    * combine all the exportable fields from the lower levels object
    *
    * @return array array of exportable Fields
-   * @access public
    */
   public static function &exportableFields() {
     if (!self::$_exportableFields) {
@@ -789,11 +779,8 @@ GROUP BY  participant.event_id
    * function to get the event name/sort name for a particular participation / participant
    *
    * @param  int    $participantId  id of the participant
-
    *
-   * @return array $name associated array with sort_name and event title
-   * @static
-   * @access public
+   * @return array<string, mixed> $name associated array with sort_name and event title
    */
   public static function participantDetails($participantId) {
     $query = "
@@ -818,12 +805,10 @@ WHERE  civicrm_participant.id = {$participantId}
   /**
    * Get the values for pseudoconstants for name->value and reverse.
    *
-   * @param array   $defaults (reference) the default values, some of which need to be resolved.
-   * @param boolean $reverse  true if we want to resolve the values in the reverse direction (value -> name)
+   * @param array $defaults (reference) the default values, some of which need to be resolved.
+   * @param bool $reverse true if we want to resolve the values in the reverse direction (value -> name)
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function resolveDefaults(&$defaults, $reverse = FALSE) {
 
@@ -864,11 +849,9 @@ WHERE  civicrm_participant.id = {$participantId}
   /**
    * Delete the record that are associated with this participation
    *
-   * @param  int  $id id of the participation to delete
+   * @param int $id id of the participation to delete
    *
-   * @return void
-   * @access public
-   * @static
+   * @return CRM_Event_DAO_Participant
    */
   public static function deleteParticipant($id) {
 
@@ -947,15 +930,12 @@ WHERE  civicrm_participant.id = {$participantId}
   }
 
   /**
-   *Checks duplicate participants
+   * Checks duplicate participants
    *
-   * @param array  $duplicates (reference ) an assoc array of name/value pairs
-   * @param array $input an assosiative array of name /value pairs
-   * from other function
+   * @param array $input an assosiative array of name /value pairs from other function
+   * @param array $duplicates (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Contribute_BAO_Contribution object
-   * @access public
-   * @static
+   * @return bool
    */
   public static function checkDuplicate($input, &$duplicates) {
     $eventId = CRM_Utils_Array::value('event_id', $input);
@@ -999,7 +979,6 @@ WHERE  civicrm_participant.id = {$participantId}
    *
    * @param string  $eventLevel  event_leval string from db
    *
-   * @static
    *
    * @return void
    */
@@ -1033,11 +1012,11 @@ WHERE  civicrm_participant.id = {$participantId}
   /**
    * get the additional participant ids.
    *
-   * @param int     $primaryParticipantId  primary partycipant Id
-   * @param boolean $excludeCancel         do not include participant those are cancelled.
+   * @param int $primaryParticipantId primary partycipant Id
+   * @param bool $excludeCancel do not include participant those are cancelled.
+   * @param int $oldStatusId
    *
    * @return array $additionalParticipantIds
-   * @static
    */
   public static function getAdditionalParticipantIds($primaryParticipantId, $excludeCancel = TRUE, $oldStatusId = NULL) {
     $additionalParticipantIds = [];
@@ -1074,11 +1053,10 @@ WHERE  civicrm_participant.id = {$participantId}
    * Get the event fee info for given participant ids
    * either from line item table / participant table.
    *
-   * @param array    $participantIds participant ids.
-   * @param boolean  $hasLineItems   do fetch from line items.
+   * @param array $participantIds participant ids.
+   * @param bool $hasLineItems do fetch from line items.
    *
    * @return array $feeDetails
-   * @static
    */
   public static function getFeeDetails($participantIds, $hasLineItems = FALSE) {
     $feeDetails = [];
@@ -1143,7 +1121,6 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
    * @param int     $primaryParticipantID  id of primary participant record
    *
    * @return array $additionalParticipants $displayName => $viewUrl
-   * @static
    */
   public static function getAdditionalParticipants($primaryParticipantID) {
     $additionalParticipantIDs = [];
@@ -1172,11 +1149,12 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
   /**
    * Function for update primary and additional participant status
    *
-   * @param  int $participantID primary participant's id
-   * @param  int $statusId status id for participant
-   * return void
-   * @access public
-   * @static
+   * @param int $participantID primary participant's id
+   * @param int $oldStatusID
+   * @param int $newStatusID status id for participant
+   * @param bool $updatePrimaryStatus
+   *
+   * @return bool|void
    */
   public static function updateParticipantStatus($participantID, $oldStatusID, $newStatusID = NULL, $updatePrimaryStatus = FALSE) {
     if (!$participantID || !$oldStatusID) {
@@ -1205,13 +1183,11 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
   /**
    * Function for update status for given participant ids
    *
-   * @param  int     $participantIds      array of participant ids
-   * @param  int     $statusId status     id for participant
-   * @params boolean $updateRegisterDate  way to track when status changed.
+   * @param array $participantIds array of participant ids
+   * @param int $statusId status id for participant
+   * @param bool $updateRegisterDate way to track when status changed.
    *
-   * return void
-   * @access public
-   * @static
+   * @return void
    */
   public static function updateStatus($participantIds, $statusId, $updateRegisterDate = FALSE) {
     if (!is_array($participantIds) || empty($participantIds) || !$statusId) {
@@ -1236,20 +1212,19 @@ UPDATE  civicrm_participant
     $dao = CRM_Core_DAO::executeQuery($query);
   }
 
-  /*
-     * Function takes participant ids and statuses
-     * update status from $fromStatusId to $toStatusId
-     * and send mail + create activities.
-     *
-     * @param  array $participantIds   participant ids.
-     * @param  int   $toStatusId       update status id.
-     * @param  int   $fromStatusId     from status id
-     *
-     * return  void
-     * @access public
-     * @static
-     */
-
+  /**
+   * Function takes participant ids and statuses
+   * update status from $fromStatusId to $toStatusId
+   * and send mail + create activities.
+   *
+   * @param array $participantIds participant ids.
+   * @param int $toStatusId update status id.
+   * @param int $fromStatusId from status id
+   * @param bool $returnResult
+   * @param bool $skipCascadeRule
+   *
+   * @return void|array
+   */
   public static function transitionParticipants(
     $participantIds,
     $toStatusId,
@@ -1496,16 +1471,14 @@ UPDATE  civicrm_participant
    * Function to send mail and create activity
    * when participant status changed.
    *
-   * @param  int     $participantId      participant id.
-   * @param  array   $participantValues  participant detail values. status id for participants
-   * @param  array   $eventDetails       required event details
-   * @param  array   $contactDetails     required contact details
-   * @param  array   $domainValues       required domain values.
-   * @param  string  $mailType           (eg 'cancelled', 'confirm', 'expired' )
+   * @param int $participantId participant id.
+   * @param array $participantValues participant detail values.
+   * @param array $eventDetails required event details
+   * @param array $contactDetails required contact details
+   * @param array $domainValues required domain values.
+   * @param string $mailType (eg 'cancelled', 'confirm', 'expired' )
    *
-   * return  void
-   * @access public
-   * @static
+   * @return bool
    */
   public static function sendTransitionParticipantMail(
     $participantId,
@@ -1610,8 +1583,11 @@ UPDATE  civicrm_participant
   /**
    * get participant status change message.
    *
+   * @param int $participantId
+   * @param int $statusChangeTo
+   * @param int $fromStatusId
+   *
    * @return string
-   * @access public
    */
   public static function updateStatusMessage($participantId, $statusChangeTo, $fromStatusId) {
     $statusMsg = NULL;
@@ -1646,8 +1622,10 @@ UPDATE  civicrm_participant
   /**
    * get event full and waiting list message.
    *
+   * @param int $eventId
+   * @param int $participantId
+   *
    * @return string
-   * @access public
    */
   public static function eventFullMessage($eventId, $participantId = NULL) {
     $eventfullMsg = $dbStatusId = NULL;
@@ -1707,10 +1685,9 @@ UPDATE  civicrm_participant
   /**
    * check for whether participant is primary or not
    *
-   * @param $participantId
+   * @param int $participantId
    *
-   * @return true if participant is primary
-   * @access public
+   * @return bool true if participant is primary
    */
   public static function isPrimaryParticipant($participantId) {
 
@@ -1731,7 +1708,6 @@ UPDATE  civicrm_participant
    * @param  int  $newStatusId     new status
    *
    * @return true if allowed
-   * @access public
    */
   public static function getValidAdditionalIds($participantId, $oldStatusId, $newStatusId) {
 
@@ -1758,8 +1734,6 @@ UPDATE  civicrm_participant
    * @param int $contactId Contact ID
    *
    * @return int count of participant records
-   * @access public
-   * @static
    */
   public static function getContactParticipantCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_participant WHERE civicrm_participant.contact_id = {$contactID} AND civicrm_participant.is_test = 0";
@@ -1773,8 +1747,6 @@ UPDATE  civicrm_participant
    * @param bool $excludeCancelled   Exclude cancelled additional participant
    *
    * @return int $participantsId
-   * @access public
-   * @static
    */
   public static function getParticipantIds($contributionId, $excludeCancelled = FALSE) {
 
@@ -1801,11 +1773,10 @@ UPDATE  civicrm_participant
   /**
    * Function to calculate event seats for given participant ids.
    *
-   * @param array  $paticipantIds an array of participant ids.
+   * @param array $participantIds an array of participant ids.
+   * @param bool $returnArray
    *
-   * @return int $totalSeats  total number if event seats.
-   * @access public
-   * @static
+   * @return int|array $totalSeats total number if event seats.
    */
   public static function totalEventSeats($participantIds, $returnArray = FALSE) {
     if (!is_array($participantIds) || empty($participantIds)) {
@@ -1868,13 +1839,10 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
   /**
    * Function to get additional Participant edit & view url .
    *
-   * @param array  $paticipantIds an array of additional participant ids.
+   * @param array $participantIds an array of additional participant ids.
    *
-   * @return array of Urls.
-   * @access public
-   * @static
+   * @return string of Urls.
    */
-
   public static function getAdditionalParticipantUrl($participantIds) {
     foreach ($participantIds as $value) {
       $links = [];
@@ -1896,11 +1864,9 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
   /**
    * Function to get participant count by seperated status
    *
-   * @param Integer $event_id a id of event
+   * @param int $event_id a id of event
    *
-   * @return array of count listed by counted and not-counted
-   * @access public
-   * @static
+   * @return array<string, float[]|int[]|mixed[][]> of count listed by counted and not-counted
    */
   public static function statusEventSeats($event_id) {
     $summary = [
@@ -1953,12 +1919,28 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
     return $summary;
   }
 
+  /**
+   * Confirm link
+   *
+   * @param int $id
+   * @param string $cs
+   *
+   * @return string
+   */
   public static function confirmLink($id, $cs) {
     if (!empty($id) && !empty($cs)) {
       return CRM_Utils_System::url('civicrm/event/confirm', 'reset=1&participantId='.$id.'&cs='.$cs);
     }
   }
 
+  /**
+   * Checkin code
+   *
+   * @param int $contactId
+   * @param int $id
+   *
+   * @return string
+   */
   public static function checkinCode($contactId, $id) {
     $checkinUrl = self::checkinUrl($contactId, $id);
     $qrcode = new CRM_Utils_QRCode($checkinUrl);
@@ -1966,6 +1948,14 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
     return $qrcode->fileImg($filename);
   }
 
+  /**
+   * Checkin URL
+   *
+   * @param int $contactId
+   * @param int $id
+   *
+   * @return string
+   */
   public static function checkinUrl($contactId, $id) {
     $limit = 'inf';
     $contactChecksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId, NULL, $limit);

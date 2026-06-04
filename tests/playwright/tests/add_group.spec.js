@@ -1,3 +1,4 @@
+// Test creating a group and setting up a mailing for that group
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 
@@ -239,6 +240,9 @@ test.describe.serial('Group Editing', () => {
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element), {visible: '#footer_id'});
             await expect(page.locator('#compose_old_id')).toBeVisible();
+
+            /* fill in "HTML Format" body (works with both CKEditor 4 and CKEditor 5) */
+            await utils.fillWysiwyg(page, 'html_message', 'mail content body');
 
             /* "Mailing Footer" choose the second option */
             element = '#footer_id';

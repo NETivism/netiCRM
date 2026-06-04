@@ -19,7 +19,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   /**
    * Return a descriptive name for the page, used in wizard header
    *
-   * @return string
+   * @return string The form title.
    */
   public function getTitle() {
     return ts('Verify %1', [1 => ts('Domain')]);
@@ -28,7 +28,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
   public function preProcess() {
     $this->set('action', CRM_Core_Action::UPDATE);
@@ -58,7 +58,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @param array $files  the uploaded files if any
    * @param object $self   current form object.
    *
-   * @return array array of errors / empty array.
+   * @return array<string, string> array of errors / empty array.
    */
   public static function formRule($fields, $files, $self) {
     global $civicrm_conf;
@@ -114,8 +114,9 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
+   *
+   * @return array{} The default values for the form.
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -123,7 +124,9 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
+   *
+   * @return void None.
    */
   public function buildQuickForm() {
     $this->assign_by_ref('values', $this->_values);
@@ -186,7 +189,9 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
+   *
+   * @return void None.
    */
   public function postProcess() {
     $buttonName = $this->controller->getButtonName();

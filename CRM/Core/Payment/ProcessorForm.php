@@ -26,10 +26,9 @@
 */
 
 /**
+ * Form handler for selecting and configuring payment processor options
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 

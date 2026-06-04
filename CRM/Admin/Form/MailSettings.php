@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,10 +39,9 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
   public $_elementIndex;
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -106,6 +103,15 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Admin_Form_MailSettings', 'formRule'], $this);
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields The input form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
+   *
+   * @return bool|array True if no errors, else array of errors.
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['is_default'] != 1 && !empty($fields['localpart'])) {
@@ -117,6 +123,11 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     return $errors;
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     // prevent modify global $civicrm_conf['mailing_mailstore'] variable
@@ -138,11 +149,9 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

@@ -2423,7 +2423,8 @@ class DB_DataObject extends DB_DataObject_Overload
         $_DB_DATAOBJECT['QUERYENDTIME'] = $time = $t[0]+$t[1];
          
         
-        for ($tries = 0; $tries < 3; $tries++) {
+        $maxTries = 3;
+        for ($tries = 0; $tries < $maxTries; $tries++) {
             if ($_DB_driver == 'DB') {
               try {
                 $result = $DB->query($string);
@@ -2440,7 +2441,7 @@ class DB_DataObject extends DB_DataObject_Overload
 
                 $message = (stristr($dbErrorMessage, 'nativecode=1213') ? 'Database deadlock encountered' : 'Database lock encountered');
                 if (($tries + 1) === $maxTries) {
-                  throw new CRM_Core_Exception($message, CRM_Core_Error::FATAL_ERROR, array('content' => $data['content'], 'sql' => $string, 'trace' => $e->getTrace()));
+                  throw $e;
                 }
                 CRM_Core_Error::debug_log_message("Retrying after $message hit on attempt " . ($tries + 1) . ' at query : ' . $string);
                 usleep(500000); // 0.5s

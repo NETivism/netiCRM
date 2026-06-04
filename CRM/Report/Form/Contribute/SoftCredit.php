@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,6 +51,9 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
   ];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -201,10 +202,20 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -273,11 +284,25 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Form rule.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $alias_constituent = 'constituentname';
     $alias_creditor = 'contact_civireport';
@@ -338,6 +363,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $alias_constituent = 'constituentname';
     $alias_creditor = 'contact_civireport';
@@ -346,11 +376,23 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
                                        {$alias_creditor}.sort_name";
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     parent::where();
     $this->_where .= " AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
   }
 
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
@@ -380,6 +422,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $this->beginPostProcess();
 
@@ -407,6 +454,13 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
 

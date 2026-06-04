@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -568,12 +566,14 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
   }
 
   /*
-     * This function return all voter links with respecting permissions
-     *
-     * @return $url array of permissioned links
-     * @static
-     */
-
+   * This function return all voter links with respecting permissions
+   *
+   * @return $url array of permissioned links
+   * @static
+   */
+  /**
+   * @return string[]
+   */
   public static function buildPermissionLinks($surveyId) {
     $menuLinks = [];
     if (!$surveyId) {

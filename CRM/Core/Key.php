@@ -26,10 +26,9 @@
 */
 
 /**
+ * Generates and validates form keys (CSRF tokens) for secure form submissions
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -78,11 +77,9 @@ class CRM_Core_Key {
   public static $_sessionID = NULL;
 
   /**
-   * Generate a private key per session and store in session
+   * Generate a private key per session and store in session.
    *
-   * @return string private key for this session
-   * @static
-   * @access private
+   * @return string Private key for this session.
    */
   public static function privateKey() {
 
@@ -97,6 +94,11 @@ class CRM_Core_Key {
     return self::$_key;
   }
 
+  /**
+   * Get the session ID for form key generation.
+   *
+   * @return string The session ID.
+   */
   public static function sessionID() {
     if (!self::$_sessionID) {
       $session = CRM_Core_Session::singleton();
@@ -111,14 +113,12 @@ class CRM_Core_Key {
 
   /**
    * Generate a form key based on form name, the current user session
-   * and a private key. Modelled after drupal's form API
+   * and a private key. Modelled after Drupal's form API.
    *
-   * @param string  $value       name of the form
-   * @paeam boolean $addSequence should we add a unique sequence number to the end of the key
+   * @param string $name Name of the form.
+   * @param bool $addSequence Whether to add a unique sequence number to the end of the key.
    *
-   * @return string       valid formID
-   * @static
-   * @acess public
+   * @return string Valid form ID.
    */
   public static function get($name, $addSequence = FALSE) {
     $key = self::sign($name);
@@ -132,14 +132,13 @@ class CRM_Core_Key {
   }
 
   /**
-   * Validate a form key based on the form name
+   * Validate a form key based on the form name.
    *
-   * @param string $formKey
-   * @param string $name
+   * @param string $key The form key to validate.
+   * @param string $name The name of the form.
+   * @param bool $addSequence Whether the key should contain a sequence number.
    *
-   * @return string $formKey if valid, else null
-   * @static
-   * @acess public
+   * @return string|null The form key if valid, else null.
    */
   public static function validate($key, $name, $addSequence = FALSE) {
     if (!is_string($key)) {
@@ -162,6 +161,13 @@ class CRM_Core_Key {
     return $key;
   }
 
+  /**
+   * Check if a form key is structurally valid.
+   *
+   * @param string $key The form key to check.
+   *
+   * @return bool True if structurally valid.
+   */
   public static function valid($key) {
     // a valid key is a 32 digit hex number
     // followed by an optional _ and a number between 1 and 10000

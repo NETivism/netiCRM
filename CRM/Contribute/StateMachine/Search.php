@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,6 +43,11 @@ class CRM_Contribute_StateMachine_Search extends CRM_Core_StateMachine {
 
   /**
    * class constructor
+   *
+   * @param CRM_Core_Controller $controller
+   * @param int $action
+   *
+   * @return CRM_Contribute_StateMachine_Search
    */
   public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
@@ -71,12 +74,13 @@ class CRM_Contribute_StateMachine_Search extends CRM_Core_StateMachine {
 
   /**
    * Determine the form name based on the action. This allows us
-   * to avoid using  conditional state machine, much more efficient
+   * to avoid using conditional state machine, much more efficient
    * and simpler
    *
    * @param CRM_Core_Controller $controller the controller object
+   * @param string $formName
    *
-   * @return string the name of the form that will handle the task
+   * @return array the name of the form that will handle the task and result status
    * @access protected
    */
   public function taskName($controller, $formName = 'Search') {

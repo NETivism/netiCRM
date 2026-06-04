@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,14 +41,11 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
   }
 
   /**
-   * Function to delete the discount
+   * Delete a discount record.
    *
-   * @param int $id   discount id
+   * @param int $id discount ID
    *
-   * @return boolean
-   * @access public
-   * @static
-   *
+   * @return bool TRUE on success, FALSE otherwise
    */
   public static function del($id) {
     // delete all discount records with the selected discounted id
@@ -63,16 +58,11 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
   }
 
   /**
+   * Add or update a discount record.
    *
-   * The function extracts all the params it needs to create a
-   * discount object. the params array contains additional unused name/value
-   * pairs
+   * @param array &$params associative array of discount data
    *
-   * @param array  $params         (reference) an assoc array of name/value pairs
-   *
-   * @return object    CRM_Core_DAO_Discount object on success, otherwise null
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_Discount the created/updated discount object
    */
   public static function add(&$params) {
     $discount = new CRM_Core_DAO_Discount();
@@ -82,14 +72,12 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
   }
 
   /**
-   * Determine whether the given table/id
-   * has discount associated with it
+   * Get the option group IDs associated with discounts for a specific entity.
    *
-   * @param  integer  $entityId      entity id to be searched
-   * @param  string   $entityTable   entity table to be searched
+   * @param int $entityId entity ID
+   * @param string $entityTable entity table name
    *
-   * @return array    $optionGroupIDs option group Ids associated with discount
-   *
+   * @return array associative array of (discount_id => option_group_id)
    */
   public static function getOptionGroup($entityId, $entityTable) {
     $optionGroupIDs = [];
@@ -105,13 +93,13 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
   }
 
   /**
-   * Determine in which discount set the registration date falls
+   * Determine which discount set matches the registration date.
    *
-   * @param  integer  $entityId      entity id to be searched
-   * @param  string   $entityTable   entity table to be searched
+   * @param int $entityID entity ID
+   * @param string $entityTable entity table name
+   * @param int $timestamp Unix timestamp to check against (defaults to CRM_REQUEST_TIME)
    *
-   * @return integer  $dao->id       discount id of the set which matches
-   *                                 the date criteria
+   * @return int|bool|null discount ID of the matching set, or FALSE if none found
    */
   public static function findSet($entityID, $entityTable, $timestamp = CRM_REQUEST_TIME) {
     if (empty($entityID) ||

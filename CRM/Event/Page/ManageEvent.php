@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,7 +50,6 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
   public static $_actionLinks = NULL;
 
@@ -115,7 +112,6 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
   public function run() {
@@ -289,7 +285,6 @@ ORDER BY start_date desc
    * all the fields in the event wizard
    *
    * @return void
-   * @access public
    */
   public function copy() {
     $key = CRM_Utils_Request::retrieve(
@@ -321,6 +316,11 @@ ORDER BY start_date desc
     return CRM_Utils_System::redirect(CRM_Utils_System::url($urlString, $urlParams));
   }
 
+  /**
+   * Search
+   *
+   * @return void
+   */
   public function search() {
     if (isset($this->_action) &
       (
@@ -339,6 +339,15 @@ ORDER BY start_date desc
     $controller->run();
   }
 
+  /**
+   * Where clause
+   *
+   * @param array $params
+   * @param bool $sortBy
+   * @param bool $force
+   *
+   * @return string
+   */
   public function whereClause(&$params, $sortBy, $force) {
     $values = [];
     $clauses = [];
@@ -377,6 +386,14 @@ ORDER BY start_date desc
     return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
 
+  /**
+   * Pager
+   *
+   * @param string $whereClause
+   * @param array $whereParams
+   *
+   * @return void
+   */
   public function pager($whereClause, $whereParams) {
 
     $params['status'] = ts('Event %%StatusMessage%%');

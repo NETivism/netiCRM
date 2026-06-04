@@ -26,16 +26,22 @@
  */
 
 /**
+ * Custom search form for searching events by aggregate participant data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
@@ -52,6 +58,14 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     ];
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     /**
      * Define the search form fields here
@@ -81,6 +95,9 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   * @access public
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/EventDetails.tpl';
@@ -88,6 +105,14 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
   /**
    * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
    */
   public function all(
     $offset = 0,
@@ -166,6 +191,12 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $sql;
   }
 
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
   public function from() {
     return "
         civicrm_participant_payment
@@ -182,10 +213,14 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         ( civicrm_option_value.value = civicrm_event.event_type_id AND civicrm_option_value.option_group_id = 14)";
   }
 
-  /*
-     * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
-     *
-     */
+  /**
+   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
@@ -235,7 +270,12 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* This function does a query to get totals for some of the search result columns and returns a totals array. */
+  /**
+   * This function does a query to get totals for some of the search result columns and returns a totals array.
+   *
+   * @return array<string, mixed>
+   * @access public
+   */
   public function summary() {
     $totalSelect = "
         SUM(civicrm_contribution.total_amount) as payment_amount,COUNT(civicrm_participant.id) as participant_count,
@@ -277,9 +317,12 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $totals;
   }
 
-  /*
-     * Functions below generally don't need to be modified
-     */
+  /**
+   * Functions below generally don't need to be modified
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     $sql = $this->all();
 
@@ -290,10 +333,26 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $dao->N;
   }
 
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort);
   }
 
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
   public function &columns() {
     return $this->_columns;
   }

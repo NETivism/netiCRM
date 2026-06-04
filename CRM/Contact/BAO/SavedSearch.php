@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,8 +39,6 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
 
   /**
    * class constructor
-   *
-   * @return object CRM_Contact_BAO_SavedSearch
    */
   public function __construct() {
     parent::__construct();
@@ -73,7 +69,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contact_BAO_SavedSearch
+   * @return CRM_Contact_BAO_SavedSearch|null
    * @access public
    * @static
    */
@@ -92,7 +88,7 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
    *
    * @param int $id the id of the saved search
    *
-   * @return array the values of the posted saved search
+   * @return array|null the values of the posted saved search
    * @access public
    * @static
    */
@@ -106,6 +102,15 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     return $result;
   }
 
+  /**
+   * Get search params for a saved search
+   *
+   * @param int $id the id of the saved search
+   *
+   * @return array search params
+   * @static
+   * @access public
+   */
   public static function getSearchParams($id) {
     $fv = &self::getFormValues($id);
     //check if the saved seach has mapping id
@@ -125,11 +130,11 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
   /**
    * get the where clause for a saved search
    *
-   * @param int $id saved search id
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int   $id          saved search id
+   * @param array $tables      (reference) add the tables that are needed for the select clause
+   * @param array $whereTables (reference) add the tables that are needed for the where clause
    *
-   * @return string the where clause for this saved search
+   * @return string|null the where clause for this saved search
    * @access public
    * @static
    */
@@ -141,6 +146,15 @@ class CRM_Contact_BAO_SavedSearch extends CRM_Contact_DAO_SavedSearch {
     return NULL;
   }
 
+  /**
+   * Get contact ids sql for a saved search
+   *
+   * @param int $id saved search id
+   *
+   * @return string contact ids sql
+   * @static
+   * @access public
+   */
   public static function contactIDsSQL($id) {
     $params = &self::getSearchParams($id);
     if ($params) {
@@ -161,6 +175,15 @@ $from
 WHERE  $where";
   }
 
+  /**
+   * Get from and where clause for email search
+   *
+   * @param int $id saved search id
+   *
+   * @return array [from, where]
+   * @static
+   * @access public
+   */
   public static function fromWhereEmail($id) {
     $params = &self::getSearchParams($id);
 
@@ -184,6 +207,9 @@ WHERE  $where";
   /**
    * given a saved search compute the clause and the tables
    * and store it for future use
+   *
+   * @return void
+   * @access public
    */
   public function buildClause() {
     $fv = unserialize($this->form_values);
@@ -211,6 +237,12 @@ WHERE  $where";
     return;
   }
 
+  /**
+   * Save the saved search
+   *
+   * @return void
+   * @access public
+   */
   public function save() {
     // first build the computed fields
     $this->buildClause();
@@ -221,9 +253,10 @@ WHERE  $where";
   /**
    * given an id, get the name of the saved search
    *
-   * @param int $id the id of the saved search
+   * @param int    $id    the id of the saved search
+   * @param string $value column name to return
    *
-   * @return string the name of the saved search
+   * @return string|null the name of the saved search
    * @access public
    * @static
    */

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -60,10 +58,9 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
   protected $_code;
 
   /**
-   * set up variables to build the form
+   * Sets up form variables by retrieving the coupon ID and its description and code.
    *
-   * @return void
-   * @acess protected
+   * @access protected
    */
   public function preProcess() {
     $this->_id = $this->get('id');
@@ -81,9 +78,8 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Builds the quick form for confirming coupon deletion.
    *
-   * @return None
    * @access public
    */
   public function buildQuickForm() {
@@ -103,9 +99,8 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
   }
 
   /**
-   * Process the form when submitted
+   * Processes the form submission by deleting the coupon and setting a status message.
    *
-   * @return void
    * @access public
    */
   public function postProcess() {

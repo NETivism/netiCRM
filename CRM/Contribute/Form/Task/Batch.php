@@ -27,14 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class provides the functionality for batch profile update for contributions
+ * This class provides the functionality for batch profile update for contributions.
  */
 class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
 
@@ -59,10 +57,13 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
   protected $_userContext;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
+   *
+   * This method initializes the task, retrieves selected contribution IDs,
+   * fetches read-only contact details (Name, ID, Transaction ID, etc.) for
+   * the grid display.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     /*
@@ -98,9 +99,10 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
   }
 
   /**
-   * Build the form
+   * Actually build the form components.
    *
-   * @access public
+   * Adds profile fields to the grid, handles field exclusions (like File types),
+   * and initializes the batch update interface for the selected contributions.
    *
    * @return void
    */
@@ -195,11 +197,11 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
   }
 
   /**
-   * This function sets the default values for the form.
+   * Set default values for the form elements.
    *
-   * @access public
+   * Retrieves existing profile values for each selected contribution.
    *
-   * @return None
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     if (empty($this->_fields)) {
@@ -216,11 +218,12 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form submission.
    *
-   * @access public
+   * Iterates through all updated contributions, processes custom fields,
+   * updates the contribution records, and stores custom values.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -273,5 +276,4 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
       CRM_Core_Session::setStatus(ts("No updates have been saved."));
     }
   }
-  //end of function
 }

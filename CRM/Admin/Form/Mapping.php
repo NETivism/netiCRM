@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -46,10 +44,9 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
   public $_mapping;
 
   /**
-   * Function to build the form
+   * Pre-processes the form.
    *
-   * @return None
-   * @access public
+   * @return void Pre-processes the form.
    */
   public function preProcess() {
     parent::preProcess();
@@ -60,6 +57,11 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     $this->assign('mappingName', $mapping->name);
   }
 
+  /**
+   * Builds the form.
+   *
+   * @return void Builds the form.
+   */
   public function buildQuickForm() {
     parent::buildQuickForm();
     if ($this->_action == CRM_Core_Action::DELETE) {
@@ -92,17 +94,20 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     }
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     return $defaults;
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     // store the submitted values in an array

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,7 +40,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
    * the price field id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -50,17 +47,13 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
    * option value  id, used when editing the Option
    *
    * @var int
-   * @access protected
    */
   protected $_oid;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @param null
+   * Function to set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
 
@@ -77,13 +70,11 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @param null
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -108,12 +99,9 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
@@ -233,14 +221,13 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields (reference) posted values of the form
+   * @param array $files
+   * @param CRM_Core_Form $form
    *
-   * @return array    if errors then list of errors to be posted back to the form,
-   *                  true otherwise
-   * @static
-   * @access public
+   * @return array|bool if errors then list of errors to be posted back to the form, true otherwise
    */
   public static function formRule($fields, $files, $form) {
     $errors = [];
@@ -254,12 +241,9 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
-   *
-   * @param null
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
 

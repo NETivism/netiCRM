@@ -37,9 +37,7 @@
  * http://pear.php.net/manual/en/package.html.html-quickform-controller.faq.php
  * for other useful tips and suggestions
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -131,18 +129,14 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   public $_destination = NULL;
 
   /**
-   * All CRM single or multi page pages should inherit from this class.
+   * Class constructor.
    *
-   * @param string  title        descriptive title of the controller
-   * @param boolean whether      controller is modal
-   * @param string  scope        name of session if we want unique scope, used only by Controller_Simple
-   * @param boolean addSequence  should we add a unique sequence number to the end of the key
-   * @param boolean ignoreKey    should we not set a qfKey for this controller (for standalone forms)
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * @param string|null $title Descriptive title of the controller.
+   * @param bool $modal Whether the controller is modal.
+   * @param int|null $mode Mode of operation.
+   * @param string|null $scope Name of session scope.
+   * @param bool $addSequence Whether to add a unique sequence number to the end of the key.
+   * @param bool $ignoreKey Whether to ignore the qfKey for this controller.
    */
   public function __construct(
     $title = NULL,
@@ -221,22 +215,40 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     );
   }
 
+  /**
+   * Initializes the session object.
+   */
   public function initSession() {
     if (!isset(self::$_session)) {
       self::$_session = CRM_Core_Session::singleton();
     }
   }
+  /**
+   * Initializes the template object.
+   */
   public function initTemplate() {
     if (!isset(self::$_template)) {
       self::$_template = CRM_Core_Smarty::singleton();
     }
   }
 
+  /**
+   * Finalizes the controller and stores the container in the cache.
+   */
   public function fini() {
 
     CRM_Core_BAO_Cache::storeSessionToCache(["_{$this->_name}_container", ['CiviCRM', $this->_scope]], TRUE);
   }
 
+  /**
+   * Manages the qfKey for the controller.
+   *
+   * @param string $name Name of the controller.
+   * @param bool $addSequence Whether to add a sequence number.
+   * @param bool $ignoreKey Whether to ignore the key.
+   *
+   * @return string|null The qfKey.
+   */
   public function key($name, $addSequence = FALSE, $ignoreKey = FALSE) {
     $config = CRM_Core_Config::singleton();
 
@@ -272,16 +284,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * Process the request, overrides the default QFC run method
-   * This routine actually checks if the QFC is modal and if it
-   * is the first invalid page, if so it call the requested action
-   * if not, it calls the display action on the first invalid page
-   * avoids the issue of users hitting the back button and getting
-   * a broken page
-   *
-   * This run is basically a composition of the original run and the
-   * jump action
-   *
+   * Process the request, overrides the default QFC run method.
    */
   public function run() {
     // the names of the action and page should be saved
@@ -305,6 +308,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return;
   }
 
+  /**
+   * Validates the form.
+   *
+   * @return bool|array True if valid, array of errors otherwise.
+   */
   public function validate() {
     $this->_actionName = $this->getActionName();
     list($pageName, $action) = $this->_actionName;
@@ -324,6 +332,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $page->_errors;
   }
 
+  /**
+   * Finds the first invalid page and returns a redirect URL.
+   *
+   * @return string|bool The redirect URL or false.
+   */
   public function findValid() {
     // the names of the action and page should be saved
     // note that this is split into two, because some versions of
@@ -348,16 +361,10 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * Helper function to add all the needed default actions. Note that the framework
-   * redefines all of the default QFC actions
+   * Helper function to add all the needed default actions.
    *
-   * @param string   directory to store all the uploaded files
-   * @param array    names for the various upload buttons (note u can have more than 1 upload)
-   *
-   * @access private
-   *
-   * @return void
-   *
+   * @param string|null $uploadDirectory Directory to store uploaded files.
+   * @param array|null $uploadNames Names for the various upload buttons.
    */
   public function addActions($uploadDirectory = NULL, $uploadNames = NULL) {
     $names = [
@@ -381,38 +388,28 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * getter method for stateMachine
+   * Getter method for stateMachine.
    *
-   * @return object
-   * @access public
+   * @return \CRM_Core_StateMachine The state machine object.
    */
   public function getStateMachine() {
     return $this->_stateMachine;
   }
 
   /**
-   * setter method for stateMachine
+   * Setter method for stateMachine.
    *
-   * @param object a stateMachineObject
-   *
-   * @return void
-   * @access public
+   * @param \CRM_Core_StateMachine $stateMachine A state machine object.
    */
   public function setStateMachine($stateMachine) {
     $this->_stateMachine = $stateMachine;
   }
 
   /**
-   * add pages to the controller. Note that the controller does not really care
-   * the order in which the pages are added
+   * Adds pages to the controller.
    *
-   * @param object $stateMachine  the state machine object
-   * @param int    $action        the mode in which the state machine is operating
-   *                              typicaly this will be add/view/edit
-   *
-   * @return void
-   * @access public
-   *
+   * @param \CRM_Core_StateMachine $stateMachine The state machine object.
+   * @param int $action The mode in which the state machine is operating.
    */
   public function addPages(&$stateMachine, $action = CRM_Core_Action::NONE) {
     $pages = $stateMachine->getPages();
@@ -455,12 +452,9 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * Get current page
+   * Get current page form object.
    *
-   * Get current form object for further usage.
-   * In most case, pages defined in statemachine and it's form object.
-   *
-   * @return CRM_Core_Form
+   * @return \CRM_Core_Form The current form object.
    */
   public function getCurrentPage() {
     $this->_actionName = $this->getActionName();
@@ -468,6 +462,9 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $this->getPage($pageName);
   }
 
+  /**
+   * Advances to the next page in the state machine.
+   */
   public function nextPage() {
     $this->_actionName = $this->getActionName();
     list($pageName, $action) = $this->_actionName;
@@ -478,13 +475,9 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * QFC does not provide native support to have different 'submit' buttons.
-   * We introduce this notion to QFC by using button specific data. Thus if
-   * we have two submit buttons, we could have one displayed as a button and
-   * the other as an image, both are of type 'submit'.
+   * Gets the name of the button that has been pressed by the user.
    *
-   * @return string the name of the button that has been pressed by the user
-   * @access public
+   * @return string|null The name of the button.
    */
   public function getButtonName() {
     $data = &$this->container();
@@ -492,11 +485,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * function to destroy all the session state of the controller.
-   *
-   * @access public
-   *
-   * @return void
+   * Function to destroy all the session state of the controller.
    */
   public function reset() {
     $data = &$this->container(TRUE);
@@ -511,56 +500,38 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * virtual function to do any processing of data.
-   * Sometimes it is useful for the controller to actually process data.
-   * This is typically used when we need the controller to figure out
-   * what pages are potentially involved in this wizard. (this is dynamic
-   * and can change based on the arguments
-   *
-   * @return void
-   * @access public
+   * Virtual function to do any processing of data.
    */
   public function process() {
   }
 
   /**
-   * Store the variable with the value in the form scope
+   * Store the variable with the value in the form scope.
    *
-   * @param  string|array $name  name  of the variable or an assoc array of name/value pairs
-   * @param  mixed        $value value of the variable if string
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * @param string|array $name Name of the variable or an assoc array of name/value pairs.
+   * @param mixed $value Value of the variable if name is a string.
    */
   public function set($name, $value = NULL) {
     self::$_session->set($name, $value, $this->_scope);
   }
 
   /**
-   * Get the variable from the form scope
+   * Get the variable from the form scope.
    *
-   * @param  string name  : name  of the variable
+   * @param string $name Name of the variable.
    *
-   * @access public
-
-   *
-   * @return mixed
-   *
+   * @return mixed The value of the variable.
    */
   public function get($name) {
     return self::$_session->get($name, $this->_scope);
   }
 
   /**
-   * Create the header for the wizard from the list of pages
-   * Store the created header in smarty
+   * Create the header for the wizard from the list of pages.
    *
-   * @param string $currentPageName name of the page being displayed
+   * @param string $currentPageName Name of the page being displayed.
    *
-   * @return array
-   * @access public
+   * @return array The wizard header array.
    */
   public function wizardHeader($currentPageName) {
     $wizard = [];
@@ -593,6 +564,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $wizard;
   }
 
+  /**
+   * Adds style information to the wizard header.
+   *
+   * @param array $wizard The wizard header array.
+   */
   public function addWizardStyle(&$wizard) {
     $wizard['style'] = ['barClass' => '',
       'stepPrefixCurrent' => '&raquo;',
@@ -606,66 +582,66 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * assign value to name in template
+   * Assign value to name in template.
    *
-   * @param array|string $name  name  of variable
-   * @param mixed $value value of varaible
-   *
-   * @return void
-   * @access public
+   * @param array|string $var Name of variable or associative array of variables.
+   * @param mixed $value Value of variable.
    */
   public function assign($var, $value = NULL) {
     self::$_template->assign($var, $value);
   }
 
+  /**
+   * Assign value to name in template by reference.
+   *
+   * @param string $var Name of variable.
+   * @param mixed $value Value of variable.
+   */
   public function assign_by_ref($var, &$value) {
     self::$_template->assign_by_ref($var, $value);
   }
 
   /**
-   * setter for embedded
+   * Setter for embedded.
    *
-   * @param boolean $embedded
-   *
-   * @return void
-   * @access public
+   * @param bool $embedded Whether the object is embedded.
    */
   public function setEmbedded($embedded) {
     $this->_embedded = $embedded;
   }
 
   /**
-   * getter for embedded
+   * Getter for embedded.
    *
-   * @return boolean return the embedded value
-   * @access public
+   * @return bool Whether the object is embedded.
    */
   public function getEmbedded() {
     return $this->_embedded;
   }
 
   /**
-   * setter for skipRedirection
+   * Setter for skipRedirection.
    *
-   * @param boolean $skipRedirection
-   *
-   * @return void
-   * @access public
+   * @param bool $skipRedirection Whether to skip redirection.
    */
   public function setSkipRedirection($skipRedirection) {
     $this->_skipRedirection = $skipRedirection;
   }
 
   /**
-   * getter for skipRedirection
+   * Getter for skipRedirection.
    *
-   * @return boolean return the skipRedirection value
-   * @access public
+   * @return bool Whether skipRedirection is set.
    */
   public function getSkipRedirection() {
     return $this->_skipRedirection;
   }
 
+  /**
+   * Sets headers for Word download.
+   *
+   * @param string|null $fileName Output file name.
+   */
   public function setWord($fileName = NULL) {
     //Mark as a CSV file.
     header('Content-Type: application/vnd.ms-word');
@@ -677,6 +653,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     header("Content-Disposition: attachment; filename=Contacts_$fileName");
   }
 
+  /**
+   * Sets headers for Excel download.
+   *
+   * @param string|null $fileName Output file name.
+   */
   public function setExcel($fileName = NULL) {
     //Mark as an excel file.
     header('Content-Type: application/vnd.ms-excel');
@@ -690,12 +671,9 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * setter for print
+   * Setter for print mode.
    *
-   * @param boolean $print
-   *
-   * @return void
-   * @access public
+   * @param int|string|bool $print The print mode.
    */
   public function setPrint($print) {
     if ($print == "xls") {
@@ -708,15 +686,19 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
   }
 
   /**
-   * getter for print
+   * Getter for print mode.
    *
-   * @return boolean return the print value
-   * @access public
+   * @return int|string|bool The print mode.
    */
   public function getPrint() {
     return $this->_print;
   }
 
+  /**
+   * Gets the template file name based on print mode and user framework.
+   *
+   * @return string Template file name.
+   */
   public function getTemplateFile() {
     if ($this->_print) {
       if ($this->_print == CRM_Core_Smarty::PRINT_PAGE) {
@@ -735,6 +717,12 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     }
   }
 
+  /**
+   * Adds upload and attach actions to the controller.
+   *
+   * @param string|null $uploadDir Directory for uploads.
+   * @param array|null $uploadNames Button names for uploads.
+   */
   public function addUploadAction($uploadDir, $uploadNames) {
     if (empty($uploadDir)) {
       $config = CRM_Core_Config::singleton();
@@ -768,18 +756,39 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     $this->addAction('attach', $action);
   }
 
+  /**
+   * Sets the parent object.
+   *
+   * @param object $parent The parent object.
+   */
   public function setParent($parent) {
     $this->_parent = $parent;
   }
 
+  /**
+   * Gets the parent object.
+   *
+   * @return object|null The parent object.
+   */
   public function getParent() {
     return $this->_parent;
   }
 
+  /**
+   * Gets the destination URL.
+   *
+   * @return string|null The destination URL.
+   */
   public function getDestination() {
     return $this->_destination;
   }
 
+  /**
+   * Sets the destination URL.
+   *
+   * @param string|null $url The destination URL.
+   * @param bool $setToReferer Whether to set the destination to the HTTP referer.
+   */
   public function setDestination($url = NULL, $setToReferer = FALSE) {
     if (empty($url)) {
       if ($setToReferer) {
@@ -801,9 +810,10 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * This function iterates through all pages of the controller and updates
    * the value for the given field name if it exists in the session.
    *
-   * @param string $name  The name of the field to set.
-   * @param mixed  $value The new value for the field.
-   * @return bool  TRUE if the value was successfully set, FALSE otherwise.
+   * @param string $name The name of the field to set.
+   * @param mixed $value The new value for the field.
+   *
+   * @return bool True if the value was successfully set, false otherwise.
    */
   public function setValue($name, $value) {
     $containerName = '_' . $this->_name . '_container';

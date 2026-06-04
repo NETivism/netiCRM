@@ -18,6 +18,7 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
 
   /**
    * Run the page.
+   *
    * @return void
    */
   public function run() {
@@ -82,7 +83,8 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
    * Format stock change for display
    *
    * @param string $type 'deduct' or 'restock'
-   * @param int $quantity
+   * @param int $quantity the stock quantity
+   *
    * @return string Formatted stock change description
    */
   protected function formatStockChange($type, $quantity) {

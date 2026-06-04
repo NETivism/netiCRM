@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -38,12 +36,19 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
   public const MAX_CONTACTS_TO_PROCESS = 1000;
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
+  /**
+   * Create a new mailing job.
+   *
+   * @param array $params An associative array of mailing job values.
+   *
+   * @return CRM_Mailing_BAO_Job The created mailing job object.
+   */
   public function create($params) {
     $job = new CRM_Mailing_BAO_Job();
     $job->mailing_id = $params['mailing_id'];
@@ -57,11 +62,11 @@ class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
   }
 
   /**
-   * Initiate all pending/ready jobs
+   * Initiate all pending/ready jobs.
    *
-   * @return void
-   * @access public
-   * @static
+   * @param array|null $testParams Optional parameters for testing.
+   *
+   * @return bool|void Returns true/false for test jobs, void otherwise.
    */
   public static function runJobs($testParams = NULL) {
     $job = new CRM_Mailing_BAO_Job();
@@ -183,8 +188,11 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
     }
   }
 
-  // post process to determine if the parent job
-  // as well as the mailing is complete after the run
+  /**
+   * Post-process to determine if the parent job and the mailing are complete.
+   *
+   * @return void
+   */
   public static function runJobs_post() {
 
     $job = new CRM_Mailing_BAO_Job();
@@ -248,7 +256,13 @@ WHERE j.job_type = 'child'
     }
   }
 
-  // before we run jobs, we need to split the jobs
+  /**
+   * Pre-process to split the jobs before running them.
+   *
+   * @param int $offset The number of recipients per child job.
+   *
+   * @return void
+   */
   public static function runJobs_pre($offset = 200) {
     $job = new CRM_Mailing_BAO_Job();
 
@@ -329,8 +343,14 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
     }
   }
 
-  // Split the parent job into n number of child job based on an offset
-  // If null or 0 , we create only one child job
+  /**
+   * Split the parent job into multiple child jobs based on an offset.
+   * If null or 0, we create only one child job.
+   *
+   * @param int $offset The number of recipients per child job.
+   *
+   * @return void
+   */
   public function split_job($offset = 200) {
 
     $recipient_count = CRM_Mailing_BAO_Recipients::mailingSize($this->mailing_id);
@@ -371,6 +391,13 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     }
   }
 
+  /**
+   * Queue recipients for the mailing job.
+   *
+   * @param array|null $testParams Optional parameters for testing.
+   *
+   * @return void
+   */
   public function queue($testParams = NULL) {
 
     $mailing = new CRM_Mailing_BAO_Mailing();
@@ -411,12 +438,12 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   }
 
   /**
-   * Send the mailing
+   * Send the mailing.
    *
-   * @param object $mailer  A Mail settings object retrieve from CRM_Core_Config::getMailer
+   * @param object $mailer A Mail settings object retrieved from CRM_Core_Config::getMailer.
+   * @param array|null $testParams Optional parameters for testing.
    *
-   * @return void
-   * @access public
+   * @return bool True if the delivery was successful or complete.
    */
   public function deliver(&$mailer, $testParams = NULL) {
 
@@ -532,15 +559,15 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   }
 
   /**
-   * Undocumented function
+   * Deliver a group of messages.
    *
-   * @param array $fields
-   * @param CRM_Mailing_BAO_Mailing $mailing
-   * @param object $mailer get from CRM_Core_Config::getMailer
-   * @param string $job_date mysql date string from job->scheduled_date
-   * @param array $attachments
+   * @param array $fields Array of message details (id, hash, contact_id, email).
+   * @param CRM_Mailing_BAO_Mailing $mailing The mailing object.
+   * @param object $mailer Mailer object obtained from CRM_Core_Config::getMailer.
+   * @param string $job_date MySQL date string from job->scheduled_date.
+   * @param array $attachments Array of attachments.
    *
-   * @return bool
+   * @return bool True on success.
    */
   public function deliverGroup(&$fields, &$mailing, &$mailer, &$job_date, &$attachments) {
     static $smtpConnectionErrors = 0;
@@ -720,10 +747,11 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
   }
 
   /**
-   * cancel a mailing
+   * Cancel a mailing.
    *
-   * @param int $mailingId  the id of the mailing to be canceled
-   * @static
+   * @param int $mailingId The ID of the mailing to be canceled.
+   *
+   * @return void
    */
   public static function cancel($mailingId) {
     $sql = "
@@ -766,13 +794,11 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
   }
 
   /**
-   * Return a translated status enum string
+   * Return a translated status enum string.
    *
-   * @param string $status        The status enum
+   * @param string $status The status enum.
    *
-   * @return string               The translated version
-   * @access public
-   * @static
+   * @return string The translated version.
    */
   public static function status($status) {
     static $translation = NULL;
@@ -793,9 +819,7 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
    * Return a workflow clause for use in SQL queries,
    * to only process jobs that are approved.
    *
-   * @return string        For use in a WHERE clause
-   * @access public
-   * @static
+   * @return string For use in a WHERE clause.
    */
   public static function workflowClause() {
     // add an additional check and only process
@@ -817,6 +841,16 @@ AND    status IN ( 'Scheduled', 'Running', 'Paused' )
     return '';
   }
 
+  /**
+   * Write delivery and activity records to the database.
+   *
+   * @param array $deliveredParams (reference) Array of event queue IDs that were delivered.
+   * @param array $targetParams (reference) Array of contact IDs that were delivered.
+   * @param CRM_Mailing_BAO_Mailing $mailing The mailing object.
+   * @param string $job_date The date of the job.
+   *
+   * @return bool True on success.
+   */
   public function writeToDB(
     &$deliveredParams,
     &$targetParams,

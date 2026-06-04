@@ -26,10 +26,9 @@
 */
 
 /**
+ * Manages option group CRUD operations and value lookups
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_OptionGroup {
@@ -46,6 +45,18 @@ class CRM_Core_OptionGroup {
     'grant_type',
   ];
 
+  /**
+   * Common function to extract option values from a DAO.
+   *
+   * @param CRM_Core_DAO $dao The DAO object.
+   * @param bool $flip Whether to flip keys and values.
+   * @param bool $grouping Whether to include grouping.
+   * @param bool $localize Whether to localize the labels.
+   * @param string $labelColumnName The column name for labels.
+   * @param string $keyColumnName The column name for keys.
+   *
+   * @return array The extracted values.
+   */
   public static function &valuesCommon(
     $dao,
     $flip = FALSE,
@@ -87,6 +98,21 @@ class CRM_Core_OptionGroup {
     return self::$_values;
   }
 
+  /**
+   * Get option values for a specific group name.
+   *
+   * @param string $name The group name.
+   * @param bool $flip Whether to flip keys and values.
+   * @param bool $grouping Whether to include grouping.
+   * @param bool $localize Whether to localize the labels.
+   * @param string|null $condition Additional WHERE clause condition.
+   * @param string $labelColumnName The column name for labels.
+   * @param bool $onlyActive Whether to only return active options.
+   * @param bool $fresh Whether to bypass cache.
+   * @param string $keyColumnName The column name for keys.
+   *
+   * @return array The option values.
+   */
   public static function &values(
     $name,
     $flip = FALSE,
@@ -184,6 +210,19 @@ class CRM_Core_OptionGroup {
     return $cacheKey;
   }
 
+  /**
+   * Get option values for a specific group ID.
+   *
+   * @param int $id The group ID.
+   * @param bool $flip Whether to flip keys and values.
+   * @param bool $grouping Whether to include grouping.
+   * @param bool $localize Whether to localize the labels.
+   * @param string $labelColumnName The column name for labels.
+   * @param bool $onlyActive Whether to only return active options.
+   * @param bool $fresh Whether to bypass cache.
+   *
+   * @return array The option values.
+   */
   public static function &valuesByID($id, $flip = FALSE, $grouping = FALSE, $localize = FALSE, $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE) {
     $cacheKey = self::createCacheKey($id, $flip, $grouping, $localize, $labelColumnName, $onlyActive);
 
@@ -284,6 +323,15 @@ WHERE  v.option_group_id = g.id
     }
   }
 
+  /**
+   * Get the internal name for a given group and value.
+   *
+   * @param string $groupName The group name.
+   * @param mixed $value The value to lookup.
+   * @param bool $onlyActiveValue Whether to only return if active.
+   *
+   * @return string|null The name.
+   */
   public static function getName($groupName, $value, $onlyActiveValue = TRUE) {
     if (empty($groupName) || empty($value)) {
       return NULL;
@@ -311,6 +359,15 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
+  /**
+   * Get the display label for a given group and value.
+   *
+   * @param string $groupName The group name.
+   * @param mixed $value The value to lookup.
+   * @param bool $onlyActiveValue Whether to only return if active.
+   *
+   * @return string|null The label.
+   */
   public static function getLabel($groupName, $value, $onlyActiveValue = TRUE) {
     if (empty($groupName) ||
       empty($value)
@@ -340,6 +397,17 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
+  /**
+   * Get the value for a given group and label.
+   *
+   * @param string $groupName The group name.
+   * @param mixed $label The label to lookup.
+   * @param string $labelField The column name for labels.
+   * @param string $labelType The type of label (for SQL validation).
+   * @param string $valueField The column name for values.
+   *
+   * @return mixed|null The value.
+   */
   public static function getValue(
     $groupName,
     $label,
@@ -377,6 +445,16 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
+  /**
+   * Create an option group and its values from an associative array.
+   *
+   * @param string $groupName The group name.
+   * @param array $values The values to create.
+   * @param int|string $defaultID The default ID (passed by reference).
+   * @param string|null $groupLabel The group label.
+   *
+   * @return int The group ID.
+   */
   public static function createAssoc($groupName, &$values, &$defaultID, $groupLabel = NULL) {
     self::deleteAssoc($groupName);
     if (!empty($values)) {
@@ -419,6 +497,14 @@ WHERE  v.option_group_id = g.id
     return $group->id;
   }
 
+  /**
+   * Get option values as an associative array.
+   *
+   * @param string $groupName The group name.
+   * @param array $values The array to populate.
+   * @param bool $flip Whether to flip the structure.
+   * @param string $field The field name to lookup by.
+   */
   public static function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
     $query = "
 SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight, v.grouping, v.filter, v.is_default
@@ -459,6 +545,12 @@ ORDER BY v.weight
     }
   }
 
+  /**
+   * Delete an option group and its values.
+   *
+   * @param string $groupName The group name.
+   * @param string $operator The SQL operator for matching group name.
+   */
   public static function deleteAssoc($groupName, $operator = "=") {
     $query = "
 DELETE g, v
@@ -472,6 +564,14 @@ DELETE g, v
     $dao = CRM_Core_DAO::executeQuery($query, $params);
   }
 
+  /**
+   * Get the label for a specific option value.
+   *
+   * @param string $groupName The group name.
+   * @param mixed $value The value.
+   *
+   * @return string|null The label.
+   */
   public static function optionLabel($groupName, $value) {
     $query = "
 SELECT v.label
@@ -486,6 +586,17 @@ SELECT v.label
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
+  /**
+   * Get full row values for a specific option.
+   *
+   * @param string $groupName The group name.
+   * @param mixed $fieldValue The value to lookup.
+   * @param string $field The field to lookup by.
+   * @param string $fieldType The type of field (for SQL validation).
+   * @param bool $active Whether to only return if active.
+   *
+   * @return array The row values.
+   */
   public static function getRowValues(
     $groupName,
     $fieldValue,
@@ -531,6 +642,12 @@ WHERE  v.option_group_id = g.id
      * will do a couple of variations & aspire to someone cleaning it up later
      */
 
+  /**
+   * Flush specific option group cache.
+   *
+   * @param string $name The group name.
+   * @param array $params Cache key parameters.
+   */
   public static function flush($name, $params = []) {
     $defaults = [
       'flip' => FALSE,
@@ -563,6 +680,9 @@ WHERE  v.option_group_id = g.id
     );
   }
 
+  /**
+   * Flush all option group caches.
+   */
   public static function flushAll() {
     self::$_values = [];
     self::$_cache = [];

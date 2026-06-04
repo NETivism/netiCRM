@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -96,18 +95,17 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
    */
   public $contribution_id;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_participant_payment
-  */
+   * class constructor
+   *
+   * @return civicrm_participant_payment
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -120,11 +118,11 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -134,11 +132,10 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -147,20 +144,20 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment ID') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'participant_id' => [
           'name' => 'participant_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant ID') ,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Event_DAO_Participant',
-        ] ,
+          'FKClassName' => 'CRM_Event_DAO_Participant',
+        ],
         'contribution_id' => [
           'name' => 'contribution_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+        ],
       ];
     }
     return self::$_fields;
@@ -168,7 +165,6 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -177,7 +173,6 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -186,8 +181,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -209,8 +203,7 @@ class CRM_Event_DAO_ParticipantPayment extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

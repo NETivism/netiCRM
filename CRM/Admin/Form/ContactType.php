@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,10 +39,9 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
 
   public $_parentId;
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void None.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -91,13 +88,13 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
+   * @param array $fields The submitted form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array True or error array.
    */
   public static function formRule($fields, $files, $self) {
 
@@ -117,11 +114,9 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void None.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -54,9 +52,7 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
   protected $_tags;
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
@@ -73,10 +69,23 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
     $this->addDefaultButtons(ts('Remove Tag Contacts'));
   }
 
+  /**
+   * Add local and global form rules.
+   *
+   * @return void
+   */
   public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_RemoveFromTag', 'formRule']);
   }
 
+  /**
+   * Global validation rules for the form.
+   *
+   * @param array $form posted values of the form
+   * @param array $rule the rules array
+   *
+   * @return array<string, string> list of errors to be posted back to the form
+   */
   public static function formRule($form, $rule) {
     $errors = [];
     if (empty($form['tag']) && empty($form['taglist'])) {
@@ -86,11 +95,9 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the submitted values in an array

@@ -30,9 +30,7 @@
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Pledge_Info extends CRM_Core_Component_Info {
@@ -40,7 +38,11 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
   // docs inherited from interface
   protected $keyword = 'pledge';
 
-  // docs inherited from interface
+  /**
+   * Get info.
+   *
+   * @return array
+   */
   public function getInfo() {
     return ['name' => 'CiviPledge',
       'translatedName' => ts('CiviPledge'),
@@ -50,7 +52,11 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get permissions.
+   *
+   * @return array
+   */
   public function getPermissions() {
     return ['access CiviPledge',
       'edit pledges',
@@ -58,7 +64,11 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get user dashboard element.
+   *
+   * @return array
+   */
   public function getUserDashboardElement() {
     return ['name' => ts('Pledges'),
       'title' => ts('Your Pledge(s)'),
@@ -68,7 +78,11 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Register tab.
+   *
+   * @return array
+   */
   public function registerTab() {
     return ['title' => ts('Pledges'),
       'url' => 'pledge',
@@ -76,19 +90,33 @@ class CRM_Pledge_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Register advanced search pane.
+   *
+   * @return array
+   */
   public function registerAdvancedSearchPane() {
     return ['title' => ts('Pledges'),
       'weight' => 25,
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get activity types.
+   *
+   * @return array|null
+   */
   public function getActivityTypes() {
     return NULL;
   }
 
-  // add shortcut to Create New
+  /**
+   * Add shortcut to Create New.
+   *
+   * @param array $shortCuts
+   *
+   * @return void
+   */
   public function creatNewShortcut(&$shortCuts) {
     if (CRM_Core_Permission::check('access CiviPledge') &&
       CRM_Core_Permission::check('edit pledges')

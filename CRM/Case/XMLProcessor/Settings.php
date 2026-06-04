@@ -26,10 +26,9 @@
 */
 
 /**
+ * Processes Case XML configuration settings for redundancy and case types
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 

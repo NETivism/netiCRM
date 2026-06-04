@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -70,6 +68,11 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
    * @var int
    */
   protected $_parentId;
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_entityTable = $this->get('entityTable');
     $this->_entityId = $this->get('entityId');
@@ -90,16 +93,14 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
-
     if ($this->_action & CRM_Core_Action::UPDATE) {
       if (isset($this->_id)) {
         $params['id'] = $this->_id;
@@ -117,10 +118,9 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
@@ -159,10 +159,9 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
   }
 
   /**
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // store the submitted values in an array

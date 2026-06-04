@@ -26,10 +26,9 @@
 */
 
 /**
+ * Manages location block data (address, phone, email, IM, OpenID) for contacts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  * add static functions to include some common functionality
  * used across location sub object BAO classes
@@ -48,17 +47,12 @@ class CRM_Core_BAO_Block {
   ];
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch blocks (Phone|Email|IM|OpenID) based on criteria.
    *
-   * @param Object $block         typically a Phone|Email|IM|OpenID object
-   * @param string $blockName     name of the above object
-   * @param array  $params        input parameters to find object
-   * @param array  $values        output values of the object
+   * @param string $blockName name of the block (e.g., 'Phone', 'Email', 'IM', 'OpenID')
+   * @param array $params associative array containing 'contact_id' or 'entity_table' and 'entity_id'
    *
-   * @return array of $block objects.
-   * @access public
-   * @static
+   * @return array|null array of block data arrays, keyed by index (1, 2, ...), or NULL if params empty
    */
   public static function &getValues($blockName, $params) {
     if (empty($params)) {
@@ -95,16 +89,12 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Retrieve block records from the database.
    *
-   * @param Object $block         typically a Phone|Email|IM|OpenID object
-   * @param string $blockName     name of the above object
-   * @param array  $values        output values of the object
+   * @param object &$block typically a Phone|Email|IM|OpenID DAO/BAO object
+   * @param string $blockName name of the block object
    *
-   * @return array of $block objects.
-   * @access public
-   * @static
+   * @return array array of block data arrays, keyed by index (1, 2, ...)
    */
   public static function retrieveBlock(&$block, $blockName) {
     // we first get the primary location due to the order by clause
@@ -127,14 +117,12 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * check if the current block object has any valid data
+   * Check if the current block object has any valid data.
    *
-   * @param array  $blockFields   array of fields that are of interest for this object
-   * @param array  $params        associated array of submitted fields
+   * @param array $blockFields list of field names required for this block type
+   * @param array &$params associative array of submitted field values
    *
-   * @return boolean              true if the block has data, otherwise false
-   * @access public
-   * @static
+   * @return bool TRUE if all required fields have data, otherwise FALSE
    */
   public static function dataExists($blockFields, &$params) {
     foreach ($blockFields as $field) {
@@ -146,14 +134,12 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * check if the current block exits
+   * Check if the specified block data exists in the parameters.
    *
-   * @param string  $blockName   bloack name
-   * @param array   $params      associated array of submitted fields
+   * @param string $blockName block name (e.g., 'email', 'phone')
+   * @param array &$params associative array of submitted field values
    *
-   * @return boolean             true if the block exits, otherwise false
-   * @access public
-   * @static
+   * @return bool TRUE if the block data is present and is an array
    */
   public static function blockExists($blockName, &$params) {
     // return if no data present
@@ -165,17 +151,12 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * check if block value exists
+   * Check if a specific block value already exists in the database for a contact.
    *
-   * @param string  $blockName   bloack name that in self::requiredBlockFields key
-   * @param array   $blockValue associated array of data without id
-   *   ```
-   *     array('phone_type_id' => 2, 'contact_id' => 1234, 'phone' => '123123123')
-   *   ```
+   * @param string $blockName block name key from self::$requiredBlockFields
+   * @param array &$blockValue associative array of block data
    *
-   * @return boolean             true if the block exits, otherwise false
-   * @access public
-   * @static
+   * @return bool TRUE if the block value already exists, otherwise FALSE
    */
   public static function blockValueExists($blockName, &$blockValue) {
     $require = self::$requiredBlockFields[$blockName];
@@ -203,15 +184,14 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * Function to get all block ids for a contact
+   * Get all block IDs for a specified contact or entity.
    *
-   * @param string $blockName block name
-   * @param int    $contactId contact id
+   * @param string $blockName block name (e.g., 'email', 'phone')
+   * @param int|null $contactId optional contact ID
+   * @param array|null $entityElements optional array containing 'entity_table' and 'entity_id'
+   * @param bool $updateBlankLocInfo if TRUE, return indexed by sequential count
    *
-   * @return array $contactBlockIds formatted array of block ids
-   *
-   * @access public
-   * @static
+   * @return array array of block IDs/data
    */
   public static function getBlockIds($blockName, $contactId = NULL, $entityElements = NULL, $updateBlankLocInfo = FALSE) {
     $allBlocks = [];
@@ -235,15 +215,13 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * takes an associative array and creates a block
+   * Create one or more block records (Email, Phone, IM, OpenID).
    *
-   * @param string $blockName      block name
-   * @param array  $params         (reference ) an assoc array of name/value pairs
-   * @param array  $requiredFields fields that's are required in a block
+   * @param string $blockName block name (e.g., 'email', 'phone')
+   * @param array &$params associative array of parameters
+   * @param string|null $entity the entity type if not a contact
    *
-   * @return object       CRM_Core_BAO_Block object on success, null otherwise
-   * @access public
-   * @static
+   * @return array array of created block objects
    */
   public static function create($blockName, &$params, $entity = NULL) {
     if (!self::blockExists($blockName, $params)) {
@@ -415,13 +393,12 @@ class CRM_Core_BAO_Block {
   }
 
   /**
-   * Function to delete block
+   * Delete a block record.
    *
-   * @param  string $blockName       block name
-   * @param  int    $params          associates array
+   * @param string $blockName block name (e.g., 'Email', 'Phone')
+   * @param array $params associative array containing 'id'
    *
    * @return void
-   * @static
    */
   public static function blockDelete($blockName, $params) {
     $baoString = 'CRM_Core_DAO_' . $blockName;
@@ -446,9 +423,10 @@ class CRM_Core_BAO_Block {
    *
    *  if $params['id'] is set $params['contact_id'] may need to be retrieved
    *
-   * @param array $params
-   * @param $class
+   * @param array &$params associative array of parameters (passed by reference)
+   * @param string $class name of the BAO class handling the block
    *
+   * @return void
    * @throws API_Exception
    */
   public static function handlePrimary(&$params, $class) {

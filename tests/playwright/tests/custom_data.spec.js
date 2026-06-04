@@ -1,3 +1,4 @@
+// Test creating a custom data group with various field types (text, radio, checkbox, etc.)
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

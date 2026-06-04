@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,10 +41,9 @@
 class CRM_Contact_Page_Task extends CRM_Core_Page {
 
   /**
-   * returns the page title
+   * Return the page title.
    *
    * @return string the title of the page
-   * @access public
    */
   public function getTitle() {
     return "Task Results";

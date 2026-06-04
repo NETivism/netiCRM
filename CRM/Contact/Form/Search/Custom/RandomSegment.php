@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for selecting a random segment of contacts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,6 +47,12 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
   public $_groups;
   public $_tableName;
   protected $_debug = 0;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -60,6 +65,9 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     $this->initialize();
   }
 
+  /**
+   * Initialize the properties of the object.
+   */
   public function initialize() {
     $this->_segmentSize = CRM_Utils_Array::value('segmentSize', $this->_formValues);
 
@@ -81,6 +89,11 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     $form->add(
       'text',
@@ -126,10 +139,25 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     $form->assign('elements', ['segmentSize', 'includeGroups', 'excludeGroups']);
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -151,6 +179,13 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     );
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * This method creates multiple temp tables to build the random segment.
+   *
+   * @return string
+   */
   public function from() {
     //define table name
     $randomNum = md5(uniqid());
@@ -330,14 +365,31 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     return $from;
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     return '(1)';
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
   public function count() {
     $sql = $this->all();
 
@@ -345,6 +397,12 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     return $dao->N;
   }
 
+  /**
+   * Destructor.
+   *
+   * The temporary tables are dropped automatically so we don't do it here,
+   * but let mysql clean up.
+   */
   public function __destruct() {
     // the temporary tables are dropped automatically
     // so we dont do it here

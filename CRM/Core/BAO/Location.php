@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,15 +42,13 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
   public static $blocks = ['phone', 'email', 'im', 'openid', 'address'];
 
   /**
-   * Function to create various elements of location block
+   * Create various elements of a location block (phone, email, im, openid, address).
    *
-   * @param array    $params       (reference ) an assoc array of name/value pairs
-   * @param boolean  $fixAddress   true if you need to fix (format) address values
-   *                               before inserting in db
+   * @param array &$params associative array of name/value pairs
+   * @param bool $fixAddress TRUE if address values should be formatted/standardized
+   * @param string|null $entity the entity type if not a contact
    *
-   * @return array   $location
-   * @access public
-   * @static
+   * @return array array of created location block elements
    */
   public static function create(&$params, $fixAddress = TRUE, $entity = NULL) {
     $location = [];
@@ -89,8 +85,12 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
   }
 
   /**
-   * Creates the entry in the civicrm_loc_block
+   * Create an entry in the civicrm_loc_block table.
    *
+   * @param array &$location array of created location block element objects
+   * @param array &$entityElements array containing 'entity_id' and 'entity_table'
+   *
+   * @return int|null the ID of the created location block, or NULL on failure
    */
   public static function createLocBlock(&$location, &$entityElements) {
     $locId = self::findExisting($entityElements);
@@ -127,9 +127,11 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
   }
 
   /**
-   * takes an entity array and finds the existing location block
-   * @access public
-   * @static
+   * Find the existing location block ID for a given entity.
+   *
+   * @param array $entityElements array containing 'entity_id' and 'entity_table'
+   *
+   * @return int|null the location block ID if found, otherwise NULL
    */
   public static function findExisting($entityElements) {
     $eid = $entityElements['entity_id'];
@@ -148,16 +150,13 @@ WHERE e.id = %1";
   }
 
   /**
-   * takes an associative array and adds location block
+   * Add a location block record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of location block data
    *
-   * @return object       CRM_Core_BAO_locBlock object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_LocBlock the created/updated location block object
    */
   public static function addLocBlock(&$params) {
-
     $locBlock = new CRM_Core_DAO_LocBlock();
 
     $locBlock->copyValues($params);
@@ -166,15 +165,12 @@ WHERE e.id = %1";
   }
 
   /**
-   *  This function deletes the Location Block
+   * Delete a location block and all its associated elements (address, phone, etc.).
    *
-   * @param  int  $locBlockId    id of the Location Block
+   * @param int $locBlockId ID of the location block to delete
    *
    * @return void
-   * @access public
-   * @static
    */
-
   public static function deleteLocBlock($locBlockId) {
     if (!$locBlockId) {
       return;
@@ -210,13 +206,11 @@ WHERE e.id = %1";
   }
 
   /**
-   * Check if there is data to create the object
+   * Check if any location block data exists in the parameters.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of name/value pairs
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return bool TRUE if at least one location block element is present
    */
   public static function dataExists(&$params) {
     // return if no data present
@@ -232,15 +226,12 @@ WHERE e.id = %1";
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch all location values for a given entity.
    *
-   * @param array $params        input parameters to find object
-   * @param array $values        output values of the object
+   * @param array $entityBlock associative array containing entity identifying fields
+   * @param bool $microformat TRUE if microformat output is required
    *
-   * @return array   array of objects(CRM_Core_BAO_Location)
-   * @access public
-   * @static
+   * @return array|null nested array of location values (keyed by block type)
    */
   public static function &getValues($entityBlock, $microformat = FALSE) {
     if (empty($entityBlock)) {
@@ -264,14 +255,12 @@ WHERE e.id = %1";
   }
 
   /**
-   * Delete all the block associated with the location
+   * Delete all blocks (address, phone, etc.) associated with a specific location type for a contact.
    *
-   * @param  int  $contactId      contact id
-   * @param  int  $locationTypeId id of the location to delete
+   * @param int $contactId contact ID
+   * @param int|string $locationTypeId location type ID (can be 'null')
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function deleteLocationBlocks($contactId, $locationTypeId) {
     // ensure that contactId has a value
@@ -297,13 +286,14 @@ WHERE e.id = %1";
     }
   }
 
-  /* Function to copy or update location block.
-     *
-     * @param  int  $locBlockId  location block id.
-     * @param  int  $updateLocBlockId update location block id
-     * @return int  newly created/updated location block id.
-     */
-
+  /**
+   * Copy or update a location block and all its elements.
+   *
+   * @param int $locBlockId source location block ID
+   * @param int|null $updateLocBlockId optional target location block ID to update
+   *
+   * @return int ID of the newly created or updated location block
+   */
   public static function copyLocBlock($locBlockId, $updateLocBlockId = NULL) {
     //get the location info.
     $defaults = $updateValues = [];
@@ -345,13 +335,14 @@ WHERE e.id = %1";
   }
 
   /**
-   * If contact has data for any location block, make sure
-   * contact should have only one primary block, CRM-5051
+   * Ensure that a contact has only one primary block for each location type element.
    *
-   * @param  int $contactId - contact id
+   * If multiple primary blocks exist, resets all but one. If no primary block
+   * exists but data does, makes one primary.
    *
-   * @access public
-   * @static
+   * @param int $contactId contact ID
+   *
+   * @return void
    */
   public static function checkPrimaryBlocks($contactId) {
     if (!$contactId) {
@@ -390,6 +381,13 @@ WHERE e.id = %1";
     }
   }
 
+  /**
+   * Ensure that a contact has exactly one billing address and handles location type logic.
+   *
+   * @param int $contactId contact ID
+   *
+   * @return void
+   */
   public static function checkBillingAddress($contactId) {
     if (!$contactId) {
       return;

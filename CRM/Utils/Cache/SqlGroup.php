@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 
@@ -64,8 +62,6 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
    *   - group: string
    *   - componentID: int
    *   - prefetch: bool, whether to preemptively read the entire cache group; default: TRUE
-   *
-   * @return void
    */
   public function __construct($config) {
     if (isset($config['group'])) {

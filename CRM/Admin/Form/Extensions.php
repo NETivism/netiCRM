@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   /**
    * Function to for pre-processing
    *
-   * @return None
+   * @return void None.
    * @access public
    */
   public function preProcess() {
@@ -70,12 +68,9 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array{} The default values for the form.
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -83,10 +78,9 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void None.
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -118,15 +112,13 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $self    this object.
+   * @param array $fields The submitted form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else an array of errors
-   * @access public
-   * @static
+   * @return bool|array True or error array.
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -135,11 +127,9 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void None.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

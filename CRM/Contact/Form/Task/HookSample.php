@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Contact_Form_Task_HookSample extends CRM_Contact_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -73,9 +70,7 @@ AND    c.id IN ( $contactIDs )";
   }
 
   /**
-   * Build the form - it consists of
-   *
-   * @access public
+   * Build the form - it consists of.
    *
    * @return void
    */
@@ -84,9 +79,7 @@ AND    c.id IN ( $contactIDs )";
   }
 
   /**
-   * process the form after the input has been submitted and validated
-   *
-   * @access public
+   * Process the form after the input has been submitted and validated.
    *
    * @return void
    */

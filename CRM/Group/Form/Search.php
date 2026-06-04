@@ -27,24 +27,37 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Group_Form_Search extends CRM_Core_Form {
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Set default values.
+   *
+   * @return array<string, int>
+   */
   public function setDefaultValues() {
     $defaults = [];
     $defaults['active_status'] = 1;
     return $defaults;
   }
 
+  /**
+   * Build the form.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $this->add(
       'text',
@@ -107,6 +120,11 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
     parent::buildQuickForm();
   }
 
+  /**
+   * Process the form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();

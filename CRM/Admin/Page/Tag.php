@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   public static $_links = NULL;
 
   /**
-   * Get BAO
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
@@ -56,7 +54,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
@@ -81,7 +79,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
@@ -90,7 +88,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get form name for edit form
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
@@ -99,7 +97,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get form name for delete form
+   * Gets the name of the delete form.
    *
    * @return string name of this page.
    */
@@ -108,16 +106,18 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/tag';
   }
 
   /**
-   * Get name of delete form
+   * Gets the name of the delete form.
    *
    * @return string Classname of delete form.
    */
@@ -126,7 +126,12 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * override function browse()
+   * Browses all tags.
+   *
+   * @param int|null $action
+   * @param string|null $sort
+   *
+   * @return void
    */
   public function browse($action = NULL, $sort = NULL) {
     $adminTagSet = FALSE;

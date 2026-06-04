@@ -27,21 +27,19 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: modifier.crmICalDate.php 30171 2010-10-14 09:11:27Z mover $
  *
  */
 
 /**
- * Format the given text in an ical suitable format
+ * Format a date in iCalendar format.
  *
- * @param string $str
+ * @param string $str the date string to format
+ * @param bool $gdata whether to format for Google Data
  *
- * @return string  formatted text
- * @access public
+ * @return string formatted date
  */
-
 function smarty_modifier_crmICalDate($str, $gdata = FALSE) {
   return CRM_Utils_ICalendar::formatDate($str, $gdata);
 }

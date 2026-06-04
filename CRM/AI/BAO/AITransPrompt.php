@@ -232,6 +232,8 @@ class CRM_AI_BAO_AITransPrompt {
 
   /**
    * Initialize SD3.5 system prompt template
+   *
+   * @return void None.
    */
   private function initializeSystemPrompt() {
     $this->systemPrompt = '## Core Identity

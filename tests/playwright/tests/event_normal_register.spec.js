@@ -1,3 +1,4 @@
+// Test standard event registration with no participant limit and verify thank-you page redirect
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

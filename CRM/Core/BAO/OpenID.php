@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,11 @@
 class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
 
   /**
-   * takes an associative array and adds OpenID
+   * Add or update an OpenID record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of OpenID data
    *
-   * @return object       CRM_Core_BAO_OpenID object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_OpenID the created/updated OpenID object
    */
   public static function add(&$params) {
     $openId = new CRM_Core_DAO_OpenID();
@@ -59,27 +55,22 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch OpenID values based on entity criteria.
    *
-   * @param array $entityBlock   input parameters to find object
+   * @param array $entityBlock associative array containing entity identifying fields
    *
-   * @return mixed
-   * @access public
-   * @static
+   * @return array|null array of OpenID data arrays
    */
   public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('openid', $entityBlock);
   }
 
   /**
-   * Returns whether or not this OpenID is allowed to login
+   * Check if a specific OpenID is allowed to login.
    *
-   * @param  string  $identity_url the OpenID to check
+   * @param string $identity_url the OpenID to check
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return bool TRUE if allowed to login, FALSE otherwise
    */
   public static function isAllowedToLogin($identity_url) {
     $openId = new CRM_Core_DAO_OpenID();
@@ -91,13 +82,12 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
   }
 
   /**
-   * Get all the openids for a specified contact_id, with the primary openid being first
+   * Get all OpenIDs for a specified contact, ordered by primary OpenID first.
    *
-   * @param int $id the contact id
+   * @param int $id contact ID
+   * @param bool $updateBlankLocInfo if TRUE, return indexed sequentially; otherwise by ID
    *
-   * @return array  the array of openid's
-   * @access public
-   * @static
+   * @return array array of OpenID details
    */
   public static function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
@@ -143,6 +133,13 @@ ORDER BY
     // do nothing
   }
 
+  /**
+   * Normalize an OpenID URL to a standard format.
+   *
+   * @param string $url the URL to normalize
+   *
+   * @return string|null normalized URL, or NULL on failure
+   */
   public static function normalizeURL($url) {
     $parsed = parse_url($url);
 
@@ -176,6 +173,13 @@ ORDER BY
     return $defragged;
   }
 
+  /**
+   * Low-level helper to normalize a URI.
+   *
+   * @param string $uri the URI to normalize
+   *
+   * @return string|null normalized URI, or NULL on failure
+   */
   public static function _normalizeURL($uri) {
     $uri_matches = [];
     preg_match('&^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?&', $uri, $uri_matches);

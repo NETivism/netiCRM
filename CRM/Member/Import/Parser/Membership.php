@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -107,7 +105,13 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   protected $_parserContact;
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param array $mapperKeys
+   * @param array $mapperLocType
+   * @param array $mapperPhoneType
+   * @param array $mapperWebsiteType
+   * @param array $mapperImProvider
    */
   public function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
     parent::__construct();
@@ -119,10 +123,9 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * the initializer code, called before the processing
+   * The initializer code, called before the processing.
    *
    * @return void
-   * @access public
    */
   public function init() {
     $fields = &CRM_Member_BAO_Membership::importableFields($this->_contactType, FALSE);
@@ -222,36 +225,33 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * handle the values in mapField mode
+   * Handle the values in mapField mode.
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean
-   * @access public
+   * @return int
    */
   public function mapField(&$values) {
     return CRM_Member_Import_Parser::VALID;
   }
 
   /**
-   * handle the values in preview mode
+   * Handle the values in preview mode.
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
   public function preview(&$values) {
     return $this->summary($values);
   }
 
   /**
-   * handle the values in summary mode
+   * Handle the values in summary mode.
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
   public function summary(&$values) {
     $erroneousField = NULL;
@@ -391,13 +391,12 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * handle the values in import mode
+   * Handle the values in import mode.
    *
    * @param int $onDuplicate the code for what action to take on duplicates
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
   public function import($onDuplicate, &$values) {
     $contactValues = $values;
@@ -700,32 +699,29 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * Get the array of succesfully imported membership id's
+   * Get the array of successfully imported membership ID's.
    *
    * @return array
-   * @access public
    */
   public function &getImportedMemberships() {
     return $this->_newMemberships;
   }
 
   /**
-   * the initializer code, called before the processing
+   * The finalizer code, called after the processing.
    *
    * @return void
-   * @access public
    */
   public function fini() {
   }
 
   /**
-   *  to calculate join, start and end dates
+   * To calculate join, start and end dates.
    *
-   *  @param Array $calcDates array of dates returned by getDatesForMembershipType()
+   * @param array $calcDates array of dates returned by getDatesForMembershipType()
+   * @param array $formatted formatted containing date values
    *
-   *  @return Array formatted containing date values
-   *
-   *  @access public
+   * @return void
    */
   public function formattedDates($calcDates, &$formatted) {
     $dates = ['join_date',
@@ -746,6 +742,14 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
   }
 
+  /**
+   * Import membership.
+   *
+   * @param array $formatted
+   * @param array $values
+   *
+   * @return int
+   */
   public function importMembership($formatted, &$values) {
     $startDate = CRM_Utils_Date::customFormat($formatted['start_date'], '%Y-%m-%d');
     $endDate = CRM_Utils_Date::customFormat($formatted['end_date'], '%Y-%m-%d');
@@ -797,6 +801,13 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     return CRM_Member_Import_Parser::VALID;
   }
 
+  /**
+   * Check contact by ID.
+   *
+   * @param array $params
+   *
+   * @return int|bool
+   */
   public function checkContactById($params) {
     $pass = $contactID = 0;
     $checkCid = new CRM_Contact_DAO_Contact();

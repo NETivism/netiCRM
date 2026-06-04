@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,6 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
   public function run() {
@@ -252,6 +249,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     parent::run();
   }
 
+  /**
+   * Get template file name
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Event/Page/{$this->_id}/EventInfo.tpl";
@@ -264,6 +266,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return parent::getTemplateFileName();
   }
 
+  /**
+   * Track
+   *
+   * @return void
+   */
   public function track() {
     $params = [
       'state' => '0',
@@ -274,6 +281,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     CRM_Core_BAO_Track::add($params);
   }
 
+  /**
+   * Get contact ID
+   *
+   * @return int|null
+   */
   public function getContactID() {
     //check if this is a checksum authentication
     $userChecksum = CRM_Utils_Request::retrieve('cs', 'String', $this);
@@ -291,6 +303,13 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return $session->get('userID');
   }
 
+  /**
+   * Fee block
+   *
+   * @param int $eventId
+   *
+   * @return array
+   */
   public static function feeBlock($eventId) {
     $feeBlock = [];
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $eventId)) {

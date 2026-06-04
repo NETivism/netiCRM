@@ -27,14 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * form to process actions on the group aspect of Custom Data
+ * form to process actions on the amount section of Contribution Page
  */
 class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_ContributionPage {
 
@@ -52,10 +50,12 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
   public const NUM_OPTION = 11;
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * This method sets up fields for contribution amounts, recurring options,
+   * payment processors, pay later options, price sets, and pledge settings.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
 
@@ -115,6 +115,27 @@ SELECT id
     if (count($paymentProcessor)) {
       $this->assign('paymentProcessor', $paymentProcessor);
     }
+
+    // Identify active non-3D TapPay processors for risk warning dialog
+    $non3dTapPayProcessors = [];
+    if (!empty($paymentProcessor)) {
+      $ppIds = CRM_Utils_Array::implode(',', array_keys($paymentProcessor));
+      $query = "
+SELECT id, name
+  FROM civicrm_payment_processor
+ WHERE id IN ({$ppIds})
+   AND payment_processor_type = 'TapPay'
+   AND (url_site IS NULL OR url_site = '')";
+      $ppDao = CRM_Core_DAO::executeQuery($query);
+      while ($ppDao->fetch()) {
+        $non3dTapPayProcessors[$ppDao->id] = $ppDao->name;
+      }
+    }
+    $this->assign('non3dTapPayProcessors', $non3dTapPayProcessors);
+
+    // Assign is_internal flag so the template can suppress the warning for internal pages
+    $isInternal = $this->_id ? CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'is_internal') : 0;
+    $this->assign('isInternalPage', empty($isInternal) ? 0 : 1);
 
     foreach ($paymentProcessor as $pid => &$pvalue) {
       $pvalue .= "-".ts("ID")."$pid";
@@ -243,6 +264,17 @@ SELECT id
     parent::buildQuickForm();
   }
 
+  /**
+   * Helper function to show/hide frequency units based on payment processor support.
+   *
+   * This method checks which recurring frequency units are supported by the
+   * currently selected payment processors and filters the available units accordingly.
+   *
+   * @param array $recurFrequencyUnits the available recurring units (passed by reference)
+   * @param array $recurringPaymentProcessor the IDs of the selected recurring payment processors
+   *
+   * @return void
+   */
   private static function doShowHideFrequencyUnits(&$recurFrequencyUnits, $recurringPaymentProcessor = []) {
     if (empty($recurringPaymentProcessor)) {
       return ;
@@ -270,12 +302,12 @@ SELECT id
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves current contribution page settings, amount blocks, and formats
+   * them for display in the form.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
@@ -347,15 +379,16 @@ SELECT id
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Validates minimum/maximum amounts, pay later settings, payment processor selection,
+   * membership signup conflicts with price sets, and amount block requirements.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Core_Form $self additional user data/form context
+   *
+   * @return array<string, mixed> true if no errors, or an array of error messages
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -460,10 +493,12 @@ SELECT id
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Saves the amount-related settings, price sets, and pledge blocks
+   * for the contribution page. Handles data cleanup if sections are disabled.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -636,10 +671,9 @@ SELECT id
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Amounts');

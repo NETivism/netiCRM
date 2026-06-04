@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,12 +37,9 @@
 class CRM_Member_Page_DashBoard extends CRM_Core_Page {
 
   /**
-   * Heart of the viewing process. The runner gets all the meta data for
-   * the contact and calls the appropriate type of page to view.
+   * Pre-process page.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
 
@@ -210,11 +205,9 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
   }
 
   /**
-   * This function is the main function that is called when the page loads,
-   * it decides the which action has to be taken for the page.
+   * Run the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();

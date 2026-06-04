@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,7 +39,7 @@ class CRM_Contact_Form_Edit_Demographics {
   /**
    * build the form elements for Demographics object
    *
-   * @param CRM_Core_Form $form       reference to the form object
+   * @param object $form (reference) reference to the form object
    *
    * @return void
    * @access public
@@ -66,9 +64,12 @@ class CRM_Contact_Form_Edit_Demographics {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
+   * @param object $form     (reference) reference to the form object
+   * @param array  $defaults (reference) defaults array
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function setDefaultValues(&$form, &$defaults) {
   }

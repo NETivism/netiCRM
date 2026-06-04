@@ -27,15 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
   public $_showHide;
   public $_event_type_id;
+  /**
+   * Set default values
+   *
+   * @return array<string, int>
+   */
   public function setDefaultValues() {
     $defaults = [];
     $defaults['eventsByDates'] = 0;
@@ -59,7 +62,6 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
   /**
    * Build the form
    *
-   * @access public
    *
    * @return void
    */
@@ -79,6 +81,11 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Post process
+   *
+   * @return void
+   */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();

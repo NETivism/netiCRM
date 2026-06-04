@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,7 +46,7 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
   /**
    * build the form elements for Communication Preferences object
    *
-   * @param CRM_Core_Form $form       reference to the form object
+   * @param object $form (reference) reference to the form object
    *
    * @return void
    * @access public
@@ -131,11 +129,11 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array  $fields the input form values
+   * @param array  $files  the uploaded files if any
+   * @param object $self   (reference) additional values form 'this'
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -161,9 +159,12 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
+   * @param object $form     (reference) reference to the form object
+   * @param array  $defaults (reference) defaults array
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function setDefaultValues(&$form, &$defaults) {
 
@@ -214,10 +215,13 @@ class CRM_Contact_Form_Edit_CommunicationPreferences {
   }
 
   /**
-   *  set array of greeting fields
+   * set array of greeting fields
    *
-   * @return None
+   * @param string $contactType contact type
+   *
+   * @return array array of greeting fields
    * @access public
+   * @static
    */
   public static function getGreetingFields($contactType) {
     if (empty(self::$greetings[$contactType])) {

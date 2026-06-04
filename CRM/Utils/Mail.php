@@ -26,10 +26,9 @@
 */
 
 /**
+ * Utility methods for composing and sending email messages
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Utils_Mail {
@@ -54,7 +53,7 @@ class CRM_Utils_Mail {
    *   attachments: an associative array of
    *   fullPath : complete pathname to the file
    *   mime_type: mime type of the attachment
-   *   cleanName: the user friendly name of the attachmment
+   *   cleanName: the user friendly name of the attachment
    *
    * @param array $callback array first element is for success callback, second is for error callback
    *   ```
@@ -70,9 +69,7 @@ class CRM_Utils_Mail {
    *   ];
    *   ```
    *
-   * @access public
-   *
-   * @return boolean true if a mail was sent, else false
+   * @return bool  TRUE if the mail was sent successfully, FALSE otherwise.
    */
   public static function send(&$params, $callback = NULL) {
     $config = CRM_Core_Config::singleton();
@@ -280,6 +277,14 @@ class CRM_Utils_Mail {
     }
   }
 
+  /**
+   * Build a human-readable HTML error message for a failed mail send attempt.
+   *
+   * @param object     $mailer The mailer object (e.g. Mail_smtp or Mail_sendmail).
+   * @param PEAR_Error $result The PEAR_Error returned by the mailer.
+   *
+   * @return string HTML-formatted error message.
+   */
   public static function errorMessage($mailer, $result) {
     $message = '<p>' . ts('An error occurred when CiviCRM attempted to send an email (via %1). If you received this error after submitting on online contribution or event registration - the transaction was completed, but we were unable to send the email receipt.', [1 => 'SMTP']) . '</p>' . '<p>' . ts('The mail library returned the following error message:') . '<br /><span class="font-red"><strong>' . $result->getMessage() . '</strong></span></p>' . '<p>' . ts('This is probably related to a problem in your Outbound Email Settings (Administer CiviCRM &raquo; Global Settings &raquo; Outbound Email), OR the FROM email address specifically configured for your contribution page or event. Possible causes are:') . '</p>';
 
@@ -295,6 +300,19 @@ class CRM_Utils_Mail {
     return $message;
   }
 
+  /**
+   * Log an outgoing email to a file for debugging purposes.
+   *
+   * If CIVICRM_MAIL_LOG is numeric, writes each email to a separate file
+   * in the configAndLogDir/mail/ directory. Otherwise appends to the
+   * file specified by CIVICRM_MAIL_LOG.
+   *
+   * @param string|array $to      Recipient email address(es) (passed by reference).
+   * @param array        $headers Email headers as key-value pairs (passed by reference).
+   * @param string       $message The email body (passed by reference).
+   *
+   * @return void
+   */
   public static function logger(&$to, &$headers, &$message) {
     if (is_array($to)) {
       $toString = CRM_Utils_Array::implode(', ', $to);
@@ -340,11 +358,11 @@ class CRM_Utils_Mail {
   }
 
   /**
-   * Get the from name from a formatted full name + address string
+   * Extract the display name from a formatted "Name <email>" header string.
    *
-   * @param  string $header  the full name + email address string
+   * @param string $header The full name + email address string.
    *
-   * @return string          the plucked email address
+   * @return string The extracted display name.
    */
   public static function pluckNameFromHeader($header) {
     $email = self::pluckEmailFromHeader($header);
@@ -354,11 +372,12 @@ class CRM_Utils_Mail {
   }
 
   /**
-   * Get the Active outBound email
+   * Check whether a valid outbound email configuration exists.
    *
-   * @return boolean true if valid outBound email configuration found, false otherwise
-   * @access public
-   * @static
+   * Inspects the mailing preferences to determine if SMTP or Sendmail
+   * settings are properly configured.
+   *
+   * @return bool TRUE if valid outbound email configuration found, FALSE otherwise.
    */
   public static function validOutBoundMail() {
 
@@ -384,6 +403,17 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
+  /**
+   * Set MIME encoding parameters on a Mail_mime message and return the encoded body.
+   *
+   * Uses UTF-8 charset and quoted-printable encoding for text/html,
+   * base64 for headers.
+   *
+   * @param Mail_mime  $message The Mail_mime message object (passed by reference).
+   * @param array|null $params  Optional custom MIME parameters. If NULL, defaults are used.
+   *
+   * @return string The encoded message body.
+   */
   public static function &setMimeParams(&$message, $params = NULL) {
     static $mimeParams = NULL;
     if (!$params) {
@@ -442,6 +472,16 @@ class CRM_Utils_Mail {
     return '';
   }
 
+  /**
+   * Validate whether an email address string conforms to RFC 822/2822 format.
+   *
+   * Checks that special characters in the display name are properly quoted
+   * and that the email address portion is valid.
+   *
+   * @param string $address The email address string to validate.
+   *
+   * @return bool TRUE if the address is valid RFC 822, FALSE otherwise.
+   */
   public static function checkRFC822Email($address) {
     $address = trim($address);
     if (strstr($address, '<') && strstr($address, '>')) {
@@ -464,6 +504,15 @@ class CRM_Utils_Mail {
     return TRUE;
   }
 
+  /**
+   * Format a display name and email address into an RFC 822 compliant string.
+   *
+   * @param string $name     The display name.
+   * @param string $email    The email address.
+   * @param bool   $useQuote Whether to quote the display name.
+   *
+   * @return string The formatted email string (e.g. '"Name" <email>'), or empty string if email is invalid.
+   */
   public static function formatRFC822Email($name, $email, $useQuote = TRUE) {
     $result = '';
     $email = CRM_Utils_Type::escape($email, 'Email', FALSE);
@@ -491,6 +540,13 @@ class CRM_Utils_Mail {
     return $result;
   }
 
+  /**
+   * Check whether an email address belongs to a known DMARC-enforcing mail provider.
+   *
+   * @param string $email The email address to check.
+   *
+   * @return bool TRUE if the email does NOT belong to a known provider, FALSE if it does.
+   */
   public static function checkMailProviders($email) {
     $mailProviders = str_replace('.', '\.', self::DMARC_MAIL_PROVIDERS);
     if (preg_match('/'.$mailProviders.'/i', $email)) {
@@ -576,6 +632,13 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
+  /**
+   * Retrieve SPF (TXT) DNS records for the domain of an email address.
+   *
+   * @param string $email An email address or domain name.
+   *
+   * @return array The DNS TXT records, or an empty array if none found.
+   */
   public static function getSPF($email) {
     if (strstr($email, '@')) {
       list($user, $domain) = explode('@', trim($email));
@@ -617,6 +680,16 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
+  /**
+   * Retrieve DKIM CNAME DNS records for the domain of an email address.
+   *
+   * Uses the DKIM selector and domain from $civicrm_conf to construct
+   * the DNS lookup hostname.
+   *
+   * @param string $email An email address or domain name.
+   *
+   * @return array The DNS CNAME records, or an empty array if none found or DKIM is not configured.
+   */
   public static function getDKIM($email) {
     global $civicrm_conf;
 
@@ -662,10 +735,14 @@ class CRM_Utils_Mail {
   }
 
   /**
-   * Get valid DKIM domain list via verified from email addr
+   * Get a list of domains with valid DKIM records from verified sender email addresses.
    *
-   * @param string $savePath if given, list will save to specify file name into system path
-   * @return array
+   * Optionally saves the verified domain list to a configuration file.
+   *
+   * @param bool        $externalOnly If TRUE, exclude domains matching the default from-email domain.
+   * @param string|null $saveFile     If provided, save the domain list to this filename in the CMS config directory.
+   *
+   * @return array|null List of verified domain names, empty array if none found, or NULL if DKIM is not configured.
    */
   public static function validDKIMDomainList($externalOnly = FALSE, $saveFile = NULL) {
     global $civicrm_conf;

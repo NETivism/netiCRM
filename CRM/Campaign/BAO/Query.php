@@ -27,10 +27,9 @@
 */
 
 /**
+ * Provides query-building and search functionality for Campaign data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Campaign_BAO_Query {

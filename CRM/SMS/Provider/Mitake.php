@@ -158,7 +158,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * @param string requestUri
    * @param array request
    *
-   * @return array [
+   * @return array<string, mixed> [
    *  'raw' => string,
    *  'body' => array,
    *  'error' => bool,

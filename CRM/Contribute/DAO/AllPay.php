@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -95,18 +94,17 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
    */
   public $data;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_allpay
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_allpay
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -118,11 +116,11 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -131,11 +129,10 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -143,18 +140,18 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'allpay_id' => [
           'name' => 'cid',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('AllPay ID') ,
-                    'FKClassName' => 'CRM_Contribute_DAO_Contribution',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_Contribution',
+        ],
         'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Data') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -162,7 +159,6 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -171,7 +167,6 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -180,8 +175,7 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -203,8 +197,7 @@ class CRM_Contribute_DAO_AllPay extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

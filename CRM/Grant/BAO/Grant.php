@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,24 +36,25 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * the name of option value group from civicrm_option_group table
    * that stores grant statuses
+   * @var string
    */
   public static $statusGroupName = 'grant_status';
 
   /**
    * the name of option value group from civicrm_option_group table
    * that stores grant statuses
+   * @var string
    */
   public static $typeGroupName = 'grant_type';
 
   /**
    * static field for all the grant information that we can potentially export
    * @var array
-   * @static
    */
   public static $_exportableFields = NULL;
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
@@ -64,9 +63,9 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to get events Summary
    *
-   * @static
+   * @param bool $admin
    *
-   * @return array Array of event summary values
+   * @return array<string, float|int|non-empty-array<array<string, mixed>>|null> Array of event summary values
    */
   public static function getGrantSummary($admin = FALSE) {
     $query = "
@@ -100,9 +99,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to get events Summary
    *
-   * @static
-   *
-   * @return array Array of event summary values
+   * @return object
    */
   public static function getGrantStatusOptGroup() {
 
@@ -121,6 +118,11 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     return $og;
   }
 
+  /**
+   * Function to get grant statuses.
+   *
+   * @return array
+   */
   public static function getGrantStatuses() {
     $og = CRM_Grant_BAO_Grant::getGrantStatusOptGroup();
 
@@ -141,8 +143,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to retrieve grant types.
    *
-   * @static
-   *
    * @return array Array of grant summary statistics
    */
   public static function getGrantTypes() {
@@ -153,14 +153,13 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to retrieve statistics for grants.
    *
-   * @static
+   * @param bool $admin
    *
    * @return array Array of grant summary statistics
    */
   public static function getGrantStatistics($admin = FALSE) {
     $grantStatuses = [];
   }
-
   /**
    * Takes a bunch of params that are needed to match certain criteria and
    * retrieves the relevant objects. Typically the valid params are only
@@ -168,12 +167,10 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * of time. This is the inverse function of create. It also stores all the retrieved
    * values in the default array
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Grant_BAO_ManageGrant object
-   * @access public
-   * @static
+   * @return CRM_Grant_BAO_Grant
    */
   public static function retrieve(&$params, &$defaults) {
     $grant = new CRM_Grant_DAO_Grant();
@@ -189,12 +186,9 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * function to add grant
    *
    * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array $ids reference array contains the id
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Grant_BAO_Grant
    */
   public static function add(&$params, &$ids) {
 
@@ -275,11 +269,9 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * function to create the event
    *
    * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array $ids reference array contains the id
    *
-   * @access public
-   * @static
-   *
+   * @return CRM_Grant_BAO_Grant
    */
   public static function create(&$params, &$ids) {
 
@@ -342,11 +334,9 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to delete the Contact
    *
-   * @param int $cid  contact id
+   * @param int $id contact id
    *
-   * @access public
-   * @static
-   *
+   * @return bool
    */
   public static function deleteContact($id) {
 
@@ -359,11 +349,9 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to delete the grant
    *
-   * @param int $id  grant id
+   * @param int $id grant id
    *
-   * @access public
-   * @static
-   *
+   * @return bool
    */
   public static function del($id) {
 
@@ -390,7 +378,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * combine all the exportable fields from the lower levels object
    *
    * @return array array of exportable Fields
-   * @access public
    */
   public static function &exportableFields() {
     if (!self::$_exportableFields) {
@@ -445,11 +432,9 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
   /**
    * Function to get grant record count for a Contact
    *
-   * @param int $contactId Contact ID
+   * @param int $contactID Contact ID
    *
    * @return int count of grant records
-   * @access public
-   * @static
    */
   public static function getContactGrantCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_grant WHERE civicrm_grant.contact_id = {$contactID} ";

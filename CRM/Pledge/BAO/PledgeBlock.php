@@ -27,16 +27,14 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
@@ -44,17 +42,12 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * pledgeBlock id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * retrieves the relevant objects.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Pledge_BAO_PledgeBlock object
-   * @access public
-   * @static
+   * @return CRM_Pledge_BAO_PledgeBlock|null
    */
   public static function retrieve(&$params, &$defaults) {
     $pledgeBlock = new CRM_Pledge_DAO_PledgeBlock();
@@ -67,13 +60,11 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
   }
 
   /**
-   * takes an associative array and creates a pledgeBlock object
+   * Takes an associative array and creates a pledgeBlock object.
    *
    * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Pledge_BAO_PledgeBlock object
-   * @access public
-   * @static
+   * @return CRM_Pledge_BAO_PledgeBlock|CRM_Core_Error
    */
   public static function &create(&$params) {
 
@@ -93,14 +84,11 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
   }
 
   /**
-   * function to add pledgeBlock
+   * Function to add pledgeBlock.
    *
    * @param array $params reference array contains the values submitted by the form
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Pledge_BAO_PledgeBlock
    */
   public static function add(&$params) {
 
@@ -150,12 +138,11 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
   }
 
   /**
-   * Function to delete the pledgeBlock
+   * Function to delete the pledgeBlock.
    *
-   * @param int $id  pledgeBlock id
+   * @param int $id pledgeBlock id
    *
-   * @access public
-   * @static
+   * @return bool
    */
   public static function deletePledgeBlock($id) {
     CRM_Utils_Hook::pre('delete', 'PledgeBlock', $id, CRM_Core_DAO::$_nullArray);
@@ -176,11 +163,11 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
   }
 
   /**
-   * Function to return Pledge  Block info in Contribution Pages
+   * Function to return Pledge Block info in Contribution Pages.
    *
-   * @param int $pageId contribution page id
+   * @param int $pageID contribution page id
    *
-   * @static
+   * @return array
    */
   public static function getPledgeBlock($pageID) {
     $pledgeBlock = [];
@@ -196,10 +183,11 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
   }
 
   /**
-   * Function to build Pledge Block in Contribution Pages
+   * Function to build Pledge Block in Contribution Pages.
    *
-   * @param int $pageId
-   * @static
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function buildPledgeBlock($form) {
     //build pledge payment fields.

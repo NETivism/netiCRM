@@ -1,3 +1,4 @@
+// Batch-visit all report pages and verify each loads without errors
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

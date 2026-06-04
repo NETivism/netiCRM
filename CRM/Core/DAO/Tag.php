@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Core_DAO_Tag extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -123,18 +122,17 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
    */
   public $used_for;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_tag
-  */
+   * class constructor
+   *
+   * @return civicrm_tag
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -146,11 +144,11 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -159,11 +157,10 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -171,54 +168,54 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-             'import' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'import' => TRUE,
           'where' => 'civicrm_tag.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
-                  'default' => 'UL',
-            'FKClassName' => 'CRM_Core_DAO_Tag',
-        ] ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Core_DAO_Tag',
+        ],
         'is_selectable' => [
           'name' => 'is_selectable',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_tagset' => [
           'name' => 'is_tagset',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'used_for' => [
           'name' => 'used_for',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Used For') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'default' => 'UL',
+        ],
       ];
     }
     return self::$_fields;
@@ -226,7 +223,6 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -235,7 +231,6 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -244,8 +239,7 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -267,8 +261,7 @@ class CRM_Core_DAO_Tag extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

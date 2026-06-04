@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -59,8 +57,6 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
@@ -176,17 +172,20 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
   }
 
   /**
-   * build the outcome basing on the CRM_Profile_Page_Dynamic's HTML
+   * Build the outcome basing on the CRM_Profile_Page_Dynamic's HTML.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     $this->preProcess();
     parent::run();
   }
 
+  /**
+   * Get template file name.
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Page/{$this->_gid}/View.tpl";

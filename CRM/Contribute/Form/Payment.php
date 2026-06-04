@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Base form class for payment processing workflows.
+ */
 class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
   public $_values;
@@ -29,10 +32,16 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
   protected $_params;
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
    *
-   * @return void
-   * @access public
+   * This method performs several critical initialization tasks:
+   * 1. Retrieves action and mode (test/live).
+   * 2. Checks user permissions for the specific contribution.
+   * 3. Validates if the payment is still available (checking status and dates).
+   * 4. Loads available payment processors for the contribution page.
+   * 5. Sets the related entity (event or contribution page) details.
+   *
+   * @return mixed false if access is denied or payment is unavailable, or continues processing
    */
   public function preProcess() {
     $this->_values = $this->get('values');

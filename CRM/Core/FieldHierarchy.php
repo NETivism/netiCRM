@@ -1,4 +1,9 @@
 <?php
+/**
+ * Defines the hierarchical grouping of contact fields used for import and field mapping
+ *
+ */
+
 class CRM_Core_FieldHierarchy {
   public static $hierarchy = [
     'reserved' => [
@@ -110,6 +115,13 @@ class CRM_Core_FieldHierarchy {
     ],
   ];
 
+  /**
+   * Arranges fields according to the defined hierarchy.
+   *
+   * @param array $fields The fields to be arranged.
+   *
+   * @return array The arranged fields.
+   */
   public static function arrange($fields) {
     $priority = self::$hierarchy;
     $names = array_keys($fields);

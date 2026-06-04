@@ -1,3 +1,4 @@
+// Test applying a discount coupon during event registration and verifying the correct fee
 const { test, expect, chromium } = require('@playwright/test');
 
 /** @type {import('@playwright/test').Page} */

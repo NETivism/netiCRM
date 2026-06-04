@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching Taiwan ACH (Automated Clearing House) payment records
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -46,12 +45,20 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
   protected $_context = NULL;
   protected $_cpage = NULL;
 
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_tableName = 'civicrm_temp_custom_achsearch';
     $this->buildColumn();
   }
 
+  /**
+   * Build the columns for the search results.
+   */
   public function buildColumn() {
     $this->_queryColumns = [
       'r.id' => 'id',
@@ -99,6 +106,9 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
     ];
   }
 
+  /**
+   * Build the temporary table.
+   */
   public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
@@ -128,13 +138,16 @@ PRIMARY KEY (id)
     CRM_Core_DAO::executeQuery($sql);
   }
 
+  /**
+   * Drop the temporary table.
+   */
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
 
   /**
-   * fill temp table for further use
+   * Fill temp table for further use.
    */
   public function fillTable() {
     $this->dropTempTable();
@@ -180,6 +193,11 @@ $having
     }
   }
 
+  /**
+   * Get the FROM clause for the temporary table query.
+   *
+   * @return string
+   */
   public function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
@@ -190,7 +208,12 @@ $having
   }
 
   /**
-   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   * Get the WHERE clause for the temporary table query.
+   *
+   * WHERE clause is an array built from any required JOINS plus conditional
+   * filters based on search criteria field values.
+   *
+   * @return string
    */
   public function tempWhere() {
     $clauses = [];
@@ -198,10 +221,20 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Get the HAVING clause for the temporary table query.
+   *
+   * @return string
+   */
   public function tempHaving() {
     return '';
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     // parent include start_date, status, installments, sort_name, email, contribution_page_id
     parent::buildForm($form);
@@ -245,17 +278,33 @@ $having
     ]);
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return [];
   }
 
+  /**
+   * Set the page title.
+   */
   public function setTitle() {
     CRM_utils_System::setTitle(ts('ACH Search'));
   }
 
+  /**
+   * Set the breadcrumb for the search page.
+   */
   public function setBreadcrumb() {
   }
 
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
   public function count() {
     if (!$this->_filled) {
       $this->fillTable();
@@ -270,7 +319,15 @@ $having
   }
 
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
@@ -282,6 +339,18 @@ $having
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
+  /**
+   * Generic SQL builder.
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param null|string $groupBy
+   *
+   * @return string
+   */
   public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
@@ -293,12 +362,21 @@ $having
   }
 
   /**
-   * Functions below generally don't need to be modified
+   * Build the FROM clause for the main query.
+   *
+   * @return string
    */
   public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
+  /**
+   * Build the WHERE clause for the main query.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
@@ -362,10 +440,22 @@ $having
     return $sql;
   }
 
+  /**
+   * Build the HAVING clause for the main query.
+   *
+   * @return string
+   */
   public function having() {
     return '';
   }
 
+  /**
+   * Append a list of contact IDs to the WHERE clause of a query.
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   */
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
@@ -391,10 +481,20 @@ $having
     }
   }
 
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get a summary of the search results.
+   *
+   * @return array<string, array<string, mixed>>
+   */
   public function summary() {
     $summary = [];
     if (!$this->_filled) {
@@ -418,6 +518,11 @@ $having
     return $summary;
   }
 
+  /**
+   * Alter a single result row for display.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
 
@@ -477,12 +582,21 @@ $having
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
   }
 
+  /**
+   * Get the available tasks for this search.
+   *
+   * @return array
+   */
   public static function tasks() {
     return [
       1001 => [

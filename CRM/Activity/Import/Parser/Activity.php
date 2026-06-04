@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -57,6 +55,10 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
 
   /**
    * class constructor
+   *
+   * @param array $mapperKeys
+   * @param int $mapperLocType
+   * @param int $mapperPhoneType
    */
   public function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
     parent::__construct();
@@ -67,7 +69,6 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * the initializer code, called before the processing
    *
    * @return void
-   * @access public
    */
   public function init() {
 
@@ -123,8 +124,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean
-   * @access public
+   * @return int
    */
   public function mapField(&$values) {
     return CRM_Activity_Import_Parser::VALID;
@@ -135,8 +135,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
   public function preview(&$values) {
     return $this->summary($values);
@@ -147,8 +146,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
   public function summary(&$values) {
     $erroneousField = NULL;
@@ -224,8 +222,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @param int $onDuplicate the code for what action to take on duplicates
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
   public function import($onDuplicate, &$values) {
     // first make sure this is a valid line
@@ -374,14 +371,21 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
   }
 
   /**
-   * the initializer code, called before the processing
+   * the finalizer code, called after the processing
    *
    * @return void
-   * @access public
    */
   public function fini() {
   }
 
+  /**
+   * Format date
+   *
+   * @param string $date
+   * @param int $dateType
+   *
+   * @return string|null
+   */
   public static function formatDate($date, $dateType) {
     $formattedDate = NULL;
     if (empty($date)) {

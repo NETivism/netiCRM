@@ -26,10 +26,9 @@
 */
 
 /**
+ * Provides query-building and search functionality for Contribution data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contribute_BAO_Query {
@@ -45,7 +44,7 @@ class CRM_Contribute_BAO_Query {
   /**
    * Function get the import/export fields for contribution
    *
-   * @return array self::$_contributionFields  associative array of contribution fields
+   * @return array associative array of contribution fields
    * @static
    */
   public static function &getFields() {
@@ -64,8 +63,11 @@ class CRM_Contribute_BAO_Query {
   /**
    * if contributions are involved, add the specific contribute fields
    *
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
    * @access public
+   * @static
    */
   public static function select(&$query) {
     // if contribute mode add contribution id
@@ -188,6 +190,14 @@ class CRM_Contribute_BAO_Query {
     }
   }
 
+  /**
+   * build where clause for contribution
+   *
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   * @static
+   */
   public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
@@ -219,6 +229,15 @@ class CRM_Contribute_BAO_Query {
     }
   }
 
+  /**
+   * build where clause for single field
+   *
+   * @param array $values
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   * @static
+   */
   public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
@@ -796,6 +815,16 @@ class CRM_Contribute_BAO_Query {
     }
   }
 
+  /**
+   * build from clause for contribution
+   *
+   * @param string $name
+   * @param int $mode
+   * @param string $side
+   *
+   * @return string|null
+   * @static
+   */
   public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
@@ -885,6 +914,14 @@ class CRM_Contribute_BAO_Query {
     return $from;
   }
 
+  /**
+   * Get default return properties for contribution
+   *
+   * @param int $mode
+   *
+   * @return array|null
+   * @static
+   */
   public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_CONTRIBUTE) {
@@ -1163,14 +1200,39 @@ class CRM_Contribute_BAO_Query {
     $form->assign('validCiviContribute', TRUE);
   }
 
+  /**
+   * Add show hide blocks
+   *
+   * @param CRM_Core_ShowHideBlocks $showHide
+   *
+   * @return void
+   * @static
+   */
   public static function addShowHide(&$showHide) {
     $showHide->addHide('contributeForm');
     $showHide->addShow('contributeForm_show');
   }
 
+  /**
+   * Search action
+   *
+   * @param array $row
+   * @param int $id
+   *
+   * @return void
+   * @static
+   */
   public static function searchAction(&$row, $id) {
   }
 
+  /**
+   * Table names for contribution
+   *
+   * @param array $tables
+   *
+   * @return void
+   * @static
+   */
   public static function tableNames(&$tables) {
     //add contribution table
     if (CRM_Utils_Array::value('civicrm_product', $tables)) {

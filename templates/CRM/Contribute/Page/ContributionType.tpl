@@ -48,12 +48,13 @@
             <th>{ts}Deductible?{/ts}</th>
             <th>{ts}Reserved?{/ts}</th>
             <th>{ts}Enabled?{/ts}</th>
+            <th>{ts}Used for{/ts}</th>
             <th></th>
           </thead>
          {foreach from=$rows item=row}
         <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-	        <td>{$row.id}</td>	
-	        <td>{$row.name}</td>	
+	        <td>{$row.id}</td>
+	        <td>{$row.name}</td>
 	        <td>{$row.description}</td>
             	<td>{$row.accounting_code}</td>
 	        <td>{if $row.is_taxreceipt eq 1}
@@ -66,10 +67,48 @@
 	        <td>{if $row.is_deductible eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td>{if $row.is_reserved eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td id="row_{$row.id}_status">{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
+	        <td class="ct-usage-cell">
+	          {if $row.usedPages}
+	            {assign var="pageCount" value=$row.usedPages|@count}
+	            <a href="javascript:void(0)" class="ct-usage-toggle" data-id="{$row.id}">
+	              {$pageCount} {ts}page(s){/ts} <i class="zmdi zmdi-caret-right ct-arrow"></i>
+	            </a>
+	            <div id="ct-usage-{$row.id}" class="ct-usage-list" style="display:none;">
+	              {foreach from=$row.usedPages item=page}
+	                <div{if not $page.is_active} class="disabled ct-usage-disabled"{/if}>
+	                  <a href="{$page.url}"{if not $page.is_active} class="disabled"{/if}>{$page.title}({ts}ID{/ts}:{$page.id})</a>
+	                </div>
+	              {/foreach}
+	            </div>
+	          {else}
+	            —
+	          {/if}
+	        </td>
 	        <td>{$row.action|replace:'xx':$row.id}</td>
         </tr>
         {/foreach}
          </table>
+<style>{literal}
+.ct-usage-toggle { cursor: pointer; white-space: nowrap; }
+.ct-usage-toggle .ct-arrow { vertical-align: middle; font-size: 24px; }
+.ct-usage-list { margin-top: 4px; }
+.ct-usage-list .ct-usage-disabled a,
+.ct-usage-list .ct-usage-disabled a.disabled {
+  color: #c00;
+  text-decoration: line-through;
+}
+{/literal}</style>
+<script>{literal}
+cj(document).ready(function($) {
+  $('.ct-usage-toggle').on('click', function() {
+    var id = $(this).data('id');
+    var list = $('#ct-usage-' + id);
+    var arrow = $(this).find('.ct-arrow');
+    list.toggle();
+    arrow.toggleClass('zmdi-caret-right zmdi-caret-down');
+  });
+});
+{/literal}</script>
         {/strip}
 
         {if $action ne 1 and $action ne 2}

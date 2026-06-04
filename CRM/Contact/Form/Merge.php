@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -62,6 +60,12 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   // to side-step this, we use the below UUID as a (re)placeholder
   public $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
 
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
     $this->_hasError = FALSE;
     if (!CRM_Core_Permission::check('merge duplicate contacts')) {
@@ -239,13 +243,31 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array defaults array
+   * @access public
+   */
   public function setDefaultValues() {
     return ['deleteOther' => 1];
   }
 
+  /**
+   * Add rules for the form
+   *
+   * @return void
+   * @access public
+   */
   public function addRules() {
   }
 
+  /**
+   * Build the form
+   *
+   * @return void
+   * @access public
+   */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Merge Contacts'));
     if (!$this->_hasError) {
@@ -256,6 +278,12 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Post-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function postProcess() {
     $formValues = $this->exportValues();
 
@@ -278,6 +306,15 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 
+  /**
+   * Validate contacts for merge
+   *
+   * @param int $cid contact id 1
+   * @param int $oid contact id 2
+   *
+   * @return boolean true if valid, false otherwise
+   * @access public
+   */
   public function validateContacts($cid, $oid) {
     if (!$cid || !$oid) {
       return;
@@ -299,6 +336,15 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Check if contact is admin
+   *
+   * @param int $cid contact id 1
+   * @param int $oid contact id 2
+   *
+   * @return boolean true if admin, false otherwise
+   * @access public
+   */
   public function checkContactIsAdmin($cid, $oid) {
     // Check contact is admin or not
     $cidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";

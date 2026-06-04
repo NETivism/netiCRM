@@ -31,9 +31,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -64,6 +62,9 @@ class CRM_Event_Badge {
    * @var float|int
    */
   public $lMarginLogo;
+  /**
+   * class constructor
+   */
   public function __construct() {
     $this->style = ['width' => 0.1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,2', 'color' => [0, 0, 200]];
     $this->format = '5160';
@@ -73,6 +74,13 @@ class CRM_Event_Badge {
     $this->setDebug(FALSE);
   }
 
+  /**
+   * Set debug
+   *
+   * @param bool $debug
+   *
+   * @return void
+   */
   public function setDebug($debug = TRUE) {
     if (!$debug) {
       $this->debug = FALSE;
@@ -88,10 +96,9 @@ class CRM_Event_Badge {
    * function to create the labels (pdf)
    * It assumes the participants are from the same event
    *
-   * @param   array    $participants
+   * @param array $participants
    *
-   * @return  null
-   * @access  public
+   * @return void
    */
   public function run(&$participants) {
     // fetch the 1st participant, and take her event to retrieve its attributes
@@ -103,6 +110,13 @@ class CRM_Event_Badge {
     CRM_Utils_System::civiExit(1);
   }
 
+  /**
+   * Retrieve event
+   *
+   * @param int $eventID
+   *
+   * @return CRM_Event_BAO_Event|null
+   */
   protected function retrieveEvent($eventID) {
 
     $bao = new CRM_Event_BAO_Event();
@@ -112,6 +126,14 @@ class CRM_Event_Badge {
     return NULL;
   }
 
+  /**
+   * Get image file name
+   *
+   * @param int $eventID
+   * @param bool|string $img
+   *
+   * @return string|bool
+   */
   public function getImageFileName($eventID, $img = FALSE) {
     global $civicrm_root;
 
@@ -155,6 +177,13 @@ class CRM_Event_Badge {
     return $imgFile;
   }
 
+  /**
+   * Print background
+   *
+   * @param bool|string $img
+   *
+   * @return void
+   */
   public function printBackground($img = FALSE) {
     $x = $this->pdf->GetAbsX();
     $y = $this->pdf->GetY();
@@ -183,7 +212,11 @@ class CRM_Event_Badge {
 
   /**
    * this is supposed to be overrided
-   **/
+   *
+   * @param array $participant
+   *
+   * @return void
+   */
   public function generateLabel($participant) {
     $txt = "{$this->event['title']}
 {$participant['first_name']} {$participant['last_name']}
@@ -192,17 +225,20 @@ class CRM_Event_Badge {
     $this->pdf->MultiCell($this->pdf->width, $this->pdf->lineHeight, $txt);
   }
 
+  /**
+   * PDF extra format
+   *
+   * @return void
+   */
   public function pdfExtraFormat() {
   }
 
   /**
    * function to create labels (pdf)
    *
-   * @param   array    $contactRows   assciated array of contact data
-   * @param   string   $format   format in which labels needs to be printed
+   * @param array $participants assciated array of contact data
    *
-   * @return  null
-   * @access  public
+   * @return void
    */
   public function createLabels(&$participants) {
 

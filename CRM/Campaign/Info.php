@@ -30,9 +30,7 @@
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Campaign_Info extends CRM_Core_Component_Info {

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,29 +46,23 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   public static $_matchFields = NULL;
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a profile group record based on the provided parameters.
    *
-   * @param array $params      (reference) an assoc array of name/value pairs
-   * @param array $defaults    (reference) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object   CRM_Core_DAO_UFGroup object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_UFGroup|null matching DAO object
    */
   public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_UFGroup', $params, $defaults);
   }
 
   /**
-   * Retrieve the first non-generic contact type
+   * Get the first non-generic contact type assigned to a profile group.
    *
-   * @param int $id  id of uf_group
+   * @param int $id ID of the profile group
    *
-   * @return string  contact type
+   * @return string|null contact type (e.g., 'Individual', 'Organization')
    */
   public static function getContactType($id) {
 
@@ -96,45 +88,37 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * Get the form title.
+   * Get the title of a profile group.
    *
-   * @param int $id id of uf_form
+   * @param int $id ID of the profile group
    *
-   * @return string title
-   *
-   * @access public
-   * @static
-   *
+   * @return string|null group title
    */
   public static function getTitle($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $id, 'title');
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag for a profile group in the database.
    *
-   * @param int      $id           id of the database record
-   * @param boolean  $is_active    value we want to set the is_active field
+   * @param int $id ID of the database record
+   * @param bool $is_active value to set for the is_active field
    *
-   * @return Object             CRM_Core_DAO_UFGroup object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_UFGroup|null updated DAO object
    */
   public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $id, 'is_active', $is_active);
   }
 
   /**
-   * get all the registration fields
+   * Get all the registration fields.
    *
-   * @param int $action   what action are we doing
-   * @param int $mode     mode
+   * @param int $action what action is being performed
+   * @param int $mode profile mode
+   * @param string|null $ctype optional contact type filter
    *
-   * @return array the fields that are needed for registration
-   * @static
-   * @access public
+   * @return array|bool the fields that are needed for registration
    */
-
   public static function getRegistrationFields($action, $mode, $ctype = NULL) {
     if ($mode & CRM_Profile_Form::MODE_REGISTER) {
       $ufGroups = &CRM_Core_BAO_UFGroup::getModuleUFGroup('User Registration');
@@ -187,17 +171,18 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * get all the listing fields
+   * Get all the listing fields.
    *
-   * @param int     $action            what action are we doing
-   * @param int     $visibility        visibility of fields we are interested in
-   * @param bool    $considerSelector  whether to consider the in_selector parameter
-   * @param array   $ufGroupIds
-   * @param boolean $searchable
+   * @param int $action what action are we doing
+   * @param int $visibility visibility of fields we are interested in
+   * @param bool $considerSelector whether to consider the in_selector parameter
+   * @param array|null $ufGroupIds array of profile group IDs
+   * @param bool|null $searchable searchable filter
+   * @param string|null $restrict module restriction
+   * @param bool $skipPermission whether to bypass permission checks
+   * @param string $permissionType permission type
    *
-   * @return array   the fields that are listings related
-   * @static
-   * @access public
+   * @return array the fields that are listings related
    */
   public static function getListingFields(
     $action,
@@ -264,19 +249,20 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * get all the fields that belong to the group with the name title
+   * Get all the fields that belong to the specified profile groups.
    *
-   * @param mix      $id           the id of the UF group or ids of ufgroup
-   * @param int      $register     are we interested in registration fields
-   * @param int      $action       what action are we doing
-   * @param int      $visibility   visibility of fields we are interested in
-   * @param          $searchable
-   * @param boolean  $showall
-   * @param string   $restrict     should we restrict based on a specified profile type
+   * @param array|int $id the ID of the UF group or IDs of ufgroups
+   * @param bool $register are we interested in registration fields
+   * @param int|null $action what action are we doing
+   * @param int|null $visibility visibility of fields we are interested in
+   * @param bool|null $searchable searchable filter
+   * @param bool $showAll whether to include inactive groups/fields
+   * @param string|null $restrict module restriction
+   * @param bool $skipPermission whether to bypass permission checks
+   * @param string|null $ctype optional contact type filter
+   * @param string $permissionType permission type
    *
-   * @return array   the fields that belong to this ufgroup(s)
-   * @static
-   * @access public
+   * @return array the fields that belong to this ufgroup(s)
    */
   public static function getFields(
     $id,
@@ -509,16 +495,14 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * check the data validity
+   * Check the data validity.
    *
-   * @param int    $userID    the user id that we are actually editing
-   * @param string $title     the title of the group we are interested in
-   * @pram  boolean $register is this the registrtion form
-   * @param int    $action  the action of the form
+   * @param int $userID the user ID that we are actually editing
+   * @param string $title the title of the group we are interested in
+   * @param bool $register is this the registration form
+   * @param int|null $action the action of the form
    *
-   * @return boolean   true if form is valid
-   * @static
-   * @access public
+   * @return bool TRUE if form is valid
    */
   public static function isValid($userID, $title, $register = FALSE, $action = NULL) {
 
@@ -554,18 +538,18 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * get the html for the form that represents this particular group
+   * Get the HTML for the form that represents this particular group.
    *
-   * @param int     $userID    the user id that we are actually editing
-   * @param string  $title     the title of the group we are interested in
-   * @param int     $action    the action of the form
-   * @param boolean $register  is this the registration form
-   * @param boolean $reset     should we reset the form?
-   * @param int     $profileID do we have the profile ID?
+   * @param int $userID the user ID that we are actually editing
+   * @param string $title the title of the group we are interested in
+   * @param int|null $action the action of the form
+   * @param bool $register is this the registration form
+   * @param bool $reset should we reset the form?
+   * @param int|null $profileID do we have the profile ID?
+   * @param bool $doNotProcess whether to skip processing the form submission
+   * @param string|null $ctype optional contact type
    *
-   * @return string       the html for the form on success, otherwise empty string
-   * @static
-   * @access public
+   * @return string the HTML for the form on success, otherwise empty string
    */
   public static function getEditHTML(
     $userID,
@@ -714,15 +698,13 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * searches for a contact in the db with similar attributes
+   * Search for a contact with similar attributes to prevent duplicates.
    *
-   * @param array $params the list of values to be used in the where clause
-   * @param int    $id          the current contact id (hence excluded from matching)
-   * @param boolean $flatten should we flatten the input params
+   * @param array &$params the list of values to be used in the where clause
+   * @param int|null $id the current contact id (hence excluded from matching)
+   * @param string $contactType contact type
    *
-   * @return contact_id if found, null otherwise
-   * @access public
-   * @static
+   * @return string|null contact_id if found, null otherwise
    */
   public static function findContact(&$params, $id = NULL, $contactType = 'Individual') {
 
@@ -738,18 +720,16 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * Given a contact id and a field set, return the values from the db
-   * for this contact
+   * Get values from the database for a contact based on a specific field set.
    *
-   * @param int     $id             the contact id
-   * @param array   $fields         the profile fields of interest
-   * @param array   $values         the values for the above fields
-   * @param boolean $searchable     searchable or not
-   * @param array   $componentWhere component condition
+   * @param int $cid contact ID
+   * @param array &$fields associative array of profile fields
+   * @param array &$values array to store retrieved values
+   * @param bool $searchable whether to include searchable fields
+   * @param array|null $componentWhere optional component conditions
+   * @param int $maskType masking type for privacy (defaults to MASK_PRIVATE)
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function getValues($cid, &$fields, &$values, $searchable = TRUE, $componentWhere = NULL, $maskType = CRM_Core_BAO_UFGroup::MASK_PRIVATE) {
     if (empty($cid)) {
@@ -1177,15 +1157,11 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * Check if profile Group used by any module.
+   * Check if a profile group is used by any CiviCRM module (via uf_join).
    *
-   * @param int  $id    profile Id
+   * @param int $id profile group ID
    *
-   * @return boolean
-   *
-   * @access public
-   * @static
-   *
+   * @return bool TRUE if used by at least one module, FALSE otherwise
    */
   public static function usedByModule($id) {
     //check whether this group is used by any module(check uf join records)
@@ -1204,15 +1180,11 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * Delete the profile Group.
+   * Delete a profile group and all its associated fields and joins.
    *
-   * @param int  $id    profile Id
+   * @param int $id profile group ID
    *
-   * @return boolean
-   *
-   * @access public
-   * @static
-   *
+   * @return int 1 on success
    */
   public static function del($id) {
     //check whether this group contains  any profile fields
@@ -1240,15 +1212,12 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * function to add the UF Group
+   * Add or update a profile group record.
    *
-   * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array &$params associative array of profile group data
+   * @param array &$ids associative array containing 'ufgroup' ID if updating
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Core_DAO_UFGroup created/updated group object
    */
   public static function add(&$params, &$ids) {
     $cache = &CRM_Utils_Cache::singleton();
@@ -1278,14 +1247,12 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
   }
 
   /**
-   * Function to make uf join entries for an uf group
+   * Synchronize UF join entries for a profile group.
    *
-   * @param array $params       (reference) an assoc array of name/value pairs
-   * @param int   $ufGroupId    ufgroup id
+   * @param array &$params associative array containing 'uf_group_type' and 'weight'
+   * @param int $ufGroupId profile group ID
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function createUFJoin(&$params, $ufGroupId) {
     $groupTypes = $params['uf_group_type'];
@@ -1346,16 +1313,13 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function to get the UF Join records for an ufgroup id
+   * Get the UF join records for a profile group.
    *
-   * @params int $ufGroupId uf group id
-   * @params int $displayName if set return display name in array
-   * @params int $status if set return module other than default modules (User Account/User registration/Profile)
+   * @param int|null $ufGroupId profile group ID
+   * @param bool|null $displayName whether to return localized module display names
+   * @param bool|null $status whether to return only non-default modules
    *
-   * @return array $ufGroupJoinRecords
-   *
-   * @access public
-   * @static
+   * @return array associative array of (join_id => module_name)
    */
   public static function getUFJoinRecord($ufGroupId = NULL, $displayName = NULL, $status = NULL) {
     if ($displayName) {
@@ -1397,13 +1361,11 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function takes an associative array and creates a ufjoin record for ufgroup
+   * Add a single UF join record.
    *
-   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array &$params associative array of UF join data
    *
-   * @return object CRM_Core_BAO_UFJoin object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_UFJoin created object
    */
   public static function addUFJoin(&$params) {
 
@@ -1414,13 +1376,11 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function to delete the uf join record for an uf group
+   * Delete a specific UF join record.
    *
-   * @param array  $params    (reference) an assoc array of name/value pairs
+   * @param array &$params associative array identifying the join to delete
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function delUFJoin(&$params) {
 
@@ -1430,13 +1390,11 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function to get the weight for ufjoin record
+   * Get the maximum weight for UF joins in a specific group.
    *
-   * @param int $ufGroupId     if $ufGroupId get update weight or add weight
+   * @param int|null $ufGroupId optional group ID
    *
-   * @return int   weight of the UFGroup
-   * @access public
-   * @static
+   * @return int the calculated weight
    */
   public static function getWeight($ufGroupId = NULL) {
     //calculate the weight
@@ -1460,14 +1418,13 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function to get the uf group for a module
+   * Get all active profile groups for a specific module.
    *
-   * @param string $moduleName module name
-   * $param int    $count no to increment the weight
+   * @param string|null $moduleName module name (e.g., 'Profile', 'User Registration')
+   * @param int $count (unused)
+   * @param bool $skipPermission whether to bypass permission checks
    *
-   * @return array $ufGroups array of ufgroups for a module
-   * @access public
-   * @static
+   * @return array nested array of profile group data
    */
   public static function getModuleUFGroup($moduleName = NULL, $count = 0, $skipPermission = TRUE) {
 
@@ -1517,13 +1474,12 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function to filter ufgroups based on logged in user contact type
+   * Filter profile groups based on a contact's type.
    *
-   * @params int $ufGroupId uf group id (profile id)
+   * @param int $ufGroupId profile group ID
+   * @param int|null $contactID optional contact ID (defaults to current user)
    *
-   * @return boolean true or false
-   * @static
-   * @access public
+   * @return bool TRUE if the group is compatible with the contact's type, otherwise FALSE
    */
   public static function filterUFGroups($ufGroupId, $contactID = NULL) {
     if (!$contactID) {
@@ -1560,16 +1516,15 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
   }
 
   /**
-   * Function to build profile form
+   * Build a form element for a profile field based on its configuration.
    *
-   * @params object  $form       form object
-   * @params array   $field      array field properties
-   * @params int     $mode       profile mode
-   * @params int     $contactID  contact id
+   * @param CRM_Core_Form &$form form object
+   * @param array &$field field configuration parameters
+   * @param int $mode profile mode
+   * @param int|null $contactId optional contact ID
+   * @param bool $online whether this is an online form
    *
-   * @return null
-   * @static
-   * @access public
+   * @return void
    */
   public static function buildProfile(&$form, &$field, $mode, $contactId = NULL, $online = FALSE) {
 

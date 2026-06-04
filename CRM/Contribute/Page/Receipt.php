@@ -6,6 +6,11 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page {
   public $_contactId = NULL;
   public $_type = NULL;
 
+  /**
+   * Pre-process the page
+   *
+   * @return void
+   */
   public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -30,6 +35,11 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page {
     }
   }
 
+  /**
+   * Run the page
+   *
+   * @return void
+   */
   public function run() {
     $this->preProcess();
 
@@ -47,6 +57,11 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page {
     return;
   }
 
+  /**
+   * Create activity record for receipt printing
+   *
+   * @return void
+   */
   public function createActivity() {
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
     if (!empty($activityTypeId)) {

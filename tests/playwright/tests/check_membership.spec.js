@@ -1,3 +1,4 @@
+// Test the full membership flow: create membership type and contribution page, then join via frontend
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

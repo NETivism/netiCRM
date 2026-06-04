@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,12 +37,11 @@
 class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return void
+   * @return array
    */
   public function setDefaultValues() {
     //parent::setDefaultValues();
@@ -79,10 +76,9 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
 
@@ -139,13 +135,13 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
   }
 
   /**
-   * Function for validation
+   * Function for validation.
    *
    * @param array $params (ref.) an assoc array of name/value pairs
+   * @param array $files
+   * @param int|null $contributionPageId
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @return array|bool true or array of errors
    */
   public static function formRule($params, $files, $contributionPageId = NULL) {
     $errors = [];
@@ -197,10 +193,9 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
   }
 
   /**
-   * Process the form
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -244,10 +239,9 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Memberships');

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,11 @@
 class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
 
   /**
-   * takes an associative array and adds im
+   * Add or update an IM record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of IM data
    *
-   * @return object       CRM_Core_BAO_IM object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_IM the created/updated IM object
    */
   public static function add(&$params) {
     $im = new CRM_Core_DAO_IM();
@@ -56,27 +52,23 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch IM values based on entity criteria.
    *
-   * @param array entityBlock input parameters to find object
+   * @param array $entityBlock associative array containing 'contact_id' or 'entity_table'/'entity_id'
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return array|null array of IM data arrays
    */
   public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('im', $entityBlock);
   }
 
   /**
-   * Get all the ims for a specified contact_id, with the primary im being first
+   * Get all IMs for a specified contact, ordered by primary IM first.
    *
-   * @param int $id the contact id
+   * @param int $id the contact ID
+   * @param bool $updateBlankLocInfo if TRUE, return indexed sequentially; otherwise by ID
    *
-   * @return array  the array of im details
-   * @access public
-   * @static
+   * @return array array of IM details
    */
   public static function allIMs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
@@ -118,14 +110,11 @@ ORDER BY
   }
 
   /**
-   * Get all the ims for a specified location_block id, with the primary im being first
+   * Get all IMs for a specified entity via its location block.
    *
-   * @param array  $entityElements the array containing entity_id and
-   * entity_table name
+   * @param array &$entityElements array containing 'entity_id' and 'entity_table'
    *
-   * @return array  the array of im details
-   * @access public
-   * @static
+   * @return array|null array of IM details
    */
   public static function allEntityIMs(&$entityElements) {
     if (empty($entityElements)) {
@@ -159,11 +148,12 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
   }
 
   /**
-   * Get current exists id from value(IM)
+   * Check if an IM value already exists for a contact and set the 'id' parameter.
    *
-   * Only effect when phone id not provided. Id will be added into params before add.
+   * Only performs lookup if 'id' is not provided and name/contact_id/provider_id are present.
    *
-   * @param array $params referenced array to be add exists phone id
+   * @param array &$params associative array of IM fields (passed by reference)
+   *
    * @return void
    */
   public static function valueExists(&$params) {

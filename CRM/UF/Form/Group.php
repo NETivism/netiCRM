@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,30 +40,38 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
    * @var string
    */
   public $_context;
+
   /**
-   * the form id saved to the session for an update
+   * The form id saved to the session for an update.
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
   /**
-   * the title for group
+   * The title for group.
    *
-   * @var int
-   * @access protected
+   * @var string
    */
   protected $_title;
+
+  /**
+   * @var HTML_QuickForm_element
+   */
   protected $_groupElement;
+
+  /**
+   * @var array
+   */
   protected $_group;
+
+  /**
+   * @var array
+   */
   protected $_allPanes;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @return void
-   * @access public
+   * Set variables up before form is built.
    */
   public function preProcess() {
     // current form id
@@ -112,10 +118,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @return void
-   * @access public
+   * Build the form.
    */
   public function buildQuickForm() {
     if ($this->_action & (CRM_Core_Action::DISABLE | CRM_Core_Action::DELETE)) {
@@ -229,12 +232,12 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * This function sets the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return void
+   * @return array
+   *   Default values for the form
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -311,10 +314,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
-   *
-   * @return void
-   * @access public
+   * Process the form submission.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

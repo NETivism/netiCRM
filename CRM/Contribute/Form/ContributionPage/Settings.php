@@ -27,22 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
+/**
+ * form to process actions on the title and settings section of Contribution Page
+ */
 class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_ContributionPage {
 
   public $_cdType;
   protected $_contributionType = NULL;
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method handles custom data types, initializes titles and entity IDs,
+   * and processes custom data if it was submitted.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     //custom data related code
@@ -73,12 +76,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing settings like background URLs, contribution type,
+   * and custom data values from the database.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     // custom data related
@@ -110,10 +113,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Adds fields for title, contribution type, intro/footer text, organization settings,
+   * goal amounts, active status, honor roll, and background image uploads.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // custom data related
@@ -133,7 +138,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       'select',
       'contribution_type_id',
       ts('Contribution Type'),
-      CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE),
+      ['' => ts('-- Select --')] + CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE),
       TRUE,
       ['onChange' => "buildCustomData( 'ContributionPage', this.value );"]
     );
@@ -159,6 +164,17 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     // is this page active ?
     $this->addElement('checkbox', 'is_active', ts('Is this Online Contribution Page Active?'), NULL, ['onclick' => "showSpecial()"]);
+
+    $redirectPages = [];
+    CRM_Core_PseudoConstant::populate($redirectPages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active', 'is_internal IS NULL');
+    if ($this->_id) {
+      unset($redirectPages[$this->_id]);
+    }
+    foreach ($redirectPages as $id => &$page) {
+      $page .= " ($id)";
+    }
+    $this->addSelect('redirect_page_id', ts('Redirect to contribution page when disabled'), ['' => ts('-- Select --')] + $redirectPages);
+
     // check if table field exists
     $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
     $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
@@ -204,13 +220,15 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * global validation rules for the form
+   * Global form rule for validation.
+   *
+   * Validates that the contribution page title does not contain forward slashes.
    *
    * @param array $values posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array<string, mixed> list of errors to be posted back to the form
    */
   public static function formRule($values, $files, $self) {
     $errors = [];
@@ -224,10 +242,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Handles saving the contribution page settings, processing dates,
+   * goal amounts, custom fields, and background image uploads.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -252,6 +272,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     if ($this->get('internalExists')) {
       $params['is_internal'] = CRM_Utils_Array::value('is_internal', $params, FALSE) ? 1 : 'null';
     }
+    $params['redirect_page_id'] = !empty($params['redirect_page_id']) ? $params['redirect_page_id'] : 'null';
     $params['is_credit_card_only'] = CRM_Utils_Array::value('is_credit_card_only', $params, FALSE);
     $params['honor_block_is_active'] = CRM_Utils_Array::value('honor_block_is_active', $params, FALSE);
     $params['is_for_organization'] = CRM_Utils_Array::value('is_organization', $params) ? CRM_Utils_Array::value('is_for_organization', $params, FALSE) : 0;
@@ -311,10 +332,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Title and Settings');

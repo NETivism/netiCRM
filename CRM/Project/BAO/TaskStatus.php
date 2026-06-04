@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,6 +37,20 @@
 
 class CRM_Project_BAO_TaskStatus {
 
+  /**
+   * Get task status initial.
+   *
+   * @param CRM_Core_Controller $controller
+   * @param string $ret responsible entity table
+   * @param int $reid responsible entity id
+   * @param string $tet target entity table
+   * @param int $teid target entity id
+   * @param int $taskID task id
+   * @param string $prefix prefix
+   * @param bool $statusDetail status detail
+   *
+   * @return array array of task status id and task status
+   */
   public static function &getTaskStatusInitial(
     &$controller,
     $ret,
@@ -88,6 +100,15 @@ class CRM_Project_BAO_TaskStatus {
     return [$taskStatusID, $taskStatus];
   }
 
+  /**
+   * Update task status.
+   *
+   * @param CRM_Core_Form $form
+   * @param string $prefix
+   * @param bool $statusDetail
+   *
+   * @return void
+   */
   public static function updateTaskStatus(
     &$form,
     $prefix = 'taskStatus',
@@ -125,6 +146,15 @@ class CRM_Project_BAO_TaskStatus {
     $dao->save();
   }
 
+  /**
+   * Update task status with value.
+   *
+   * @param CRM_Core_Form $form
+   * @param string $value
+   * @param string $prefix
+   *
+   * @return void
+   */
   public static function updateTaskStatusWithValue(
     &$form,
     $value = 'In Progress',
@@ -150,13 +180,11 @@ class CRM_Project_BAO_TaskStatus {
   }
 
   /**
-   * Function to set the task status of various tasks
+   * Function to set the task status of various tasks.
    *
-   * @param array  $params        associated array
+   * @param array $params associated array
    *
-   * @static
-   *
-   * @return returns task status object
+   * @return CRM_Project_DAO_TaskStatus|null returns task status object
    */
   public static function create(&$params) {
     if (!$params['target_entity_id'] || !$params['responsible_entity_id']

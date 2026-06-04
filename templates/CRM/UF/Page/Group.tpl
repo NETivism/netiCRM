@@ -44,6 +44,7 @@
         </a>
       </span>
     </div>
+    {include file="CRM/common/ShortenURLHistory.tpl" history=$shorten_history pageType="civicrm_uf_group" pageId=$gid}
 
     <div>
       <h2>{ts}HTML Form Snippet{/ts}</h2>

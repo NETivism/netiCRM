@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -257,6 +255,9 @@ SET    version = '$version'
     return $domainID ? TRUE : FALSE;
   }
 
+  /**
+   * @return string[]
+   */
   public function getRevisionSequence() {
     $revList = [];
     $sqlDir = CRM_Utils_Array::implode(

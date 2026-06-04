@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -46,7 +44,6 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * This defines two actions- View and Edit.
    *
    * @var array
-   * @static
    */
   public static $_links = NULL;
 
@@ -54,14 +51,12 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * we use desc to remind us what that column is, name is used in the tpl
    *
    * @var array
-   * @static
    */
   public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
-   * @static
    */
   public static $_properties = [
     'id',
@@ -77,7 +72,6 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_single = FALSE;
@@ -85,7 +79,6 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_limit = NULL;
@@ -93,7 +86,6 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   /**
    * what context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_context = NULL;
@@ -103,7 +95,6 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * the HTML_QuickForm_Controller for that page.
    *
    * @var array
-   * @access protected
    */
   public $_queryParams;
 
@@ -111,7 +102,6 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * represent the type of selector
    *
    * @var int
-   * @access protected
    */
   protected $_action;
 
@@ -130,16 +120,10 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   protected $_query;
 
   /**
-   * Class constructor
+   * Class constructor.
    *
-   * @param array   $queryParams array of parameters for query
-   * @param int     $action - action of search basic or advanced.
-   * @param string  $memberClause if the caller wants to further restrict the search (used in memberships)
-   * @param boolean $single are we dealing only with one contact?
-   * @param int     $limit  how many memberships do we want returned
-   *
-   * @return CRM_Contact_Selector
-   * @access public
+   * @param array $queryParams array of parameters for query
+   * @param int|null $limit how many memberships do we want returned
    */
   public function __construct(&$queryParams, $limit = NULL) {
     // submitted form values
@@ -154,10 +138,12 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   }
 
   /**
-   * getter for array of the parameters required for creating pager.
+   * Getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param int $action
+   * @param array $params
+   *
+   * @return void
    */
   public function getPagerParams($action, &$params) {
   }
@@ -166,25 +152,24 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   /**
    * Returns total number of rows for the query.
    *
-   * @param
+   * @param int $action
    *
    * @return int Total number of rows
-   * @access public
    */
   public function getTotalCount($action) {
     return CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_membership_log WHERE $this->_where");
   }
 
   /**
-   * returns all the rows in the given offset and rowCount
+   * Returns all the rows in the given offset and rowCount.
    *
-   * @param enum   $action   the action being performed
-   * @param int    $offset   the row number to start from
-   * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param int $offset the row number to start from
+   * @param int $rowCount the number of rows to return
+   * @param string|object $sort the sql string that describes the sort order or sort object
+   * @param string|null $output what should the result set include (web/email/csv)
    *
-   * @return int   the total number of rows for this action
+   * @return array the total number of rows for this action
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
@@ -230,14 +215,13 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   }
 
   /**
-   * returns the column headers as an array of tuples:
+   * Returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param string|null $action the action being performed
+   * @param string|null $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
-   * @access public
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
@@ -277,12 +261,17 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     return self::$_columnHeaders;
   }
 
+  /**
+   * Get query.
+   *
+   * @return string
+   */
   public function &getQuery() {
     return $this->_query;
   }
 
   /**
-   * name of export file.
+   * Name of export file.
    *
    * @param string $output type of output
    *

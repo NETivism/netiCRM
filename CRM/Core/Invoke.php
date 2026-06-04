@@ -30,21 +30,17 @@
  * Given an argument list, invoke the appropriate CRM function
  * Serves as a wrapper between the UserFrameWork and Core CRM
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_Invoke {
 
   /**
-   * This is the main function that is called on every click action and based on the argument
-   * respective functions are called
+   * Main function called on every click action to invoke respective functions.
    *
-   * @param $args array this array contains the arguments of the url
+   * @param array $args The arguments from the URL.
    *
-   * @static
-   * @access public
+   * @return mixed The result of the invoked callback.
    */
   public static function invoke($args) {
     self::menuRebuild($args);
@@ -163,12 +159,11 @@ class CRM_Core_Invoke {
   }
 
   /**
-   * This function contains the default action
+   * Default action for form invocation.
    *
-   * @param $action
-   *
-   * @static
-   * @access public
+   * @param int $action The action to perform.
+   * @param string $contact_type The contact type.
+   * @param string $contact_sub_type The contact sub-type.
    */
   public static function form($action, $contact_type, $contact_sub_type) {
     CRM_Utils_System::setUserContext(['civicrm/contact/search/basic', 'civicrm/contact/view']);
@@ -184,12 +179,11 @@ class CRM_Core_Invoke {
   }
 
   /**
-   * This function contains the actions for profile arguments
+   * Actions for profile arguments.
    *
-   * @param $args array this array contains the arguments of the url
+   * @param array $args The arguments from the URL.
    *
-   * @static
-   * @access public
+   * @return mixed The result of the profile action.
    */
   public static function profile($args) {
     if ($args[1] !== 'profile') {
@@ -336,6 +330,14 @@ class CRM_Core_Invoke {
     return $page->run();
   }
 
+  /**
+   * Rebuild the menu system.
+   *
+   * @param array|null $args The arguments from the URL.
+   * @param bool $force Whether to force a rebuild.
+   *
+   * @return void|string|null Redirect result if rebuild is triggered by URL.
+   */
   public static function menuRebuild($args = NULL, $force = FALSE) {
     // when force rebuild, do not check permission and add status message
     if ($force) {

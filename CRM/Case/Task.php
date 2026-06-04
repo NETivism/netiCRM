@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -120,7 +118,7 @@ class CRM_Case_Task {
   /**
    * These tasks get added based on the context the user is in
    *
-   * @return array the set of optional tasks for a group of contacts
+   * @return array{} the set of optional tasks for a group of contacts
    * @static
    * @access public
    */

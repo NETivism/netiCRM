@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -71,15 +69,20 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
   /**
    * build all the data structures needed to build the form
    *
-   * @param
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
     self::preProcessCommon($this);
   }
 
+  /**
+   * Common pre process
+   *
+   * @param CRM_Core_Form $form
+   * @param bool $useTable
+   *
+   * @return void
+   */
   public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_participantIds = [];
 
@@ -144,6 +147,8 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
   /**
    * Given the participant id, compute the contact id
    * since its used for things like send email
+   *
+   * @return void
    */
   public function setContactIDs() {
     $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent(
@@ -157,10 +162,11 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
    * the form with a customized title for the main Submit
    *
    * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
+   * @param string $nextType button type for the form after processing
+   * @param string $backType button type for the form before processing
+   * @param bool $submitOnce
    *
    * @return void
-   * @access public
    */
   public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
     $this->addButtons(

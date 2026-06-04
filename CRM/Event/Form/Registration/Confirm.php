@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -77,7 +75,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -228,7 +225,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    * no help display needed
    *
    * @return int
-   * @access public
    */
   public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
@@ -242,8 +238,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->assignToTemplate();
@@ -475,13 +470,11 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Event_Form_Registration_Confirm $self additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -520,9 +513,8 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 
@@ -1019,8 +1011,14 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
   /**
    * Process the contribution
    *
-   * @return void
-   * @access public
+   * @param CRM_Core_Form $form
+   * @param array $params
+   * @param array $result
+   * @param int $contactID
+   * @param bool $pending
+   * @param bool $isAdditionalAmount
+   *
+   * @return CRM_Contribute_BAO_Contribution
    */
   public static function processContribution(
     &$form,

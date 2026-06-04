@@ -1,5 +1,10 @@
 <?php
 class CRM_Contribute_Page_Invoice extends CRM_Core_Page {
+  /**
+   * Run the page
+   *
+   * @return void
+   */
   public function run() {
     // template
     if (!empty($_GET['ii'])) {

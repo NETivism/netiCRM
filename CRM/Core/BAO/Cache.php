@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 
@@ -51,16 +49,14 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
   public static $_cache = NULL;
 
   /**
-   * Retrieve an item from the DB cache
+   * Retrieve an item from the database cache.
    *
-   * @param string $group (required) The group name of the item
-   * @param string $path  (required) The path under which this item is stored
-   * @param int    $componentID The optional component ID (so componenets can share the same name space)
-   * @param int $createdTime minimal create date time in int or mysql datetime format
+   * @param string $group the group name of the item
+   * @param string $path the path under which this item is stored
+   * @param int|null $componentID optional component ID to namespace the item
+   * @param int|string $createdTime minimal create date time (Unix timestamp or MySQL datetime)
    *
-   * @return mixed The data if present in cache, else null
-   * @static
-   * @access public
+   * @return mixed the data if present in cache, otherwise NULL
    */
   public static function &getItem($group, $path, $componentID = NULL, $createdTime = 0) {
     if (self::$_cache === NULL) {
@@ -104,14 +100,12 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
   }
 
   /**
-   * Retrieve all items in a group
+   * Retrieve all items in a specific cache group.
    *
-   * @param string $group (required) The group name of the item
-   * @param int    $componentID The optional component ID (so componenets can share the same name space)
+   * @param string $group the group name of the items
+   * @param int|null $componentID optional component ID to namespace the items
    *
-   * @return object The data if present in cache, else null
-   * @static
-   * @access public
+   * @return array associative array of (path => data) if present, otherwise an empty array
    */
   public static function &getItems($group, $componentID = NULL) {
     if (self::$_cache === NULL) {
@@ -144,13 +138,14 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
   }
 
   /**
-   * Set Cache Item
+   * Store an item in the database cache.
    *
-   * @param mixed $data referenced data to be save into cache, will be serialized
-   * @param string $group cache group name
-   * @param string $path unique cache id based on group name
-   * @param int $componentID component of this cache belong to
-   * @param int $expired unix timestamp indicate this cache to be expire after this date
+   * @param mixed $data the data to be saved (will be serialized)
+   * @param string $group the cache group name
+   * @param string $path the unique cache ID within the group
+   * @param int|null $componentID optional component ID to namespace the item
+   * @param int|null $expired Unix timestamp indicating when this cache item expires
+   *
    * @return void
    */
   public static function setItem(&$data, $group, $path, $componentID = NULL, $expired = NULL) {
@@ -201,6 +196,15 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $cache->delete($argString);
   }
 
+  /**
+   * Delete a specific item from the database cache.
+   *
+   * @param string $group the group name of the item
+   * @param string $path the path under which this item is stored
+   * @param int|null $componentID optional component ID
+   *
+   * @return bool TRUE if the item was found and deleted, otherwise FALSE
+   */
   public static function deleteItem($group, $path, $componentID = NULL) {
     $dao = new CRM_Core_DAO_Cache();
     $dao->group_name = $group;
@@ -227,6 +231,13 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     return $success;
   }
 
+  /**
+   * Delete all items in a specific cache group.
+   *
+   * @param string|null $group the group name to clear (NULL to clear everything in civicrm_cache)
+   *
+   * @return void
+   */
   public static function deleteGroup($group = NULL) {
     $dao = new CRM_Core_DAO_Cache();
 
@@ -240,6 +251,14 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     CRM_ACL_BAO_Cache::resetCache();
   }
 
+  /**
+   * Store specified session variables into the database cache.
+   *
+   * @param array $names list of session keys to store (can be strings or nested arrays)
+   * @param bool $resetSession TRUE to clear the variables from the session after storing
+   *
+   * @return void
+   */
   public static function storeSessionToCache($names, $resetSession = TRUE) {
     // CRM_Core_Error::debug_var( 'names in store', $names );
     foreach ($names as $key => $sessionName) {
@@ -273,6 +292,13 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     self::cleanupSessionCache();
   }
 
+  /**
+   * Restore specified session variables from the database cache.
+   *
+   * @param array $names list of session keys to restore
+   *
+   * @return void
+   */
   public static function restoreSessionFromCache($names) {
     // CRM_Core_Error::debug_var( 'names in restore', $names );
     foreach ($names as $key => $sessionName) {
@@ -311,8 +337,9 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
   /**
    * Clean up session in cache
    *
-   * @param boolean $force force to execute cleanup, not base on probability
-   * @param boolean $all clean up all session cache in one run, but calc expired / created date
+   * @param bool $force force to execute cleanup, not base on probability
+   * @param bool $all clean up all session cache in one run, but calc expired / created date
+   *
    * @return void
    */
   public static function cleanupSessionCache($force = FALSE, $all = FALSE) {
@@ -339,6 +366,15 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     }
   }
 
+  /**
+   * Get the creation date of a specific cache item.
+   *
+   * @param string $group the group name
+   * @param string $path the path
+   * @param int|null $componentID optional component ID
+   *
+   * @return string|null the creation date in MySQL datetime format, or NULL if not found
+   */
   public static function getItemCreatedDate($group, $path, $componentID = NULL) {
     $dao = new CRM_Core_DAO_Cache();
     $dao->group_name = $group;

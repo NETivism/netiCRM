@@ -26,11 +26,10 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
+
 class CRM_Core_DAO_Currency extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -108,18 +107,17 @@ class CRM_Core_DAO_Currency extends CRM_Core_DAO {
    */
   public $full_name;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_currency
-  */
+   * class constructor
+   *
+   * @return civicrm_currency
+   */
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -129,45 +127,45 @@ class CRM_Core_DAO_Currency extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-             'import' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'import' => TRUE,
           'where' => 'civicrm_currency.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'symbol' => [
           'name' => 'symbol',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Symbol') ,
-           'maxlength' => 8,
-           'size' => CRM_Utils_Type::EIGHT,
-                ] ,
+          'maxlength' => 8,
+          'size' => CRM_Utils_Type::EIGHT,
+        ],
         'numeric_code' => [
           'name' => 'numeric_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Numeric Code') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-             'import' => TRUE,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'import' => TRUE,
           'where' => 'civicrm_currency.numeric_code',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'full_name' => [
           'name' => 'full_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Full Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
       ];
     }
     return self::$_fields;
@@ -175,7 +173,6 @@ class CRM_Core_DAO_Currency extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -184,7 +181,6 @@ class CRM_Core_DAO_Currency extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -193,8 +189,7 @@ class CRM_Core_DAO_Currency extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -216,8 +211,7 @@ class CRM_Core_DAO_Currency extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

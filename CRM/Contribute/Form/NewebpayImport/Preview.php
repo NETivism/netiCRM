@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Form for previewing Newebpay contribution imports.
+ */
 class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   protected $_result = NULL;
 
@@ -17,6 +20,16 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
 
   protected $_errorFileName = 'NewebpayImportPreviewError.xlsx';
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method parses the uploaded file, validates each row against existing
+   * contributions in the database (checking trxn_id, amount, and dates),
+   * and categorizes them into success, status-inconsistent, or error groups.
+   * It also handles Excel export requests for errors or status issues.
+   *
+   * @return void
+   */
   public function preProcess() {
     $downloadErrorType = CRM_Utils_Request::retrieve('downloadType', 'String', CRM_Core_DAO::$_nullObject);
 
@@ -156,6 +169,13 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $this->assign('downloadStatusUrl', $downloadStatusUrl);
   }
 
+  /**
+   * Actually build the form components.
+   *
+   * Adds the 'Import' and 'Cancel' buttons.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $this->addButtons(
       [
@@ -170,17 +190,39 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Global form rule for validation.
+   *
+   * @param array $fields posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array{} list of errors to be posted back to the form (currently empty)
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     return $errors;
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * @return array{} the array of default values (currently empty)
+   */
   public function setDefaultValues() {
     $defaults = [
     ];
     return $defaults;
   }
 
+  /**
+   * Process the form submission.
+   *
+   * Iterates through successful and status-inconsistent contributions,
+   * calls `processImportData` for each, and sets final status messages.
+   *
+   * @return void
+   */
   public function postProcess() {
     if (!empty($this->_successedContribution)) {
       foreach ($this->_successedContribution as &$contributionRow) {
@@ -200,19 +242,24 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Preview');
   }
 
   /**
-   * Process the contribution, which is array type.
+   * Process a single contribution row from the import data.
    *
-   * @param Array $contributionRow
+   * Updates fee amount, disbursement date (custom field), and handles status
+   * changes if requested. Also records a note for the transaction record.
+   *
+   * @param array $contributionRow the contribution data row (passed by reference)
+   * @param bool $isChangeStatus whether to force the contribution status to 'Completed'
+   *
+   * @return void
    */
   private function processImportData(&$contributionRow, $isChangeStatus = FALSE) {
     $contributionRow[ts('Result')] = "";
@@ -275,6 +322,16 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     self::addNote($contributionRow[ts('Result')], $contributionRow);
   }
 
+  /**
+   * Add a transaction record note to the contribution.
+   *
+   * Appends the new note text to any existing notes for the contribution record.
+   *
+   * @param string $note the note text to add
+   * @param array $contributionRow the contribution data row containing IDs
+   *
+   * @return void
+   */
   private static function addNote($note, &$contributionRow) {
 
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";

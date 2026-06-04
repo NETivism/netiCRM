@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,6 +40,12 @@
  *
  */
 class CRM_Contact_Form_Test extends CRM_Core_Form {
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
   }
 
@@ -51,7 +55,7 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array defaults array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -61,7 +65,7 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -79,7 +83,7 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
   }

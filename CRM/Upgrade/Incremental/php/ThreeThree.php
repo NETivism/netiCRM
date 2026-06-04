@@ -26,10 +26,9 @@
 */
 
 /**
+ * Database upgrade routines for CiviCRM version 3.3
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Upgrade_Incremental_php_ThreeThree {

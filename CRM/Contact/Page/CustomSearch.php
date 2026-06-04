@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,6 +45,11 @@ class CRM_Contact_Page_CustomSearch extends CRM_Core_Page {
    */
   public static $_links = NULL;
 
+  /**
+   * Get info about custom searches.
+   *
+   * @return array
+   */
   public static function &info() {
     $sql = "
 SELECT v.value, v.label, v.name, v.description
@@ -77,8 +80,7 @@ ORDER By  v.weight
   /**
    * Browse all custom searches.
    *
-   * @return content of the parents run method
-   *
+   * @return void
    */
   public function browse() {
     $rows = &self::info();
@@ -87,7 +89,7 @@ ORDER By  v.weight
   }
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run this page (figure out the action needed and perform it).
    *
    * @return void
    */

@@ -30,9 +30,7 @@
  * Typically we'll have different values for a user's sandbox, a qa sandbox and a production area.
  * The default values in general, should reflect production values (minimizes chances of screwing up)
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 /* we must load db first, never delete this require */
@@ -186,26 +184,22 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   ///
 
   /**
-   * to determine wether the call is from cms or civicrm
+   * Whether the call is from CMS or CiviCRM.
+   *
+   * @var bool
    */
   public $inCiviCRM = FALSE;
 
-  ///
-  /// END: RUNTIME SET CLASS PROPERTIES
-  ///
-
   /**
-   *  Define recaptcha key
+   * Recaptcha public key.
+   *
+   * @var string
    */
-
   public $recaptchaPublicKey;
 
   /**
-   * The constructor. Sets domain id if defined, otherwise assumes
-   * single instance installation.
-   *
-   * @return void
-   * @access private
+   * Class constructor.
+   * Sets domain id if defined, otherwise assumes single instance installation.
    */
   private function __construct() {
   }
@@ -213,11 +207,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * Singleton function used to manage this object.
    *
-   * @param $loadFromDB boolean  whether to load from the database
-   * @param $force      boolean  whether to force a reconstruction
+   * @param bool $loadFromDB Whether to load configuration from the database.
+   * @param bool $force Whether to force a reconstruction of the singleton instance.
    *
-   * @return object
-   * @static
+   * @return CRM_Core_Config The configuration instance.
    */
   public static function &singleton($loadFromDB = TRUE, $force = FALSE) {
     if (self::$_singleton === NULL || $force) {
@@ -308,6 +301,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     return self::$_singleton;
   }
 
+  /**
+   * Set user framework configuration.
+   *
+   * @param string $userFramework Name of the user framework (e.g., 'Drupal', 'Joomla').
+   */
   private function _setUserFrameworkConfig($userFramework) {
     global $civicrm_root;
 
@@ -364,8 +362,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * Reads constants defined in civicrm.settings.php and
    * stores them in config properties.
    *
-   * @return void
-   * @access public
+   * @param bool $loadFromDB Whether to initialize database-related settings.
    */
   private function _initialize($loadFromDB = TRUE) {
     // following variables should be set in CiviCRM settings and
@@ -401,10 +398,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * initialize the DataObject framework
-   *
-   * @return void
-   * @access private
+   * Initialize the DataObject framework.
    */
   private function _initDAO() {
     CRM_Core_DAO::init($this->dsn);
@@ -415,12 +409,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * returns the singleton logger for the application
+   * Returns the singleton logger for the application.
    *
-   * @param
-   * @access private
-   *
-   * @return object
+   * @return \Log The logger instance.
    */
   public static function &getLog() {
     if (!isset(self::$_log)) {
@@ -431,10 +422,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * initialize the config variables
-   *
-   * @return void
-   * @access private
+   * Initialize the config variables.
    */
   private function _initVariables() {
     global $civicrm_root;
@@ -536,12 +524,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * retrieve a mailer to send any mail from the applciation
+   * Retrieve a mailer to send any mail from the application.
    *
-   * @param int $mailerType
-   * @access private
+   * @param int|string $mailerType The type of mailer to retrieve.
    *
-   * @return object
+   * @return \Mail_smtp|\Mail_sendmail|\Mail_mail|\CRM_Mailing_BAO_Spool The mailer object.
    */
   public static function &getMailer($mailerType = '') {
     $mailerTypes = CRM_Core_BAO_MailSettings::$_mailerTypes;
@@ -650,13 +637,10 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * delete the web server writable directories
+   * Delete the web server writable directories.
    *
-   * @param int $value 1 - clean templates_c, 2 - clean upload, 3 - clean both
-   *
-   * @access public
-   *
-   * @return void
+   * @param int $value 1 - clean templates_c, 2 - clean upload, 3 - clean both.
+   * @param bool $rmdir Whether to remove the directory itself.
    */
   public function cleanup($value, $rmdir = TRUE) {
     $value = (int ) $value;
@@ -675,14 +659,12 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * verify that the needed parameters are not null in the config
+   * Verify that the needed parameters are not null in the config.
    *
-   * @param CRM_Core_Config (reference ) the system config object
-   * @param array           (reference ) the parameters that need a value
+   * @param CRM_Core_Config $config The system config object.
+   * @param array $required The names of parameters that need a value.
    *
-   * @return boolean
-   * @static
-   * @access public
+   * @return bool True if all required parameters are present.
    */
   public static function check(&$config, &$required) {
     foreach ($required as $name) {
@@ -703,7 +685,12 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * one function to get domain ID
+   * Reset or retrieve the domain ID.
+   *
+   * @param int|null $domainID The domain ID to set.
+   * @param bool $reset Whether to reset the domain ID to default.
+   *
+   * @return int The current domain ID.
    */
   public static function domainID($domainID = NULL, $reset = FALSE) {
     static $domain;
@@ -718,7 +705,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * clear db cache
+   * Clear database cache.
    */
   public static function clearDBCache() {
     $queries = ['TRUNCATE TABLE civicrm_acl_cache',
@@ -739,7 +726,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * clear up session
+   * Clear up session.
    */
   public function sessionReset() {
     $session = CRM_Core_Session::singleton();
@@ -747,7 +734,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * clear leftover temporary tables
+   * Clear leftover temporary tables.
    */
   public function clearTempTables() {
     // CRM-5645
@@ -784,7 +771,11 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * function to check if running in upgrade mode
+   * Check if running in upgrade mode.
+   *
+   * @param string|null $path The current path to check.
+   *
+   * @return bool True if in upgrade mode.
    */
   public static function isUpgradeMode($path = NULL) {
     if ($path && $path == 'civicrm/upgrade') {
@@ -798,7 +789,9 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * Wrapper function to allow unit tests to switch user framework on the fly
+   * Wrapper function to allow unit tests to switch user framework on the fly.
+   *
+   * @param string|null $userFramework Name of the user framework.
    */
   public function setUserFramework($userFramework = NULL) {
     $this->userFramework = $userFramework;
@@ -806,12 +799,13 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 
   /**
-   * add shutdown callback to static array
+   * Add shutdown callback to static array.
    *
-   * @param string $type allow value is before | after
-   * @param string $callback
-   * @param array $args
-   * @return bool
+   * @param string $type The callback type, allowed values are 'before' | 'after'.
+   * @param string|array|callable $callback The callback to execute.
+   * @param array|null $args Arguments for the callback.
+   *
+   * @return bool True if callback was successfully added.
    */
   public static function addShutdownCallback($type, $callback, $args = NULL) {
     if (is_array($callback) && count($callback) == 2) {

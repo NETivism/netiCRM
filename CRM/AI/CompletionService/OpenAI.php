@@ -65,8 +65,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    *
    * Should set to default model when provide model name not available
    *
-   * @param string $model
-   * @return string the real model name set on this function
+   * @param string $model The model name.
+   * @return void
    */
   public function setModel($model) {
     // TODO: check if model name is in available list
@@ -78,8 +78,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    *
    * Should set to max tokens when value not provided
    *
-   * @param int $maxTokens
-   * @return int the real tokens set on this function
+   * @param int $maxTokens The maximum number of tokens.
+   * @return void
    */
   public function setMaxTokens($maxTokens) {
     if ($maxTokens >= CRM_AI_BAO_AICompletion::COMPLETION_MAX_TOKENS) {
@@ -96,7 +96,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Get current model name
    *
-   * @return string
+   * @return string The model name.
    */
   public function getModel() {
     return $this->_model;
@@ -105,7 +105,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Get current max tokens
    *
-   * @return int|null
+   * @return int|null The maximum number of tokens.
    */
   public function getMaxTokens() {
     return $this->_maxTokens;
@@ -116,8 +116,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    *
    * Error handling should using try - catch when doing request
    *
-   * @param array $params
-   * @return string
+   * @param array $params The request parameters.
+   * @return array|void The response data.
    */
   public function request($params) {
     $config = CRM_Core_Config::singleton();
@@ -288,8 +288,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Format parameters before sending via request
    *
-   * @param array $params(reference)
-   * @return string json encoded string.
+   * @param array $params The request parameters (reference).
+   * @return string The JSON encoded request data.
    */
   protected function formatParams(&$params) {
     if ($params['id']) {
@@ -329,8 +329,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Format response before saving to CRM_AI_DAO_AICompletion
    *
-   * @param string $responseString
-   * @return array
+   * @param string $responseString The raw response string.
+   * @return array<string, mixed> The formatted response data.
    */
   protected function formatResponse($responseString) {
     $response = json_decode($responseString, TRUE);
@@ -360,8 +360,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Low level function to determine if result in response is an error.
    *
-   * @param array $response
-   * @return boolean
+   * @param array $response The response data.
+   * @return boolean True if the response contains an error.
    */
   protected function isError($response) {
 
@@ -370,8 +370,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Calculate token numbers
    *
-   * @param string $string
-   * @return int
+   * @param string $input The input string.
+   * @return int The number of tokens.
    */
   public static function calculateTokenNumbers($input) {
 

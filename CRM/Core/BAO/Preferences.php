@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,6 +41,11 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
   private static $_mailingPref = NULL;
 
+  /**
+   * Retrieve the system-wide preferences object.
+   *
+   * @return CRM_Core_DAO_Preferences system-wide preferences
+   */
   public static function systemObject() {
     if (!self::$_systemObject) {
       self::$_systemObject = new CRM_Core_DAO_Preferences();
@@ -54,6 +57,11 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_systemObject;
   }
 
+  /**
+   * Retrieve the mailing backend preferences.
+   *
+   * @return array associative array of mailing configuration
+   */
   public static function mailingPreferences() {
     global $civicrm_conf;
     if (!self::$_mailingPref) {
@@ -73,6 +81,13 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_mailingPref;
   }
 
+  /**
+   * Retrieve the preferences object for a specific user.
+   *
+   * @param int|null $userID optional user ID (defaults to logged in user)
+   *
+   * @return CRM_Core_DAO_Preferences user preferences object
+   */
   public static function userObject($userID = NULL) {
     if (!self::$_userObject) {
       if (!$userID) {
@@ -88,6 +103,15 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_userObject;
   }
 
+  /**
+   * Get the value of a specific preference.
+   *
+   * @param string $name preference name
+   * @param bool $system TRUE for system-wide, FALSE for user-specific
+   * @param int|null $userID optional user ID for user preferences
+   *
+   * @return mixed preference value
+   */
   public static function value($name, $system = TRUE, $userID = NULL) {
     if ($system) {
       $object = self::systemObject();
@@ -106,6 +130,13 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_systemObject->$name;
   }
 
+  /**
+   * Compute the address field sequence based on a format string.
+   *
+   * @param string $format address format string (e.g., with {street_address})
+   *
+   * @return string[] array of field names in order
+   */
   public static function addressSequence($format) {
     // also compute and store the address sequence
     $addressSequence = ['address_name',
@@ -136,6 +167,19 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return $newSequence;
   }
 
+  /**
+   * Get the enabled options for a multi-choice preference.
+   *
+   * @param string $name preference name
+   * @param bool $system TRUE for system-wide, FALSE for user-specific
+   * @param int|null $userID optional user ID
+   * @param bool $localize whether to localize labels
+   * @param string $returnField field to use as key ('name' or 'label')
+   * @param bool $returnNameANDLabels whether to return name => label pairs
+   * @param string|null $condition optional SQL condition for options
+   *
+   * @return array associative array of enabled options
+   */
   public static function valueOptions(
     $name,
     $system = TRUE,
@@ -196,6 +240,17 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return ($returnNameANDLabels) ? $nameAndLabels : $returnValues;
   }
 
+  /**
+   * Set the value of a specific preference.
+   *
+   * @param string $name preference name
+   * @param mixed $value new value (string or array for multi-choice)
+   * @param bool $system TRUE for system-wide, FALSE for user-specific
+   * @param int|null $userID optional user ID for user preferences
+   * @param string $keyField field to use for mapping array values
+   *
+   * @return void
+   */
   public static function setValue($name, $value, $system = TRUE, $userID = NULL, $keyField = 'name') {
     if ($system) {
       $object = self::systemObject();
@@ -235,6 +290,13 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     $object->save();
   }
 
+  /**
+   * Extract and store directory and URL preferences from parameters.
+   *
+   * @param array &$params associative array of configuration parameters
+   *
+   * @return void
+   */
   public static function fixAndStoreDirAndURL(&$params) {
     $sql = "
 SELECT v.name as valueName, g.name as optionName
@@ -271,6 +333,14 @@ AND    v.is_active = 1
     }
   }
 
+  /**
+   * Store directory or URL preferences in the option_value table.
+   *
+   * @param array &$params associative array of (name => value)
+   * @param string $type preference type ('directory' or 'url')
+   *
+   * @return void
+   */
   public static function storeDirectoryOrURLPreferences(&$params, $type = 'directory') {
     $optionName = ($type == 'directory') ? 'directory_preferences' : 'url_preferences';
 
@@ -300,6 +370,14 @@ AND    v.name = %3
     }
   }
 
+  /**
+   * Retrieve directory and URL preferences from the database.
+   *
+   * @param array &$params associative array to store retrieved values
+   * @param bool $setInConfig whether to also set values in the global config object
+   *
+   * @return void
+   */
   public static function retrieveDirectoryAndURLPreferences(&$params, $setInConfig = FALSE) {
     if ($setInConfig) {
       $config = &CRM_Core_Config::singleton();
