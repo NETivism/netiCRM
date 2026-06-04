@@ -973,6 +973,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     $currentDate = date('Y-m-01 00:00:00', $time);
+    $currentDay = date('Y-m-d', $time);
 
     // #25443, only trigger when current month doesn't have any contribution yet
     $sql = "
@@ -999,6 +1000,7 @@ WHERE
 AND r.contribution_status_id in (5,6)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
+AND (r.last_execute_date IS NULL OR r.last_execute_date < '$currentDay')
 GROUP BY r.id
 ORDER BY r.id
 LIMIT 0, 100
@@ -1008,7 +1010,7 @@ LIMIT 0, 100
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay']));
+        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay'])." recur_id: ".$dao->recur_id);
         continue;
       }
 
@@ -1016,7 +1018,7 @@ LIMIT 0, 100
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
       if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
-        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date."));
+        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date.")." recur_id: ".$dao->recur_id);
         continue;
       }
 
@@ -1082,8 +1084,9 @@ LIMIT 0, 100
             $activeTokenOverride = TRUE;
           }
           else {
-            $resultNote = "Token status is $tokenStatus, skip payment. ";
+            $resultNote = "Token status is $tokenStatus, skip payment. recur_id: ".$recurId;
             CRM_Core_Error::debug_log_message($resultNote);
+            CRM_Core_Error::debug_log_message("TapPay synchronize finished: ".$recurId);
             return $resultNote;
           }
         }
