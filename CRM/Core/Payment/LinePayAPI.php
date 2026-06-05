@@ -13,13 +13,15 @@ class CRM_Core_Payment_LinePayAPI {
     'TWD' => 'TWD',
     'THB' => 'THB',
   ];
+  // LINE Pay v4 付款等待畫面語言 (options.display.locale)，預設值為 'en'
   public static $_lang = [
-    'zh_TW' => 'zh-Hant',
-    'zh_CN' => 'zh-Hans',
+    'zh_TW' => 'zh_TW',
     'en_US' => 'en',
-    'ja_JP' => 'ja',
-    'ko_KR' => 'ko',
-    'th_TH' => 'th',
+    ## LINE Pay API v4 supported
+    // 'zh_CN' => 'zh_CN',
+    // 'ja_JP' => 'ja',
+    // 'ko_KR' => 'ko',
+    // 'th_TH' => 'th',
   ];
   public static $_errorMessage = [
     '0110' => 'Customer has completed LINE Pay authentication; payment confirmation is available.',
@@ -27,62 +29,126 @@ class CRM_Core_Payment_LinePayAPI {
     '0122' => 'Payment failed.',
     '0123' => 'Payment completed.',
     '1101' => 'This user is not a LINE Pay user.',
-    '1102' => 'The purchasing user suspended for transaction.',
-    '1104' => 'Merchant not found.',
-    '1105' => 'This Merchant cannot use LINE Pay.',
-    '1106' => 'Header information error',
+    '1102' => 'This user is temporarily unable to use LINE Pay transactions.',
+    '1104' => 'Merchant not found. Please confirm the credentials you entered are correct.',
+    '1105' => 'This merchant cannot use LINE Pay.',
+    '1106' => 'Header information error.',
     '1110' => 'Not available credit card.',
-    '1124' => 'Error in Amount (scale).',
-    '1133' => 'Invalid oneTimeKey',
+    '1124' => 'Error in amount.',
     '1141' => 'Account status error.',
-    '1142' => 'Insufficient balance remains.',
+    '1142' => 'Insufficient balance.',
     '1145' => 'Payment in progress.',
     '1150' => 'Transaction record not found.',
     '1152' => 'Transaction has already been made.',
     '1153' => 'Request amount is different from real amount.',
     '1154' => 'Preapproved payment account not available.',
-    '1155' => 'The transaction Id not eligible for Refund.',
+    '1155' => 'The transaction Id is incorrect.',
     '1159' => 'Omitted request payment information.',
-    '1163' => 'Exceeded the expiration for Refund.',
+    '1163' => 'Unable to refund. (Exceeded the refundable period.)',
     '1164' => 'Refund limit exceeded.',
     '1165' => 'The transaction has already been refunded.',
     '1169' => 'Payment method and password must be certificated by LINE Pay.',
-    '1170' => 'User’s account remains have been changed.',
+    '1170' => 'User account balance has been changed.',
     '1172' => 'Existing same orderId.',
     '1177' => 'Exceeded max. number of transactions (100) allowed to be retrieved.',
     '1178' => 'Unsupported currency.',
     '1179' => 'Status can not be processed.',
-    '1180' => 'Expired the payment date',
-    '1183' => 'Payment amount must be greater than 0.',
-    '1184' => 'Payment amount exceeds amount requested.',
+    '1180' => 'Expired the payment date.',
+    '1183' => 'Payment amount must be greater than the minimum amount.',
+    '1184' => 'Payment amount must be less than the maximum amount.',
     '1190' => 'The regKey does not exist.',
     '1193' => 'The regKey expired.',
-    '1194' => 'This Merchant cannot use Preapproved Payment.',
-    '1197' => 'Already processing payment with regKey',
+    '1194' => 'This merchant cannot use Preapproved Payment.',
     '1198' => 'Duplicated the request calling API.',
     '1199' => 'Internal request error.',
-    '1280' => 'Temporary error while making a payment with Credit Card',
-    '1281' => 'Credit Card Payment Error',
-    '1282' => 'Credit Card Authorization Error',
+    '1280' => 'Temporary error while making a payment with credit card.',
+    '1281' => 'Credit card payment error.',
+    '1282' => 'Credit card authorization error.',
     '1283' => 'The payment has been declined due to suspected fraud.',
-    '1284' => 'Payment amount must be greater than 0.',
-    '1285' => 'Omitted credit card information',
-    '1286' => 'Incorrect credit card payment information',
+    '1284' => 'Credit card payment temporarily suspended.',
+    '1285' => 'Omitted credit card information.',
+    '1286' => 'Incorrect credit card payment information.',
     '1287' => 'Credit card expiration date has passed.',
     '1288' => 'Credit card has insufficient funds.',
     '1289' => 'Maximum credit card limit exceeded.',
     '1290' => 'One-time payment limit exceeded.',
     '1291' => 'This card has been reported stolen.',
     '1292' => 'This card has been suspended.',
-    '1293' => 'Invalid Card Verification Number (CVN)',
+    '1293' => 'Invalid Card Verification Number (CVN).',
     '1294' => 'This card is blacklisted.',
-    '1295' => 'Invalid credit card number',
-    '1296' => 'Invalid amount',
+    '1295' => 'Invalid credit card number.',
+    '1296' => 'Invalid amount.',
     '1298' => 'The credit card payment declined.',
+    '190X' => 'A temporary error occurred. Please try again later.',
     '2042' => 'EPI refund failed due to insufficient merchant reserve.',
-    '2101' => 'Parameter error',
-    '2102' => 'JSON data format error',
-    '9000' => 'Internal error',
+    '2101' => 'Parameter error.',
+    '2102' => 'JSON data format error.',
+    '9000' => 'Internal error.',
+  ];
+
+  // Traditional Chinese (zh-Hant) messages from the official v4 result-code table.
+  // Keys mirror self::$_errorMessage; used when the system locale is zh_TW.
+  public static $_errorMessageZhTW = [
+    '0110' => '顧客已完成 LINE Pay 認證，可以進行付款授權。',
+    '0121' => '顧客取消付款或超過 LINE Pay 認證等待時間。',
+    '0122' => '付款失敗。',
+    '0123' => '付款完成。',
+    '1101' => '該用戶不是 LINE Pay 用戶。',
+    '1102' => '該用戶目前無法使用 LINE Pay 交易。',
+    '1104' => '您的商店尚未在合作商店中心註冊成為合作商店。請確認輸入的 credentials 是否正確。',
+    '1105' => '該合作商店目前無法使用 LINE Pay。',
+    '1106' => '請求標頭訊息有錯誤。',
+    '1110' => '該信用卡無法正常使用。',
+    '1124' => '金額訊息有誤。',
+    '1141' => '帳戶狀態有問題。如為 EPI 交易，商家有可能未開通 EPI 支付方式；如為 Preapproved 交易，有可能用戶已刪除該支付方式，需重新取得 Regkey。',
+    '1142' => '餘額不足。',
+    '1145' => '付款進行中。',
+    '1150' => '無交易歷史。',
+    '1152' => '有相同交易歷史。',
+    '1153' => '付款請求金額和請款金額不同。',
+    '1154' => '無法使用設定為預先授權付款的付款方式。',
+    '1155' => '交易 ID 有誤。',
+    '1159' => '無付款請求訊息。',
+    '1163' => '無法退款。（超過可退款期限）',
+    '1164' => '超出可退款金額。',
+    '1165' => '已退款的交易。',
+    '1169' => '須在 LINE Pay 中選擇付款方式並驗證認證密碼。',
+    '1170' => '會員帳戶餘額發生變化。',
+    '1172' => '已存在相同訂單號碼的交易記錄。',
+    '1177' => '超出可查看的最多交易數量（100 筆）。',
+    '1178' => '合作商店不支援該貨幣。',
+    '1179' => '無法處理該狀態。',
+    '1180' => '已超過付款期限。',
+    '1183' => '付款金額必須大於設定的最低金額。',
+    '1184' => '付款金額必須小於設定的最高金額。',
+    '1190' => '無預先授權付款密鑰。',
+    '1193' => '預先授權付款密鑰已逾期。',
+    '1194' => '合作商店不支援預先授權付款。',
+    '1198' => 'API 呼叫請求重複。',
+    '1199' => '內部請求發生錯誤。',
+    '1280' => '信用卡付款時發生臨時錯誤。',
+    '1281' => '信用卡付款時發生錯誤。',
+    '1282' => '信用卡授權時發生錯誤。',
+    '1283' => '有不當使用疑慮，付款被拒絕。',
+    '1284' => '信用卡付款暫時暫停。',
+    '1285' => '信用卡付款訊息缺失。',
+    '1286' => '信用卡付款訊息中有錯誤訊息。',
+    '1287' => '信用卡已過期。',
+    '1288' => '信用卡帳戶餘額不足。',
+    '1289' => '超出信用卡額度。',
+    '1290' => '超出信用卡單筆付款額度。',
+    '1291' => '該卡已被通報失竊。',
+    '1292' => '該卡已停用。',
+    '1293' => 'CVN 輸入錯誤。',
+    '1294' => '該卡已被列入黑名單。',
+    '1295' => '信用卡號碼錯誤。',
+    '1296' => '無法處理此金額。',
+    '1298' => '該卡被拒絕。',
+    '190X' => '發生臨時錯誤，請稍後再試一次。',
+    '2042' => '由於商家的退款準備金不足，未能為該 EPI 交易進行退款。',
+    '2101' => '參數錯誤。',
+    '2102' => 'JSON 數據格式錯誤。',
+    '9000' => '發生了內部錯誤。',
   ];
 
   public $_request;
@@ -144,6 +210,26 @@ class CRM_Core_Payment_LinePayAPI {
         $this->_apiMethod = 'POST';
       }
     }
+  }
+
+  /**
+   * Create an API client from a payment processor configuration.
+   *
+   * Lets callers build a client for a specific API type at the moment they
+   * need it, without reaching into the LINE Pay business object.
+   *
+   * @param array $paymentProcessor payment processor params (url_site, url_api, is_test)
+   * @param string $apiType API type (request, confirm, query)
+   *
+   * @return CRM_Core_Payment_LinePayAPI
+   */
+  public static function create($paymentProcessor, $apiType) {
+    return new self([
+      'channelId' => $paymentProcessor['url_site'],
+      'channelSecret' => $paymentProcessor['url_api'],
+      'apiType' => $apiType,
+      'isTest' => !empty($paymentProcessor['is_test']),
+    ]);
   }
 
   /**
@@ -394,17 +480,48 @@ class CRM_Core_Payment_LinePayAPI {
   /**
    * Get the error message corresponding to a LinePay error code.
    *
+   * The active CiviCRM locale (global $tsLocale) decides the language: zh_TW
+   * returns the Traditional Chinese (zh-Hant) messages from the v4 docs, while
+   * all other locales fall back to the English messages (kept translatable via
+   * ts() so existing .po catalogs still apply).
+   *
    * @param string $code error code
    *
-   * @return string|false translated error message or FALSE if not found
+   * @return string|false error message or FALSE if not found
    */
   public static function errorMessage($code) {
     $code = (string) $code;
+    global $tsLocale;
+    $isZhTW = ($tsLocale === 'zh_TW');
 
-    if (!empty(self::$_errorMessage[$code])) {
-      return ts(self::$_errorMessage[$code]);
+    $messages = $isZhTW ? self::$_errorMessageZhTW : self::$_errorMessage;
+    $message = NULL;
+    if (!empty($messages[$code])) {
+      $message = $messages[$code];
     }
-    return FALSE;
+    // v4 groups codes 1900-1909 under the wildcard "190X" (temporary error).
+    elseif (preg_match('/^190\d$/', $code) && !empty($messages['190X'])) {
+      $message = $messages['190X'];
+    }
+    if ($message === NULL) {
+      return FALSE;
+    }
+    return $isZhTW ? $message : ts($message);
+  }
+
+  /**
+   * Map the active CiviCRM locale to a LINE Pay display locale.
+   *
+   * LINE Pay v4 accepts options.display.locale on the payment request to set
+   * the language of the payment pages shown to the customer. Supported values
+   * are defined in self::$_lang (zh-Hant, zh-Hans, en, ja, ko, th); unsupported
+   * locales fall back to 'en'.
+   *
+   * @return string LINE Pay display locale code (e.g. zh-Hant, en, ja)
+   */
+  public static function displayLocale() {
+    global $tsLocale;
+    return self::$_lang[$tsLocale] ?? 'en';
   }
 
   /**

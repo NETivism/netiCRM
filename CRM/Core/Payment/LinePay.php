@@ -1,31 +1,54 @@
 <?php
 /**
- * LinePay payment processor API client for initiating and confirming LINE Pay transactions.
+ * LINE Pay business logic for initiating and confirming transactions.
+ *
+ * This class only holds the business logic (build request payload, run the
+ * IPN flow, write notes). The actual HTTP calls live in
+ * CRM_Core_Payment_LinePayAPI; this class decides which API type to call at
+ * the moment it needs it.
  *
  * @package CiviCRM_PaymentProcessor
  */
 
 class CRM_Core_Payment_LinePay {
 
-  private $_paymentProcessId;
-  private $_apiType;
+  /**
+   * @var string the mode of operation: live or test
+   */
+  protected $_mode;
 
-  private $_linePayAPI;
+  /**
+   * @var array payment processor parameters (holds LINE Pay credentials)
+   */
+  protected $_paymentProcessor;
 
   /**
    * Class constructor.
    *
-   * @param int $paymentProcessorId payment processor ID
-   * @param string $type API type (defaults to 'request')
+   * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
    */
-  public function __construct($paymentProcessorId, $type = 'request') {
-    $this->_paymentProcessId = $paymentProcessorId;
-    $this->_apiType = $type;
-    $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, $type);
+  public function __construct($mode, &$paymentProcessor) {
+    $this->_mode = $mode;
+    $this->_paymentProcessor = $paymentProcessor;
   }
 
   /**
-   * Initiate a LinePay request.
+   * Build a LINE Pay API client for a given API type.
+   *
+   * The API type is decided at call time so a single business object can talk
+   * to whichever endpoint it needs (request / confirm / query).
+   *
+   * @param string $apiType API type
+   *
+   * @return CRM_Core_Payment_LinePayAPI
+   */
+  private function getAPI($apiType) {
+    return CRM_Core_Payment_LinePayAPI::create($this->_paymentProcessor, $apiType);
+  }
+
+  /**
+   * Initiate a LINE Pay payment request.
    *
    * @param array &$params contribution and form parameters
    *
@@ -94,36 +117,39 @@ class CRM_Core_Payment_LinePay {
       'redirectUrls' => [
         'confirmUrl' => $confirmUrl,
         'cancelUrl' => $cancelUrl,
+        // v4: confirmUrlType belongs to redirectUrls, default 'CLIENT'
+        'confirmUrlType' => 'CLIENT',
       ],
       'options' => [
         'payment' => [
           'capture' => TRUE,
         ],
         'display' => [
-          'confirmUrlType' => 'CLIENT',
+          'locale' => CRM_Core_Payment_LinePayAPI::displayLocale(),
           'checkConfirmUrlBrowser' => TRUE,
         ],
       ],
     ];
 
-    $result = $this->_linePayAPI->request($requestParams);
-    if ($this->_linePayAPI->_response->returnMessage == 'Success.' && $this->_linePayAPI->_response->returnCode == '0000') {
-      $transactionId = $this->_linePayAPI->_response->info->transactionId;
+    $api = $this->getAPI('request');
+    $response = $api->request($requestParams);
+    if ($response && $response->returnCode === '0000') {
+      $transactionId = $response->info->transactionId;
       if (!empty($transactionId)) {
         $contribution = self::prepareContribution($contributionId);
         $contribution->trxn_id = $transactionId;
         $contribution->save();
       }
-      CRM_Utils_System::redirect($this->_linePayAPI->_response->info->paymentUrl->web);
+      CRM_Utils_System::redirect($response->info->paymentUrl->web);
     }
     else {
-      $this->addResponseMessageToNote($contributionId);
-      CRM_Core_Error::fatal($this->_linePayAPI->_response->returnMessage);
+      self::addResponseMessageToNote($contributionId, $api);
+      CRM_Core_Error::fatal($api->_response->returnMessage);
     }
   }
 
   /**
-   * Static entry point for confirming a LinePay transaction.
+   * Static entry point for confirming a LINE Pay transaction.
    *
    * @param array $url_params URL parameters from router
    * @param array $get optional GET variables
@@ -151,43 +177,45 @@ class CRM_Core_Payment_LinePay {
     if (empty($params['ppid'])) {
       CRM_Core_Error::fatal(ts('Could not find payment processor meta information'));
     }
-    $linePayAPI = new CRM_Core_Payment_LinePay($params['ppid'], 'confirm');
-    $linePayAPI->doConfirm($params);
+    $paymentProcessor = self::getPaymentProcessor($params['ppid']);
+    $mode = !empty($paymentProcessor['is_test']) ? 'test' : 'live';
+    $linePay = new self($mode, $paymentProcessor);
+    $linePay->doConfirm($params);
   }
 
   /**
-   * Handle the confirmation of a LinePay transaction.
+   * Handle the confirmation of a LINE Pay transaction.
    *
    * @param array $params confirmation parameters (including transactionId)
    *
    * @return void
    */
   public function doConfirm($params) {
-    $type = 'linepay';
     $config = CRM_Core_Config::singleton();
     $contribution = self::prepareContribution($params['cid']);
 
-    // confirm
-    $requestParams = [];
-    $requestParams['transactionId'] = $params['transactionId'];
-    $requestParams['amount'] = (int)$contribution->total_amount; // integer
-    $requestParams['currency'] = $config->defaultCurrency;
-    $result = $this->_linePayAPI->request($requestParams);
+    // confirm (v4: POST /v4/payments/{transactionId}/confirm, body amount + currency)
+    $confirmParams = [
+      'transactionId' => $params['transactionId'],
+      'amount' => (int)$contribution->total_amount,
+      'currency' => $config->defaultCurrency,
+    ];
+    $api = $this->getAPI('confirm');
+    $api->request($confirmParams);
 
-    // Timeout condition.
+    // Timeout condition: confirm timed out (curl error 28). Fall back to query
+    // to find out the real transaction status.
     $triedTimes = 0;
-    while (!empty($this->_linePayAPI->_curlError[28]) && $triedTimes < 2) {
+    while (!empty($api->_curlError[28]) && $triedTimes < 2) {
       sleep(10);
-      $paymentProcessorId = $this->_paymentProcessId;
-      $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, 'query');
-      $params = [
+      $api = $this->getAPI('query');
+      $api->request([
         'transactionId' => $params['transactionId'],
         'orderId' => $params['cid'],
-      ];
-      $this->_linePayAPI->request($params);
+      ]);
       $triedTimes++;
     }
-    $is_success = $this->_linePayAPI->_success;
+    $is_success = $api->_success;
     $thankYouPath = 'civicrm/contribute/transact';
 
     // ipn transact
@@ -210,19 +238,19 @@ class CRM_Core_Payment_LinePay {
     $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
     // Refs #31598, 1172 means duplicated order, often means trigger twice.
     // Refs #41790, 1198 means duplicate API requests.
-    if ($validate_result && ($this->_linePayAPI->_response->returnCode != '1172' && $this->_linePayAPI->_response->returnCode != '1198')) {
+    if ($validate_result && ($api->_response->returnCode != '1172' && $api->_response->returnCode != '1198')) {
       $transaction = new CRM_Core_Transaction();
       if ($is_success) {
         $input['payment_instrument_id'] = $contribution->payment_instrument_id;
         $input['amount'] = $contribution->total_amount;
         $objects['contribution']->receive_date = date('YmdHis');
-        $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
+        $ipn->completeTransaction($input, $ids, $objects, $transaction);
         $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey']);
       }
       else {
         $error = '';
         $ipn->failed($objects, $transaction, $error);
-        $this->addResponseMessageToNote($contribution);
+        self::addResponseMessageToNote($contribution, $api);
         $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
       }
       $transaction->commit();
@@ -235,7 +263,10 @@ class CRM_Core_Payment_LinePay {
   }
 
   /**
-   * Static entry point for querying LinePay transaction status.
+   * Static entry point for querying LINE Pay transaction status.
+   *
+   * This is a pure sync operation, so it talks to the LINE Pay API directly
+   * instead of going through the business object.
    *
    * @param array $url_params URL parameters from router
    * @param array $get parameters containing contribution ID
@@ -256,17 +287,15 @@ class CRM_Core_Payment_LinePay {
     if ($contribution->find(TRUE)) {
       $result_note = ts('Update the contribution manually.');
 
-      // Sync to linapay server
-      $ppid = $contribution->payment_processor_id;
-      $linePay = new CRM_Core_Payment_LinePay($ppid, 'query');
-
-      $params = [
+      // Sync to linepay server: call the API directly.
+      $paymentProcessor = self::getPaymentProcessor($contribution->payment_processor_id);
+      $api = CRM_Core_Payment_LinePayAPI::create($paymentProcessor, 'query');
+      $api->request([
         'orderId' => $contribution->id,
         'transactionId' => $contribution->trxn_id,
-      ];
-      $linePay->_linePayAPI->request($params);
-      if (!empty($linePay->_linePayAPI->_response->info)) {
-        $info = $linePay->_linePayAPI->_response->info;
+      ]);
+      if (!empty($api->_response->info)) {
+        $info = $api->_response->info;
         if (is_array($info)) {
           foreach ($info as $transaction) {
             if ($transaction->transactionId == $contribution->trxn_id) {
@@ -308,7 +337,7 @@ class CRM_Core_Payment_LinePay {
       }
       else {
         $result_note = ts('The response has errors, please check the note.');
-        $linePay->addResponseMessageToNote($contribution);
+        self::addResponseMessageToNote($contribution, $api);
 
       }
       // finish sync to linepay server
@@ -324,19 +353,20 @@ class CRM_Core_Payment_LinePay {
   }
 
   /**
-   * Add LinePay response message to the contribution note.
+   * Add a LINE Pay error response message to the contribution note.
    *
    * @param CRM_Contribute_DAO_Contribution|int $contribution contribution object or ID
+   * @param CRM_Core_Payment_LinePayAPI $api the API client that holds the response
    *
    * @return void
    */
-  private function addResponseMessageToNote($contribution) {
+  private static function addResponseMessageToNote($contribution, $api) {
     if (is_numeric($contribution)) {
       $contribution = self::prepareContribution($contribution);
     }
-    $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
-    $note = '';
-    $note .= "Error, return code is ".$this->_linePayAPI->_response->returnCode.": ".$errorMessage;
+    $returnCode = $api->_response->returnCode;
+    $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($returnCode);
+    $note = "Error, return code is ".$returnCode.": ".$errorMessage;
     CRM_Core_Payment_Mobile::addNote($note, $contribution);
   }
 
@@ -355,25 +385,19 @@ class CRM_Core_Payment_LinePay {
   }
 
   /**
-   * Prepare a LinePay API instance.
+   * Load a payment processor configuration array by ID.
    *
    * @param int $paymentProcessorId payment processor ID
-   * @param string $type API type
    *
-   * @return CRM_Core_Payment_LinePayAPI LinePay API object
+   * @return array payment processor parameters
    */
-  private static function prepareLinePayAPI($paymentProcessorId, $type = 'request') {
-    $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
-    $paymentProcessor->id = $paymentProcessorId;
-    $paymentProcessor->find(TRUE);
-
-    $apiParams = [
-      'channelId' => $paymentProcessor->url_site,
-      'channelSecret' => $paymentProcessor->url_api,
-      'apiType' => $type,
-      'isTest' => $paymentProcessor->is_test,
-    ];
-    return new CRM_Core_Payment_LinePayAPI($apiParams);
+  private static function getPaymentProcessor($paymentProcessorId) {
+    $dao = new CRM_Core_DAO_PaymentProcessor();
+    $dao->id = $paymentProcessorId;
+    if (!$dao->find(TRUE)) {
+      CRM_Core_Error::fatal(ts('Could not find payment processor meta information'));
+    }
+    return CRM_Core_BAO_PaymentProcessor::buildPayment($dao);
   }
 
   /**

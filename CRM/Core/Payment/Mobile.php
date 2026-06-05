@@ -175,7 +175,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     if ($this->_instrumentType == 'linepay') {
       CRM_Core_Error::debug_var('mobile_payment_linepay', $cid);
-      $this->_mobilePayment = new CRM_Core_Payment_LinePay($params['payment_processor']);
+      $this->_mobilePayment = new CRM_Core_Payment_LinePay($this->_mode, $this->_paymentProcessor);
       $this->_mobilePayment->doRequest($params);
       return;
     }
