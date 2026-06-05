@@ -2280,6 +2280,15 @@
         $("#nme-preview-popup").on("click", ".nme-preview-close", function() {
           _nmePreview.close();
         });
+
+        // Delegate the mode switch so it works regardless of preview render timing.
+        $("#nme-preview-popup").on("click", ".nme-preview-mode-btn", function() {
+          let mode = $(this).data("mode");
+          $(".nme-preview-mode-btn").removeClass("is-active");
+          $(this).addClass("is-active");
+          $(".nme-preview-panel").removeClass("is-active");
+          $(".nme-preview-panel[data-mode='" + mode + "']").addClass("is-active");
+        });
       }
 
       $(".nme-setting-panels").on("change", ".nme-preview-mode-switch", function() {
@@ -2324,15 +2333,6 @@
                     previewFrame.open();
                     previewFrame.write(previewContent);
                     previewFrame.close();
-                  });
-
-                  // preview mode switch
-                  $(".nme-preview-mode-btn").on("click", function() {
-                    let mode = $(this).data("mode");
-                    $(".nme-preview-mode-btn").removeClass("is-active");
-                    $(this).addClass("is-active");
-                    $(".nme-preview-panel").removeClass("is-active");
-                    $(".nme-preview-panel[data-mode='" + mode + "']").addClass("is-active");
                   });
                 }
               }

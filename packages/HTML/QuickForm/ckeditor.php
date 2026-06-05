@@ -1,6 +1,7 @@
 <?php
 
 require_once('HTML/QuickForm/textarea.php');
+require_once('HTML/QuickForm/ckeditor5.php');
 
 /**
  * HTML Quickform element for CKeditor
@@ -78,9 +79,11 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             if (CRM_Core_Permission::check('access CiviCRM')) {
               $toolbar = 'CiviCRM';
               $allowedContent = 'editor.config.allowedContent = true;';
+              $allowedContentConfig = true;
             }
             else {
               $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';";
+              $allowedContentConfig = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';
               $toolbar =  'CiviCRMBasic';
             }
             $fullPage = $this->getAttribute('fullpage');
@@ -91,23 +94,40 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
               $fullPage = "editor.config.fullPage = false;";
             }
             $name = $this->getAttribute('name');
+            // QuickForm sanitizes bracketed names (e.g. email[1][signature_html])
+            // into valid ids (e.g. email_1_signature_html). CKEditor keys the
+            // instance by element id, so we must resolve and look up by id.
+            $elementId = $this->getAttribute('id');
             $html = '';
             $html .= parent::toHtml();
             if (empty($GLOBALS['civcirm_ckeditor_script'])) {
               $html .= "\n".'<script type="text/javascript" src="'.$config->resourceBase.'packages/ckeditor/ckeditor.js?'.$config->ver.'"></script>'."\n";
               $GLOBALS['civicrm_ckeditor_script'] = TRUE;
             }
+
+            // Load switcher logic
+            if (empty($GLOBALS['editor_switcher_loaded'])) {
+              $html .= '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/editor-switcher.css?' . $config->ver . '">' . "\n";
+              $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/editor-switcher.js?' . $config->ver . '"></script>' . "\n";
+              $GLOBALS['editor_switcher_loaded'] = TRUE;
+            }
+
             $html .= "<script type='text/javascript'>
 ".implode("\n", $extraPlugins)."
 cj( function( ) {
-  if (cj('#{$name}').hasClass('ckeditor-processed')) {
+  // Resolve the element by id (bracketed names are not valid id/jQuery
+  // selectors); fall back to name lookup when no id is present.
+  var element = document.getElementById('{$elementId}') || document.getElementsByName('{$name}')[0];
+  if (!element) {
     return;
   }
-  else {
-    cj('#{$name}').addClass('ckeditor-processed');
+  if (cj(element).hasClass('ckeditor-processed')) {
+    return;
   }
-  CKEDITOR.replace('{$name}');
-  var editor = CKEDITOR.instances['{$name}'];
+  cj(element).addClass('ckeditor-processed');
+  // Capture the instance from replace() directly; CKEDITOR.instances is keyed
+  // by element id, not by the bracketed field name.
+  var editor = CKEDITOR.replace(element);
   if ( editor ) {
     editor.on( 'key', function( evt ){
       global_formNavigate = false;
@@ -122,6 +142,57 @@ cj( function( ) {
   }
 }); 
 </script>";
+
+            // Add Switcher UI
+            $systemEditorId = CRM_Core_BAO_Preferences::value('editor_id');
+            $isCke5Default = ($systemEditorId == 4 || (is_array($systemEditorId) && in_array(4, $systemEditorId))); // 4 is CKE5 ID from add_ckeditor5_option.sql
+            
+            if (!$isCke5Default) {
+              // Resolve CKE5 UI language so the switcher can load the matching
+              // translation when switching CKE4 -> CKE5 (mirrors ckeditor5.php).
+              global $civicrm_root;
+              $cke5Lang = HTML_QuickForm_CKEditor5::getCKEditorLang($config->lcMessages);
+              $hasTranslation = ($cke5Lang !== 'en') && file_exists($civicrm_root . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js');
+
+              $cke4Config = array(
+                'resourceBase' => $config->resourceBase,
+                'ver' => $config->ver,
+                'plugins' => $plugins,
+                'extraPluginsCode' => implode("\n", $extraPlugins),
+                'extraPluginsList' => implode(',', $plugins),
+                'toolbar' => $toolbar,
+                'allowedContent' => $allowedContentConfig,
+                'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
+                'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
+                'imceUrl' => CRM_Utils_System::url('imce') ? CRM_Utils_System::url('imce') : '',
+                'clipboardImageEnabled' => in_array('clipboard_image', $plugins),
+                'clipboardImageUrl' => in_array('clipboard_image', $plugins)
+                  ? CRM_Utils_System::url('civicrm/ajax/editor/image-upload', NULL, FALSE, NULL, FALSE)
+                  : '',
+                'lang' => $cke5Lang,
+                'langTranslationUrl' => $hasTranslation ? ($config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver) : '',
+                );
+
+                $hintMessage = '';
+              if ($systemEditorId == 2 || (is_array($systemEditorId) && in_array(2, $systemEditorId))) {
+                $hintMessage = '<span class="editor-switcher-hint">' . ts('CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href="%1" target="_blank">Please report any issues</a>.', [1 => 'https://neticrm.tw/support']) . '</span>';
+              }
+
+              $switcherHtml = '
+              <div class="crm-section editor-switcher-container">
+                <div class="editor-switcher-row">
+                  <span class="editor-switcher-label">' . ts('Switch Editor:') . '</span>
+                  <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')">
+                    <option value="cke4" selected>' . ts('CKEditor 4 (Legacy)') . '</option>
+                    <option value="cke5">' . ts('CKEditor 5 (New)') . '</option>
+                  </select>
+                  <span class="editor-switch-status"></span>
+                </div>
+                ' . $hintMessage . '
+              </div>';
+              
+              $html = $switcherHtml . $html;
+            }
           }
           else {
             $toolbar = NULL;

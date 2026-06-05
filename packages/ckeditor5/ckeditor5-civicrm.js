@@ -1,0 +1,1609 @@
+/**
+ * CKEditor 5 Configuration for CiviCRM
+ *
+ * IIFE wrapper that reads classes from the global CKEDITOR_5 namespace
+ * (set by ckeditor5.umd.js + namespace swap in ckeditor5.php).
+ *
+ * Exposes window.CiviCKEditor5 with:
+ * - ExtendSchema: Custom plugin for font icons, iframe, script whitelist
+ * - getFullEditorConfig(overrides): Full editor config (CiviCRM preset)
+ * - getBasicEditorConfig(overrides): Basic editor config (CiviCRMBasic preset)
+ */
+(function() {
+  'use strict';
+
+  var CK = window.CKEDITOR_5;
+  if (!CK) {
+    console.error('CiviCKEditor5: window.CKEDITOR_5 not found');
+    return;
+  }
+
+  // Destructure required classes from UMD bundle
+  var Plugin = CK.Plugin;
+  var GeneralHtmlSupport = CK.GeneralHtmlSupport;
+  var DataFilter = CK.DataFilter;
+  var DataSchema = CK.DataSchema;
+  var ImageInsertUI = CK.ImageInsertUI;
+  var ButtonView = CK.ButtonView;
+  var IconBrowseFiles = CK.IconBrowseFiles;
+  var IconImage = CK.IconImage;
+  var IconImageAssetManager = CK.IconImageAssetManager;
+
+  // ==========================================================================
+  // Constants
+  // ==========================================================================
+
+  /**
+   * Regex pattern for matching font icon CSS classes.
+   * Covers Font Awesome (fa-) and Material Design Icons (zmdi-).
+   */
+  var FONT_ICON_PATTERN = /(fa-|zmdi-)/;
+
+  /**
+   * Wildcard htmlSupport used when the admin opt-in
+   * (editor_allow_all_content) is enabled. Allows any tag,
+   * attribute, class, and style.
+   */
+  var ALLOW_ALL_HTML_SUPPORT = {
+    allow: [
+      {
+        name: /.*/,
+        attributes: true,
+        classes: true,
+        styles: true,
+      },
+    ],
+  };
+
+  /**
+   * CiviClipboardImage defaults (mirror CKE4 plugin behavior).
+   * Resize: cap at 800x600 with JPEG quality 0.7. Upload to server
+   * by default; UI inserts a blob: URL so downstream
+   * CRM/Utils/Image.php::processBlobImagesInField can move the temp
+   * file to the user's permanent directory at form save time.
+   */
+  var CLIPBOARD_IMAGE_DEFAULTS = {
+    maxWidth: 800,
+    maxHeight: 600,
+    quality: 0.7,
+    uploadToServer: true,
+  };
+  var CLIPBOARD_IMAGE_ALLOWED_TYPES = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+  ];
+
+  // ==========================================================================
+  // ExtendSchema Plugin
+  // ==========================================================================
+
+  /**
+   * Custom plugin that extends GeneralHtmlSupport with:
+   * 1. Font icon support (<i class="fa-*"> / <i class="zmdi-*">)
+   * 2. iframe as proper block object
+   * 3. Script tag whitelist (trusted domains only)
+   * 4. Table width fix
+   * 5. Table figure removal (for email templates)
+   * 6. Email custom tags (<unsubscribe>)
+   * 7. Allow div in heading (Bootstrap accordion)
+   *
+   * Configuration via editor config:
+   *   extendSchema: {
+   *     enableFontIcons: true,
+   *     enableIframe: true,
+   *     enableScripts: false
+   *   }
+   */
+  class ExtendSchema extends Plugin {
+    static get pluginName() {
+      return 'ExtendSchema';
+    }
+
+    static get requires() {
+      return [GeneralHtmlSupport];
+    }
+
+    init() {
+      var config = this.editor.config.get('extendSchema') || {};
+      var enableFontIcons = config.enableFontIcons !== false; // default: true
+      var enableIframe = config.enableIframe || false;
+      var enableScripts = config.enableScripts === true;
+
+      if (enableFontIcons) {
+        this._setupFontIcons();
+      }
+      if (enableIframe) {
+        this._setupIframe();
+      }
+      if (enableScripts) {
+        this._setupScriptWhitelist();
+      }
+      this._setupTableWidthFix();
+      this._setupTableFigureRemoval();
+      if (!enableScripts) {
+        this._setupOutputSanitizer();
+      }
+      this._setupEmailCustomTags();
+      this._setAllowDivInHeading();
+      // Installed last so it is the outermost data.get wrapper and can
+      // short-circuit empty content before the other wrappers run.
+      this._setupEmptyContentNormalize();
+    }
+
+    /**
+     * Font icon support.
+     * Registers <i> elements with font icon classes as non-editable objects
+     * so CKEditor 5 won't strip empty <i></i> tags.
+     */
+    _setupFontIcons() {
+      var editor = this.editor;
+      var schema = editor.model.schema;
+
+      // Register htmlI as object in model
+      if (!schema.isRegistered('htmlI')) {
+        schema.register('htmlI', {
+          allowWhere: '$text',
+          isObject: true,
+          allowAttributes: ['htmlAttributes'],
+        });
+      }
+
+      // Ensure block elements allow htmlI children
+      var blockModels = [
+        'paragraph',
+        'heading1', 'heading2', 'heading3',
+        'heading4', 'heading5', 'heading6',
+      ];
+      blockModels.forEach(function(modelName) {
+        if (schema.isRegistered(modelName)) {
+          schema.extend(modelName, {
+            allowChildren: 'htmlI',
+            allowAttributes: ['htmlAttributes'],
+          });
+        }
+      });
+
+      // Upcast: HTML -> Model
+      editor.conversion.for('upcast').elementToElement({
+        view: {
+          name: 'i',
+          classes: FONT_ICON_PATTERN,
+        },
+        model: function(viewElement, conversionApi) {
+          var writer = conversionApi.writer;
+          return writer.createElement('htmlI', {
+            htmlAttributes: {
+              class: viewElement.getAttribute('class') || '',
+              style: viewElement.getAttribute('style') || '',
+            },
+          });
+        },
+        converterPriority: 'highest',
+      });
+
+      // Data Downcast: Model -> saved HTML
+      editor.conversion.for('dataDowncast').elementToElement({
+        model: 'htmlI',
+        view: function(modelElement, conversionApi) {
+          var writer = conversionApi.writer;
+          var attrs = modelElement.getAttribute('htmlAttributes') || {};
+          return writer.createEmptyElement('i', attrs);
+        },
+        converterPriority: 'highest',
+      });
+
+      // Editing Downcast: Model -> editor view
+      editor.conversion.for('editingDowncast').elementToElement({
+        model: 'htmlI',
+        view: function(modelElement, conversionApi) {
+          var writer = conversionApi.writer;
+          var attrs = modelElement.getAttribute('htmlAttributes') || {};
+          var iView = writer.createUIElement(
+            'i',
+            attrs,
+            function(domDocument) {
+              var domElement = this.toDomElement(domDocument);
+              domElement.classList.add('ck-widget-font-icon');
+              return domElement;
+            },
+          );
+          return iView;
+        },
+        converterPriority: 'highest',
+      });
+
+      // Heading/paragraph attributes (fix font-weight disappearing)
+      editor.conversion.for('upcast').attributeToAttribute({
+        view: {
+          name: /^(h[1-6]|p)$/,
+          attributes: { style: /.*/, class: /.*/ },
+        },
+        model: 'htmlAttributes',
+        converterPriority: 'highest',
+      });
+    }
+
+    /**
+     * iframe support.
+     * Registers iframe as a proper block object via DataSchema
+     * so GeneralHtmlSupport handles it correctly.
+     */
+    _setupIframe() {
+      var editor = this.editor;
+      var dataFilter = editor.plugins.get(DataFilter);
+      var dataSchema = editor.plugins.get(DataSchema);
+
+      dataSchema.registerBlockElement({
+        model: 'htmlIframe',
+        view: 'iframe',
+        isObject: true,
+        modelSchema: { inheritAllFrom: '$blockObject' },
+      });
+      dataFilter.allowElement('iframe');
+      dataFilter.allowAttributes({
+        name: 'iframe',
+        attributes: true,
+        classes: true,
+        styles: true,
+      });
+    }
+
+    /**
+     * Allow <script> tags through the data filter.
+     * Only invoked when the admin opt-in (editor_allow_all_content)
+     * is enabled. When disabled, scripts are stripped by GHS.
+     */
+    _setupScriptWhitelist() {
+      var editor = this.editor;
+      var dataFilter = editor.plugins.get(DataFilter);
+
+      // htmlScript is already registered by CKEditor 5's built-in DataSchema.
+      // Allow script elements and all attributes through the data filter.
+      dataFilter.allowElement('script');
+      dataFilter.allowAttributes({
+        name: 'script',
+        attributes: true,
+      });
+    }
+
+    /**
+     * Email custom tag support.
+     * Registers custom inline tags used in email templates (e.g. <unsubscribe>)
+     * as inline elements so they can properly wrap inline content like <a>.
+     *
+     * Without explicit inline registration, GHS treats unknown elements as block,
+     * which causes the wrapper to be stripped when it contains inline content.
+     */
+    _setupEmailCustomTags() {
+      var editor = this.editor;
+      var schema = editor.model.schema;
+
+      // Register as a paragraph-like block so it can directly contain inline
+      // content (text, <a>, etc.) without needing an inner <p> wrapper.
+      if (!schema.isRegistered('htmlUnsubscribe')) {
+        schema.register('htmlUnsubscribe', {
+          inheritAllFrom: '$block',
+          allowAttributes: ['htmlAttributes'],
+        });
+      }
+
+      // Upcast: <unsubscribe style="..."> → model element with htmlAttributes
+      editor.conversion.for('upcast').elementToElement({
+        view: 'unsubscribe',
+        model: function(viewElement, conversionApi) {
+          var writer = conversionApi.writer;
+          var htmlAttrs = {};
+          for (var entry of viewElement.getAttributes()) {
+            htmlAttrs[entry[0]] = entry[1];
+          }
+          var modelElement = writer.createElement('htmlUnsubscribe');
+          if (Object.keys(htmlAttrs).length) {
+            writer.setAttribute('htmlAttributes', htmlAttrs, modelElement);
+          }
+          return modelElement;
+        },
+        priority: 'high',
+      });
+
+      // Downcast: model element → <unsubscribe style="...">
+      editor.conversion.for('downcast').elementToElement({
+        model: 'htmlUnsubscribe',
+        view: function(modelElement, conversionApi) {
+          var writer = conversionApi.writer;
+          var htmlAttrs = modelElement.getAttribute('htmlAttributes') || {};
+          return writer.createContainerElement('unsubscribe', htmlAttrs);
+        },
+      });
+    }
+
+    /**
+     * Restore CKEditor 4's ignoreEmptyParagraph behavior. This bundle's native
+     * data.get() does not honor trim:'empty' (GHS interferes), so an empty editor
+     * serializes to '<p>&nbsp;</p>' instead of ''. Without this, an untouched
+     * WYSIWYG field persists a phantom value (e.g. a fake email signature).
+     * model.hasContent reliably reports empty (verified false for untouched editor).
+     */
+    _setupEmptyContentNormalize() {
+      var editor = this.editor;
+      var originalGet = editor.data.get.bind(editor.data);
+      editor.data.get = function(options) {
+        var trim = (options && options.trim) || 'empty';
+        if (trim === 'empty') {
+          var rootName = (options && options.rootName) || 'main';
+          var root = editor.model.document.getRoot(rootName);
+          if (root && !editor.model.hasContent(root, { ignoreWhitespaces: true })) {
+            return '';
+          }
+        }
+        return originalGet(options);
+      };
+    }
+
+    /**
+     * Fix CKEditor bug: width="100%" on <table> becomes width:100%px in output.
+     * Wraps editor.data.get() to replace incorrect percentage+px patterns.
+     */
+    _setupTableWidthFix() {
+      var editor = this.editor;
+      var originalGet = editor.data.get.bind(editor.data);
+      editor.data.get = function(options) {
+        return originalGet(options).replace(
+          /width:(\d+(?:\.\d+)?)%px/g,
+          'width:$1%',
+        );
+      };
+    }
+
+    /**
+     * Remove <figure class="table"> wrappers that CKEditor 5's Table plugin
+     * automatically adds around every <table> element during downcast.
+     * Email newsletter templates use raw <table> elements and must not have
+     * them wrapped in <figure> tags.
+     *
+     * Uses DOM-based processing (deepest-first) to safely handle nested tables.
+     */
+    _setupTableFigureRemoval() {
+      var editor = this.editor;
+      var originalGet = editor.data.get.bind(editor.data);
+      editor.data.get = function(options) {
+        var html = originalGet(options);
+
+        // Detect full page HTML (from FullPage plugin)
+        var isFullPage = /^\s*(<!doctype|<html[\s>])/i.test(html);
+
+        var root;
+        var doc;
+        if (isFullPage) {
+          doc = new DOMParser().parseFromString(html, 'text/html');
+          root = doc.body;
+        }
+        else {
+          doc = null;
+          root = document.createElement('div');
+          root.innerHTML = html;
+        }
+
+        // Reverse = deepest-first, so nested tables are unwrapped before parents
+        var figures = Array.from(
+          root.querySelectorAll('figure.table'),
+        ).reverse();
+        figures.forEach(function(figure) {
+          var parent = figure.parentNode;
+
+          // Transfer figure's style to the inner <table>
+          var table = figure.querySelector(':scope > table');
+          if (table) {
+            var figureStyle = figure.getAttribute('style');
+            if (figureStyle) {
+              var tableStyle = table.getAttribute('style') || '';
+              table.setAttribute(
+                'style',
+                tableStyle ? figureStyle + '; ' + tableStyle : figureStyle,
+              );
+            }
+          }
+
+          while (figure.firstChild) {
+            parent.insertBefore(figure.firstChild, figure);
+          }
+          parent.removeChild(figure);
+        });
+
+        // Convert CKEditor inline styles back to HTML attributes for email compatibility
+        root.querySelectorAll('table').forEach(function(table) {
+          var s = table.style;
+
+          var float = s.float;
+          if (float === 'left' || float === 'right') {
+            table.setAttribute('align', float);
+            s.removeProperty('float');
+          }
+
+          var width = s.width;
+          if (width) {
+            table.setAttribute('width', width);
+            s.removeProperty('width');
+          }
+
+          // Remove empty style attribute
+          if (!s.cssText.trim()) {
+            table.removeAttribute('style');
+          }
+        });
+
+        if (isFullPage) {
+          var doctype = html.match(/<!doctype[^>]*>/i);
+          var doctypeStr = doctype ? doctype[0] : '';
+          return (doctypeStr ? doctypeStr + '\n' : '') + doc.documentElement.outerHTML;
+        }
+        return root.innerHTML;
+      };
+    }
+
+    /**
+     * DOM post-processor that supplements GHS disallow with two protections:
+     * 1. Strip javascript: URLs from href/src/formaction/xlink:href
+     *    (Link plugin's linkHref bypasses GHS attribute disallow)
+     * 2. Strip dangerous CSS declarations from style attributes
+     *    (GHS disallow.attributes.style regex is unreliable for unknown
+     *    properties such as -moz-binding; CSS parser only handles
+     *    expression()/url(javascript:))
+     * Only runs in default mode; opt-in (enableScripts) skips this.
+     */
+    _setupOutputSanitizer() {
+      var editor = this.editor;
+      var originalGet = editor.data.get.bind(editor.data);
+      var JS_URL = /^\s*javascript:/i;
+      var URL_ATTRS = ['href', 'src', 'formaction', 'xlink:href'];
+      var DANGEROUS_PROPS = { '-moz-binding': true, 'behavior': true };
+      var DANGEROUS_VALUE = /expression\s*\(|javascript\s*:/i;
+
+      function sanitizeStyle(styleStr) {
+        var decls = styleStr.split(';');
+        var keep = [];
+        for (var i = 0; i < decls.length; i++) {
+          var d = decls[i].trim();
+          if (!d) continue;
+          var colon = d.indexOf(':');
+          if (colon < 0) continue;
+          var prop = d.slice(0, colon).trim().toLowerCase();
+          var val = d.slice(colon + 1);
+          if (DANGEROUS_PROPS[prop]) continue;
+          if (DANGEROUS_VALUE.test(val)) continue;
+          keep.push(d);
+        }
+        return keep.join('; ');
+      }
+
+      editor.data.get = function(options) {
+        var html = originalGet(options);
+
+        var isFullPage = /^\s*(<!doctype|<html[\s>])/i.test(html);
+        var root;
+        var doc;
+        if (isFullPage) {
+          doc = new DOMParser().parseFromString(html, 'text/html');
+          root = doc.body;
+        }
+        else {
+          doc = null;
+          root = document.createElement('div');
+          root.innerHTML = html;
+        }
+
+        root.querySelectorAll('*').forEach(function(el) {
+          URL_ATTRS.forEach(function(attr) {
+            var val = el.getAttribute(attr);
+            if (val && JS_URL.test(val)) {
+              el.removeAttribute(attr);
+            }
+          });
+          var styleVal = el.getAttribute('style');
+          if (styleVal) {
+            var sanitized = sanitizeStyle(styleVal);
+            if (sanitized !== styleVal) {
+              if (sanitized) {
+                el.setAttribute('style', sanitized);
+              }
+              else {
+                el.removeAttribute('style');
+              }
+            }
+          }
+        });
+
+        if (isFullPage) {
+          var doctype = html.match(/<!doctype[^>]*>/i);
+          var doctypeStr = doctype ? doctype[0] : '';
+          return (doctypeStr ? doctypeStr + '\n' : '') + doc.documentElement.outerHTML;
+        }
+        return root.innerHTML;
+      };
+    }
+
+    /**
+     * Allow block elements (e.g. <div>) inside headings.
+     * Frameworks like Bootstrap use <h2><div class="accordion-button">...</div></h2>.
+     *
+     * Strategy: register a custom model element `htmlBlockHeading` that acts as a
+     * block container. Any <h1>~<h6> that contains a block-level child is upcasted
+     * to `htmlBlockHeading`, then downcasted back to the original tag + attributes.
+     */
+    _setAllowDivInHeading() {
+      var editor = this.editor;
+      var schema = editor.model.schema;
+
+      if (!schema.isRegistered('htmlBlockHeading')) {
+        schema.register('htmlBlockHeading', {
+          allowWhere: '$block',
+          allowContentOf: '$root',
+          allowAttributes: ['htmlHeadingTag', 'htmlAttributes'],
+        });
+      }
+
+      var BLOCK_TAGS = new Set([
+        'div', 'section', 'article', 'nav', 'aside', 'header', 'footer', 'main',
+      ]);
+
+      // Upcast: <h1>~<h6> with block children → htmlBlockHeading
+      editor.conversion.for('upcast').add(function(dispatcher) {
+        ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].forEach(function(tag) {
+          dispatcher.on(
+            'element:' + tag,
+            function(_evt, data, conversionApi) {
+              var viewElement = data.viewItem;
+
+              // Only intercept when the heading contains at least one block child
+              var children = Array.from(viewElement.getChildren());
+              var hasBlockChild = children.some(function(child) {
+                return child.is('element') && BLOCK_TAGS.has(child.name);
+              });
+              if (!hasBlockChild) return;
+
+              var writer = conversionApi.writer;
+              var consumable = conversionApi.consumable;
+              var safeInsert = conversionApi.safeInsert;
+              var updateConversionResult = conversionApi.updateConversionResult;
+
+              if (!consumable.consume(viewElement, { name: true })) return;
+
+              // Collect and consume all attributes
+              var htmlAttrs = {};
+              for (var entry of viewElement.getAttributes()) {
+                consumable.consume(viewElement, { attribute: entry[0] });
+                htmlAttrs[entry[0]] = entry[1];
+              }
+
+              var modelAttrs = { htmlHeadingTag: tag };
+              if (Object.keys(htmlAttrs).length) {
+                modelAttrs.htmlAttributes = htmlAttrs;
+              }
+              var modelElement = writer.createElement('htmlBlockHeading', modelAttrs);
+
+              if (!safeInsert(modelElement, data.modelCursor)) return;
+
+              conversionApi.convertChildren(viewElement, modelElement);
+              updateConversionResult(modelElement, data);
+            },
+            { priority: 'highest' },
+          );
+        });
+      });
+
+      // Downcast: htmlBlockHeading → original <h1>~<h6> with attributes
+      var downcastView = function(modelElement, conversionApi) {
+        var writer = conversionApi.writer;
+        var tag = modelElement.getAttribute('htmlHeadingTag') || 'h2';
+        var attrs = modelElement.getAttribute('htmlAttributes') || {};
+        return writer.createContainerElement(tag, attrs);
+      };
+      editor.conversion.for('dataDowncast').elementToElement({
+        model: 'htmlBlockHeading',
+        view: downcastView,
+      });
+      editor.conversion.for('editingDowncast').elementToElement({
+        model: 'htmlBlockHeading',
+        view: downcastView,
+      });
+    }
+  }
+
+  // ==========================================================================
+  // IMCEBrowse Plugin
+  // ==========================================================================
+
+  /**
+   * Adds a "Browse Server" entry to the Image Insert dropdown that opens
+   * IMCE in a popup window. When the user selects a file in IMCE, the URL
+   * is sent back to a per-instance callback which inserts the image via
+   * the insertImage command.
+   *
+   * Activation: only registered when editor.config.imceUrl is set
+   * (passed in by ckeditor5.php / editor-switcher.js based on the
+   * Drupal IMCE module being enabled).
+   */
+  class IMCEBrowse extends Plugin {
+    static get pluginName() {
+      return 'IMCEBrowse';
+    }
+
+    static get requires() {
+      return [ImageInsertUI];
+    }
+
+    init() {
+      var editor = this.editor;
+      var imceUrl = editor.config.get('imceUrl');
+      if (!imceUrl) return;
+
+      var imageInsertUI = editor.plugins.get('ImageInsertUI');
+      var self = this;
+
+      imageInsertUI.registerIntegration({
+        name: 'imce',
+        observable: function() { return editor.commands.get('insertImage'); },
+        buttonViewCreator: function() { return self._createButton(false); },
+        formViewCreator: function() { return self._createButton(true); },
+        requiresForm: false,
+      });
+    }
+
+    _createButton(isFormView) {
+      var editor = this.editor;
+      var t = editor.locale.t;
+      var btn = new ButtonView(editor.locale);
+      var self = this;
+
+      btn.set({
+        label: t('Insert image'),
+        // Toolbar split-button uses the generic image icon so users
+        // recognise it as "insert image"; dropdown form entry keeps
+        // the folder icon to differentiate from "Insert via URL".
+        icon: isFormView ? IconImageAssetManager : IconImage,
+        tooltip: !isFormView,
+        withText: isFormView,
+        class: 'ck-image-insert__imce-button',
+      });
+
+      btn.on('execute', function() { self._openIMCE(); });
+      return btn;
+    }
+
+    _openIMCE() {
+      var editor = this.editor;
+      var imceUrl = editor.config.get('imceUrl');
+      var sep = imceUrl.indexOf('?') >= 0 ? '&' : '?';
+
+      // Register a unique sendto callback per open call. The editor is
+      // captured via closure, which is more reliable than a shared
+      // window variable (which can return null due to popup reuse,
+      // page reload, or other timing issues).
+      var fnName = 'civiCKE5Send_' + Date.now() + '_' +
+        Math.random().toString(36).slice(2, 8);
+      window[fnName] = function(file, win) {
+        try {
+          var url = file.getUrl();
+          // Restore editor focus so model selection is valid before
+          // insertion; popup lifecycle can leave the view unfocused.
+          editor.editing.view.focus();
+          var html = '<img src="' + url.replace(/"/g, '&quot;') + '">';
+          var viewFragment = editor.data.processor.toView(html);
+          var modelFragment = editor.data.toModel(viewFragment);
+          editor.model.insertContent(modelFragment);
+        }
+        catch (err) {
+          console.error('[IMCE CKE5] insert error:', err);
+        }
+        delete window[fnName];
+        win.close();
+      };
+
+      // type=image makes IMCE check Item.isImageSource() instead of
+      // Item.isFile, matching the "insert image" semantics.
+      var fullUrl = imceUrl + sep + 'sendto=' + fnName + '&type=image';
+      // Use unique window name so the popup is never reused.
+      var win = window.open(
+        fullUrl,
+        fnName,
+        'width=800,height=600,resizable=yes,scrollbars=yes'
+      );
+      if (!win) {
+        delete window[fnName];
+        alert(editor.locale.t('Popup blocked. Please allow popups for IMCE.'));
+      }
+    }
+  }
+
+  // ==========================================================================
+  // CiviClipboardImage Plugin
+  // ==========================================================================
+
+  /**
+   * Intercepts paste and drag-drop of image data, resizes via Canvas,
+   * uploads to /civicrm/ajax/editor/image-upload, then inserts an
+   * <img src="blob:..." title="originalName | tempName"> tag.
+   *
+   * Downstream CRM/Utils/Image.php::processBlobImagesInField scans
+   * saved content for the blob+title pattern and moves the temp file
+   * to the user's permanent directory, replacing the blob URL with a
+   * public URL. The title format is therefore load-bearing — keep
+   * `<originalName> | <tempName>` (pipe-separated) in sync with the
+   * regex in CRM/Utils/Image.php.
+   *
+   * Activation: only registered when editor.config.clipboardImageUrl
+   * is set (passed in by ckeditor5.php / editor-switcher.js based on
+   * the `access CiviCRM` or `paste and upload images` permission).
+   *
+   * Three input strategies, mirroring the CKE4 plugin:
+   *   1. Native files in dataTransfer.files (paste-image / drop)
+   *   2. HTML <img src="data:image/..."> in dataTransfer 'text/html'
+   *   3. (CKE5 unifies paste and drop via clipboardInput, so a
+   *      separate drop listener is not needed here)
+   */
+  class CiviClipboardImage extends Plugin {
+    static get pluginName() {
+      return 'CiviClipboardImage';
+    }
+
+    init() {
+      var editor = this.editor;
+      var uploadUrl = editor.config.get('clipboardImageUrl');
+      // Permission gate is enforced in ckeditor5.php; if the URL is
+      // not provided, the plugin stays inert.
+      if (!uploadUrl) return;
+
+      var self = this;
+      editor.editing.view.document.on('clipboardInput', function(evt, data) {
+        if (!data || !data.dataTransfer) return;
+
+        // Strategy 1: native image files (paste-image or drop).
+        var files = [];
+        try {
+          files = Array.from(data.dataTransfer.files || []);
+        }
+        catch (e) {
+          files = [];
+        }
+        var imageFiles = files.filter(function(f) {
+          return f && f.type && f.type.indexOf('image/') === 0;
+        });
+        if (imageFiles.length > 0) {
+          imageFiles.forEach(function(file) {
+            // file.name present → drag-drop with original filename;
+            // empty → clipboard paste-image (no source filename).
+            var source = file.name ? 'drop' : 'paste';
+            self._processFile(file, source);
+          });
+          evt.stop();
+          return;
+        }
+
+        // Strategy 2: HTML payload with <img src="data:image/...">.
+        // Plain http(s) <img> URLs are intentionally not intercepted
+        // — they go through the normal pipeline (no upload needed).
+        var html = '';
+        try {
+          html = data.dataTransfer.getData('text/html') || '';
+        }
+        catch (e) {
+          html = '';
+        }
+        if (html && html.indexOf('<img') >= 0) {
+          var dataUrls = self._extractDataUrls(html);
+          if (dataUrls.length > 0) {
+            dataUrls.forEach(function(url) {
+              self._processDataUrl(url, 'paste');
+            });
+            evt.stop();
+          }
+        }
+      }, { priority: 'high' });
+    }
+
+    _processFile(file, source) {
+      if (!this._isAllowedType(file.type)) {
+        this._notifyUnsupported(file.type);
+        return;
+      }
+      var self = this;
+      var reader = new FileReader();
+      reader.onerror = function() {
+        console.error('[CiviClipboardImage] FileReader error');
+      };
+      reader.onload = function(e) {
+        if (!e.target || !e.target.result) return;
+        self._loadImage(e.target.result, file.type, source, file);
+      };
+      try {
+        reader.readAsDataURL(file);
+      }
+      catch (err) {
+        console.error('[CiviClipboardImage] readAsDataURL failed', err);
+      }
+    }
+
+    _processDataUrl(dataUrl, source) {
+      var match = dataUrl.match(/^data:([^;]+);/);
+      var mime = match ? match[1] : 'image/jpeg';
+      if (!this._isAllowedType(mime)) {
+        this._notifyUnsupported(mime);
+        return;
+      }
+      this._loadImage(dataUrl, mime, source, null);
+    }
+
+    _loadImage(dataUrl, mime, source, originalFile) {
+      var self = this;
+      var img = new Image();
+      img.onerror = function() {
+        console.error('[CiviClipboardImage] image decode failed');
+      };
+      img.onload = function() {
+        self._resizeAndDispatch(img, mime, source, originalFile);
+      };
+      img.src = dataUrl;
+    }
+
+    _resizeAndDispatch(img, mime, source, originalFile) {
+      var size = this._calcSize(
+        img.width, img.height,
+        CLIPBOARD_IMAGE_DEFAULTS.maxWidth,
+        CLIPBOARD_IMAGE_DEFAULTS.maxHeight
+      );
+      var canvas = document.createElement('canvas');
+      canvas.width = size.width;
+      canvas.height = size.height;
+      var ctx = canvas.getContext('2d');
+      // Clear for PNG transparency; harmless for JPEG.
+      if (mime === 'image/png') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0, size.width, size.height);
+
+      var self = this;
+      canvas.toBlob(function(blob) {
+        if (!blob) {
+          console.error('[CiviClipboardImage] canvas.toBlob returned null');
+          return;
+        }
+        var fileNames = self._generateFileNames(originalFile, source, mime);
+        if (CLIPBOARD_IMAGE_DEFAULTS.uploadToServer) {
+          self._uploadToServer(blob, fileNames);
+        }
+        else {
+          self._insertImage(
+            URL.createObjectURL(blob),
+            self._buildClientTitle(fileNames)
+          );
+        }
+      }, mime, CLIPBOARD_IMAGE_DEFAULTS.quality);
+    }
+
+    _uploadToServer(blob, fileNames) {
+      var editor = this.editor;
+      var url = editor.config.get('clipboardImageUrl');
+      var fd = new FormData();
+      fd.append('image', blob, fileNames.tempName);
+      fd.append('original_filename', fileNames.originalName || '');
+      fd.append('suggested_filename', fileNames.suggestedName);
+      fd.append('timestamp', Date.now());
+
+      var self = this;
+      fetch(url, { method: 'POST', body: fd, credentials: 'same-origin' })
+        .then(function(res) { return res.json(); })
+        .then(function(json) {
+          var titleAttr = (json && json.title_attribute)
+            ? json.title_attribute
+            : self._buildClientTitle(fileNames);
+          // Match CKE4: server endpoint does not return a public URL,
+          // so we fall back to a blob: URL. Downstream Image.php picks
+          // up `src="blob:..."` + title to relocate the temp file.
+          var src = (json && json.url) || URL.createObjectURL(blob);
+          self._insertImage(src, titleAttr);
+        })
+        .catch(function(err) {
+          console.error('[CiviClipboardImage] upload failed', err);
+          self._insertImage(
+            URL.createObjectURL(blob),
+            self._buildClientTitle(fileNames)
+          );
+        });
+    }
+
+    _insertImage(src, titleAttr) {
+      var editor = this.editor;
+      // Restore focus so the model selection is in the editable.
+      editor.editing.view.focus();
+      var safeSrc = (src || '').replace(/"/g, '&quot;');
+      var safeTitle = (titleAttr || '').replace(/"/g, '&quot;');
+      var html = '<img src="' + safeSrc +
+        '" alt="" title="' + safeTitle + '" />';
+      try {
+        var viewFrag = editor.data.processor.toView(html);
+        var modelFrag = editor.data.toModel(viewFrag);
+        editor.model.insertContent(modelFrag);
+      }
+      catch (err) {
+        console.error('[CiviClipboardImage] insert error', err);
+      }
+    }
+
+    _isAllowedType(mime) {
+      if (!mime) return false;
+      return CLIPBOARD_IMAGE_ALLOWED_TYPES.indexOf(mime.toLowerCase()) !== -1;
+    }
+
+    _calcSize(w, h, maxW, maxH) {
+      var width = w;
+      var height = h;
+      if (width > maxW) {
+        height = Math.round(height * (maxW / width));
+        width = maxW;
+      }
+      if (height > maxH) {
+        width = Math.round(width * (maxH / height));
+        height = maxH;
+      }
+      return { width: width, height: height };
+    }
+
+    _generateFileNames(file, source, mime) {
+      var timestamp = Date.now();
+      var originalName = '';
+      if (file && file.name && file.name.trim() !== '') {
+        originalName = file.name.trim();
+      }
+      var ext = 'jpg';
+      var key = (mime || (file && file.type) || '').toLowerCase();
+      switch (key) {
+        case 'image/png':
+          ext = 'png'; break;
+        case 'image/gif':
+          ext = 'gif'; break;
+        case 'image/webp':
+          ext = 'webp'; break;
+        case 'image/jpeg':
+        case 'image/jpg':
+        default:
+          ext = 'jpg'; break;
+      }
+      var suggested = '';
+      if (source === 'drop' && originalName) {
+        suggested = originalName;
+      }
+      else {
+        var d = new Date();
+        var pad = function(n) { return String(n).padStart(2, '0'); };
+        var dateStr = d.getFullYear() + '-' + pad(d.getMonth() + 1) +
+          '-' + pad(d.getDate()) + '_' + pad(d.getHours()) + '-' +
+          pad(d.getMinutes()) + '-' + pad(d.getSeconds());
+        suggested = (source === 'paste' ? 'pasted_image_' : 'dropped_image_') +
+          dateStr + '.' + ext;
+      }
+      return {
+        originalName: originalName,
+        suggestedName: suggested,
+        tempName: 'temp_' + timestamp + '.' + ext,
+      };
+    }
+
+    _buildClientTitle(fileNames) {
+      var orig = fileNames.originalName || fileNames.suggestedName;
+      // Pipe-separated, matching the regex in CRM/Utils/Image.php
+      // (whitespace around `|` is tolerated by [^|]+\s*\|\s*[^"]+).
+      return orig + '|' + fileNames.tempName;
+    }
+
+    _extractDataUrls(html) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      var imgs = tmp.getElementsByTagName('img');
+      var urls = [];
+      for (var i = 0; i < imgs.length; i++) {
+        var src = imgs[i].getAttribute('src') || '';
+        if (src.indexOf('data:image/') === 0) {
+          urls.push(src);
+        }
+      }
+      return urls;
+    }
+
+    _notifyUnsupported(mime) {
+      var editor = this.editor;
+      var t = editor.locale.t;
+      var msg = t('Unsupported image format') + ': ' + (mime || '') +
+        '\n' + t('Supported formats') + ': JPEG, PNG, GIF, WebP';
+      if (editor.plugins.has('Notification')) {
+        editor.plugins.get('Notification').showWarning(msg, {
+          namespace: 'civi-clipboard-image',
+        });
+      }
+      else {
+        // Last-resort fallback (Notification ships with Essentials,
+        // but stay defensive in case a custom preset removes it).
+        try { window.alert(msg); } catch (e) { /* ignore */ }
+      }
+    }
+  }
+
+  // ==========================================================================
+  // htmlSupport Configurations
+  // ==========================================================================
+
+  /**
+   * Full editor htmlSupport config (default mode).
+   * Allows all HTML tags/attributes/classes/styles, with an explicit
+   * deny list for scripts and common XSS vectors.
+   * Follows CKEditor 5's recommended "enable all HTML features" pattern.
+   */
+  var FULL_HTML_SUPPORT = {
+    allow: [
+      // styles intentionally NOT listed: GHS no longer preserves
+      // user-pasted inline style attributes. Built-in CKE5 plugins
+      // (FontSize, FontColor, Alignment, ImageResize, TableProperties, ...)
+      // still emit their own style attributes via their own conversion
+      // pipelines, which run independently from GHS allow/disallow.
+      {
+        name: /.*/,
+        attributes: true,
+        classes: true,
+      },
+    ],
+    disallow: [
+      // Block <script>/<style>/<link> entirely. <style> and <link> are
+      // CSS-injection vectors that bypass the inline style filter.
+      // Opt-in mode (allowAllContent) lifts this whole list.
+      { name: /^(script|style|link)$/ },
+      // Block all HTML event handlers (onclick, onload, onwheel, ondrag, ...)
+      { attributes: /^on[a-z]+$/i },
+      // Block javascript: URLs on common link/src attributes.
+      // Note: attributes managed by the Link plugin (linkHref) may bypass
+      // this rule; supplemental DOM sanitizer in _setupOutputSanitizer
+      // covers those paths.
+      {
+        attributes: {
+          href: /^\s*javascript:/i,
+          src: /^\s*javascript:/i,
+          formaction: /^\s*javascript:/i,
+          'xlink:href': /^\s*javascript:/i,
+        },
+      },
+      // Block CSS injection vectors inside the style attribute.
+      // Covers expression()/javascript:/behavior:/-moz-binding for defense in depth,
+      // even though modern browsers already drop most of these.
+      {
+        attributes: {
+          style: /expression\s*\(|javascript\s*:|behavior\s*:|-moz-binding\s*:/i,
+        },
+      },
+    ],
+  };
+
+  /**
+   * Basic editor htmlSupport config.
+   * Only allows limited HTML elements.
+   */
+  var BASIC_HTML_SUPPORT = {
+    allow: [
+      {
+        // styles removed: paste/source no longer carries inline style
+        // on these blocks. classes still allowed for theming.
+        name: /^(h[1-3]|p|blockquote)$/,
+        classes: true,
+      },
+      {
+        name: /^(strong|em)$/,
+      },
+      {
+        name: 'a',
+        attributes: ['href', 'target', 'rel'],
+      },
+      {
+        name: 'img',
+        attributes: ['src', 'alt', 'width', 'height', 'title'],
+        classes: ['left', 'right'],
+      },
+      {
+        name: 'span',
+        styles: ['font-size', 'color', 'background-color'],
+      },
+    ],
+  };
+
+  // ==========================================================================
+  // Preset Configurations
+  // ==========================================================================
+
+  /**
+   * Get full editor configuration (CiviCRM preset).
+   *
+   * @param {object} [overrides] - Override specific config options.
+   *   Set `allowAllContent: true` to enable wildcard GHS and <script>
+   *   support (controlled by the civicrm_preferences opt-in flag).
+   * @returns {object} CKEditor 5 configuration object
+   */
+  function getFullEditorConfig(overrides) {
+    overrides = overrides || {};
+    var allowAll = overrides.allowAllContent === true;
+    var imceEnabled = overrides.imceEnabled === true && !!overrides.imceUrl;
+    var clipboardImageEnabled = overrides.clipboardImageEnabled === true &&
+      !!overrides.clipboardImageUrl;
+    // Strip internal flags so they do not leak into CKEditor's config.
+    // imceUrl / clipboardImageUrl stay in ckOverrides because the
+    // IMCEBrowse / CiviClipboardImage plugins read them via
+    // editor.config.get(...).
+    var ckOverrides = Object.assign({}, overrides);
+    delete ckOverrides.allowAllContent;
+    delete ckOverrides.imceEnabled;
+    delete ckOverrides.clipboardImageEnabled;
+    if (!imceEnabled) {
+      delete ckOverrides.imceUrl;
+    }
+    if (!clipboardImageEnabled) {
+      delete ckOverrides.clipboardImageUrl;
+    }
+
+    var pluginList = [
+      CK.Essentials,
+      CK.Paragraph,
+      CK.Heading,
+      CK.Bold,
+      CK.Italic,
+      CK.Underline,
+      CK.Strikethrough,
+      CK.Code,
+      CK.Subscript,
+      CK.Superscript,
+      CK.Font,
+      CK.FontSize,
+      CK.FontFamily,
+      CK.FontColor,
+      CK.FontBackgroundColor,
+      CK.Alignment,
+      CK.List,
+      CK.ListProperties,
+      CK.TodoList,
+      CK.Indent,
+      CK.IndentBlock,
+      CK.Link,
+      CK.LinkImage,
+      CK.AutoLink,
+      CK.Image,
+      CK.ImageCaption,
+      CK.ImageStyle,
+      CK.ImageToolbar,
+      CK.ImageUpload,
+      CK.ImageResize,
+      CK.ImageInsert,
+      CK.Base64UploadAdapter,
+      CK.Table,
+      CK.TableToolbar,
+      CK.TableProperties,
+      CK.TableCellProperties,
+      CK.TableColumnResize,
+      CK.TableCaption,
+      CK.HtmlEmbed,
+      CK.BlockQuote,
+      CK.CodeBlock,
+      CK.HorizontalLine,
+      CK.PageBreak,
+      CK.SpecialCharacters,
+      CK.SpecialCharactersEssentials,
+      CK.FindAndReplace,
+      CK.TextTransformation,
+      CK.Highlight,
+      CK.RemoveFormat,
+      CK.SourceEditing,
+      CK.Autoformat,
+      CK.PasteFromOffice,
+      CK.Clipboard,
+      CK.GeneralHtmlSupport,
+      CK.HtmlComment,
+      CK.ShowBlocks,
+      CK.Fullscreen,
+      CK.FullPage,
+      CK.Undo,
+      ExtendSchema,
+    ];
+    if (imceEnabled) {
+      pluginList.push(IMCEBrowse);
+    }
+    if (clipboardImageEnabled) {
+      pluginList.push(CiviClipboardImage);
+    }
+
+    return Object.assign({
+      licenseKey: 'GPL',
+      plugins: pluginList,
+      toolbar: {
+        items: [
+          'fullscreen',
+          '|',
+          'removeFormat',
+          '|',
+          'bold', 'italic', 'underline', 'strikethrough',
+          '|',
+          'alignment',
+          '|',
+          'numberedList', 'bulletedList', 'outdent', 'indent', 'blockQuote',
+          '|',
+          'link', 'unlink',
+          '|',
+          'insertImage', 'htmlEmbed',
+          '-',
+          'heading', 'fontFamily', 'fontSize',
+          '|',
+          'undo', 'redo',
+          '|',
+          'fontColor', 'fontBackgroundColor',
+          '|',
+          'insertTable', 'horizontalLine',
+          '|',
+          'sourceEditing',
+        ],
+        shouldNotGroupWhenFull: true,
+      },
+      alignment: {
+        options: ['left', 'center', 'right', 'justify'],
+      },
+      htmlEmbed: {
+        showPreviews: true,
+      },
+      heading: {
+        options: [
+          { model: 'paragraph', title: '段落', class: 'ck-heading_paragraph' },
+          { model: 'heading1', view: 'h1', title: '標題 1', class: 'ck-heading_heading1' },
+          { model: 'heading2', view: 'h2', title: '標題 2', class: 'ck-heading_heading2' },
+          { model: 'heading3', view: 'h3', title: '標題 3', class: 'ck-heading_heading3' },
+          { model: 'heading4', view: 'h4', title: '標題 4', class: 'ck-heading_heading4' },
+          { model: 'heading5', view: 'h5', title: '標題 5', class: 'ck-heading_heading5' },
+          { model: 'heading6', view: 'h6', title: '標題 6', class: 'ck-heading_heading6' },
+        ],
+      },
+      fontSize: {
+        options: ['default', 9, 11, 13, 17, 19, 21, 24, 28, 32, 36],
+        supportAllValues: true,
+      },
+      fontFamily: {
+        options: [
+          'default',
+          'Arial, Helvetica, sans-serif',
+          'Courier New, Courier, monospace',
+          'Georgia, serif',
+          'Lucida Sans Unicode, Lucida Grande, sans-serif',
+          'Tahoma, Geneva, sans-serif',
+          'Times New Roman, Times, serif',
+          'Trebuchet MS, Helvetica, sans-serif',
+          'Verdana, Geneva, sans-serif',
+          '微軟正黑體, Microsoft JhengHei',
+          '新細明體, PMingLiU',
+          '標楷體, DFKai-SB',
+        ],
+        supportAllValues: true,
+      },
+      image: {
+        toolbar: [
+          'imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:breakText',
+          '|',
+          'toggleImageCaption', 'imageTextAlternative',
+          '|',
+          'linkImage',
+        ],
+        resizeOptions: [
+          { name: 'resizeImage:original', label: 'Original', value: null },
+          { name: 'resizeImage:25', label: '25%', value: '25' },
+          { name: 'resizeImage:50', label: '50%', value: '50' },
+          { name: 'resizeImage:75', label: '75%', value: '75' },
+        ],
+        // CKE5 ImageInsertUI requires integrations to be listed here AND
+        // registered via registerIntegration(); list members not registered
+        // are silently dropped. 'imce' is added only when the IMCEBrowse
+        // plugin is active to avoid an "unknown integration" warning.
+        // 'upload' is intentionally omitted: uploads are routed through IMCE
+        // (or URL fallback) so images are stored on the server rather than
+        // inlined as base64. ImageUpload plugin stays loaded so drag-drop
+        // and paste-image still work via the base64 upload adapter.
+        insert: {
+          integrations: imceEnabled
+            ? ['imce', 'url']
+            : ['url'],
+        },
+      },
+      table: {
+        contentToolbar: [
+          'tableColumn', 'tableRow', 'mergeTableCells',
+          '|',
+          'tableProperties', 'tableCellProperties',
+          '|',
+          'toggleTableCaption',
+        ],
+      },
+      list: {
+        properties: {
+          styles: true,
+          startIndex: true,
+          reversed: true,
+        },
+      },
+      link: {
+        decorators: {
+          openInNewTab: {
+            mode: 'manual',
+            label: 'Open in a new tab',
+            attributes: {
+              target: '_blank',
+              rel: 'noopener noreferrer',
+            },
+          },
+          isDownloadable: {
+            mode: 'manual',
+            label: 'Downloadable',
+            attributes: {
+              download: 'file',
+            },
+          },
+        },
+      },
+      codeBlock: {
+        languages: [
+          { language: 'plaintext', label: 'Plain text' },
+          { language: 'c', label: 'C' },
+          { language: 'cs', label: 'C#' },
+          { language: 'cpp', label: 'C++' },
+          { language: 'css', label: 'CSS' },
+          { language: 'diff', label: 'Diff' },
+          { language: 'html', label: 'HTML' },
+          { language: 'java', label: 'Java' },
+          { language: 'javascript', label: 'JavaScript' },
+          { language: 'php', label: 'PHP' },
+          { language: 'python', label: 'Python' },
+          { language: 'ruby', label: 'Ruby' },
+          { language: 'typescript', label: 'TypeScript' },
+          { language: 'xml', label: 'XML' },
+        ],
+      },
+      highlight: {
+        options: [
+          { model: 'yellowMarker', class: 'marker-yellow', title: 'Yellow marker', color: 'var(--ck-highlight-marker-yellow)', type: 'marker' },
+          { model: 'greenMarker', class: 'marker-green', title: 'Green marker', color: 'var(--ck-highlight-marker-green)', type: 'marker' },
+          { model: 'pinkMarker', class: 'marker-pink', title: 'Pink marker', color: 'var(--ck-highlight-marker-pink)', type: 'marker' },
+          { model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
+        ],
+      },
+      htmlSupport: allowAll ? ALLOW_ALL_HTML_SUPPORT : FULL_HTML_SUPPORT,
+      fullPage: {
+        // Bypass default sanitizer so <head> content is preserved
+        sanitizer: function(html) { return html; },
+      },
+      extendSchema: {
+        enableFontIcons: true,
+        enableIframe: true,
+        enableScripts: allowAll,
+      },
+    }, ckOverrides);
+  }
+
+  /**
+   * Get basic editor configuration (CiviCRMBasic preset).
+   *
+   * @param {object} [overrides] - Override specific config options.
+   *   Set `allowAllContent: true` to enable wildcard GHS and <script>
+   *   support (controlled by the civicrm_preferences opt-in flag).
+   * @returns {object} CKEditor 5 configuration object
+   */
+  function getBasicEditorConfig(overrides) {
+    overrides = overrides || {};
+    var allowAll = overrides.allowAllContent === true;
+    var imceEnabled = overrides.imceEnabled === true && !!overrides.imceUrl;
+    var clipboardImageEnabled = overrides.clipboardImageEnabled === true &&
+      !!overrides.clipboardImageUrl;
+    // Strip internal flags; keep imceUrl / clipboardImageUrl when
+    // their respective plugins are active.
+    var ckOverrides = Object.assign({}, overrides);
+    delete ckOverrides.allowAllContent;
+    delete ckOverrides.imceEnabled;
+    delete ckOverrides.clipboardImageEnabled;
+    if (!imceEnabled) {
+      delete ckOverrides.imceUrl;
+    }
+    if (!clipboardImageEnabled) {
+      delete ckOverrides.clipboardImageUrl;
+    }
+
+    var pluginList = [
+      CK.Essentials,
+      CK.Paragraph,
+      CK.Heading,
+      CK.Bold,
+      CK.Italic,
+      CK.Underline,
+      CK.Strikethrough,
+      CK.FontSize,
+      CK.FontColor,
+      CK.FontBackgroundColor,
+      CK.Alignment,
+      CK.List,
+      CK.Link,
+      CK.Image,
+      CK.ImageStyle,
+      CK.ImageToolbar,
+      CK.ImageInsert,
+      CK.ImageResize,
+      CK.RemoveFormat,
+      CK.PasteFromOffice,
+      CK.Clipboard,
+      CK.GeneralHtmlSupport,
+      CK.HtmlEmbed,
+      CK.Undo,
+      ExtendSchema,
+    ];
+    if (imceEnabled) {
+      pluginList.push(IMCEBrowse);
+    }
+    if (clipboardImageEnabled) {
+      pluginList.push(CiviClipboardImage);
+    }
+
+    return Object.assign({
+      licenseKey: 'GPL',
+      plugins: pluginList,
+      toolbar: {
+        items: [
+          'heading',
+          '|',
+          'removeFormat',
+          '|',
+          'bold', 'italic', 'underline', 'strikethrough',
+          '|',
+          'alignment',
+          '|',
+          'fontSize', 'fontColor', 'fontBackgroundColor',
+          '|',
+          'numberedList', 'bulletedList',
+          '|',
+          'link', 'unlink',
+          '|',
+          'insertImage', 'htmlEmbed',
+          '|',
+          'undo', 'redo',
+        ],
+        shouldNotGroupWhenFull: true,
+      },
+      alignment: {
+        options: ['left', 'center', 'right', 'justify'],
+      },
+      htmlEmbed: {
+        showPreviews: true,
+      },
+      heading: {
+        options: [
+          { model: 'paragraph', title: '段落', class: 'ck-heading_paragraph' },
+          { model: 'heading1', view: 'h1', title: '標題 1', class: 'ck-heading_heading1' },
+          { model: 'heading2', view: 'h2', title: '標題 2', class: 'ck-heading_heading2' },
+          { model: 'heading3', view: 'h3', title: '標題 3', class: 'ck-heading_heading3' },
+        ],
+      },
+      fontSize: {
+        options: [
+          'default', 10, 11, 12, 13, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72,
+        ],
+        supportAllValues: true,
+      },
+      image: {
+        insert: {
+          type: 'auto',
+          integrations: imceEnabled ? ['imce', 'url'] : ['url'],
+        },
+        toolbar: [
+          'imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:breakText',
+          '|',
+          'imageTextAlternative',
+        ],
+      },
+      link: {
+        decorators: {
+          openInNewTab: {
+            mode: 'manual',
+            label: 'Open in a new tab',
+            attributes: {
+              target: '_blank',
+              rel: 'noopener noreferrer',
+            },
+          },
+        },
+      },
+      htmlSupport: allowAll ? ALLOW_ALL_HTML_SUPPORT : BASIC_HTML_SUPPORT,
+      extendSchema: {
+        enableFontIcons: true,
+        enableIframe: allowAll,
+        enableScripts: allowAll,
+      },
+    }, ckOverrides);
+  }
+
+  // ==========================================================================
+  // Public helpers for interacting with an editor instance by element name.
+  // Used by Smarty templates (token insert, template fill) that historically
+  // hard-coded the CKEditor 4 `CKEDITOR.instances[...]` API (ref #45339).
+  // ==========================================================================
+
+  /**
+   * Resolve the CKEditor 5 instance bound to a textarea element.
+   * Mirrors the lookup in ckeditor5.php / editor-switcher.js:
+   * element -> next sibling .ck-editor -> .ck-editor__editable -> instance.
+   *
+   * @param {string|HTMLElement} elOrName element, or its id/name
+   * @return {object|null} the editor instance, or null if not found
+   */
+  function getEditorInstance(elOrName) {
+    var el = typeof elOrName === 'string'
+      ? (document.getElementById(elOrName) || document.getElementsByName(elOrName)[0])
+      : elOrName;
+    if (!el) {
+      return null;
+    }
+    var container = el.nextElementSibling;
+    if (container && container.classList.contains('ck-editor')) {
+      var editable = container.querySelector('.ck-editor__editable');
+      if (editable && editable.ckeditorInstance) {
+        return editable.ckeditorInstance;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Replace the whole content of the editor bound to elementName.
+   * Falls back to the raw textarea value when no instance is found.
+   *
+   * @return {boolean} true if an editor instance handled it
+   */
+  function setData(elementName, html) {
+    var editor = getEditorInstance(elementName);
+    if (editor) {
+      editor.setData(html || '');
+      return true;
+    }
+    var el = document.getElementById(elementName) || document.getElementsByName(elementName)[0];
+    if (el) {
+      el.value = html || '';
+    }
+    return false;
+  }
+
+  /**
+   * Insert HTML at the current selection of the editor bound to elementName.
+   * Uses the CKE5 model API (CKE5 has no CKE4-style insertHtml).
+   *
+   * @return {boolean} true if an editor instance handled it
+   */
+  function insertHtml(elementName, html) {
+    var editor = getEditorInstance(elementName);
+    if (!editor) {
+      return false;
+    }
+    var viewFragment = editor.data.processor.toView(html);
+    var modelFragment = editor.data.toModel(viewFragment);
+    editor.model.insertContent(modelFragment);
+    return true;
+  }
+
+  // ==========================================================================
+  // Expose API
+  // ==========================================================================
+
+  window.CiviCKEditor5 = {
+    ExtendSchema: ExtendSchema,
+    IMCEBrowse: IMCEBrowse,
+    CiviClipboardImage: CiviClipboardImage,
+    getFullEditorConfig: getFullEditorConfig,
+    getBasicEditorConfig: getBasicEditorConfig,
+    getEditorInstance: getEditorInstance,
+    setData: setData,
+    insertHtml: insertHtml,
+  };
+
+})();

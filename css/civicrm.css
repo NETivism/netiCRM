@@ -6,6 +6,7 @@
   --color-error-dark: #b71c1c;
   --color-error-light: #fff5f5;
   --color-form-input-border: #999;
+  --color-civicrm-primary: #333;
   --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
   --font-sans-serif: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
@@ -29,6 +30,8 @@
   --rfm-track-height: 4px;
   --rfm-icon-size: 1.75rem;
   --rfm-field-gap: 1.5rem;
+  --cke-max-width: 880px;
+  --cke-height: 400px;
 }
 
 /* Visually hidden helper (bootstrap 5) */
@@ -2918,26 +2921,6 @@ span.icon {
 .Note-icon:before { content: "\f25b"; }
 .Relationship-icon:before { content: "\f30d"; }
 
-/* media embed */
-.crm-container .media_embed {
-  position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 30px;
-  width: auto !important;
-  height: 0 !important;
-  overflow: hidden;
-}
-.crm-container .media_embed iframe,
-.crm-container .media_embed object,
-.crm-container .media_embed video,
-.crm-container .media_embed embed {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /* accordion styles */
 
 .crm-accordion-header {
@@ -3211,6 +3194,40 @@ div.helpicon:focus::before {
 #help div.helpicon:hover::before {
  color: #212121;
  background: #fafafa;
+}
+
+/* Shorten URL history: helpicon with inline target URL preview. */
+.crm-container .shorten-url-history-table div.shorten-url-target {
+  position: relative;
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+}
+.crm-container .shorten-url-history-table div.shorten-url-target.helpicon::before {
+  font-family: 'Material-Design-Iconic-Font';
+  content: "\f18e";
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: 24px;
+  width: auto;
+  height: auto;
+}
+.crm-container .shorten-url-history-table .original-target-url {
+  display: none;
+  order: -1;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.crm-container .shorten-url-history-empty {
+  padding: 10px;
+  color: #757575;
+  font-style: italic;
 }
 
 div.statusicon {
@@ -5778,6 +5795,17 @@ tbody.scrollContent tr.alternateRow {
     border-left: 1px solid #999999;
 }
 
+
+/* ckeditor 4 & 5 */
+.crm-container textarea + .cke,
+.crm-container .ck.ck-editor {
+  max-width: var(--cke-max-width);
+}
+.crm-container .cke_contents,
+  .crm-container .ck.ck-editor__main .ck-content {
+  height: var(--cke-height);
+}
+
 /* Contribute booster */
 /* path: civicrm/contribute/booster */
 .crm-contribute-booster .crm-section-content {
@@ -5912,7 +5940,8 @@ tbody.scrollContent tr.alternateRow {
   padding-top: 0;
 }
 .crm-container .event-map,
-.crm-container .event-map.media_embed {
+.crm-container .event-map.media_embed,
+.crm-container .event-map.raw-html-embed {
   margin: 0 auto;
 }
 .crm-container .event-map-links {
@@ -6130,8 +6159,8 @@ tbody.scrollContent tr.alternateRow {
   color: #929a9c;
 }
 
-/* Report Summary */
-.crm-container form[action*="/civicrm/admin/contribute/settings"] label[for=is_special]:after {
+.crm-container form[action*="/civicrm/admin/contribute/settings"] label[for=is_special]:after,
+.crm-container form[action*="/civicrm/admin/price"] label[for=show_remaining]:after {
   content: "beta";
   vertical-align: top;
   font-size: 10px;

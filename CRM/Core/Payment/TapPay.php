@@ -973,6 +973,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     $currentDate = date('Y-m-01 00:00:00', $time);
+    $currentDay = date('Y-m-d', $time);
 
     // #25443, only trigger when current month doesn't have any contribution yet
     $sql = "
@@ -999,6 +1000,7 @@ WHERE
 AND r.contribution_status_id in (5,6)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
+AND (r.last_execute_date IS NULL OR r.last_execute_date < '$currentDay')
 GROUP BY r.id
 ORDER BY r.id
 LIMIT 0, 100
@@ -1008,7 +1010,7 @@ LIMIT 0, 100
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay']));
+        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay'])." recur_id: ".$dao->recur_id);
         continue;
       }
 
@@ -1016,7 +1018,7 @@ LIMIT 0, 100
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
       if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
-        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date."));
+        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date.")." recur_id: ".$dao->recur_id);
         continue;
       }
 
@@ -1082,8 +1084,9 @@ LIMIT 0, 100
             $activeTokenOverride = TRUE;
           }
           else {
-            $resultNote = "Token status is $tokenStatus, skip payment. ";
+            $resultNote = "Token status is $tokenStatus, skip payment. recur_id: ".$recurId;
             CRM_Core_Error::debug_log_message($resultNote);
+            CRM_Core_Error::debug_log_message("TapPay synchronize finished: ".$recurId);
             return $resultNote;
           }
         }
@@ -1198,7 +1201,7 @@ LIMIT 0, 100
       }
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
     }
     elseif ($activeTokenOverride && $donePayment) {
       // Add note when payment succeeded for expired recurring with active token
@@ -1218,7 +1221,7 @@ LIMIT 0, 100
           'contribution_status_id' => 5
         ];
         CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
       }
     }
 
@@ -1490,9 +1493,44 @@ LIMIT 0, 100
           'message' => ts("Card expiry date is due."),
         ];
         CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
-        $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
+        $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(6)]);
         $statusNote = $params['message'] . ts("Auto renews status");
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
+      }
+    }
+
+    // Convert expired recurring to Failed if no successful contribution in past 6 months
+    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
+    $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
+ WHERE r.contribution_status_id = 6
+ AND r.start_date < %1
+ AND r.id NOT IN (
+   SELECT DISTINCT contribution_recur_id
+   FROM civicrm_contribution
+   WHERE contribution_status_id = 1
+   AND receive_date >= %1
+   AND contribution_recur_id IN(SELECT id FROM civicrm_contribution_recur WHERE contribution_status_id = 6)
+ )";
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$sixMonthsAgo, 'String'],
+    ]);
+    $processorTypeCache = [];
+    while ($dao->fetch()) {
+      $cacheKey = $dao->processor_id . '_' . ($dao->is_test ? 'test' : 'live');
+      if (!array_key_exists($cacheKey, $processorTypeCache)) {
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->processor_id, $dao->is_test ? 'test' : 'live');
+        $processorTypeCache[$cacheKey] = isset($paymentProcessor['payment_processor_type']) ? strtolower($paymentProcessor['payment_processor_type']) : NULL;
+      }
+      if ($dao->id && $processorTypeCache[$cacheKey] === 'tappay') {
+        $noteMessage = ts("Recurring has expired and no successful contribution in the past 6 months, system auto changed to failed.");
+        $params = [
+          'id' => $dao->id,
+          'contribution_status_id' => 4,
+          'message' => $noteMessage,
+        ];
+        CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+        $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(4)]);
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $noteMessage);
       }
     }
   }
@@ -1682,7 +1720,7 @@ LIMIT 0, 100
             if ($canUpdateStatus) {
               $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
               $statusNote = ts('Card expiry date has been updated.').' '.ts("Auto renews status");
-              CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $statusNoteTitle, $statusNote);
+              CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
             }
             break;
           }

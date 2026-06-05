@@ -36,15 +36,15 @@
      <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-name">
  	  <td class="label">{$form.name.label}</td>
-	  <td class="html-adjust">{$form.name.html}</td>	
+	  <td class="html-adjust">{$form.name.html}{if $hasReceiptsLocked} <a href="#" class="ct-unlock-field" data-target="name">{ts}Change{/ts}</a>{/if}</td>
        </tr>
-       <tr class="crm-contribution-form-block-description">	 
+       <tr class="crm-contribution-form-block-description">
     	  <td class="label">{$form.description.label}</td>
 	  <td class="html-adjust">{$form.description.html}</td>
        </tr>
        <tr class="crm-contribution-form-block-accounting_code">
     	  <td class="label">{$form.accounting_code.label}</td>
-	  <td class="html-adjust">{$form.accounting_code.html}<br />
+	  <td class="html-adjust">{$form.accounting_code.html}{if $hasReceiptsLocked} <a href="#" class="ct-unlock-field" data-target="accounting_code">{ts}Change{/ts}</a>{/if}<br />
        	      <span class="description">{ts}Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package.{/ts}</span>
 	  </td>
        </tr>
@@ -65,9 +65,16 @@
           </table>
         </td>
        </tr>
-       <tr class="crm-contribution-form-block-is_active">	 
+       <tr class="crm-contribution-form-block-is_active">
     	  <td class="label">{$form.is_active.label}</td>
-	  <td class="html-adjust">{$form.is_active.html}</td>
+	  <td class="html-adjust">
+	    {$form.is_active.html}
+	    {if $isActivePageLocked}
+	      {capture assign=ctListUrl}{crmURL p='civicrm/admin/contribute/contributionType' q='reset=1'}{/capture}
+	      <br />
+	      <span class="description">{ts 1=$ctListUrl}This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href="%1">Contribution Type list</a> and disable or change the contribution type for the related pages first.{/ts}</span>
+	    {/if}
+	  </td>
        </tr>
       </table> 
    {/if}
@@ -75,6 +82,16 @@
 </div>
 <script>{literal}
 cj(document).ready(function($){
+  $('.ct-unlock-field').click(function(e){
+    e.preventDefault();
+    var target = $(this).data('target');
+    var ok = confirm("{/literal}{ts}This contribution type has receipt records. Changing the name or accounting code will affect the consistency of historical receipts. If needed, it is recommended to create a new contribution type instead. Are you sure you want to continue?{/ts}{literal}");
+    if (ok) {
+      $('#' + target).removeAttr('readonly');
+      $(this).remove();
+    }
+  });
+
   var showHideTaxReceipt = function(){
     if($('#is_deductible').attr('checked')) {
       $('tr.crm-contribution-form-block-is_taxreceipt').hide();
@@ -104,4 +121,5 @@ cj(document).ready(function($){
   showHideTaxReceipt();
   showHideTaxRate($("input[name=is_taxreceipt][checked=checked]"));
 });
-{/literal}</script>
+{/literal}
+</script>

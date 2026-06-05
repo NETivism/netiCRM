@@ -232,6 +232,7 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     $this->add('textarea', 'summary', ts('Event Summary'), $attributes['summary']);
     $this->addWysiwyg('description', ts('Complete Description'), $attributes['event_description']);
+
     $this->addElement('checkbox', 'is_public', ts('Public Event?'));
     $this->addElement('checkbox', 'is_map', ts('Include Map to Event Location?'));
 

@@ -37,6 +37,13 @@ test.describe.serial('Contribution Page Editing', () => {
             await utils.findElement(page, element);
             await utils.fillInput(locator, utils.makeid(10));
 
+            /* select Contribution Type */
+            element = "#contribution_type_id";
+            await utils.findElement(page, element);
+            const firstTypeOption = await page.locator(`${element} option[value]:not([value=""])`).first();
+            const firstTypeValue = await firstTypeOption.getAttribute('value');
+            await page.locator(element).selectOption(firstTypeValue);
+
             /* click Continue >> */
             element = "#_qf_Settings_upload-bottom";
             await utils.findElement(page, element);
@@ -190,13 +197,8 @@ test.describe.serial('Contribution Page Editing', () => {
             await utils.findElement(page, element);
             await utils.checkInput(page, page.locator(element));
 
-            /* filled up About(ckeditor) */
-            element = 'iframe.cke_wysiwyg_frame';
-            await utils.findElement(page, element);
-            const frame_locator = page.frameLocator(element);
-            await frame_locator.locator(':nth-match(p,1)').click({ position: { x: 0, y: 0 } });
-            await page.keyboard.type('widget test');
-            await expect(frame_locator.locator(':nth-match(p,1)')).toHaveText('widget test');
+            /* filled up About (works with both CKEditor 4 and CKEditor 5) */
+            await utils.fillWysiwyg(page, 'about', 'widget test');
 
             /* click Save and Preview */
             element = "#_qf_Widget_refresh";

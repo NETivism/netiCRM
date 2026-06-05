@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+.crm-container table.form-layout-compressed:has(.form-CKEditor5) td.label ~ td,
+.crm-container table.form-layout-compressed:has(.editor-switcher-container) td.label ~ td {
+  max-width: 0;
+  overflow: hidden;
+}
+.crm-container .ck.ck-editor__main {
+  overflow: auto;
+  border-top: 1px solid var(--ck-color-base-border);
+}
+.crm-container .ck-editor .ck-editor__top:has(.ck-sticky-panel) {
+  z-index: 100;
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+.crm-container .ck.ck-button:not(.ck-disabled):hover,
+.crm-container a.ck.ck-button:not(.ck-disabled):hover {
+  background: #555;
+}
+.crm-container .ck.ck-button.ck-disabled:hover,
+.crm-container a.ck.ck-button.ck-disabled:hover,
+.crm-container .ck.ck-button.ck-disabled:focus,
+.crm-container a.ck.ck-button.ck-disabled:focus {
+  cursor: not-allowed;
+  background: #666;
+}
+.ck.ck-button.ck-list-item-button.ck-button.ck-on:hover:not(.ck-disabled),.ck.ck-button.ck-list-item-button.ck-on:hover:not(.ck-disabled),.ck.ck-button.ck-list-item-button.ck-on:not(.ck-list-item-button_toggleable):not(.ck-disabled),.ck.ck-button.ck-list-item-button:hover:not(.ck-disabled):not(.ck-disabled) {
+  background: #ccc;
+}
+.crm-container .ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_ne,
+.crm-container .ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_se {
+  top: 0;
+}
+.crm-container .ck-rounded-corners .ck.ck-dropdown > .ck-dropdown__panel > .ck-list,
+.crm-container .ck.ck-dropdown>.ck-dropdown__panel>.ck-list.ck-rounded-corners {
+  border: 1px solid #ccc;
+}

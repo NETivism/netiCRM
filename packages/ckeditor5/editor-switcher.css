@@ -1,0 +1,59 @@
+@charset "UTF-8";
+
+/**
+ * Editor Switcher Toolbar Styles
+ *
+ * Styles for the CKEditor 4 / CKEditor 5 switcher UI rendered by
+ * packages/HTML/QuickForm/ckeditor.php and ckeditor5.php.
+ * All selectors are scoped under .crm-container to prevent style leakage.
+ */
+
+/* Outer toolbar container */
+.crm-container .editor-switcher-container {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Inner row: label + select + status */
+.crm-container .editor-switcher-row {
+  display: flex;
+  align-items: center;
+}
+
+/* "Switch Editor:" label */
+.crm-container .editor-switcher-label {
+  font-size: .8125rem;
+  font-weight: bold;
+  color: #444;
+  margin-right: 10px;
+}
+
+/* Editor format dropdown */
+.crm-container .editor-format-switcher {
+  padding: 2px 4px;
+  font-size: .8125rem;
+  height: 24px;
+  min-width: 140px;
+}
+
+/* Switching status text */
+.crm-container .editor-switch-status {
+  font-size: .8125rem;
+  color: #666;
+}
+
+/* Hint message banner (shown when CKEditor 5 is in testing mode) */
+.crm-container .editor-switcher-hint {
+  font-size: .8125rem;
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #faebcc;
+  margin-left: -5px;
+}

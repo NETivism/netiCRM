@@ -8569,7 +8569,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8874,7 +8874,7 @@ msgstr "Email 格式"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
 msgid "NO BULK EMAILS (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/Form/Edit/Demographics.php
 #: templates/CRM/Contact/Page/View/Demographics.tpl
@@ -51961,14 +51961,19 @@ msgid ""
 msgstr "當此募款頁停用時，訪客將自動轉址至所選頁面。若未指定頁面，則會看到系統預設的停用通知。"
 
 #: templates/CRM/Contact/Form/Task/Email.tpl:119
-msgid "Are you sure you want to send this email? This action cannot be undone."
+msgid ""
+"Are you sure you want to send this email? This action cannot be undone."
 msgstr "您確定要寄送這封電子郵件？此操作無法復原。"
 
-#: templates/CRM/Price/Form/PriceSet.tpl:60 templates/CRM/Price/Form/PriceSet.tpl:100
+#: templates/CRM/Price/Form/PriceSet.tpl:60
+#: templates/CRM/Price/Form/PriceSet.tpl:100
 msgid "(Full)"
 msgstr "（額滿）"
 
-#: templates/CRM/Price/Form/PriceSet.tpl:48 templates/CRM/Price/Form/PriceSet.tpl:63 templates/CRM/Price/Form/PriceSet.tpl:90 templates/CRM/Price/Form/PriceSet.tpl:103
+#: templates/CRM/Price/Form/PriceSet.tpl:48
+#: templates/CRM/Price/Form/PriceSet.tpl:63
+#: templates/CRM/Price/Form/PriceSet.tpl:90
+#: templates/CRM/Price/Form/PriceSet.tpl:103
 msgid "%1 remaining"
 msgstr "剩餘 %1 名"
 
@@ -51977,9 +51982,108 @@ msgid "Show remaining capacity?"
 msgstr "顯示剩餘名額？"
 
 #: templates/CRM/Price/Form/Set.tpl:84
-msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
+msgid ""
+"When enabled, remaining capacity will be shown next to each option on the "
+"frontend (e.g. \"8 remaining\"). Only applies to options with a maximum "
+"quantity set."
 msgstr "勾選後，前台頁面的價格表選項旁將顯示各選項的剩餘名額（例如「剩餘 8 名」）。僅對有設定「最多數量」的選項生效；未設定最多數量的選項不受影響。"
 
 #: templates/CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl:5
-msgid "Note: Contacts who made a successful donation after the specified number of days will also be included in the results."
+msgid ""
+"Note: Contacts who made a successful donation after the specified number of "
+"days will also be included in the results."
 msgstr "注意：若聯絡人在失敗後超過指定天數才成功再捐，仍會被納入搜尋結果"
+
+#: templates/CRM/common/ShortenURL.tpl:188
+#: templates/CRM/common/ShortenURL.tpl:238
+msgid "Failed to shorten URL, please try again."
+msgstr "縮短網址失敗，請再試一次。"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:16
+msgid "Shorten URL History (Personal Campaign)"
+msgstr "短網址紀錄（個人募款）"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:18
+msgid "Shorten URL History"
+msgstr "短網址紀錄"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:20
+msgid "(latest 30 records)"
+msgstr "（最近 30 筆）"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:33
+#: templates/CRM/common/ShortenURLHistory.tpl:74
+msgid "Original Target URL"
+msgstr "原始目標網址"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:56
+msgid "No shortened URL records yet. Click \"Shorten URL\" to create one."
+msgstr "尚無縮網址記錄，請點選「縮短網址」建立第一筆。"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:101
+msgid "Unable to load target URL."
+msgstr "無法載入目標網址。"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:102
+msgid "(no data)"
+msgstr "（無資料）"
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr "個頁面"
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:75
+msgid ""
+"This contribution type is currently used by active payment pages. If "
+"disabled, the contribution type field will be blank in related records and "
+"receipt downloads will stop working. To disable it, please visit the <a "
+"href=\"%1\">Contribution Type list</a> and disable or change the "
+"contribution type for the related pages first."
+msgstr "此費用類型目前被啟用中的付款頁使用，停用後相關頁面的捐款紀錄將無法顯示費用類型，收據下載功能亦會失效。若需停用，請先至<a href=\"%1\">費用類型列表</a>，將相關頁面停用或更換費用類型。"
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:88
+msgid ""
+"This contribution type has receipt records. Changing the name or accounting "
+"code will affect the consistency of historical receipts. If needed, it is "
+"recommended to create a new contribution type instead. Are you sure you want"
+" to continue?"
+msgstr ""
+
+#: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php
+#: CRM/Core/Payment/TapPay.php
+msgid "【Payment Gateway】"
+msgstr "【金流端】"
+
+#: CRM/Core/Payment/TapPay.php:1519
+msgid ""
+"Recurring has expired and no successful contribution in the past 6 months, "
+"system auto changed to failed."
+msgstr "定期定額已過期，且近 6 個月內無成功捐款，系統自動轉為已失敗。"
+
+#: templates/CRM/Admin/Form/Preferences/Display.tpl:107
+msgid "HTML Security Filter"
+msgstr "HTML 安全性過濾"
+
+#: templates/CRM/Admin/Form/Preferences/Display.tpl:113
+msgid "By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts."
+msgstr "預設會過濾危險的 HTML 以防範 XSS 攻擊，包含 &lt;script&gt;、&lt;style&gt; 和 &lt;link&gt; 標籤、所有事件處理屬性（如 onclick、onload）及 javascript: 網址。啟用此選項將移除所有上述防護措施，請僅在信任所有編輯人員且確實需要嵌入指令碼時才啟用。"
+
+#: CRM/Admin/Form/Preferences/Display.php:102
+msgid "Disable Security Filter (Allow all content & scripts)"
+msgstr "停用安全性過濾器（允許所有內容與指令碼）"
+
+#: packages/HTML/QuickForm/ckeditor.php:161 packages/HTML/QuickForm/ckeditor5.php:244
+msgid "Switch Editor:"
+msgstr "切換編輯器："
+
+#: packages/HTML/QuickForm/ckeditor.php:163 packages/HTML/QuickForm/ckeditor5.php:246
+msgid "CKEditor 4 (Legacy)"
+msgstr "CKEditor 4（舊版）"
+
+#: packages/HTML/QuickForm/ckeditor.php:164 packages/HTML/QuickForm/ckeditor5.php:247
+msgid "CKEditor 5 (New)"
+msgstr "CKEditor 5（新版）"
+
+#: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
+msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
+msgstr "CKEditor 5 目前處於測試階段，您可以切換至新版進行試用。<a href=\"%1\" target=\"_blank\">有問題歡迎回報</a>。"

@@ -45,7 +45,8 @@
                   {$form.$element_name.label}
                   {if $priceSet.show_remaining && $element.max_value}
                     {assign var="fieldRemaining" value=`$element.max_value-$element.db_total_count`}
-                    {if $fieldRemaining >= 0}<span class="price-remaining">{ts 1=$fieldRemaining}%1 remaining{/ts}</span>{/if}
+                    {if $fieldRemaining <= 0}<span class="price-remaining">{ts}(Full){/ts}</span>
+                    {else}<span class="price-remaining">{ts 1=$fieldRemaining}%1 remaining{/ts}</span>{/if}
                   {/if}
                 </div>
                 <div class="content">
@@ -56,7 +57,7 @@
                         {capture assign="element_count"}{$element_name}_{$key}_count{/capture}
                         <span class="price-set-option-content">
                           {$form.$element_name.$key.html}{if $form.$element_count}{$form.$element_count.html}{/if}
-                          {if $priceSet.show_remaining && $element.options[$key].is_full}
+                          {if $priceSet.show_remaining && $element.options[$key].is_full && !$element.max_value}
                             <span class="price-remaining">{ts}(Full){/ts}</span>
                           {elseif $priceSet.show_remaining && $element.options[$key].max_value}
                             {assign var="remaining" value=`$element.options[$key].max_value-$element.options[$key].db_total_count`}
@@ -87,7 +88,8 @@
                   {$form.$element_name.label}
                   {if $priceSet.show_remaining && $element.max_value}
                     {assign var="fieldRemaining" value=`$element.max_value-$element.db_total_count`}
-                    {if $fieldRemaining >= 0}<span class="price-remaining">{ts 1=$fieldRemaining}%1 remaining{/ts}</span>{/if}
+                    {if $fieldRemaining <= 0}<span class="price-remaining">{ts}(Full){/ts}</span>
+                    {else}<span class="price-remaining">{ts 1=$fieldRemaining}%1 remaining{/ts}</span>{/if}
                   {/if}
                 </div>
                 <div class="content">
@@ -96,13 +98,23 @@
                       {if is_numeric($key)}
                         <div class="price-set-option-content">
                           {$form.$element_name.$key.html}
-                          {if $element.options[$key].is_full}
+                          {if $element.options[$key].is_full && !$element.max_value}
                             <span class="price-remaining">{ts}(Full){/ts}</span>
                           {elseif $element.options[$key].max_value}
                             {assign var="remaining" value=`$element.options[$key].max_value-$element.options[$key].db_total_count`}
                             {if $remaining >= 0}<span class="price-remaining">{ts 1=$remaining}%1 remaining{/ts}</span>{/if}
                           {/if}
                         </div>
+                      {/if}
+                    {/foreach}
+                  {elseif $priceSet.show_remaining && $element.html_type eq 'Text'}
+                    {$form.$element_name.html}
+                    {foreach key=key item=opt from=$element.options}
+                      {if $opt.is_full}
+                        <span class="price-remaining">{ts}(Full){/ts}</span>
+                      {elseif $opt.max_value}
+                        {assign var="remaining" value=`$opt.max_value-$opt.db_total_count`}
+                        {if $remaining >= 0}<span class="price-remaining">{ts 1=$remaining}%1 remaining{/ts}</span>{/if}
                       {/if}
                     {/foreach}
                   {else}

@@ -26,14 +26,14 @@
 {* Edit or display Profile fields, when embedded in an online contribution or event registration form. *}
 {if ! empty( $fields )}
    {strip} 
-   {if $help_pre && $action neq 4}<div class="messages help">{$help_pre}</div>{/if} 
+   {if $help_pre && $action neq 4}<div class="messages help profile-help-pre">{$help_pre}</div>{/if} 
     {assign var=zeroField value="Initial Non Existent Fieldset"} 
     {assign var=fieldset  value=$zeroField} 
     {foreach from=$fields item=field key=fieldName} 
     {if $field.groupTitle != $fieldset} 
         {if $fieldset != $zeroField} 
            {if $groupHelpPost && $action neq 4} 
-              <div class="messages help">{$groupHelpPost}</div> 
+              <div class="messages help profile-group-help-post">{$groupHelpPost}</div> 
            {/if} 
            {if $mode ne 8} 
               </fieldset> 
@@ -46,7 +46,7 @@
         {assign var=fieldset  value=`$field.groupTitle`} 
         {assign var=groupHelpPost  value=`$field.groupHelpPost`} 
         {if $field.groupHelpPre && $action neq 4 && $action neq 1028} 
-            <div class="messages help">{$field.groupHelpPre}</div> 
+            <div class="messages help profile-group-help-pre">{$field.groupHelpPre}</div> 
         {/if} 
     {/if} 
      
@@ -140,7 +140,7 @@
     {/foreach} 
    
     {if $field.groupHelpPost && $action neq 4  && $action neq 1028} 
-        <div class="messages help">{$field.groupHelpPost}</div> 
+        <div class="messages help profile-group-help-post">{$field.groupHelpPost}</div> 
     {/if}
      
     {if $mode eq 4} 
@@ -153,7 +153,7 @@
         </fieldset> 
     {/if} 
          
-    {if $help_post && $action neq 4}<br /><div class="messages help">{$help_post}</div>{/if} 
+    {if $help_post && $action neq 4}<br /><div class="messages help profile-help-post">{$help_post}</div>{/if} 
     {/strip} 
  
 {/if} {* fields array is not empty *} 

@@ -81,8 +81,8 @@
         <a href="#" class="button full-url-copy">{ts}Copy Final URL{/ts}</a>
         <a href="#" class="button shorten-url-copy">{ts}Copy Short URL{/ts}</a>
       </div>
-    </div>  
-  </form> 
+    </div>
+  </form>
 </div>
 <script>{literal}
   cj(document).ready( function($) {
@@ -105,17 +105,18 @@
       $("#shorten-url").dialog("open");
       name = $(this).data("url-shorten");
       $('#shorten_url').val('');
-      $(".shorten-url-copy").css({ 
+      $(".shorten-url-copy").css({
         "pointer-events":"initial",
         "background": "#333030"
       });
-      $("#shorten_url+span").remove();
+      $('#shorten_url').nextAll('span.copied, div.font-red').remove();
       addOriginurl();
       return false;
     });
 
+    // Fill UTM inputs from localStorage and rebuild the Final URL for the current target.
+    // Only this needs to run on each dialog open; event handlers are bound once below.
     function addOriginurl(){
-      //utm input default value
       var previousSetting = JSON.parse(localStorage.getItem('netShortenTool'));
       if (previousSetting) {
         if ('utmSource' in previousSetting) $('#utm-source').val(previousSetting.utmSource);
@@ -125,112 +126,156 @@
         if ('utmCampaign' in previousSetting) $('#utm-campaign').val(previousSetting.utmCampaign);
       }
 
-      $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
-        var utmParameters = {
-          utmSource : $('#utm-source').val(),
-          utmMedium : $('#utm-medium').val(),
-          utmTerm : $('#utm-term').val(),
-          utmCotent : $('#utm-content').val(),
-          utmCampaign : $('#utm-campaign').val()
-        }
-        localStorage.setItem('netShortenTool', JSON.stringify(utmParameters));
-      });
-
-      //Final URL default
       var utm = ["utm-source", "utm-medium", "utm-term", "utm-content", "utm-campaign"];
       var urlOriginal = $('.url_to_copy[name="'+ name +'"]').data("url-original");
       var utmResult = "";
       $.each(utm , function(index, val) {
-        var utmInput = document.getElementById(val); 
+        var utmInput = document.getElementById(val);
         if (utmInput && utmInput.value) {
           utmResult = utmResult + '&' + val.replace('-', '_') + '=' + encodeURIComponent(utmInput.value);
         }
       });
       $('#result_url').val(urlOriginal + utmResult);
-
-      //Final URL change
-      $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
-        var changeutm = $(this).attr('id');
-        var href = new URL($('#result_url').val());
-        //href.searchParams.set(changeutm.replace('-', '_'), $(this).val());
-        var params = new URLSearchParams(href.search);
-        if($(this).val().length > 0 ){
-          params.set(changeutm.replace('-', '_'), $(this).val());
-        } else {
-          params.delete(changeutm.replace('-', '_'));
-        }
-        href.search = params.toString();
-        $('#result_url').val(href.href);
-        $('#result_url').scrollTop($('#result_url')[0].scrollHeight);
-      });
-
-      //Shorten URL
-      $('.shorten-url-copy').click(function(){
-        var sendUrl = $('#result_url').val();
-        $(".shorten-url-copy").css({"pointer-events":"none","background": "#808080"});
-        $.ajax({
-          url: '/civicrm/ajax/saveshortenurl',
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            'url': sendUrl,
-            'page_id': pageId,
-            'page_type': pageType,
-          },
-          success: function(data) {
-            if (data.is_error) {
-              $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
-              $('#shorten_url').after(" <div class='font-red'>{/literal}{ts}Failed to shorten URL, please try again.{/ts}{literal}</div>");
-              return;
-            }
-            var shortUrl = data.shorten;
-            $('#shorten_url').val(shortUrl);
-            $('#shorten_url').select();
-            document.execCommand('copy');
-            $('#shorten_url').after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
-            $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
-            $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
-          },
-          error: function() {
-            $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
-            $('#shorten_url').after(" <div class='font-red'>{/literal}{ts}Failed to shorten URL, please try again.{/ts}{literal}</div>");
-          }
-        });
-      });
-
-      //Shorten URL btn
-      $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
-        if($('.shorten-url-copy').css("pointer-events") == "none") {
-          $(".shorten-url-copy").css({ 
-            "pointer-events":"initial",
-            "background": "#333030"
-          });
-        }
-      });
-
-      //Full URL btn
-      $(".full-url-copy").click(function() {
-        $("#shorten-url").dialog("widget").find('.copied').remove();
-        $("#result_url").select();
-        document.execCommand("copy");
-        $(".full-url-copy").after("<span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
-      });
-
-      // select input when focus
-      $("#shorten_url, #result_url").click(function(){
-        $("#shorten-url").dialog("widget").find('.copied').remove();
-        if ($(this).val()) {
-          $(this).select();
-          document.execCommand("copy");
-        }
-      });
-
-      // clear input button
-      $(".zmdi.clear-input").css('cursor', 'pointer');
-      $(".zmdi.clear-input").click(function(){
-        $(this).prev('input').val('');
-        $(this).prev('input').trigger('change');
-      });
     }
+
+    // Persist UTM inputs to localStorage on change.
+    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+      var utmParameters = {
+        utmSource : $('#utm-source').val(),
+        utmMedium : $('#utm-medium').val(),
+        utmTerm : $('#utm-term').val(),
+        utmCotent : $('#utm-content').val(),
+        utmCampaign : $('#utm-campaign').val()
+      }
+      localStorage.setItem('netShortenTool', JSON.stringify(utmParameters));
+    });
+
+    // Update Final URL when a UTM input changes.
+    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+      var changeutm = $(this).attr('id');
+      var href = new URL($('#result_url').val());
+      var params = new URLSearchParams(href.search);
+      if($(this).val().length > 0 ){
+        params.set(changeutm.replace('-', '_'), $(this).val());
+      } else {
+        params.delete(changeutm.replace('-', '_'));
+      }
+      href.search = params.toString();
+      $('#result_url').val(href.href);
+      $('#result_url').scrollTop($('#result_url')[0].scrollHeight);
+    });
+
+    // Re-enable Shorten button when a UTM input changes after a successful shorten.
+    $('#utm-source, #utm-medium, #utm-term, #utm-content, #utm-campaign').on('change', function() {
+      if($('.shorten-url-copy').css("pointer-events") == "none") {
+        $(".shorten-url-copy").css({
+          "pointer-events":"initial",
+          "background": "#333030"
+        });
+      }
+    });
+
+    // Shorten URL button.
+    $('.shorten-url-copy').click(function(){
+      var sendUrl = $('#result_url').val();
+      $(".shorten-url-copy").css({"pointer-events":"none","background": "#808080"});
+      $.ajax({
+        url: '/civicrm/ajax/saveshortenurl',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          'url': sendUrl,
+          'page_id': pageId,
+          'page_type': pageType,
+          'utm_source':   $('#utm-source').val(),
+          'utm_medium':   $('#utm-medium').val(),
+          'utm_term':     $('#utm-term').val(),
+          'utm_content':  $('#utm-content').val(),
+          'utm_campaign': $('#utm-campaign').val(),
+        },
+        success: function(data) {
+          if (data.is_error) {
+            $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
+            $('#shorten_url').nextAll('span.copied, div.font-red').remove();
+            $('#shorten_url').after(" <div class='font-red'>{/literal}{ts}Failed to shorten URL, please try again.{/ts}{literal}</div>");
+            return;
+          }
+          var shortUrl = data.shorten;
+          $('#shorten_url').val(shortUrl);
+          $('#shorten_url').select();
+          document.execCommand('copy');
+          $('#shorten_url').nextAll('span.copied, div.font-red').remove();
+          $('#shorten_url').after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
+          $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
+          $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
+
+          // Prepend a new row into the matching history accordion and auto-expand.
+          // The new row's target tooltip uses sendUrl directly, so no extra
+          // batch-info call is needed for it.
+          var $accordion = $('.shorten-url-history[data-page-type="' + pageType + '"][data-page-id="' + pageId + '"]');
+          if ($accordion.length) {
+            // Upgrade empty-state body into a real table on first insertion.
+            var $body = $accordion.find('.crm-accordion-body');
+            if (!$body.find('table').length) {
+              $body.empty().append(
+                $('<table class="report shorten-url-history-table">')
+                  .append(window._netiShortenUrlHistoryThead)
+                  .append($('<tbody>'))
+              );
+            }
+
+            var $tr = $('<tr>');
+            $tr.append($('<td>').text($('#utm-source').val()));
+            $tr.append($('<td>').text($('#utm-medium').val()));
+            $tr.append($('<td>').text($('#utm-term').val()));
+            $tr.append($('<td>').text($('#utm-content').val()));
+            $tr.append($('<td>').text($('#utm-campaign').val()));
+            var $link = $('<a>').attr({href: shortUrl, target: '_blank', rel: 'noopener'}).text(shortUrl);
+            $tr.append($('<td>').append($link));
+            var $icon = $('<div class="helpicon shorten-url-target tooltip-inited">').attr('data-short-url', shortUrl);
+            $icon.append(document.createTextNode(' '));
+            var $longLink = function() {
+              return $('<a>').attr({href: sendUrl, target: '_blank', rel: 'noopener'}).text(sendUrl);
+            };
+            $icon.append($('<span style="display:none">').append($('<div class="crm-help">').append($longLink())));
+            $icon.append($('<span class="original-target-url">').append($longLink()));
+            $tr.append($('<td>').append($icon));
+
+            $accordion.find('tbody').prepend($tr);
+            $accordion.removeClass('crm-accordion-closed').addClass('crm-accordion-open');
+            $icon.toolTip({skipVerticalComparison: true, keepAlive: true});
+          }
+        },
+        error: function() {
+          $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
+          $('#shorten_url').nextAll('span.copied, div.font-red').remove();
+          $('#shorten_url').after(" <div class='font-red'>{/literal}{ts}Failed to shorten URL, please try again.{/ts}{literal}</div>");
+        }
+      });
+    });
+
+    // Copy Final URL button.
+    $(".full-url-copy").click(function() {
+      $("#shorten-url").dialog("widget").find('.copied').remove();
+      $("#result_url").select();
+      document.execCommand("copy");
+      $(".full-url-copy").after("<span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
+    });
+
+    // Select / copy when clicking the result or short-url input.
+    $("#shorten_url, #result_url").click(function(){
+      $("#shorten-url").dialog("widget").find('.copied').remove();
+      if ($(this).val()) {
+        $(this).select();
+        document.execCommand("copy");
+      }
+    });
+
+    // Clear input buttons.
+    $(".zmdi.clear-input").css('cursor', 'pointer');
+    $(".zmdi.clear-input").click(function(){
+      $(this).prev('input').val('');
+      $(this).prev('input').trigger('change');
+    });
   });
 {/literal}</script>

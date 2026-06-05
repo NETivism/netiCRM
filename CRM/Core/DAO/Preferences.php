@@ -196,6 +196,12 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
    */
   public $contact_autocomplete_options;
   /**
+   * If set, WYSIWYG editors allow all HTML content including script tags (XSS risk).
+   *
+   * @var boolean
+   */
+  public $editor_allow_all_content;
+  /**
    * class constructor
    *
    * @return civicrm_preferences
@@ -358,6 +364,11 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
           'title' => ts('Contact Autocomplete Options') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
+        ],
+        'editor_allow_all_content' => [
+          'name' => 'editor_allow_all_content',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Editor Allow All Content') ,
         ],
       ];
     }

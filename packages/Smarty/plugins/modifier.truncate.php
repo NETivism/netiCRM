@@ -38,7 +38,7 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...',
         if(!$middle) {
             return substr($string, 0, $length) . $etc;
         } else {
-            return substr($string, 0, $length/2) . $etc . substr($string, -$length/2);
+            return substr($string, 0, (int)($length/2)) . $etc . substr($string, -(int)($length/2));
         }
     } else {
         return $string;
