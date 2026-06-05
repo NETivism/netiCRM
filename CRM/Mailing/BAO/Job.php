@@ -303,6 +303,7 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
         // Re-check after acquiring lock to prevent duplicate calculation in concurrent processes.
         $hasChildAfterLock = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $jobTable WHERE is_test = 0 AND job_type = 'child' AND parent_id = {$job->id}");
         if (!$hasChildAfterLock) {
+          CRM_Core_Error::debug_log_message("Re-calculating recipients for mailing {$job->mailing_id} (job {$job->id})");
           CRM_Mailing_BAO_Mailing::getRecipients($job->mailing_id, $job->mailing_id, NULL, NULL, TRUE, $job->dedupe_email);
           $rlock->release();
           sleep(mt_rand(10, 40));
