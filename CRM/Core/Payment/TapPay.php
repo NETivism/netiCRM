@@ -1134,9 +1134,11 @@ LIMIT 0, 100
     if ($goPayment) {
       // Check if Credit card over date, unless it's expired recurring with active token
       if ($time <= strtotime($currentExpiryDate) || ($activeTokenOverride && $time > strtotime($currentExpiryDate))) {
-        // Change status to In Progress when card expiry date has been updated
-        if ($activeTokenOverride && !empty($newExpiryDate) && strtotime($newExpiryDate) >= strtotime($currentExpiryDate) && $time > strtotime($currentExpiryDate)) {
-          $isProgress = TRUE;
+        // Change status to In Progress only when TapPay returns a future expiry date.
+        if ($activeTokenOverride && !empty($newExpiryDate)) {
+          if ($newExpiryDate >= date('Ym', $time) && $newExpiryDate >= date('Ym', strtotime($currentExpiryDate))) {
+            $isProgress = TRUE;
+          }
         }
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
