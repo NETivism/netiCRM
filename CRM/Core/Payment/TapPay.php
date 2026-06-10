@@ -1502,6 +1502,8 @@ LIMIT 0, 100
     }
 
     // Convert expired recurring to Failed if no successful contribution in past 6 months
+    // refs #45628, temporarily disabled
+    /*
     $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
     $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
@@ -1535,6 +1537,7 @@ LIMIT 0, 100
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $noteMessage);
       }
     }
+    */
   }
 
   /**
