@@ -1134,9 +1134,11 @@ LIMIT 0, 100
     if ($goPayment) {
       // Check if Credit card over date, unless it's expired recurring with active token
       if ($time <= strtotime($currentExpiryDate) || ($activeTokenOverride && $time > strtotime($currentExpiryDate))) {
-        // Change status to In Progress when card expiry date has been updated
-        if ($activeTokenOverride && !empty($newExpiryDate) && strtotime($newExpiryDate) >= strtotime($currentExpiryDate) && $time > strtotime($currentExpiryDate)) {
-          $isProgress = TRUE;
+        // Change status to In Progress only when TapPay returns a future expiry date.
+        if ($activeTokenOverride && !empty($newExpiryDate)) {
+          if ($newExpiryDate >= date('Ym', $time) && $newExpiryDate >= date('Ym', strtotime($currentExpiryDate))) {
+            $isProgress = TRUE;
+          }
         }
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
@@ -1500,6 +1502,8 @@ LIMIT 0, 100
     }
 
     // Convert expired recurring to Failed if no successful contribution in past 6 months
+    // refs #45628, temporarily disabled
+    /*
     $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
     $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
@@ -1533,6 +1537,7 @@ LIMIT 0, 100
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $noteMessage);
       }
     }
+    */
   }
 
   /**
