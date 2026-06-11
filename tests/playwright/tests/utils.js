@@ -96,6 +96,39 @@ async function selectDate(page, locator, year, month, day){
     await expect(locator).toHaveValue(format.replace('yy', year).replace('mm', formatNumber(month)).replace('dd', formatNumber(day)));
 }
 
+/**
+ * Fill a WYSIWYG editor field, compatible with both CKEditor 4 (iframe-based)
+ * and CKEditor 5 (inline contenteditable). Detects whichever editor mounted on
+ * the given textarea id, types the text, and asserts it landed in the editor.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} fieldId The textarea element id, e.g. 'about'.
+ * @param {string} text    Text to type into the editor.
+ * @return {Promise<void>}
+ */
+async function fillWysiwyg(page, fieldId, text){
+    // CKEditor 5: inline contenteditable mounted as the textarea's next sibling.
+    const cke5 = `#${fieldId} + .ck-editor .ck-editor__editable`;
+    // CKEditor 4: legacy iframe-based editable.
+    const cke4Frame = 'iframe.cke_wysiwyg_frame';
+
+    // Wait for whichever editor variant mounted.
+    await page.locator(`${cke5}, ${cke4Frame}`).first().waitFor({ state: 'visible' });
+
+    if (await page.locator(cke5).count() > 0){
+        const editable = page.locator(cke5);
+        await editable.click();
+        await page.keyboard.type(text);
+        await expect(editable.locator('p').first()).toHaveText(text);
+    }
+    else {
+        const p = page.frameLocator(cke4Frame).locator('p').first();
+        await p.click({ position: { x: 0, y: 0 } });
+        await page.keyboard.type(text);
+        await expect(p).toHaveText(text);
+    }
+}
+
 function wait(ms){
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -208,5 +241,5 @@ async function setParticipantNum(page, page_title, event_id, full_participant='5
 }
 
 module.exports = {
-    makeid, print, logoutUser, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, wait, getPageTitle, fillForm ,reLogin , setParticipantNum
+    makeid, print, logoutUser, findElement, findElementByLabel, fillInput, checkInput, selectOption, clickElement, selectDate, fillWysiwyg, wait, getPageTitle, fillForm ,reLogin , setParticipantNum
 }

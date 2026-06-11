@@ -22,14 +22,15 @@
       const $el = cj(el);
       const currentType = $el.data('current-editor-type') || ($el.hasClass('ckeditor5-processed') ? 'cke5' : 'cke4');
       if (format === currentType) return;
-
-      const $container = $el.closest('.crm-section').find('.editor-switch-status');
-      $container.text('Switching...').css('color', '#666');
+      const $switcherStatus = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-switch-status');
+      const $switcher = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-format-switcher');
+      $switcher.prop('disabled', true);
+      $switcherStatus.html('<i class="zmdi zmdi-spinner zmdi-hc-spin"></i>');
 
       try {
         const content = await this.getCurrentContent(el, currentType);
         await this.destroyEditor(el, currentType);
-        
+
         await new Promise(resolve => setTimeout(resolve, 200));
 
         if (format === 'cke4') {
@@ -39,16 +40,21 @@
         }
 
         $el.data('current-editor-type', format);
-        $container.text('✓ Switched').css('color', 'green');
+        $switcherStatus.empty();
+        $switcher.prop('disabled', false);
       } catch (error) {
         console.error('Switch error:', error);
-        $container.text('✗ Failed: ' + error.message).css('color', 'red');
+        $switcherStatus.empty();
+        $switcher.prop('disabled', false);
       }
     },
 
     getCurrentContent: async function(el, type) {
-      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[el.name]) {
-        return window.CKEDITOR.instances[el.name].getData();
+      // CKE4 keys instances by element id (bracketed names like
+      // email[1][signature_html] become ids email_1_signature_html).
+      var cke4Key = el.id || el.name;
+      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[cke4Key]) {
+        return window.CKEDITOR.instances[cke4Key].getData();
       } else if (type === 'cke5') {
         const container = el.nextElementSibling;
         if (container && container.classList.contains('ck-editor')) {
@@ -62,8 +68,9 @@
     },
 
     destroyEditor: async function(el, type) {
-      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[el.name]) {
-        window.CKEDITOR.instances[el.name].destroy();
+      var cke4Key = el.id || el.name;
+      if (type === 'cke4' && window.CKEDITOR && window.CKEDITOR.instances[cke4Key]) {
+        window.CKEDITOR.instances[cke4Key].destroy();
         cj(el).removeClass('ckeditor-processed');
       } else if (type === 'cke5') {
         const container = el.nextElementSibling;
@@ -111,8 +118,9 @@
           cke4Config.filebrowserImageBrowseUrl = config.imceUrl + '&type=Images';
         }
 
-        // Pass configuration object directly to replace()
-        const instance = window.CKEDITOR.replace(el.name, cke4Config);
+        // Pass the DOM element (not the bracketed name) so the instance is
+        // keyed consistently by element id.
+        const instance = window.CKEDITOR.replace(el, cke4Config);
         
         instance.on('key', function(evt) {
           window.global_formNavigate = false;

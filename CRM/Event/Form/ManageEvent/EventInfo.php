@@ -154,7 +154,6 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     return $defaults;
   }
 
-
   /**
    * Function to build the form
    *

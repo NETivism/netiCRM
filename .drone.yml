@@ -25,6 +25,7 @@ steps:
     - /usr/bin/supervisord &
     - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit Packages/Smarty
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BaseIPNTest.php
