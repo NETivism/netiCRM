@@ -277,7 +277,7 @@ WHERE j.job_type = 'child'
     // Select all the mailing jobs that are created from
     // when the mailing is submitted or scheduled.
     $query = "
-SELECT j.*, m.dedupe_email
+SELECT j.*, m.dedupe_email, m.created_id
   FROM $jobTable j
   INNER JOIN $mailingTable m ON m.id = j.mailing_id AND m.domain_id = {$domainID}
 WHERE j.is_test = 0
@@ -304,7 +304,27 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
         $hasChildAfterLock = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM $jobTable WHERE is_test = 0 AND job_type = 'child' AND parent_id = {$job->id}");
         if (!$hasChildAfterLock) {
           CRM_Core_Error::debug_log_message("Re-calculating recipients for mailing {$job->mailing_id} (job {$job->id})");
+          // refs #22088, in cron context there is no logged-in user, so the ACL
+          // cacheClause() inside getRecipients() resolves user_id to 0 and filters
+          // out every contact, producing an empty recipients list. Login the CMS
+          // user of the mailing creator (civicrm_mailing.created_id) so both the
+          // Drupal-level permission check ('view all contacts') and the ACL cache
+          // are evaluated against that user while calculating recipients.
+          $session = CRM_Core_Session::singleton();
+          $originalUFID = $session->get('ufID');
+          $impersonated = FALSE;
+          $creatorUFID = CRM_Core_BAO_UFMatch::getUFId($job->created_id);
+          if (!empty($creatorUFID)) {
+            CRM_Utils_System::loadUser(['uid' => $creatorUFID]);
+            $impersonated = TRUE;
+          }
           CRM_Mailing_BAO_Mailing::getRecipients($job->mailing_id, $job->mailing_id, NULL, NULL, TRUE, $job->dedupe_email);
+          // Restore the original CMS user for the rest of the cron run.
+          if ($impersonated) {
+            if (!empty($originalUFID)) {
+              CRM_Utils_System::loadUser(['uid' => $originalUFID]);
+            }
+          }
           $rlock->release();
           sleep(mt_rand(10, 40));
         }
