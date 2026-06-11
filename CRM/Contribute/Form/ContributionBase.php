@@ -342,6 +342,21 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
               $pageId = NULL;
             }
           }
+
+          // refs #42406, restore pre-#42406 defaultRenewalPageId fallback for renewal-link visits only.
+          // A personalized renewal link carries cid + cs; general visitors (bare URL) fall through to
+          // the unavailable notice (AC-3). Only the presence of cid + cs is checked: identity is not
+          // forwarded to the public default page, so validating the checksum guards nothing and would
+          // wrongly strand donors clicking an expired link (checksum default TTL is 7 days).
+          if (!$pageId) {
+            $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+            $cs = CRM_Utils_Request::retrieve('cs', 'String', $this);
+            if ($cid && $cs) {
+              $config = CRM_Core_Config::singleton();
+              $pageId = $config->defaultRenewalPageId;
+            }
+          }
+
           if ($pageId) {
             // Handle utm params
             $utmParams = ['utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign'];
