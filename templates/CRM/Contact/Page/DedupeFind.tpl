@@ -99,6 +99,26 @@ cj(document).ready(function($){
         return false;
       }
   });
+
+  // Refs #46518, Fix pager go-to-page button not working on dedupefind page.
+  $('input[name="PagerTopButton"]').on('click', function(e) {
+    e.preventDefault();
+    var page = parseInt($('input[name="crmPID"]').first().val(), 10);
+    if (page >= 1) {
+      var url = new URL(window.location.href);
+      url.searchParams.set('crmPID', page);
+      window.location.href = url.toString();
+    }
+  });
+  $('input[name="PagerBottomButton"]').on('click', function(e) {
+    e.preventDefault();
+    var page = parseInt($('input[name="crmPID_B"]').first().val(), 10);
+    if (page >= 1) {
+      var url = new URL(window.location.href);
+      url.searchParams.set('crmPID', page);
+      window.location.href = url.toString();
+    }
+  });
 });
 {/literal}</script>
 </div>
