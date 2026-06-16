@@ -447,3 +447,34 @@
   });
 {/literal}</script>
 {/if}
+
+{if $ppType eq 'Mobile'}
+{* refs #45587, repurpose the subject field as a LINE Pay Recurring enable/disable checkbox *}
+<script>{literal}
+  jQuery(document).ready(function($){
+    function setLinePayRecurOption(formBlockName) {
+      var subjectFieldDiv = $(formBlockName);
+      var subjectTextField = subjectFieldDiv.find('input.form-text[type="text"]');
+      if (!subjectTextField.length) {
+        return;
+      }
+      subjectTextField.hide();
+      var newCheckBox = $('<input type="checkbox">');
+      newCheckBox.insertBefore(subjectTextField);
+      newCheckBox.change(function(){
+        subjectTextField.val(newCheckBox.prop('checked') ? '1' : '');
+      });
+      var subjectLabel = subjectFieldDiv.find('label');
+      subjectLabel.text('{/literal}{ts}Enable{/ts} {ts}LINE Pay Recurring{/ts}{literal}');
+      subjectLabel.click(function(){
+        newCheckBox.click();
+      });
+      if (subjectTextField.val() === '1') {
+        newCheckBox.prop('checked', 1);
+      }
+    }
+    setLinePayRecurOption('.crm-paymentProcessor-form-block-subject');
+    setLinePayRecurOption('.crm-paymentProcessor-form-block-test_subject');
+  });
+{/literal}</script>
+{/if}

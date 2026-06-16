@@ -50,6 +50,13 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   protected static $_params = [];
 
   /**
+   * Failed (4) / Overdue-Expired (6) can never be picked by a human on the
+   * Recurring contribution edit form for a LINE Pay preapproved recurring;
+   * the system sets them (refs #45587).
+   */
+  public static $_excludedStatuses = [4, 6];
+
+  /**
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
    *
@@ -174,9 +181,19 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     CRM_Core_Error::debug_var('mobile_payment_params', $params);
 
     if ($this->_instrumentType == 'linepay') {
-      CRM_Core_Error::debug_var('mobile_payment_linepay', $cid);
       $this->_mobilePayment = new CRM_Core_Payment_LinePay($this->_mode, $this->_paymentProcessor);
-      $this->_mobilePayment->doRequest($params);
+      try {
+        // doRequest() redirects to LINE Pay on success; on failure it throws.
+        $this->_mobilePayment->doRequest($params);
+      }
+      catch (Exception $e) {
+        // Bounce to the thank you page with the failure flag
+        // (payment_result_type=4) so the donor sees an error message instead of
+        // mistaking a failed request for a completed transaction (refs #45587).
+        CRM_Core_Error::debug_log_message('LINE Pay doRequest failed: ' . $e->getMessage());
+        $thankyou_url = CRM_Core_Payment_LinePay::prepareThankYouUrl(CRM_Utils_System::currentPath(), $params['qfKey'], TRUE);
+        CRM_Utils_System::redirect($thankyou_url);
+      }
       return;
     }
 
@@ -246,6 +263,139 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $payment = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
       $payment->doTransferCheckout($params, $component);
     }
+  }
+
+  /**
+   * Fields editable on the Recurring contribution edit form
+   * (CRM/Contribute/Form/ContributionRecur.php).
+   *
+   * refs #45587. Only LINE Pay preapproved recurrings are editable through
+   * this form; other Mobile-type processors (Apple Pay, Google Pay, ...) are
+   * fully frozen.
+   *
+   * @param array $paymentProcessor payment processor params
+   * @param CRM_Core_Form $form the edit form, used to read the recurring ID
+   *
+   * @return array editable field names, or [] when the form should be frozen
+   */
+  public static function getEditableFields($paymentProcessor, $form) {
+    if (!CRM_Core_Payment_LinePay::isLinePayPreapprovedProcessor($paymentProcessor)) {
+      return [];
+    }
+    if (!self::isLinePayInstrument($form->_id)) {
+      return [];
+    }
+    return CRM_Core_Payment_LinePay::getEditableFields($form->_id);
+  }
+
+  /**
+   * Apply LINE Pay side-effects when the Recurring contribution edit form is saved.
+   *
+   * refs #45587. Only called by the form when getEditableFields() returned a
+   * non-empty list, i.e. only for an unlocked LINE Pay preapproved recurring.
+   *
+   * @param array $params changed fields, plus contribution_recur_id and trxn_id
+   * @param bool $debug debug mode
+   *
+   * @return array ['is_error' => int, 'msg' => string]
+   */
+  public function doUpdateRecur($params, $debug = FALSE) {
+    if (!CRM_Core_Payment_LinePay::isLinePayPreapprovedProcessor($this->_paymentProcessor)) {
+      return $params;
+    }
+    if (!self::isLinePayInstrument($params['contribution_recur_id'])) {
+      return $params;
+    }
+    return CRM_Core_Payment_LinePay::updateRecur($params, $debug);
+  }
+
+  /**
+   * Assign template variables for the Recurring contribution edit form.
+   *
+   * refs #45587. Provides the LINE Pay preapproved key's 180-day expiry window
+   * so the form can warn an admin who pauses (Suspended, status 7) a recurring.
+   *
+   * @param CRM_Core_Form $form the edit form
+   *
+   * @return void
+   */
+  public static function postBuildForm(&$form) {
+    if (empty($form->_id)) {
+      return;
+    }
+    $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->_id, 'processor_id');
+    if (empty($processorId)) {
+      return;
+    }
+    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->_id, 'is_test');
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test' : 'live');
+    if (!CRM_Core_Payment_LinePay::isLinePayPreapprovedProcessor($paymentProcessor)) {
+      return;
+    }
+    if (!self::isLinePayInstrument($form->_id)) {
+      return;
+    }
+    $expiry = CRM_Core_Payment_LinePay::getRegKeyExpiryInfo($form->_id);
+    if (!empty($expiry)) {
+      $form->assign('linepay_last_charge_date', $expiry['last_charge_date']);
+      $form->assign('linepay_regkey_expiry_date', $expiry['expiry_date']);
+    }
+  }
+
+  /**
+   * Handle recurring transaction trigger.
+   *
+   * refs #45587. "Process now" on the Recurring contribution view is only
+   * meaningful for a LINE Pay preapproved recurring whose latest contribution
+   * was itself paid via LINE Pay; other Mobile-type processors (Apple Pay,
+   * Google Pay, ...) don't support this action.
+   *
+   * @param int|null $recurId recurring ID
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return array result note
+   */
+  public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
+    if (empty($recurId) || !CRM_Utils_Type::validate($recurId, 'Positive')) {
+      $msg = ts('Missing required field: %1', [1 => 'Recurring Id']);
+      return ['status' => '', 'msg' => $msg];
+    }
+
+    $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'processor_id');
+    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'is_test');
+    $paymentProcessor = !empty($processorId) ? CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test' : 'live') : NULL;
+    if (empty($paymentProcessor) || !CRM_Core_Payment_LinePay::isLinePayPreapprovedProcessor($paymentProcessor)) {
+      $msg = ts("Recurring contribution %1 doesn't have LINE Pay Recurring enabled.", [1 => $recurId]);
+      CRM_Core_Error::debug_log_message($msg);
+      return ['status' => '', 'msg' => $msg];
+    }
+
+    if (!self::isLinePayInstrument($recurId)) {
+      $msg = ts("The latest contribution of recurring %1 was not paid with LINE Pay.", [1 => $recurId]);
+      CRM_Core_Error::debug_log_message($msg);
+      return ['status' => '', 'msg' => $msg];
+    }
+
+    return CRM_Core_Payment_LinePay::doRecurTransact($recurId, $sendMail);
+  }
+
+  /**
+   * Whether the latest contribution of a recurring was paid via LINE Pay.
+   *
+   * refs #45587. Used to gate LINE Pay preapproved actions (editing, manual
+   * "Process now") to recurrings whose payments actually flow through LINE Pay.
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return bool TRUE when the latest contribution's payment instrument is LINE Pay
+   */
+  private static function isLinePayInstrument($recurId) {
+    // Compare the option value machine name ('LinePay'), never the label:
+    // the label is localized and free to be renamed by the site.
+    $instrumentName = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_contribution c INNER JOIN civicrm_option_value v ON v.value = c.payment_instrument_id INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND c.contribution_recur_id = %1 ORDER BY c.id DESC LIMIT 1", [
+      1 => [$recurId, 'Positive'],
+    ]);
+    return strtolower((string) $instrumentName) === 'linepay';
   }
 
   /**
@@ -572,6 +722,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     return $isPass;
   }
+
   /**
    * Get the sync data URL for manual synchronization.
    *
@@ -594,4 +745,18 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     }
     return $sync_url;
   }
+
+  /**
+   * Get the recurring cancelation message.
+   *
+   * @param int $recurID recurring ID
+   *
+   * @return string HTML message and JS
+   */
+  public function cancelRecuringMessage($recurID) {
+    $text = '<p>'.ts("Please edit recurring and change status to 'Cancelled'.").'</p>';
+    $js = '<script>cj(".ui-dialog-buttonset button").hide();</script>';
+    return $text . $js;
+  }
+
 }

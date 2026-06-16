@@ -226,6 +226,117 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   }
 
   /**
+   * refs #45587, 'recurring/payment' body whitelist for preapproved payment.
+   * regKey is a path param and must NOT appear in the body whitelist.
+   */
+  public function testRecurringPaymentFieldsWhitelist() {
+    $fields = CRM_Core_Payment_LinePayAPI::fields('recurring/payment');
+    $this->assertEquals(['amount', 'currency', 'orderId', 'productName'], $fields);
+    $this->assertNotContains('regKey', $fields);
+  }
+
+  /**
+   * refs #45587, 'recurring/payment' is a supported apiType and resolves to the
+   * v4 preapproved endpoint with the {regKey} path placeholder.
+   */
+  public function testRecurringPaymentApiTypeSupported() {
+    $api = CRM_Core_Payment_LinePayAPI::create([
+      'url_site' => 'ChannelId123',
+      'url_api' => 'ChannelSecret123',
+      'is_test' => 1,
+    ], 'recurring/payment');
+    $ref = new ReflectionObject($api);
+    $prop = $ref->getProperty('_apiURL');
+    $prop->setAccessible(TRUE);
+    $url = $prop->getValue($api);
+    $this->assertEquals(CRM_Core_Payment_LinePayAPI::LINEPAY_TEST . '/v4/payments/preapprovedPay/{regKey}/payment', $url);
+  }
+
+  /**
+   * refs #45587, recurring donation body carries payType PREAPPROVED plus a
+   * RECURRING regPayRequest, while keeping capture true.
+   */
+  public function testRequestBodyPreapprovedShape() {
+    $amount = 1000;
+    $body = [
+      'amount' => $amount,
+      'currency' => 'TWD',
+      'orderId' => '12345',
+      'options' => [
+        'payment' => [
+          'capture' => TRUE,
+          'payType' => 'PREAPPROVED',
+        ],
+        'regPayRequest' => [
+          'regPayPeriodType' => 'RECURRING',
+          'recurringPeriod' => CRM_Core_Payment_LinePayAPI::recurringPeriod('month'),
+          'productPrice' => $amount,
+          'recurringDay' => 5,
+        ],
+      ],
+    ];
+
+    $this->assertEquals('PREAPPROVED', $body['options']['payment']['payType']);
+    $this->assertTrue($body['options']['payment']['capture']);
+    $this->assertEquals('RECURRING', $body['options']['regPayRequest']['regPayPeriodType']);
+    $this->assertEquals('MONTH', $body['options']['regPayRequest']['recurringPeriod']);
+
+    $json = json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $this->assertNotFalse($json);
+    $this->assertEquals($body, json_decode($json, TRUE));
+  }
+
+  /**
+   * refs #45587, a non-recurring request must not carry preapproved fields.
+   */
+  public function testNormalRequestHasNoPreapproved() {
+    $body = [
+      'amount' => 1000,
+      'currency' => 'TWD',
+      'orderId' => '12345',
+      'options' => [
+        'payment' => ['capture' => TRUE],
+        'display' => ['locale' => 'en', 'checkConfirmUrlBrowser' => TRUE],
+      ],
+    ];
+    $this->assertArrayNotHasKey('payType', $body['options']['payment']);
+    $this->assertArrayNotHasKey('regPayRequest', $body['options']);
+  }
+
+  /**
+   * refs #45587, CiviCRM frequency unit maps to a LINE Pay recurringPeriod.
+   */
+  public function testRecurringPeriodMapping() {
+    $this->assertEquals('WEEK', CRM_Core_Payment_LinePayAPI::recurringPeriod('week'));
+    $this->assertEquals('MONTH', CRM_Core_Payment_LinePayAPI::recurringPeriod('month'));
+    $this->assertEquals('YEAR', CRM_Core_Payment_LinePayAPI::recurringPeriod('year'));
+    $this->assertNull(CRM_Core_Payment_LinePayAPI::recurringPeriod('day'));
+  }
+
+  /**
+   * refs #45587, preapprovedPay body is signed correctly (32-byte HMAC, Base64)
+   * and the signature is sensitive to body changes.
+   */
+  public function testPreapprovedPayBodyAndSignature() {
+    $channelSecret = 'ChannelSecret123';
+    $apiPath = '/v4/payments/preapprovedPay/RK2AE3519XTFXHM/payment';
+    $nonce = '550e8400-e29b-41d4-a716-446655440000';
+    $body = json_encode([
+      'amount' => 1000,
+      'currency' => 'TWD',
+      'orderId' => '12345',
+      'productName' => 'Test Page',
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+    $sig = CRM_Core_Payment_LinePayAPI::_signature($channelSecret, $apiPath, $body, $nonce);
+    $this->assertEquals(32, strlen(base64_decode($sig)));
+
+    $bodyB = str_replace('1000', '2000', $body);
+    $sigB = CRM_Core_Payment_LinePayAPI::_signature($channelSecret, $apiPath, $bodyB, $nonce);
+    $this->assertNotEquals($sig, $sigB);
+  }
+
+  /**
    * @after
    */
   public function tearDownTest() {

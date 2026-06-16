@@ -738,6 +738,19 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('special_style', 1);
       $this->assign('min_amount', (float) $this->_values['min_amount']);
       $this->assign('max_amount', (float) $this->_values['max_amount']);
+      // refs #45587, expose LINE Pay preapproved recurring to the special page JS
+      // so recurring can be set up with the LINE Pay instrument, not only credit card.
+      $linepayRecur = FALSE;
+      if (!empty($this->_paymentProcessors)) {
+        foreach ($this->_paymentProcessors as $eachPP) {
+          if (CRM_Utils_Array::value('payment_processor_type', $eachPP) === 'Mobile' && !empty($eachPP['subject']) && !empty($eachPP['url_site'])) {
+            $linepayRecur = TRUE;
+            break;
+          }
+        }
+      }
+      $this->assign('linepay_recur', $linepayRecur ? 1 : 0);
+      $this->assign('linepay_instrument_id', $linepayRecur ? CRM_Core_OptionGroup::getValue('payment_Instrument', 'LinePay', 'name') : '');
       $object = [
         'tag' => 'link',
         'attributes' =>  [

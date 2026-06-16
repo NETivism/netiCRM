@@ -443,6 +443,36 @@
     {/literal}
     {/if}
 
+    {if $payment_type == 'Mobile'}
+    {literal}
+    <script>
+      (function($){
+        $(function(){
+          var $statusSelect = $('select#contribution_status_id');
+          if (!$statusSelect.length || $statusSelect.prop('disabled')) {
+            return;
+          }
+          var originStatus = $statusSelect.attr('data-origin-status');
+          $statusSelect.change(function(e){
+            var newStatus = e.target.value;
+            if (newStatus === originStatus) {
+              return;
+            }
+            if (newStatus === '1' || newStatus === '3') {
+              if (!window.confirm("{/literal}{ts}If you choose this status, this recurring contribution will never be charged again. Are you sure you want to continue?{/ts}{literal}")) {
+                e.target.value = originStatus;
+              }
+            }
+            else if (newStatus === '7') {
+              window.alert("{/literal}{ts 1=$linepay_last_charge_date 2=$linepay_regkey_expiry_date}The LINE Pay preapproved key is valid for 180 days. The last successful charge was on %1. If no charge succeeds before %2, the system will automatically set this recurring contribution to Expired.{/ts}{literal}");
+            }
+          });
+        });
+      })(cj);
+    </script>
+    {/literal}
+    {/if}
+
 
     {if $form.note_title.html}
     {literal}

@@ -646,7 +646,9 @@
           if(!this.currentPriceAmount || this.currentPriceAmount == 0){
             error_msg.push('Please enter a valid amount.');
           }
-          if(this.currentContribType == 'recurring' && $('[data-credit-card="1"]:checked').length == 0){
+          var linepayRecurOk = window.ContribPageParams.linepayRecur && window.ContribPageParams.linepayInstrumentId &&
+            $('input[id^=civicrm-instrument-dummy]:checked').val() == window.ContribPageParams.linepayInstrumentId;
+          if(this.currentContribType == 'recurring' && $('[data-credit-card="1"]:checked').length == 0 && !linepayRecurOk){
             error_msg.push('You cannot set up a recurring contribution if you are not paying online by credit card.');
           }
           if(window.ContribPageParams.minAmount && !this.currentPriceOption && this.currentPriceAmount < parseInt(window.ContribPageParams.minAmount)){

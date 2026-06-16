@@ -700,8 +700,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         is_array($this->_paymentProcessors)
       ) {
         foreach ($this->_paymentProcessors as $value) {
-          if ($value['is_recur']) {
+          // refs #45587, LINE Pay (Mobile) preapproved recurring is enabled via subject = '1'.
+          $linepayRecur = CRM_Utils_Array::value('payment_processor_type', $value) === 'Mobile' && !empty($value['subject']) && !empty($value['url_site']);
+          if ($value['is_recur'] || $linepayRecur) {
             $this->buildRecur();
+            break;
           }
         }
       }
@@ -1407,7 +1410,19 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if (empty($credit_card_iid)) {
       $credit_card_iid = '1';
     }
-    if (CRM_Utils_Array::value('is_recur', $fields) && (CRM_Utils_Array::value('payment_processor', $fields) == 0 || CRM_Utils_Array::value('civicrm_instrument_id', $fields) != $credit_card_iid)) {
+    // refs #45587, LINE Pay (Mobile) preapproved recurring is allowed alongside credit
+    // card when the selected processor has recurring enabled (subject = '1').
+    $instrumentId = CRM_Utils_Array::value('civicrm_instrument_id', $fields);
+    $selectedPP = CRM_Utils_Array::value('payment_processor', $fields);
+    $linepay_iid = CRM_Core_OptionGroup::getValue('payment_Instrument', 'LinePay', 'name');
+    $linepayRecur = !empty($linepay_iid)
+      && $instrumentId == $linepay_iid
+      && !empty($selectedPP)
+      && !empty($self->_paymentProcessors[$selectedPP])
+      && $self->_paymentProcessors[$selectedPP]['payment_processor_type'] === 'Mobile'
+      && !empty($self->_paymentProcessors[$selectedPP]['subject'])
+      && !empty($self->_paymentProcessors[$selectedPP]['url_site']);
+    if (CRM_Utils_Array::value('is_recur', $fields) && !$linepayRecur && ($selectedPP == 0 || $instrumentId != $credit_card_iid)) {
       $errors['_qf_default'] = ts('You cannot set up a recurring contribution if you are not paying online by credit card.');
     }
 

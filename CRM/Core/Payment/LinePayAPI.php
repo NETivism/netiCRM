@@ -155,6 +155,23 @@ class CRM_Core_Payment_LinePayAPI {
   public $_response;
   public $_success;
 
+  /**
+   * Canned API responses consumed by tests (refs #45587).
+   *
+   * When non-empty, _curl() shifts one entry per request instead of calling
+   * the real LINE Pay API. Each entry is a JSON string or a decoded response
+   * object. Signature/nonce/body are still computed so tests exercise the
+   * exact bytes a real call would send; they are appended to
+   * self::$_requestLog for assertions.
+   */
+  public static $_mockResponseQueue = [];
+
+  /**
+   * Requests served from the mock queue, for test assertions.
+   * Each entry: url, method, body, nonce, signature.
+   */
+  public static $_requestLog = [];
+
   protected $_apiURL;
   protected $_isTest;
 
@@ -168,14 +185,16 @@ class CRM_Core_Payment_LinePayAPI {
     'query' => '/v4/payments',
     'request' => '/v4/payments/request',
     'confirm' => '/v4/payments/{transactionId}/confirm',
+    // refs #45587, preapproved payment via regKey
+    'recurring/payment' => '/v4/payments/preapprovedPay/{regKey}/payment',
+    // refs #45587, discard a preapproved regKey so it can never charge again
+    'recurring/expire' => '/v4/payments/preapprovedPay/{regKey}/expire',
     // not supportted api types
     #'refund' => '/v4/payments/{transactionId}/refund',
     #'check' => '/v4/payments/requests/{transactionId}/check',
     #'capture' => '/v4/payments/authorizations/{transactionId}/capture',
     #'void' => '/v4/payments/authorizations/{transactionId}/void',
-    #'recurring/payment' => '/v4/payments/preapprovedPay/{regKey}/payment',
     #'recurring/check' => '/v4/payments/preapprovedPay/{regKey}/check',
-    #'recurring/expire' => '/v4/payments/preapprovedPay/{regKey}/expire',
   ];
 
   protected $_apiGetMethodTypes = ['query', 'check', 'recurring/check'];
@@ -191,14 +210,14 @@ class CRM_Core_Payment_LinePayAPI {
   public function __construct($apiParams) {
     extract($apiParams);
     if (empty($channelId) || empty($channelSecret) || is_null($isTest) || empty($apiType)) {
-      CRM_Core_Error::fatal('Required parameters missing: channelId, channelSecret, isTest, apiType');
+      throw new CRM_Core_Exception('Required parameters missing: channelId, channelSecret, isTest, apiType');
     }
     foreach ($apiParams as $name => $val) {
       $name = '_'.$name;
       $this->$name = $val;
     }
     if (empty($this->_apiTypes[$this->_apiType])) {
-      CRM_Core_Error::fatal('API type not supported currently or given wrong type');
+      throw new CRM_Core_Exception('API type not supported currently or given wrong type');
     }
     else {
       $this->_apiURL = $isTest ? self::LINEPAY_TEST : self::LINEPAY_PROD;
@@ -255,11 +274,11 @@ class CRM_Core_Payment_LinePayAPI {
     // verify some parameter
     if ($this->_apiType == 'request') {
       if (!in_array($post['currency'], self::$_currencies)) {
-        CRM_Core_Error::fatal("Wrong currency specified: {$post['currency']}");
+        throw new CRM_Core_Exception("Wrong currency specified: {$post['currency']}");
       }
 
       if (empty($post['orderId'])) {
-        CRM_Core_Error::fatal("No contribution trxn_id (linepay orderId) specify");
+        throw new CRM_Core_Exception("No contribution trxn_id (linepay orderId) specify");
       }
       else {
         $this->writeRecord($post['orderId']);
@@ -278,7 +297,7 @@ class CRM_Core_Payment_LinePayAPI {
       $replace = $params[$matches[1]] ?? '';
       $newApiURL = str_replace($search, $replace, $this->_apiURL);
       if ($newApiURL == $this->_apiURL) {
-        CRM_Core_Error::fatal("Required params '$search' of this API type $this->_apiURL");
+        throw new CRM_Core_Exception("Required params '$search' of this API type $this->_apiURL");
         break;
       }
       else {
@@ -397,14 +416,37 @@ class CRM_Core_Payment_LinePayAPI {
 
     // Build the exact body bytes that will be both signed and POSTed.
     // Bytes must match exactly — re-encoding with different flags would break HMAC.
+    // Body-less POSTs (e.g. recurring/expire) sign and send an empty string so
+    // we never sign "[]" from an empty array.
     $body = '';
-    if ($this->_apiMethod == 'POST') {
+    if ($this->_apiMethod == 'POST' && !empty($this->_request)) {
       $body = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     $nonce = self::_generateNonce();
     $signTarget = $this->_apiMethod == 'GET' ? $this->_queryString : $body;
     $signature = self::_signature($this->_channelSecret, $this->_apiPath, $signTarget, $nonce);
+
+    // refs #45587, serve a canned response in tests instead of hitting the
+    // real LINE Pay API. Everything up to here (URL, body bytes, signature)
+    // is computed exactly as a live call would.
+    if (!empty(self::$_mockResponseQueue)) {
+      $mock = array_shift(self::$_mockResponseQueue);
+      self::$_requestLog[] = [
+        'url' => $this->_apiURL,
+        'method' => $this->_apiMethod,
+        'body' => $body,
+        'nonce' => $nonce,
+        'signature' => $signature,
+      ];
+      $this->_response = is_string($mock) ? json_decode($mock) : $mock;
+      $this->_success = !empty($this->_response->returnCode) && $this->_response->returnCode == '0000';
+      return [
+        'success' => $this->_success,
+        'status' => 200,
+        'curlError' => [],
+      ];
+    }
 
     $ch = curl_init($this->_apiURL);
     $opt = [];
@@ -473,8 +515,31 @@ class CRM_Core_Payment_LinePayAPI {
       case 'confirm':
         $fields = explode(',', 'amount,currency');
         break;
+        // refs #45587, preapproved payment body (regKey is a path param, not a body field)
+      case 'recurring/payment':
+        $fields = explode(',', 'amount,currency,orderId,productName');
+        break;
     }
     return $fields;
+  }
+
+  /**
+   * Map a CiviCRM recurring frequency unit to a LINE Pay recurringPeriod.
+   *
+   * refs #45587. Used by options.regPayRequest.recurringPeriod on the v4
+   * preapproved payment request. Only WEEK / MONTH / YEAR are supported.
+   *
+   * @param string $frequencyUnit CiviCRM frequency unit (week, month, year)
+   *
+   * @return string|null LINE Pay recurringPeriod or NULL when unsupported
+   */
+  public static function recurringPeriod($frequencyUnit) {
+    $map = [
+      'week' => 'WEEK',
+      'month' => 'MONTH',
+      'year' => 'YEAR',
+    ];
+    return $map[strtolower((string) $frequencyUnit)] ?? NULL;
   }
 
   /**
