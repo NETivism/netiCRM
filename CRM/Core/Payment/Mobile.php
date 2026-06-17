@@ -282,10 +282,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if (!CRM_Core_Payment_LinePay::isLinePayPreapprovedProcessor($paymentProcessor)) {
       return [];
     }
-    if (!self::isLinePayInstrument($form->_id)) {
+    $recurId = $form->get('id');
+    if (!self::isLinePayInstrument($recurId)) {
       return [];
     }
-    return CRM_Core_Payment_LinePay::getEditableFields($form->_id);
+    return CRM_Core_Payment_LinePay::getEditableFields($recurId);
   }
 
   /**
@@ -320,22 +321,23 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    * @return void
    */
   public static function postBuildForm(&$form) {
-    if (empty($form->_id)) {
+    $recurId = $form->get('id');
+    if (empty($recurId)) {
       return;
     }
-    $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->_id, 'processor_id');
+    $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'processor_id');
     if (empty($processorId)) {
       return;
     }
-    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $form->_id, 'is_test');
+    $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'is_test');
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $isTest ? 'test' : 'live');
     if (!CRM_Core_Payment_LinePay::isLinePayPreapprovedProcessor($paymentProcessor)) {
       return;
     }
-    if (!self::isLinePayInstrument($form->_id)) {
+    if (!self::isLinePayInstrument($recurId)) {
       return;
     }
-    $expiry = CRM_Core_Payment_LinePay::getRegKeyExpiryInfo($form->_id);
+    $expiry = CRM_Core_Payment_LinePay::getRegKeyExpiryInfo($recurId);
     if (!empty($expiry)) {
       $form->assign('linepay_last_charge_date', $expiry['last_charge_date']);
       $form->assign('linepay_regkey_expiry_date', $expiry['expiry_date']);
