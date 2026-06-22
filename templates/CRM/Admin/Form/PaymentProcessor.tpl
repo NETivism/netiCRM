@@ -449,7 +449,7 @@
 {/if}
 
 {if $ppType eq 'Mobile'}
-{* refs #45587, repurpose the subject field as a LINE Pay Recurring enable/disable checkbox *}
+{* refs #45595, repurpose the subject field as a LINE Pay Recurring enable/disable checkbox *}
 <script>{literal}
   jQuery(document).ready(function($){
     function setLinePayRecurOption(formBlockName) {
@@ -475,6 +475,76 @@
     }
     setLinePayRecurOption('.crm-paymentProcessor-form-block-subject');
     setLinePayRecurOption('.crm-paymentProcessor-form-block-test_subject');
+
+    // refs #45595, signature (Apple Pay merchant identifier) is not used for LINE Pay setup
+    $('.crm-paymentProcessor-form-block-signature').hide();
+    $('.crm-paymentProcessor-form-block-test_signature').hide();
+
+    // refs #45595, merchant-processor (user_name) and provider (password) setup.
+    // Migrated here from the civicrm_instrument module so the LINE Pay (Mobile)
+    // admin form is self-contained:
+    //   - user_name: hide the raw text input and drive it with a dropdown of
+    //     ALLPAY/SPGATEWAY processors (or 'none' for LINE Pay only).
+    //   - password: holds the provider name and is only meaningful when a
+    //     merchant is set, so expose it as a single-option select and
+    //     clear/hide it when user_name is 'none'.
+    var mobileProcessorOptionsLive = {/literal}{if $mobile_processor_options_live}{$mobile_processor_options_live}{else}{ldelim}{rdelim}{/if}{literal};
+    var mobileProcessorOptionsTest = {/literal}{if $mobile_processor_options_test}{$mobile_processor_options_test}{else}{ldelim}{rdelim}{/if}{literal};
+    function setupMobileMerchant(isTestStr, options) {
+      var userNameBlockName = '.crm-paymentProcessor-form-block-' + isTestStr + 'user_name';
+      var passwordBlockName = '.crm-paymentProcessor-form-block-' + isTestStr + 'password';
+      var processorSelectId = isTestStr + 'used_payment_processor_id';
+      var userNameTextDiv = $(userNameBlockName + ' .crm-form-textfield');
+      var userNameField = userNameTextDiv.find('input');
+      var passwordFieldDiv = $(passwordBlockName);
+      var passwordTextField = passwordFieldDiv.find('input.form-text[type="text"]');
+      if (!userNameField.length || !passwordTextField.length) {
+        return;
+      }
+
+      // Merchant processor dropdown that replaces the raw user_name text input.
+      if (userNameField.val() === '') {
+        userNameField.val('none');
+      }
+      var merchantSelect = $('<select class="form-select required">')
+        .attr({'name': processorSelectId, 'id': processorSelectId});
+      merchantSelect.append($('<option value="none">{/literal}{ts}None{/ts} / {ts}Line Pay Only{/ts}{literal}</option>'));
+      $.each(options, function(value, label){
+        merchantSelect.append($('<option>').attr('value', value).text(label));
+      });
+      userNameTextDiv.after($('<div class="crm-form-select">').append(merchantSelect));
+      merchantSelect.val(userNameField.val());
+      userNameTextDiv.hide();
+
+      // Provider (password) single-option select.
+      passwordTextField.hide();
+      var providerSelect = $('<select class="form-select">');
+      providerSelect.append($('<option value="spgateway">NewebPay</option>'));
+      providerSelect.insertBefore(passwordTextField);
+      providerSelect.change(function(){
+        passwordTextField.val(providerSelect.val());
+      });
+      function applyProviderState() {
+        // Only the exact value 'none' means "no merchant".
+        if (userNameField.val() === 'none') {
+          passwordTextField.val('');
+          passwordFieldDiv.hide();
+        }
+        else {
+          passwordFieldDiv.show();
+          // Single supported provider: force password to the select's value.
+          providerSelect.val('spgateway');
+          passwordTextField.val(providerSelect.val());
+        }
+      }
+      merchantSelect.change(function(){
+        userNameField.val($(this).val());
+        applyProviderState();
+      });
+      applyProviderState();
+    }
+    setupMobileMerchant('', mobileProcessorOptionsLive);
+    setupMobileMerchant('test_', mobileProcessorOptionsTest);
   });
 {/literal}</script>
 {/if}

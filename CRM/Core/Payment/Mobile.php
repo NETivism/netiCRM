@@ -631,6 +631,24 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   public static function getAdminFields($ppDAO, $form) {
     $text = ts('If the provider needs server IP address, the IP address of this website is %1', [1 => gethostbyname($_SERVER['HTTP_HOST'])]);
     CRM_Core_Session::setStatus($text);
+
+    // refs #45595, build the merchant-processor (user_name) select options.
+    // Migrated here from the civicrm_instrument module so the LINE Pay (Mobile)
+    // admin form is self-contained: user_name links a real ALLPAY/SPGATEWAY
+    // processor (or 'none' for LINE Pay only). The template turns these into a
+    // dropdown that writes back into the hidden user_name field.
+    $smarty = CRM_Core_Smarty::singleton();
+    foreach (['live' => 0, 'test' => 1] as $modeLabel => $isTest) {
+      $options = [];
+      $dao = CRM_Core_DAO::executeQuery("SELECT id, name, user_name FROM civicrm_payment_processor WHERE class_name IN ('Payment_ALLPAY', 'Payment_SPGATEWAY') AND is_test = %1 GROUP BY user_name", [
+        1 => [$isTest, 'Integer'],
+      ]);
+      while ($dao->fetch()) {
+        $options[$dao->id] = "{$dao->user_name} ({$dao->name})";
+      }
+      $smarty->assign("mobile_processor_options_{$modeLabel}", json_encode($options, JSON_FORCE_OBJECT));
+    }
+
     return [
       ['name' => 'user_name',
         'label' => $ppDAO->user_name_label,
