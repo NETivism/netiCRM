@@ -54,7 +54,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    * Recurring contribution edit form for a LINE Pay preapproved recurring;
    * the system sets them (refs #45587).
    */
-  public static $_excludedStatuses = [4, 6];
+  public static $_excludedStatuses = [2, 4, 6];
 
   /**
    * We only need one instance of this object. So we use the singleton

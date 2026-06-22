@@ -868,6 +868,16 @@ LIMIT 1";
     if (self::isRegKeyVoidedCode($returnCode)) {
       self::voidRegKey($recurringId, $returnCode, $returnMessage);
     }
+    // refs #45587, code 1193 means the preapproved regKey has already expired on
+    // the LINE Pay side, so it can never charge again. Drop the key locally and
+    // move the recurring to Expired (6).
+    elseif ($returnCode === '1193') {
+      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_linepay SET reg_key = NULL WHERE contribution_recur_id = %1", [
+        1 => [$recurringId, 'Positive'],
+      ]);
+      $note = ts("LINE Pay returned code 1193: the preapproved key has expired, so the recurring contribution is set to Expired.");
+      self::setRecurStatus($recurringId, 6, $note);
+    }
 
     return ['status' => $returnCode, 'msg' => $returnMessage];
   }
@@ -969,7 +979,7 @@ INNER JOIN
 WHERE
   $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
-AND r.contribution_status_id in (5,6)
+AND r.contribution_status_id in (5,7)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'Mobile'
 AND (r.last_execute_date IS NULL OR r.last_execute_date < '$currentDay')
@@ -1033,27 +1043,34 @@ LIMIT 0, 100
     $resultNote = "Syncing recurring $recurId ";
     $recurStatus = (int) $dao->recur_status_id;
 
-    // refs #45587, terminal statuses Completed (1) / Cancelled (3) must never
+    // refs #45597, do not execute payment when pending / complete / failed / expired
+    if (in_array($recurId, [1,2,4,6], TRUE)) {
+      $resultNote .= ts("Recurring already in a skip status (%s); skipped execute payment.", [1 =>  CRM_Contribute_PseudoConstant::contributionStatus($recurStatus)]);
+      CRM_Core_Error::debug_log_message($resultNote);
+      return $resultNote;
+    }
+
+    // refs #45597, terminal statuses Cancelled (3) must never
     // charge again: discard the regKey and stop.
-    if (in_array($recurStatus, [1, 3], TRUE)) {
+    if ($recurStatus === 3) {
       self::expireRegKey($recurId);
       $resultNote .= ts("Recurring already in a terminal status (%1); preapproved key discarded.", [1 => CRM_Contribute_PseudoConstant::contributionStatus($recurStatus)]);
       CRM_Core_Error::debug_log_message($resultNote);
       return $resultNote;
     }
 
-    // refs #45587, LINE Pay voids a preapproved key once it has been unused for
+    // refs #45597, LINE Pay voids a preapproved key once it has been unused for
     // over REGKEY_VALID_DAYS days.
     $lastChargeTime = self::lastChargeTime($recurId);
     $regKeyExpired = !empty($lastChargeTime) && ($time - $lastChargeTime) > (self::REGKEY_VALID_DAYS * 86400);
 
-    // Paused (7): never charge. Auto-cancel once the regKey window has lapsed,
+    // Paused (7): never charge. Auto-expire once the regKey window has lapsed,
     // otherwise just remind when the last charge happened.
     if ($recurStatus === 7) {
       if ($regKeyExpired) {
         $note = ts("Paused recurring exceeded the %1-day LINE Pay key window; cancelling.", [1 => self::REGKEY_VALID_DAYS]);
         self::expireRegKey($recurId);
-        self::setRecurStatus($recurId, 3, $note);
+        self::setRecurStatus($recurId, 6, $note);
         $resultNote .= "\n" . $note;
       }
       else {
@@ -1065,15 +1082,13 @@ LIMIT 0, 100
     }
 
     // Active but the regKey window lapsed: expire the recurring (6) and discard.
-    if ($regKeyExpired) {
-      $note = ts("LINE Pay preapproved key unused for over %1 days; the recurring is expired.", [1 => self::REGKEY_VALID_DAYS]);
-      self::expireRegKey($recurId);
-      self::setRecurStatus($recurId, 6, $note);
+    if ($regKeyExpired && $recurStatus === 5) {
+      $note = ts("LINE Pay preapproved key unused for over %1 days. We will try execute one payment to see if it's really expired.", [1 => self::REGKEY_VALID_DAYS]);
       $resultNote .= "\n" . $note;
       CRM_Core_Error::debug_log_message($resultNote);
-      return $resultNote;
     }
 
+    // only "In Progress" recurring (5) enter here
     $reason = '';
     $changeStatus = FALSE;
     $goPayment = FALSE;
@@ -1125,6 +1140,16 @@ LIMIT 0, 100
         CRM_Core_Error::debug_log_message("LinePay synchronize finished: " . $recurId);
         return $resultNote;
       }
+
+      // refs #45587, code 1193 means the preapproved regKey has expired;
+      // payByRegKey already moved the recurring to Expired (6). Stop here.
+      if (($payResult['status'] ?? '') === '1193') {
+        $resultNote .= "\n" . ts("Charge failed because the preapproved key has expired (code 1193); recurring set to Expired.");
+        CRM_Core_Error::debug_log_message($resultNote);
+        CRM_Core_Error::debug_log_message("LinePay synchronize finished: " . $recurId);
+        return $resultNote;
+      }
+
     }
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
@@ -1147,7 +1172,6 @@ LIMIT 0, 100
     // discard the regKey so it can never charge again (refs #45587).
     if ($changeStatus) {
       self::setRecurStatus($dao->recur_id, 1, $resultNote);
-      self::expireRegKey($dao->recur_id);
       $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
       $resultNote .= "\n" . $statusNoteTitle;
     }
@@ -1238,7 +1262,7 @@ LIMIT 0, 100
         $result['msg'] = ts('This recurring contribution no longer has a usable LINE Pay preapproved key, so its status cannot be changed.');
         return $result;
       }
-      if (in_array($newStatus, [1, 3], TRUE)) {
+      if (in_array($newStatus, [3], TRUE)) {
         self::expireRegKey($recurId);
         $result['msg'] = ts('The LINE Pay preapproved key for this recurring contribution has been discarded; it will never be charged again.');
       }
