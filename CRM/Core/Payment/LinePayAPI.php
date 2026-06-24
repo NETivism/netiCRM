@@ -189,12 +189,13 @@ class CRM_Core_Payment_LinePayAPI {
     'recurring/payment' => '/v4/payments/preapprovedPay/{regKey}/payment',
     // refs #45587, discard a preapproved regKey so it can never charge again
     'recurring/expire' => '/v4/payments/preapprovedPay/{regKey}/expire',
+    // refs #45587, check whether a preapproved regKey is still valid
+    'recurring/check' => '/v4/payments/preapprovedPay/{regKey}/check',
     // not supportted api types
     #'refund' => '/v4/payments/{transactionId}/refund',
     #'check' => '/v4/payments/requests/{transactionId}/check',
     #'capture' => '/v4/payments/authorizations/{transactionId}/capture',
     #'void' => '/v4/payments/authorizations/{transactionId}/void',
-    #'recurring/check' => '/v4/payments/preapprovedPay/{regKey}/check',
   ];
 
   protected $_apiGetMethodTypes = ['query', 'check', 'recurring/check'];

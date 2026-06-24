@@ -720,6 +720,31 @@ LIMIT 1";
   }
 
   /**
+   * Check whether a recurring's preapproved regKey is still valid on the LINE
+   * Pay server (v4 GET /v4/payments/preapprovedPay/{regKey}/check).
+   *
+   * refs #45587. Used before discarding a regKey purely on the local
+   * 180-day elapsed-time heuristic, in case the key is in fact still valid.
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return bool TRUE when the regKey is confirmed valid (returnCode 0000)
+   */
+  private static function isRegKeyValid($recurId) {
+    $regKey = self::getRegKey($recurId);
+    if (empty($regKey)) {
+      return FALSE;
+    }
+    $paymentProcessor = self::getRecurPaymentProcessor($recurId);
+    if (empty($paymentProcessor)) {
+      return FALSE;
+    }
+    $api = CRM_Core_Payment_LinePayAPI::create($paymentProcessor, 'recurring/check');
+    $api->request(['regKey' => $regKey]);
+    return ($api->_response->returnCode ?? '') === '0000';
+  }
+
+  /**
    * Discard a recurring's preapproved regKey on the LINE Pay server.
    *
    * refs #45587 (v4 POST /v4/payments/preapprovedPay/{regKey}/expire). Called
@@ -1067,10 +1092,18 @@ LIMIT 0, 100
     // otherwise just remind when the last charge happened.
     if ($recurStatus === 7) {
       if ($regKeyExpired) {
-        $note = ts("Paused recurring exceeded the %1-day LINE Pay key window; cancelling.", [1 => self::REGKEY_VALID_DAYS]);
-        self::expireRegKey($recurId);
-        self::setRecurStatus($recurId, 6, $note);
-        $resultNote .= "\n" . $note;
+        // refs #45587, the 180-day window is a local heuristic; confirm with
+        // LINE Pay before discarding a key that might still be valid.
+        if (self::isRegKeyValid($recurId)) {
+          $note = ts("Paused recurring exceeded the %1-day LINE Pay key window, but the preapproved key is still confirmed valid; keep it.", [1 => self::REGKEY_VALID_DAYS]);
+          $resultNote .= "\n" . $note;
+        }
+        else {
+          $note = ts("Paused recurring exceeded the %1-day LINE Pay key window; expiring.", [1 => self::REGKEY_VALID_DAYS]);
+          self::expireRegKey($recurId);
+          self::setRecurStatus($recurId, 6, $note);
+          $resultNote .= "\n" . $note;
+        }
       }
       else {
         $lastChargeNote = !empty($lastChargeTime) ? date('Y-m-d', $lastChargeTime) : ts('never');
