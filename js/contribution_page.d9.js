@@ -29,8 +29,6 @@
 
         var $content = $('#main');
         $content.prepend($('#intro_text').prepend($('h1.page-title')));
-        $('.sharethis').appendTo('body');
-
         if (this.currentPage != 'ThankYou') {
           document.querySelector('body').classList.add('special-page-col-sticky');
         }
