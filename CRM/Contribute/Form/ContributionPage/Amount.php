@@ -105,7 +105,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
 SELECT id
   FROM civicrm_payment_processor
  WHERE id IN ({$paymentProcessorIds})
-   AND is_recur = 1";
+   AND (is_recur = 1 OR payment_processor_type = 'Mobile')";
       $dao = &CRM_Core_DAO::executeQuery($query);
       while ($dao->fetch()) {
         $recurringPaymentProcessor[] = $dao->id;
