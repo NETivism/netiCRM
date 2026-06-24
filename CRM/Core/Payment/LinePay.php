@@ -41,8 +41,7 @@ class CRM_Core_Payment_LinePay {
    * preapproved recurring, while not locked (refs #45587).
    */
   public const EDITABLE_RECUR_FIELDS = [
-    'amount', 'cycle_day', 'installments',
-    'create_date', 'start_date', 'modified_date', 'cancel_date', 'end_date',
+    'amount', 'cycle_day', 'installments', 'end_date',
     'contribution_status_id', 'note_title', 'note_body',
   ];
 
@@ -1191,10 +1190,11 @@ LIMIT 0, 100
    * - In Progress (5) / Suspended-Paused (7): editable.
    *
    * @param int $recurId contribution recur ID
+   * @param CRM_Core_Form $form the edit form, used to read the recurring ID
    *
    * @return array editable field names, or [] when the form is locked
    */
-  public static function getEditableFields($recurId) {
+  public static function getEditableFields($recurId, $form) {
     $statusId = (int) CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurId, 'contribution_status_id');
     if (in_array($statusId, self::LOCKED_RECUR_STATUSES, TRUE)) {
       return [];

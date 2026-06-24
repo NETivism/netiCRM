@@ -92,7 +92,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $contributionId = $this->get('contributionId');
 
     $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
-    if (method_exists($paymentClass, 'doRecurUpdate')) {
+    if (method_exists($paymentClass, 'doRecurUpdate') && !empty($contributionId)) {
       $name = $this->getButtonName('upload');
       $message = ts("Are you sure you want to sync the recurring status and check the contributions?");
       if (method_exists($paymentClass, 'getSyncNowMessage')) {

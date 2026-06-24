@@ -200,6 +200,14 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
       $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
 
+      // use recur payment processor id as payment class
+      if (isset($recur->processor_id) && !empty($recur->processor_id)) {
+        $mode = $recur->is_test ? 'test' : 'live';
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $mode);
+        $payment = CRM_Core_Payment::singleton($mode, $paymentProcessor);
+        $paymentClass = get_class($payment);
+      }
+
       if (is_string($paymentClass)) {
         if ((method_exists($paymentClass, 'doRecurTransact') || method_exists($paymentClass, 'doRecurUpdate')) && CRM_Core_Permission::check('edit contributions')) {
           $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);

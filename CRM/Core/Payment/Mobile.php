@@ -54,7 +54,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    * Recurring contribution edit form for a LINE Pay preapproved recurring;
    * the system sets them (refs #45587).
    */
-  public static $_excludedStatuses = [4, 6];
+  public static $_excludedStatuses = [1, 4, 6];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -286,7 +286,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if (!self::isLinePayInstrument($recurId)) {
       return [];
     }
-    return CRM_Core_Payment_LinePay::getEditableFields($recurId);
+    return CRM_Core_Payment_LinePay::getEditableFields($recurId, $form);
   }
 
   /**
@@ -357,6 +357,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    *
    * @return array result note
    */
+  /* disable this function due to lack of process history
   public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
     if (empty($recurId) || !CRM_Utils_Type::validate($recurId, 'Positive')) {
       $msg = ts('Missing required field: %1', [1 => 'Recurring Id']);
@@ -380,6 +381,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     return CRM_Core_Payment_LinePay::doRecurTransact($recurId, $sendMail);
   }
+    */
 
   /**
    * Whether the latest contribution of a recurring was paid via LINE Pay.

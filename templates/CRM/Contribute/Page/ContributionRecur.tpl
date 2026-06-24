@@ -310,7 +310,7 @@
       {if $hide_fields}{if 'trxn_id'|in_array:$hide_fields}-->{/if}{/if}
 
       {if $form.auto_renew.html}<tr><td class="label">{$form.auto_renew.label}</td><td>{$form.auto_renew.html}</td></tr>{/if}
-      <tr><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}</td></tr>
+      <tr><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}<div id="contribution_status_message" class="description"></div></td></tr>
       {if $form.note_title.html}
       <tr><td class="label">{$form.note_title.label}</td><td>{$form.note_title.html}</td></tr>
       {/if}
@@ -444,6 +444,9 @@
     {/if}
 
     {if $payment_type == 'Mobile'}
+    <div id="dialog-confirm-cancel-recur" title="{ts}Confirm Cancellation{/ts}" style="display:none;">
+      <p>{ts}If you choose this status, this recurring contribution will never be charged again. Are you sure you want to continue?{/ts}</p>
+    </div>
     {literal}
     <script>
       (function($){
@@ -453,18 +456,52 @@
             return;
           }
           var originStatus = $statusSelect.attr('data-origin-status');
-          $statusSelect.change(function(e){
-            var newStatus = e.target.value;
-            if (newStatus === originStatus) {
-              return;
-            }
-            if (newStatus === '1' || newStatus === '3') {
-              if (!window.confirm("{/literal}{ts}If you choose this status, this recurring contribution will never be charged again. Are you sure you want to continue?{/ts}{literal}")) {
-                e.target.value = originStatus;
+          var $message = $('#contribution_status_message');
+          var $form = $statusSelect.closest('form');
+
+          if (originStatus !== '2') {
+            $statusSelect.find('option[value="2"]').remove();
+          }
+
+          $('#dialog-confirm-cancel-recur').dialog({
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            buttons: {
+              "{/literal}{ts}Confirm{/ts}{literal}": function(){
+                $(this).dialog('close');
+                $form.off('submit.recurCancelGuard').trigger('submit');
+              },
+              "{/literal}{ts}Cancel{/ts}{literal}": function(){
+                $(this).dialog('close');
               }
             }
+          });
+
+          function updateStatusMessage(newStatus) {
+            if (newStatus === '3') {
+              $message.text("{/literal}{ts}If you choose this status, this recurring contribution will never be charged again.{/ts}{literal}");
+            }
+            else if (newStatus === '5') {
+              $message.text("{/literal}{ts}If you choose this status, this recurring contribution will resume and be charged again on the regular monthly billing date.{/ts}{literal}");
+            }
             else if (newStatus === '7') {
-              window.alert("{/literal}{ts 1=$linepay_last_charge_date 2=$linepay_regkey_expiry_date}The LINE Pay preapproved key is valid for 180 days. The last successful charge was on %1. If no charge succeeds before %2, the system will automatically set this recurring contribution to Expired.{/ts}{literal}");
+              $message.text("{/literal}{ts 1=$linepay_last_charge_date 2=$linepay_regkey_expiry_date}The LINE Pay preapproved key is valid for 180 days. The last successful charge was on %1. If no charge succeeds before %2, the system will automatically set this recurring contribution to Expired.{/ts}{literal}");
+            }
+            else {
+              $message.text('');
+            }
+          }
+
+          updateStatusMessage($statusSelect.val());
+          $statusSelect.change(function(e){
+            updateStatusMessage(e.target.value);
+          });
+
+          $form.on('submit.recurCancelGuard', function(e){
+            if ($statusSelect.val() === '3' && $statusSelect.val() !== originStatus) {
+              e.preventDefault();
+              $('#dialog-confirm-cancel-recur').dialog('open');
             }
           });
         });
