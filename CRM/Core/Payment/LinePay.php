@@ -1068,7 +1068,7 @@ LIMIT 0, 100
     $recurStatus = (int) $dao->recur_status_id;
 
     // refs #45597, do not execute payment when pending / complete / failed / expired
-    if (in_array($recurId, [1,2,4,6], TRUE)) {
+    if (in_array($recurStatus, [1,2,4,6], TRUE)) {
       $resultNote .= ts("Recurring already in a skip status (%s); skipped execute payment.", [1 =>  CRM_Contribute_PseudoConstant::contributionStatus($recurStatus)]);
       CRM_Core_Error::debug_log_message($resultNote);
       return $resultNote;
