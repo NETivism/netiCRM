@@ -1541,6 +1541,14 @@ UPDATE  civicrm_participant
 
       $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_event', 'participant_' . strtolower($mailType));
       $activityId = CRM_Activity_BAO_Activity::addTransactionalActivity($participant, 'Event Notification Email', $workflow['msg_title']);
+
+      global $tsLocale;
+      $savedLocale = $tsLocale;
+      $contactPreferredLanguage = CRM_Utils_Array::value('preferred_language', $contactDetails);
+      if (!empty($contactPreferredLanguage) && $contactPreferredLanguage !== $tsLocale) {
+        $tsLocale = $contactPreferredLanguage;
+      }
+
       list($mailSent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         [
           'groupName' => 'msg_tpl_workflow_event',
@@ -1575,6 +1583,7 @@ UPDATE  civicrm_participant
           1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
         ]
       );
+      $tsLocale = $savedLocale;
     }
     // mail sent
     return TRUE;

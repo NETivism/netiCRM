@@ -628,7 +628,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     //CRM-5058
     //token replacement of subject
-    $headers['Subject'] = $mailingSubject;
+    $headers['Subject'] = $mailParams['Subject'];    
 
     CRM_Utils_Mail::setMimeParams($message);
     $headers = $message->headers($headers);

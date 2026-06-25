@@ -1134,9 +1134,11 @@ LIMIT 0, 100
     if ($goPayment) {
       // Check if Credit card over date, unless it's expired recurring with active token
       if ($time <= strtotime($currentExpiryDate) || ($activeTokenOverride && $time > strtotime($currentExpiryDate))) {
-        // Change status to In Progress when card expiry date has been updated
-        if ($activeTokenOverride && !empty($newExpiryDate) && strtotime($newExpiryDate) >= strtotime($currentExpiryDate) && $time > strtotime($currentExpiryDate)) {
-          $isProgress = TRUE;
+        // Change status to In Progress only when TapPay returns a future expiry date.
+        if ($activeTokenOverride && !empty($newExpiryDate)) {
+          if ($newExpiryDate >= date('Ym', $time) && $newExpiryDate >= date('Ym', strtotime($currentExpiryDate))) {
+            $isProgress = TRUE;
+          }
         }
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
@@ -1499,20 +1501,30 @@ LIMIT 0, 100
       }
     }
 
-    // Convert expired recurring to Failed if no successful contribution in past 6 months
-    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
+    // Convert expired recurring to Failed once it has been Expired for at least 6 months
+    // (counted from the "Card expiry date is due." note, not from now or start_date)
+    // and has received no successful contribution since becoming Expired.
     $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
- AND r.start_date < %1
- AND r.id NOT IN (
-   SELECT DISTINCT contribution_recur_id
-   FROM civicrm_contribution
-   WHERE contribution_status_id = 1
-   AND receive_date >= %1
-   AND contribution_recur_id IN(SELECT id FROM civicrm_contribution_recur WHERE contribution_status_id = 6)
+ AND (
+   SELECT MAX(n.modified_date) FROM civicrm_note n
+   WHERE n.entity_table = 'civicrm_contribution_recur'
+   AND n.entity_id = r.id
+   AND n.note LIKE %1
+ ) <= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+ AND NOT EXISTS (
+   SELECT 1 FROM civicrm_contribution c
+   WHERE c.contribution_recur_id = r.id
+   AND c.contribution_status_id = 1
+   AND c.receive_date >= (
+     SELECT MAX(n.modified_date) FROM civicrm_note n
+     WHERE n.entity_table = 'civicrm_contribution_recur'
+     AND n.entity_id = r.id
+     AND n.note LIKE %1
+   )
  )";
     $dao = CRM_Core_DAO::executeQuery($sql, [
-      1 => [$sixMonthsAgo, 'String'],
+      1 => [ts("Card expiry date is due.") . '%', 'String'],
     ]);
     $processorTypeCache = [];
     while ($dao->fetch()) {

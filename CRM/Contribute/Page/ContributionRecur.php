@@ -108,6 +108,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
           $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($recur->contact_id);
           $donateAgain = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$cid&oid=$oid&cs=$cs", TRUE);
           $this->assign('donateAgain', $donateAgain);
+          // Shortened URL history for this recurring contribution's renewal link.
+          $this->assign('shorten_history', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_contribution_recur', $recur->id));
           $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
           if ($providersCount) {
             $phones = CRM_Core_BAO_Phone::allPhones($cid, FALSE, ts('Mobile'));
