@@ -11,6 +11,11 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
 
   public $DBResetRequired = FALSE;
 
+  protected $_processor;
+  protected $_cid;
+  protected $_is_test = 1;
+  protected $_page_id = 1;
+
   public function get_info() {
     return [
       'name' => 'LinePay v4 simulated tests',
@@ -24,6 +29,219 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
    */
   public function setUpTest() {
     parent::setUp();
+    $this->prepareMailLog();
+
+    // refs #45587, reset the canned-response seam between tests so a leftover
+    // queue entry from one test can never bleed into the next.
+    CRM_Core_Payment_LinePayAPI::$_mockResponseQueue = [];
+    CRM_Core_Payment_LinePayAPI::$_requestLog = [];
+
+    $this->_processor = $this->getOrCreateLinePayProcessor();
+    $this->_cid = $this->getOrCreateContact();
+  }
+
+  /**
+   * Get (or create) a Mobile-type payment processor carrying LINE Pay
+   * preapproved credentials (refs #45587).
+   *
+   * isLinePayRecur() only charges recurrings whose gateway is a Mobile
+   * processor with url_site/url_api set and the repurposed subject flag = '1'.
+   *
+   * @return array payment processor params (as buildPayment() returns)
+   */
+  protected function getOrCreateLinePayProcessor() {
+    $existing = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_payment_processor WHERE class_name = 'Payment_Mobile' AND is_test = %1 AND url_site IS NOT NULL AND subject = '1' LIMIT 1", [
+      1 => [$this->_is_test, 'Integer'],
+    ]);
+    if (empty($existing)) {
+      $type = civicrm_api('PaymentProcessorType', 'get', [
+        'version' => 3,
+        'class_name' => 'Payment_Mobile',
+      ]);
+      $this->assertAPISuccess($type);
+      $typeValue = reset($type['values']);
+      $create = civicrm_api('PaymentProcessor', 'create', [
+        'version' => 3,
+        'domain_id' => CRM_Core_Config::domainID(),
+        'name' => 'AUTO LinePay Preapproved',
+        'payment_processor_type_id' => $typeValue['id'],
+        'payment_processor_type' => 'Mobile',
+        'class_name' => 'Payment_Mobile',
+        'is_active' => 1,
+        'is_default' => 0,
+        'is_test' => $this->_is_test,
+        'is_recur' => 1,
+        'user_name' => 'none',
+        'password' => 'linepaytest',
+        // subject = '1' is the LINE Pay Recurring enabled flag.
+        'subject' => '1',
+        // url_site / url_api hold the LINE Pay channel id / secret.
+        'url_site' => 'ChannelId123',
+        'url_api' => 'ChannelSecret123',
+        'billing_mode' => $typeValue['billing_mode'],
+        'payment_type' => CRM_Utils_Array::value('payment_type', $typeValue),
+      ]);
+      $this->assertAPISuccess($create);
+      $existing = $create['id'];
+    }
+    return CRM_Core_BAO_PaymentProcessor::getPayment($existing, 'test');
+  }
+
+  /**
+   * Get any existing contact id, creating one when the test DB has none.
+   *
+   * @return int contact id
+   */
+  protected function getOrCreateContact() {
+    $cid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE contact_type = 'Individual' AND is_deleted = 0 ORDER BY id ASC LIMIT 1");
+    if (empty($cid)) {
+      $cid = $this->individualCreate();
+    }
+    return $cid;
+  }
+
+  /**
+   * Create a recurring + its first contribution wired to the LINE Pay
+   * processor, optionally storing a preapproved regKey.
+   *
+   * @param array $opts overrides: recur_status, contribution_status, reg_key,
+   *   amount, installments, end_date, start_date, receive_date, frequency_unit,
+   *   cycle_day
+   *
+   * @return array [recur => DAO, contribution => DAO]
+   */
+  protected function createLinePayRecur($opts = []) {
+    $now = time();
+    $date = date('YmdHis', $now);
+    $amount = $opts['amount'] ?? 222;
+
+    $recurParams = [
+      'contact_id' => $this->_cid,
+      'amount' => $amount,
+      'frequency_unit' => $opts['frequency_unit'] ?? 'month',
+      'frequency_interval' => 1,
+      'installments' => $opts['installments'] ?? 0,
+      'is_test' => $this->_is_test,
+      'start_date' => $opts['start_date'] ?? $date,
+      'create_date' => $opts['start_date'] ?? $date,
+      'modified_date' => $date,
+      'invoice_id' => md5(uniqid('', TRUE)),
+      'contribution_status_id' => $opts['recur_status'] ?? 2,
+      'cycle_day' => $opts['cycle_day'] ?? (int) date('j', $now),
+      'processor_id' => $this->_processor['id'],
+      // Unique per call: several recurs may be created within the same second.
+      'trxn_id' => uniqid('lprecur', TRUE),
+    ];
+    if (!empty($opts['end_date'])) {
+      $recurParams['end_date'] = $opts['end_date'];
+    }
+    $ids = [];
+    $recur = CRM_Contribute_BAO_ContributionRecur::add($recurParams, $ids);
+
+    $contribParams = [
+      'contact_id' => $this->_cid,
+      'contribution_contact_id' => $this->_cid,
+      'contribution_type_id' => 1,
+      'contribution_page_id' => $this->_page_id,
+      'payment_processor_id' => $this->_processor['id'],
+      'payment_instrument_id' => 1,
+      'created_date' => $opts['start_date'] ?? $date,
+      'receive_date' => $opts['receive_date'] ?? $date,
+      'non_deductible_amount' => 0,
+      'total_amount' => $amount,
+      'currency' => 'TWD',
+      'source' => 'AUTO: linepay unit test',
+      'contribution_source' => 'AUTO: linepay unit test',
+      'is_test' => $this->_is_test,
+      'contribution_status_id' => $opts['contribution_status'] ?? 2,
+      'contribution_recur_id' => $recur->id,
+    ];
+    $contribution = CRM_Contribute_BAO_Contribution::create($contribParams, CRM_Core_DAO::$_nullArray);
+
+    // The LINE Pay request flow keys the row by orderId = contribution id.
+    $linepay = new CRM_Contribute_DAO_LinePay();
+    $linepay->trxn_id = (string) $contribution->id;
+    $linepay->transaction_id = 'lptxn' . $contribution->id;
+    $linepay->contribution_recur_id = $recur->id;
+    if (!empty($opts['reg_key'])) {
+      $linepay->reg_key = $opts['reg_key'];
+    }
+    $linepay->save();
+
+    // Mirror the production trxn_id used on the first contribution.
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', (string) $contribution->id);
+    $contribution->trxn_id = (string) $contribution->id;
+
+    // Creating the first contribution can side-effect the recurring's status;
+    // pin it back to the value the test asked for so setup is deterministic.
+    // Use setFieldValue (not raw SQL) so CRM_Core_DAO's getFieldValue cache,
+    // which getEditableFields()/doConfirm() read through, stays consistent.
+    $recurStatus = $opts['recur_status'] ?? 2;
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $recur->id, 'contribution_status_id', $recurStatus);
+    // setFieldValue does not refresh getFieldValue's static cache; a forced read
+    // re-reads and overwrites the cached entry so getEditableFields()/doConfirm()
+    // (which read through getFieldValue) see the pinned status, not a stale one.
+    CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $recur->id, 'contribution_status_id', 'id', TRUE);
+    $recur->contribution_status_id = $recurStatus;
+
+    return ['recur' => $recur, 'contribution' => $contribution];
+  }
+
+  /**
+   * Push a canned LINE Pay API response onto the mock queue.
+   *
+   * @param string $returnCode LINE Pay result code
+   * @param array $info optional info payload
+   *
+   * @return void
+   */
+  protected function queueResponse($returnCode, $info = NULL) {
+    $resp = ['returnCode' => $returnCode, 'returnMessage' => 'mock ' . $returnCode];
+    if ($info !== NULL) {
+      $resp['info'] = $info;
+    }
+    CRM_Core_Payment_LinePayAPI::$_mockResponseQueue[] = json_encode($resp);
+  }
+
+  /**
+   * Current regKey stored for a recurring (NULL when cleared).
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return string|null
+   */
+  protected function regKeyOf($recurId) {
+    return CRM_Core_DAO::singleValueQuery("SELECT reg_key FROM civicrm_contribution_linepay WHERE contribution_recur_id = %1 AND reg_key IS NOT NULL AND reg_key != '' LIMIT 1", [
+      1 => [$recurId, 'Positive'],
+    ]);
+  }
+
+  /**
+   * Count of completed contributions belonging to a recurring.
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return int
+   */
+  protected function completedCountOf($recurId) {
+    return (int) CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", [
+      1 => [$recurId, 'Positive'],
+    ]);
+  }
+
+  /**
+   * Current contribution_status_id of a recurring.
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return int
+   */
+  protected function recurStatusOf($recurId) {
+    // Read straight from the DB: CRM_Core_DAO::getFieldValue caches per
+    // (class, id, field) and would return a stale value after setRecurStatus().
+    return (int) CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", [
+      1 => [$recurId, 'Positive'],
+    ]);
   }
 
   /**
@@ -336,9 +554,327 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     $this->assertNotEquals($sig, $sigB);
   }
 
+  // ---------------------------------------------------------------------------
+  // Integration tests (refs #45587): preapprove -> recurring charge flow.
+  // These drive the real business methods, feeding canned LINE Pay responses
+  // through CRM_Core_Payment_LinePayAPI::$_mockResponseQueue.
+  // ---------------------------------------------------------------------------
+
+  /**
+   * A. First preapproved charge: doConfirm() completes the contribution, stores
+   * the returned regKey, and activates the recurring (Pending 2 -> In Progress 5).
+   */
+  public function testPreapproveConfirmActivatesRecur() {
+    $setup = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
+    $recurId = $setup['recur']->id;
+    $contributionId = $setup['contribution']->id;
+
+    // The confirm of a PREAPPROVED request returns the regKey.
+    $this->queueResponse('0000', ['regKey' => 'RK_TEST_001']);
+
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+    $linePay->doConfirm([
+      'qfKey' => 'qfkeytest',
+      'cid' => $contributionId,
+      'ppid' => $this->_processor['id'],
+      'transactionId' => 'lptxn' . $contributionId,
+    ]);
+
+    $this->assertDBCompareValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_status_id', 'id', 1, 'First charge should complete the contribution. ' . __LINE__);
+    $this->assertEquals(5, $this->recurStatusOf($recurId), 'Recurring should move Pending(2) -> In Progress(5). ' . __LINE__);
+    $this->assertEquals('RK_TEST_001', $this->regKeyOf($recurId), 'regKey returned on confirm should be stored. ' . __LINE__);
+  }
+
+  /**
+   * B. payByRegKey() charges a subsequent installment with the stored regKey:
+   * it creates a new completed contribution and keeps the regKey.
+   */
+  public function testPayByRegKeySuccess() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_TEST_B',
+    ]);
+    $recurId = $setup['recur']->id;
+    $before = $this->completedCountOf($recurId);
+
+    $this->queueResponse('0000', ['transactionId' => '20240101000000']);
+    $result = CRM_Core_Payment_LinePay::payByRegKey($recurId, NULL, FALSE);
+
+    $this->assertEquals('0000', $result['status'], 'Charge should report success. ' . __LINE__);
+    $this->assertEquals($before + 1, $this->completedCountOf($recurId), 'A new completed contribution should be created. ' . __LINE__);
+    $this->assertEquals('RK_TEST_B', $this->regKeyOf($recurId), 'A successful charge keeps the regKey. ' . __LINE__);
+  }
+
+  /**
+   * B2. The isLinePayRecur() guard: a recurring backed by a non-LINE-Pay
+   * processor is skipped without consuming the mock queue.
+   */
+  public function testPayByRegKeyGuardSkipsNonLinePay() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_TEST_GUARD',
+    ]);
+    $recurId = $setup['recur']->id;
+    // Strip the LINE Pay Recurring flag so the gateway no longer qualifies.
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET subject = '0' WHERE id = %1", [
+      1 => [$this->_processor['id'], 'Integer'],
+    ]);
+
+    $this->queueResponse('0000', ['transactionId' => 'should_not_be_used']);
+    $result = CRM_Core_Payment_LinePay::payByRegKey($recurId, NULL, FALSE);
+
+    $this->assertEquals('', $result['status'], 'Non-LINE-Pay recurring should be skipped. ' . __LINE__);
+    $this->assertCount(1, CRM_Core_Payment_LinePayAPI::$_mockResponseQueue, 'Skipped charge must not consume a mock response. ' . __LINE__);
+
+    // restore for other assertions / cleanliness
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET subject = '1' WHERE id = %1", [
+      1 => [$this->_processor['id'], 'Integer'],
+    ]);
+  }
+
+  /**
+   * C. doCheckRecur() drives a due charge through payByRegKey() for an
+   * In Progress recurring with installments not yet full.
+   */
+  public function testDoCheckRecurCharges() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_TEST_C',
+      'installments' => 12,
+    ]);
+    $recurId = $setup['recur']->id;
+    $before = $this->completedCountOf($recurId);
+
+    $this->queueResponse('0000', ['transactionId' => '20240202000000']);
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertEquals($before + 1, $this->completedCountOf($recurId), 'doCheckRecur should charge one installment. ' . __LINE__);
+    $this->assertEquals(5, $this->recurStatusOf($recurId), 'Recurring stays In Progress while installments remain. ' . __LINE__);
+  }
+
+  /**
+   * C2. doCheckRecur() completes the recurring (status 1) once the final
+   * installment is charged.
+   */
+  public function testDoCheckRecurCompletesOnLastInstallment() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_TEST_C2',
+      'installments' => 1,
+    ]);
+    $recurId = $setup['recur']->id;
+
+    // installments already satisfied by the first (completed) contribution,
+    // so no charge is attempted; the recurring is just completed.
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertEquals(1, $this->recurStatusOf($recurId), 'Recurring should complete once installments are full. ' . __LINE__);
+  }
+
+  /**
+   * D. Skip-status guard (verifies the LinePay.php:1071 bug fix): a recurring
+   * already in a skip status must not be charged.
+   */
+  public function testDoCheckRecurSkipsTerminalStatus() {
+    foreach ([2, 4, 6] as $skipStatus) {
+      $setup = $this->createLinePayRecur([
+        'recur_status' => $skipStatus,
+        'contribution_status' => 1,
+        'reg_key' => 'RK_SKIP_' . $skipStatus,
+        'installments' => 12,
+      ]);
+      $recurId = $setup['recur']->id;
+      $before = $this->completedCountOf($recurId);
+
+      // Queue a response that must NOT be consumed if the skip guard works.
+      CRM_Core_Payment_LinePayAPI::$_mockResponseQueue = [];
+      $this->queueResponse('0000', ['transactionId' => 'skip_' . $skipStatus]);
+      CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+      $this->assertCount(1, CRM_Core_Payment_LinePayAPI::$_mockResponseQueue, "Status $skipStatus must skip charging (queue untouched). " . __LINE__);
+      $this->assertEquals($before, $this->completedCountOf($recurId), "Status $skipStatus must not add a contribution. " . __LINE__);
+    }
+  }
+
+  /**
+   * D2. A Cancelled (3) recurring discards its regKey via expireRegKey() and
+   * is not charged.
+   */
+  public function testDoCheckRecurCancelledDiscardsKey() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 3,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_CANCEL',
+    ]);
+    $recurId = $setup['recur']->id;
+
+    // expireRegKey() calls the recurring/expire endpoint.
+    $this->queueResponse('0000');
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertEmpty($this->regKeyOf($recurId), 'Cancelled recurring should discard its regKey. ' . __LINE__);
+  }
+
+  /**
+   * E. 180-day window: a paused (7) recurring whose key is past the window and
+   * confirmed invalid is expired (status 6) and its key discarded.
+   */
+  public function testPausedExpiresAfter180DaysWhenKeyInvalid() {
+    $old = date('YmdHis', time() - (CRM_Core_Payment_LinePay::REGKEY_VALID_DAYS + 5) * 86400);
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 7,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_PAUSED_INVALID',
+      'start_date' => $old,
+      'receive_date' => $old,
+    ]);
+    $recurId = $setup['recur']->id;
+
+    // recurring/check -> invalid, then recurring/expire -> ok.
+    $this->queueResponse('1190');
+    $this->queueResponse('0000');
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertEquals(6, $this->recurStatusOf($recurId), 'Paused + lapsed + invalid key should expire (6). ' . __LINE__);
+    $this->assertEmpty($this->regKeyOf($recurId), 'Expired recurring should discard its regKey. ' . __LINE__);
+  }
+
+  /**
+   * E2. A paused (7) recurring past the window whose key is still confirmed
+   * valid keeps its key and status.
+   */
+  public function testPausedKeepsKeyWhenStillValid() {
+    $old = date('YmdHis', time() - (CRM_Core_Payment_LinePay::REGKEY_VALID_DAYS + 5) * 86400);
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 7,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_PAUSED_VALID',
+      'start_date' => $old,
+      'receive_date' => $old,
+    ]);
+    $recurId = $setup['recur']->id;
+
+    // recurring/check -> still valid (0000); no expire call expected.
+    $this->queueResponse('0000');
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertEquals(7, $this->recurStatusOf($recurId), 'Still-valid key keeps the recurring paused. ' . __LINE__);
+    $this->assertEquals('RK_PAUSED_VALID', $this->regKeyOf($recurId), 'Still-valid key is kept. ' . __LINE__);
+  }
+
+  /**
+   * F1. A generic gateway failure (e.g. 1911) fails the charge but keeps the
+   * regKey and leaves the recurring In Progress for the next cycle.
+   */
+  public function testPayByRegKeyGenericFailureKeepsKey() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_1911',
+    ]);
+    $recurId = $setup['recur']->id;
+
+    $this->queueResponse('1911');
+    $result = CRM_Core_Payment_LinePay::payByRegKey($recurId, NULL, FALSE);
+
+    $this->assertEquals('1911', $result['status'], 'Failure code should be returned. ' . __LINE__);
+    $this->assertEquals('RK_1911', $this->regKeyOf($recurId), 'A non-voiding failure keeps the regKey. ' . __LINE__);
+    $this->assertEquals(5, $this->recurStatusOf($recurId), 'A non-voiding failure leaves the recurring In Progress. ' . __LINE__);
+  }
+
+  /**
+   * F2. A regKey-voiding code (e.g. 1287 card expired) drops the key and fails
+   * the recurring (status 4).
+   */
+  public function testPayByRegKeyVoidingCodeFailsRecur() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_VOID',
+    ]);
+    $recurId = $setup['recur']->id;
+
+    $this->queueResponse('1287');
+    CRM_Core_Payment_LinePay::payByRegKey($recurId, NULL, FALSE);
+
+    $this->assertEquals(4, $this->recurStatusOf($recurId), 'A voiding code should fail the recurring (4). ' . __LINE__);
+    $this->assertEmpty($this->regKeyOf($recurId), 'A voiding code should discard the regKey. ' . __LINE__);
+  }
+
+  /**
+   * F3. Code 1193 (preapproved key expired) drops the key and expires the
+   * recurring (status 6).
+   */
+  public function testPayByRegKeyExpiredCodeExpiresRecur() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 5,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_1193',
+    ]);
+    $recurId = $setup['recur']->id;
+
+    $this->queueResponse('1193');
+    CRM_Core_Payment_LinePay::payByRegKey($recurId, NULL, FALSE);
+
+    $this->assertEquals(6, $this->recurStatusOf($recurId), 'Code 1193 should expire the recurring (6). ' . __LINE__);
+    $this->assertEmpty($this->regKeyOf($recurId), 'Code 1193 should discard the regKey. ' . __LINE__);
+  }
+
+  /**
+   * G1. getEditableFields() locks terminal statuses and Pending-without-key,
+   * and unlocks In Progress / Paused.
+   */
+  public function testGetEditableFieldsLocking() {
+    // terminal -> []
+    $terminal = $this->createLinePayRecur(['recur_status' => 1, 'reg_key' => 'RK_G1']);
+    $this->assertEquals([], CRM_Core_Payment_LinePay::getEditableFields($terminal['recur']->id, NULL), 'Completed is locked. ' . __LINE__);
+
+    // Pending without key -> []
+    $pendingNoKey = $this->createLinePayRecur(['recur_status' => 2]);
+    $this->assertEquals([], CRM_Core_Payment_LinePay::getEditableFields($pendingNoKey['recur']->id, NULL), 'Pending without regKey is locked. ' . __LINE__);
+
+    // Pending with key -> editable
+    $pendingKey = $this->createLinePayRecur(['recur_status' => 2, 'reg_key' => 'RK_G1B']);
+    $this->assertEquals(CRM_Core_Payment_LinePay::EDITABLE_RECUR_FIELDS, CRM_Core_Payment_LinePay::getEditableFields($pendingKey['recur']->id, NULL), 'Pending with regKey is editable. ' . __LINE__);
+
+    // In Progress -> editable
+    $active = $this->createLinePayRecur(['recur_status' => 5, 'reg_key' => 'RK_G1C']);
+    $this->assertEquals(CRM_Core_Payment_LinePay::EDITABLE_RECUR_FIELDS, CRM_Core_Payment_LinePay::getEditableFields($active['recur']->id, NULL), 'In Progress is editable. ' . __LINE__);
+  }
+
+  /**
+   * G2. updateRecur() rejects system-only statuses and Pending-without-key, and
+   * discards the regKey when moving to Cancelled (3).
+   */
+  public function testUpdateRecurGuards() {
+    $setup = $this->createLinePayRecur(['recur_status' => 5, 'reg_key' => 'RK_G2']);
+    $recurId = $setup['recur']->id;
+
+    // 4 / 6 are system-only.
+    $rejected = CRM_Core_Payment_LinePay::updateRecur(['contribution_recur_id' => $recurId, 'contribution_status_id' => 4]);
+    $this->assertEquals(1, $rejected['is_error'], 'Failed(4) cannot be set on the form. ' . __LINE__);
+
+    // Cancelled (3) discards the regKey (recurring/expire).
+    $this->queueResponse('0000');
+    $cancelled = CRM_Core_Payment_LinePay::updateRecur(['contribution_recur_id' => $recurId, 'contribution_status_id' => 3]);
+    $this->assertEquals(0, $cancelled['is_error'], 'Cancelling is allowed. ' . __LINE__);
+    $this->assertEmpty($this->regKeyOf($recurId), 'Cancelling discards the regKey. ' . __LINE__);
+  }
+
   /**
    * @after
    */
   public function tearDownTest() {
+    $this->quickCleanup([
+      'civicrm_contribution',
+      'civicrm_contribution_recur',
+      'civicrm_contribution_linepay',
+    ]);
+    CRM_Core_Payment_LinePayAPI::$_mockResponseQueue = [];
+    CRM_Core_Payment_LinePayAPI::$_requestLog = [];
   }
 }
