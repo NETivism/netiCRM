@@ -74,6 +74,10 @@
 
 {capture assign='reqMark'}<span class="marker" title="{ts}This field is required.{/ts}">*</span>{/capture}
 <div class="crm-block crm-contribution-main-form-block">
+  {if $sharethis}<div class="sharethis">
+    {$sharethis}
+  </div>{/if}
+
   {if $progress.display}
     {include file="CRM/common/progressbar.tpl" progress=$progress}
   {/if}
