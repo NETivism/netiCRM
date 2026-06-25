@@ -651,7 +651,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       $smarty->assign("mobile_processor_options_{$modeLabel}", json_encode($options, JSON_FORCE_OBJECT));
     }
 
-    return [
+    $fields = [
       ['name' => 'user_name',
         'label' => $ppDAO->user_name_label,
       ],
@@ -671,6 +671,16 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
         'label' => ts('LinePay Channel Secret Key'),
       ],
     ];
+
+    // refs #45587, the subject field is only used for LINE Pay recurring
+    // payments, so only show it when explicitly enabled via this constant.
+    if (!defined('CIVICRM_ENABLE_LINEPAY_RECUR') || CIVICRM_ENABLE_LINEPAY_RECUR != 1) {
+      $fields = array_values(array_filter($fields, function ($field) {
+        return $field['name'] !== 'subject';
+      }));
+    }
+
+    return $fields;
   }
 
   /**
