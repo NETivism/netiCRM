@@ -869,11 +869,6 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
    * @after
    */
   public function tearDownTest() {
-    $this->quickCleanup([
-      'civicrm_contribution',
-      'civicrm_contribution_recur',
-      'civicrm_contribution_linepay',
-    ]);
     CRM_Core_Payment_LinePayAPI::$_mockResponseQueue = [];
     CRM_Core_Payment_LinePayAPI::$_requestLog = [];
   }
