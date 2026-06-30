@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: SIAOLING HUANG, 2024\n"
+"Last-Translator: Seal Shen, 2025-2026\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52047,7 +52047,7 @@ msgid ""
 "code will affect the consistency of historical receipts. If needed, it is "
 "recommended to create a new contribution type instead. Are you sure you want"
 " to continue?"
-msgstr ""
+msgstr "此費用類型已有收據紀錄，修改名稱或會計代碼會影響歷史收據一致性，若有需要，建議新增費用類型。確定要繼續修改？"
 
 #: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php
 #: CRM/Core/Payment/TapPay.php
@@ -52065,25 +52065,152 @@ msgid "HTML Security Filter"
 msgstr "HTML 安全性過濾"
 
 #: templates/CRM/Admin/Form/Preferences/Display.tpl:113
-msgid "By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts."
+msgid ""
+"By default, dangerous HTML is filtered to prevent XSS attacks — including "
+"&lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler "
+"attributes (e.g., onclick, onload), and javascript: URLs. Enabling this "
+"option removes all these protections. Only enable this if you trust all "
+"editors and require embedded scripts."
 msgstr "預設會過濾危險的 HTML 以防範 XSS 攻擊，包含 &lt;script&gt;、&lt;style&gt; 和 &lt;link&gt; 標籤、所有事件處理屬性（如 onclick、onload）及 javascript: 網址。啟用此選項將移除所有上述防護措施，請僅在信任所有編輯人員且確實需要嵌入指令碼時才啟用。"
 
 #: CRM/Admin/Form/Preferences/Display.php:102
 msgid "Disable Security Filter (Allow all content & scripts)"
 msgstr "停用安全性過濾器（允許所有內容與指令碼）"
 
-#: packages/HTML/QuickForm/ckeditor.php:161 packages/HTML/QuickForm/ckeditor5.php:244
+#: packages/HTML/QuickForm/ckeditor.php:161
+#: packages/HTML/QuickForm/ckeditor5.php:244
 msgid "Switch Editor:"
 msgstr "切換編輯器："
 
-#: packages/HTML/QuickForm/ckeditor.php:163 packages/HTML/QuickForm/ckeditor5.php:246
+#: packages/HTML/QuickForm/ckeditor.php:163
+#: packages/HTML/QuickForm/ckeditor5.php:246
 msgid "CKEditor 4 (Legacy)"
 msgstr "CKEditor 4（舊版）"
 
-#: packages/HTML/QuickForm/ckeditor.php:164 packages/HTML/QuickForm/ckeditor5.php:247
+#: packages/HTML/QuickForm/ckeditor.php:164
+#: packages/HTML/QuickForm/ckeditor5.php:247
 msgid "CKEditor 5 (New)"
 msgstr "CKEditor 5（新版）"
 
-#: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
-msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
+#: packages/HTML/QuickForm/ckeditor.php:155
+#: packages/HTML/QuickForm/ckeditor5.php:238
+msgid ""
+"CKEditor 5 is currently in testing. You can switch to the new version to try"
+" it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
 msgstr "CKEditor 5 目前處於測試階段，您可以切換至新版進行試用。<a href=\"%1\" target=\"_blank\">有問題歡迎回報</a>。"
+
+#: CRM/Core/Payment/LinePay.php:195
+msgid "LINE Pay request failed."
+msgstr "LINE Pay 請求失敗。"
+
+#: CRM/Core/Payment/LinePay.php:715
+msgid "LINE Pay preapproved key was voided by the gateway (code %1: %2). The donor must subscribe again."
+msgstr "LINE Pay 預授權金鑰已被金流商作廢（代碼 %1：%2），捐款人須重新訂閱。"
+
+#: CRM/Core/Payment/LinePay.php:843
+msgid "Could not find the contribution."
+msgstr "找不到捐款紀錄。"
+
+#: CRM/Core/Payment/LinePay.php:902
+msgid "LINE Pay returned code 1193: the preapproved key has expired, so the recurring contribution is set to Expired."
+msgstr "LINE Pay 回傳代碼 1193：預授權金鑰已過期，定期定額已設為已到期。"
+
+#: CRM/Core/Payment/LinePay.php:1072
+msgid "Recurring already in a skip status (%s); skipped execute payment."
+msgstr "定期定額已處於略過狀態（%s），跳過執行扣款。"
+
+#: CRM/Core/Payment/LinePay.php:1081
+msgid "Recurring already in a terminal status (%1); preapproved key discarded."
+msgstr "定期定額已處於終止狀態（%1），預授權金鑰已廢棄。"
+
+#: CRM/Core/Payment/LinePay.php:1098
+msgid "Paused recurring exceeded the %1-day LINE Pay key window, but the preapproved key is still confirmed valid; keep it."
+msgstr "暫停的定期定額已超過 %1 天 LINE Pay 金鑰有效期，但預授權金鑰確認仍有效，予以保留。"
+
+#: CRM/Core/Payment/LinePay.php:1102
+msgid "Paused recurring exceeded the %1-day LINE Pay key window; expiring."
+msgstr "暫停的定期定額已超過 %1 天 LINE Pay 金鑰有效期，設為已到期。"
+
+#: CRM/Core/Payment/LinePay.php:1109
+msgid "never"
+msgstr "從未"
+
+#: CRM/Core/Payment/LinePay.php:1110
+msgid "Recurring is paused (last charge: %1); skip charging."
+msgstr "定期定額已暫停（最後扣款：%1），略過扣款。"
+
+#: CRM/Core/Payment/LinePay.php:1118
+msgid "LINE Pay preapproved key unused for over %1 days. We will try execute one payment to see if it's really expired."
+msgstr "LINE Pay 預授權金鑰超過 %1 天未使用，將嘗試執行一次扣款以確認是否已過期。"
+
+#: CRM/Core/Payment/LinePay.php:1179
+msgid "Charge failed because the preapproved key has expired (code 1193); recurring set to Expired."
+msgstr "扣款失敗，預授權金鑰已過期（代碼 1193），定期定額已設為已到期。"
+
+#: CRM/Core/Payment/LinePay.php:1170
+msgid "Charge failed and the preapproved key was voided (code %1); recurring set to Failed."
+msgstr "扣款失敗且預授權金鑰已被作廢（代碼 %1），定期定額已設為失敗。"
+
+#: CRM/Core/Payment/LinePay.php:1290
+msgid "This status can only be set by the system."
+msgstr "此狀態僅能由系統設定。"
+
+#: CRM/Core/Payment/LinePay.php:1295
+msgid "This recurring contribution no longer has a usable LINE Pay preapproved key, so its status cannot be changed."
+msgstr "此定期定額已無可用的 LINE Pay 預授權金鑰，無法變更狀態。"
+
+#: CRM/Core/Payment/LinePay.php:1300
+msgid "The LINE Pay preapproved key for this recurring contribution has been discarded; it will never be charged again."
+msgstr "此定期定額的 LINE Pay 預授權金鑰已廢棄，將不再扣款。"
+
+#: CRM/Core/Payment/Mobile.php:371
+msgid "Recurring contribution %1 doesn't have LINE Pay Recurring enabled."
+msgstr "定期定額 %1 未啟用 LINE Pay 定期扣款。"
+
+#: CRM/Core/Payment/Mobile.php:377
+msgid "The latest contribution of recurring %1 was not paid with LINE Pay."
+msgstr "定期定額 %1 的最新捐款並非透過 LINE Pay 付款。"
+
+#: CRM/Core/Payment/Mobile.php:789
+msgid "Please edit recurring and change status to 'Cancelled'."
+msgstr "請編輯定期定額並將狀態變更為「已取消」。"
+
+#: CRM/Contribute/DAO/LinePay.php:221
+msgid "Contribution Recur ID"
+msgstr "定期定額 ID"
+
+#: CRM/Contribute/DAO/LinePay.php:284
+msgid "Preapproved Payment regKey"
+msgstr "預授權付款金鑰"
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl:468
+msgid "LINE Pay Recurring"
+msgstr "LINE Pay 定期扣款"
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl:511
+msgid "Line Pay Only"
+msgstr "僅限 LINE Pay"
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:448
+msgid "Confirm Cancellation"
+msgstr "確認取消"
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:449
+msgid "If you choose this status, this recurring contribution will never be charged again. Are you sure you want to continue?"
+msgstr "若選擇此狀態，此定期定額將不再扣款。確定要繼續？"
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:484
+msgid "If you choose this status, this recurring contribution will never be charged again."
+msgstr "若選擇此狀態，此定期定額將不再扣款。"
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:487
+msgid "If you choose this status, this recurring contribution will resume and be charged again on the regular monthly billing date."
+msgstr "若選擇此狀態，此定期定額將恢復並於每月固定扣款日重新扣款。"
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:490
+msgid "The LINE Pay preapproved key is valid for 180 days. The last successful charge was on %1. If no charge succeeds before %2, the system will automatically set this recurring contribution to Expired."
+msgstr "LINE Pay 預授權金鑰有效期為 180 天。最後一次成功扣款日為 %1，若在 %2 前未有成功扣款，系統將自動將此定期定額設為已到期。"
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid "Please complete the LINE Pay Recurring application process before checking this option."
+msgstr "需先完成 LINE Pay 定期定額申請流程再勾選"

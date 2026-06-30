@@ -469,6 +469,7 @@
       subjectLabel.click(function(){
         newCheckBox.click();
       });
+      $('<div class="description">{/literal}{ts}Please complete the LINE Pay Recurring application process before checking this option.{/ts}{literal}</div>').insertAfter(subjectTextField);
       if (subjectTextField.val() === '1') {
         newCheckBox.prop('checked', 1);
       }

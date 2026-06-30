@@ -51318,3 +51318,119 @@ msgstr ""
 #: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
 msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
 msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:195
+msgid "LINE Pay request failed."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:715
+msgid "LINE Pay preapproved key was voided by the gateway (code %1: %2). The donor must subscribe again."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:843
+msgid "Could not find the contribution."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:902
+msgid "LINE Pay returned code 1193: the preapproved key has expired, so the recurring contribution is set to Expired."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1072
+msgid "Recurring already in a skip status (%s); skipped execute payment."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1081
+msgid "Recurring already in a terminal status (%1); preapproved key discarded."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1098
+msgid "Paused recurring exceeded the %1-day LINE Pay key window, but the preapproved key is still confirmed valid; keep it."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1102
+msgid "Paused recurring exceeded the %1-day LINE Pay key window; expiring."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1109
+msgid "never"
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1110
+msgid "Recurring is paused (last charge: %1); skip charging."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1118
+msgid "LINE Pay preapproved key unused for over %1 days. We will try execute one payment to see if it's really expired."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1179
+msgid "Charge failed because the preapproved key has expired (code 1193); recurring set to Expired."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1170
+msgid "Charge failed and the preapproved key was voided (code %1); recurring set to Failed."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1290
+msgid "This status can only be set by the system."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1295
+msgid "This recurring contribution no longer has a usable LINE Pay preapproved key, so its status cannot be changed."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1300
+msgid "The LINE Pay preapproved key for this recurring contribution has been discarded; it will never be charged again."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:371
+msgid "Recurring contribution %1 doesn't have LINE Pay Recurring enabled."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:377
+msgid "The latest contribution of recurring %1 was not paid with LINE Pay."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:789
+msgid "Please edit recurring and change status to 'Cancelled'."
+msgstr ""
+
+#: CRM/Contribute/DAO/LinePay.php:221
+msgid "Contribution Recur ID"
+msgstr ""
+
+#: CRM/Contribute/DAO/LinePay.php:284
+msgid "Preapproved Payment regKey"
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl:468
+msgid "LINE Pay Recurring"
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl:511
+msgid "Line Pay Only"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:448
+msgid "Confirm Cancellation"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:449
+msgid "If you choose this status, this recurring contribution will never be charged again. Are you sure you want to continue?"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:484
+msgid "If you choose this status, this recurring contribution will never be charged again."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:487
+msgid "If you choose this status, this recurring contribution will resume and be charged again on the regular monthly billing date."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:490
+msgid "The LINE Pay preapproved key is valid for 180 days. The last successful charge was on %1. If no charge succeeds before %2, the system will automatically set this recurring contribution to Expired."
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid "Please complete the LINE Pay Recurring application process before checking this option."
+msgstr ""
