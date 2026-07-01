@@ -443,6 +443,10 @@ body .crm-container-md table.crm-custom-data-view.no-border{
   .region.region-footer>div {
     text-align:center;
   }
+  .sharethis{
+    left: unset !important;
+    right: 10px;
+  }
 
 
   .error-msg {
