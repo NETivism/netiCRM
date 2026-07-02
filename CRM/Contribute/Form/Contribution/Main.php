@@ -309,16 +309,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
             $ele = $this->getElement($name);
             $eleClass = get_class($ele);
             if ($ele->_type == 'text' && strstr($eleClass, 'HTML_QuickForm_text')) {
-              $this->_originalValues[$name] = $this->_defaults[$name];
-              $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
-              $ele->updateAttributes(['data-mask' => $this->_defaults[$name]]);
-              if (isset($this->_rules[$name])) {
-                foreach ($this->_rules[$name] as $idx => &$rule) {
-                  if ($rule['type'] != 'xssString') {
-                    unset($this->_rules[$name][$idx]);
-                  }
-                }
-              }
+              $this->maskDefaultValueForDisplay($name);
             }
           }
         }
@@ -413,7 +404,16 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $userContributionPrepopulate = $session->get('user_contribution_prepopulate');
       if (!empty($userContributionPrepopulate) && CRM_REQUEST_TIME <= $userContributionPrepopulate['expires']) {
         unset($userContributionPrepopulate['expires']);
+        $maskedFieldNames = CRM_Utils_Array::value('_maskedFieldNames', $userContributionPrepopulate, []);
+        unset($userContributionPrepopulate['_maskedFieldNames']);
         $this->_defaults = $userContributionPrepopulate;
+        foreach ($maskedFieldNames as $name) {
+          $this->maskDefaultValueForDisplay($name);
+        }
+        // early return skips the persist-originalValues call below, so do it here too
+        if (!empty($this->_originalValues) && empty($this->get('originalValues'))) {
+          $this->set('originalValues', $this->_originalValues);
+        }
         return $this->_defaults;
       }
     }
@@ -440,19 +440,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           }
           if (!empty($this->_originalId) && empty($this->_ppType)) {
             if ($field['html_type'] == 'Text') {
-              $this->_originalValues[$name] = $this->_defaults[$name];
-              $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
-              if (isset($this->_elementIndex[$name])) {
-                $ele = $this->getElement($name);
-                $ele->updateAttributes(['data-mask' => $this->_defaults[$name]]);
-              }
-              if (isset($this->_rules[$name])) {
-                foreach ($this->_rules[$name] as $idx => &$rule) {
-                  if ($rule['type'] != 'xssString') {
-                    unset($this->_rules[$name][$idx]);
-                  }
-                }
-              }
+              $this->maskDefaultValueForDisplay($name);
             }
           }
         }
@@ -604,6 +592,29 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->set('originalValues', $this->_originalValues);
     }
     return $this->_defaults;
+  }
+
+  /**
+   * @param string $name
+   * @return void
+   */
+  private function maskDefaultValueForDisplay($name) {
+    if (empty($this->_defaults[$name])) {
+      return;
+    }
+    $this->_originalValues[$name] = $this->_defaults[$name];
+    $this->_defaults[$name] = CRM_Utils_String::mask($this->_defaults[$name]);
+    if (isset($this->_elementIndex[$name])) {
+      $ele = $this->getElement($name);
+      $ele->updateAttributes(['data-mask' => $this->_defaults[$name]]);
+    }
+    if (isset($this->_rules[$name])) {
+      foreach ($this->_rules[$name] as $idx => &$rule) {
+        if ($rule['type'] != 'xssString') {
+          unset($this->_rules[$name][$idx]);
+        }
+      }
+    }
   }
 
   /**
