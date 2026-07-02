@@ -51434,3 +51434,7 @@ msgstr ""
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Please complete the LINE Pay Recurring application process before checking this option."
 msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid "LINE Pay recurring contributions only support monthly, yearly is not available."
+msgstr ""
