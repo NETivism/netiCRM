@@ -1502,17 +1502,15 @@ LIMIT 0, 100
     }
 
     // Convert expired recurring to Failed once it has been Expired for at least 6 months
-    // (counted from the "Card expiry date is due." or "This is lastest contribution..." note)
-    $expiryDueNotePrefix = ts("Card expiry date is due.") . '%';
-    $lastContributionNoteTemplate = ts("This is lastest contribution of this recurring (expiry date is %1).");
-    $lastContributionNotePrefix = explode('%1', $lastContributionNoteTemplate)[0] . '%';
+    // (counted from the "Card expiry date is due." note, not from now or start_date)
+    // and has received no successful contribution since becoming Expired.
     $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
  AND (
    SELECT MAX(n.modified_date) FROM civicrm_note n
    WHERE n.entity_table = 'civicrm_contribution_recur'
    AND n.entity_id = r.id
-   AND (n.note LIKE %1 OR n.note LIKE %2)
+   AND n.note LIKE %1
  ) <= DATE_SUB(NOW(), INTERVAL 6 MONTH)
  AND NOT EXISTS (
    SELECT 1 FROM civicrm_contribution c
@@ -1522,12 +1520,11 @@ LIMIT 0, 100
      SELECT MAX(n.modified_date) FROM civicrm_note n
      WHERE n.entity_table = 'civicrm_contribution_recur'
      AND n.entity_id = r.id
-     AND (n.note LIKE %1 OR n.note LIKE %2)
+     AND n.note LIKE %1
    )
  )";
     $dao = CRM_Core_DAO::executeQuery($sql, [
-      1 => [$expiryDueNotePrefix, 'String'],
-      2 => [$lastContributionNotePrefix, 'String'],
+      1 => [ts("Card expiry date is due.") . '%', 'String'],
     ]);
     $processorTypeCache = [];
     while ($dao->fetch()) {
