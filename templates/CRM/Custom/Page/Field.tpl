@@ -53,7 +53,7 @@
         <tbody>
         {foreach from=$customField item=row}
         <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {if NOT $row.is_active} disabled{/if}">
-            <td>{$row.label}</td>
+            <td>{$row.label|escape}</td>
             <td>{$row.data_type}</td>
             <td>{$row.html_type}</td>
             <td class="nowrap weight-order">{$row.order}</td>
