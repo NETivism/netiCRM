@@ -1501,33 +1501,22 @@ LIMIT 0, 100
       }
     }
 
-    // Convert expired recurring to Failed once it has been Expired for at least 6 months
-    // (counted from the "Card expiry date is due." or "This is lastest contribution..." note)
-    $expiryDueNotePrefix = ts("Card expiry date is due.") . '%';
-    $lastContributionNoteTemplate = ts("This is lastest contribution of this recurring (expiry date is %1).");
-    $lastContributionNotePrefix = explode('%1', $lastContributionNoteTemplate)[0] . '%';
+    // Convert expired recurring to Failed if no successful contribution in past 6 months
+    // refs #45628, temporarily disabled
+    /*
+    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
     $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
- AND (
-   SELECT MAX(n.modified_date) FROM civicrm_note n
-   WHERE n.entity_table = 'civicrm_contribution_recur'
-   AND n.entity_id = r.id
-   AND (n.note LIKE %1 OR n.note LIKE %2)
- ) <= DATE_SUB(NOW(), INTERVAL 6 MONTH)
- AND NOT EXISTS (
-   SELECT 1 FROM civicrm_contribution c
-   WHERE c.contribution_recur_id = r.id
-   AND c.contribution_status_id = 1
-   AND c.receive_date >= (
-     SELECT MAX(n.modified_date) FROM civicrm_note n
-     WHERE n.entity_table = 'civicrm_contribution_recur'
-     AND n.entity_id = r.id
-     AND (n.note LIKE %1 OR n.note LIKE %2)
-   )
+ AND r.start_date < %1
+ AND r.id NOT IN (
+   SELECT DISTINCT contribution_recur_id
+   FROM civicrm_contribution
+   WHERE contribution_status_id = 1
+   AND receive_date >= %1
+   AND contribution_recur_id IN(SELECT id FROM civicrm_contribution_recur WHERE contribution_status_id = 6)
  )";
     $dao = CRM_Core_DAO::executeQuery($sql, [
-      1 => [$expiryDueNotePrefix, 'String'],
-      2 => [$lastContributionNotePrefix, 'String'],
+      1 => [$sixMonthsAgo, 'String'],
     ]);
     $processorTypeCache = [];
     while ($dao->fetch()) {
@@ -1548,6 +1537,7 @@ LIMIT 0, 100
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $noteMessage);
       }
     }
+    */
   }
 
   /**
