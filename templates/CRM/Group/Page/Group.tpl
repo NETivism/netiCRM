@@ -77,7 +77,7 @@
        <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
             <td>{$row.id}</td>
             <td>
-              {$row.title|escape}
+              {$row.title}
             </td>	
             <td>
               {$row.description|mb_truncate:80:"...":true}
