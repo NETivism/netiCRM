@@ -221,7 +221,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
       $this->addElement('checkbox', 'allow_count', ts('Allow Changing Count'), NULL, ['onclick' => 'onChangeAllowCount();']);
 
-      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value'] + ['min' > 0]);
+      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value'] + ['min' => 0]);
+      $this->addRule('max_value', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
       $this->add('textArea', 'description', ts('Description'), $attributes['description']);
 
@@ -404,13 +405,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     }
 
     if (($form->_action & CRM_Core_Action::ADD || $form->_action & CRM_Core_Action::UPDATE) && $fields['allow_count']) {
-      if (isset($fields['max_value']) && $fields['max_value'] !== '') {
-        if (!is_numeric($fields['max_value'])) {
-          $errors['max_value'] = ts('must be a numeric value');
-        }
-        elseif ($fields['max_value'] <= 0) {
-          $errors['max_value'] = ts('Max participants must be greater than 0.');
-        }
+      if (!is_numeric($fields['max_value']) || $fields['max_value'] == '') {
+        $errors['max_value'] = ts('must be a numeric value');
+      }
+      elseif ($fields['max_value'] < 0) {
+        $errors['max_value'] = ts("greater than or equal to '%1'", [1 => 0]);
       }
     }
 

@@ -231,16 +231,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
    */
   public static function formRule($fields, $files, $form) {
     $errors = [];
-
-    if (isset($fields['max_value']) && $fields['max_value'] !== '') {
-      if (!is_numeric($fields['max_value'])) {
-        $errors['max_value'] = ts('must be a numeric value');
-      }
-      elseif ($fields['max_value'] <= 0) {
-        $errors['max_value'] = ts('Max participants must be greater than 0.');
-      }
-    }
-
     if ($fields['count'] && $fields['max_value'] &&
       $fields['count'] > $fields['max_value']
     ) {
