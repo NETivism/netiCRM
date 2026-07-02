@@ -1692,7 +1692,12 @@
           let allowSaveBtns = ["_qf_Upload_back", "_qf_Upload_upload", "_qf_Upload_upload_save" , "_qf_Upload_submit"];
           if (allowSaveBtns.indexOf(buttonName) != -1) {
             event.preventDefault();
-            let oldEditorContent = CKEDITOR.instances['html_message'].getData(),
+            // Read from whichever editor is active (CKEditor 5 / CKEditor 4 / plain textarea). ref #45339
+            let oldEditorContent = (window.CiviCKEditor5 && window.CiviCKEditor5.getEditorInstance('html_message'))
+                  ? window.CiviCKEditor5.getEditorInstance('html_message').getData()
+                  : (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['html_message'])
+                    ? CKEDITOR.instances['html_message'].getData()
+                    : $('#html_message').val(),
                 confirmMessage = _ts["Because you have switched to 'Compose On-screen' mode, the content of the traditional editor will be replaced. Are you sure you want to save it?"];
 
             let saveContentToOldEditor = function() {
@@ -1705,7 +1710,14 @@
                   if (previewContent) {
                     clearInterval(checkMailOutputTimer);
                     previewContent = document.getElementById("nme-mail-output-frame").contentWindow.document.documentElement.outerHTML;
-                    CKEDITOR.instances['html_message'].setData(previewContent);
+                    // Write back to whichever editor is active. ref #45339
+                    if (window.CiviCKEditor5 && window.CiviCKEditor5.getEditorInstance('html_message')) {
+                      window.CiviCKEditor5.setData('html_message', previewContent);
+                    } else if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['html_message']) {
+                      CKEDITOR.instances['html_message'].setData(previewContent);
+                    } else {
+                      $('#html_message').val(previewContent);
+                    }
                     $form.data("allow-submit", true);
                     $form.find("[name='" + buttonName + "']").click();
                   }
