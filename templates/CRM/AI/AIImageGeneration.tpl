@@ -1,7 +1,7 @@
 {* Magnific Popup *}
 {* Load css via {css} block so stylesheets go into <head> instead of <body>, avoiding FOUC. refs #45502 #45479 *}
 {css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-magnific-popup}{/css}
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 
 {* AIImageGeneration CSS *}
 {css src=packages/AIImageGeneration/AIImageGeneration.css library=civicrm/civicrm-css-aiimagegeneration}{/css}

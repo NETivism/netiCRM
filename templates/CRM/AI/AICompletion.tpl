@@ -1,6 +1,6 @@
 {* Magnific Popup *}
 {css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-aicompletion}{/css}
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 
 {* AICompletion files start *}
 {* TODO: File used temporarily during development, to be removed later *}
