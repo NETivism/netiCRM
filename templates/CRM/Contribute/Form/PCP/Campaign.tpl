@@ -125,8 +125,8 @@ cj(document).ready(function($){
 {/literal}</script>
 
 {if $pcp_show_preview && isset($pcp_page_preview_url)}
-<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-magnific-popup}{/css}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 
 <div id="pcp-preview-popup" class="pcp-preview-popup crm-preview-popup">
   <div class="inner">

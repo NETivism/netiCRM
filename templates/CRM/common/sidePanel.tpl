@@ -7,7 +7,7 @@
 {/if}
 
 <!-- sidePanel files start -->
-<link rel="stylesheet" href="{$config->resourceBase}packages/sidePanel/sidePanel.css?v{$config->ver}">
+{css src=packages/sidePanel/sidePanel.css library=civicrm/civicrm-css-sidepanel}{/css}
 {js src=packages/sidePanel/sidePanel.js group=999 weight=998 library=civicrm/civicrm-js-sidepanel}{/js}
 {literal}
 <script type="text/javascript">
