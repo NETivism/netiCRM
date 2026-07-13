@@ -94,16 +94,16 @@ class SmartyTest extends TestCase {
   }
 
   public function testAppendWithMerge() {
-    $this->smarty->append('merged', ['a' => 1], true);
-    $this->smarty->append('merged', ['b' => 2], true);
+    $this->smarty->append('merged', ['a' => 1], TRUE);
+    $this->smarty->append('merged', ['b' => 2], TRUE);
     $result = $this->smarty->get_template_vars('merged');
     $this->assertArrayHasKey('a', $result);
     $this->assertArrayHasKey('b', $result);
   }
 
   public function testAppendWithoutMergeKeepsNumericKeys() {
-    $this->smarty->append('list2', ['x', 'y'], false);
-    $this->smarty->append('list2', ['z'], false);
+    $this->smarty->append('list2', ['x', 'y'], FALSE);
+    $this->smarty->append('list2', ['z'], FALSE);
     $result = $this->smarty->get_template_vars('list2');
     $this->assertCount(2, $result);
   }
@@ -134,7 +134,7 @@ class SmartyTest extends TestCase {
 
   public function testAppendByRefWithMerge() {
     $val = ['k' => 'v'];
-    $this->smarty->append_by_ref('refmap', $val, true);
+    $this->smarty->append_by_ref('refmap', $val, TRUE);
     $result = $this->smarty->get_template_vars('refmap');
     $this->assertArrayHasKey('k', $result);
   }
@@ -394,17 +394,17 @@ class SmartyTest extends TestCase {
   }
 
   public function testGetAutoIdCacheOnly() {
-    $result = $this->smarty->_get_auto_id('cache123', null);
+    $result = $this->smarty->_get_auto_id('cache123', NULL);
     $this->assertSame('cache123', $result);
   }
 
   public function testGetAutoIdCompileOnly() {
-    $result = $this->smarty->_get_auto_id(null, 'compile456');
+    $result = $this->smarty->_get_auto_id(NULL, 'compile456');
     $this->assertSame('compile456', $result);
   }
 
   public function testGetAutoIdNeither() {
-    $result = $this->smarty->_get_auto_id(null, null);
+    $result = $this->smarty->_get_auto_id(NULL, NULL);
     $this->assertNull($result);
   }
 
@@ -418,13 +418,13 @@ class SmartyTest extends TestCase {
   }
 
   public function testGetAutoFilenameWithAutoId() {
-    $result = $this->smarty->_get_auto_filename('/tmp/compile', null, 'en');
+    $result = $this->smarty->_get_auto_filename('/tmp/compile', NULL, 'en');
     $this->assertStringContainsString('en', $result);
     $this->assertStringStartsWith('/tmp/compile', $result);
   }
 
   public function testGetAutoFilenameWithSource() {
-    $result = $this->smarty->_get_auto_filename('/tmp/compile', 'index.tpl', null);
+    $result = $this->smarty->_get_auto_filename('/tmp/compile', 'index.tpl', NULL);
     $this->assertStringContainsString('index.tpl', $result);
     $this->assertStringContainsString('%%', $result);
   }
@@ -478,7 +478,7 @@ class SmartyTest extends TestCase {
     file_put_contents($tmpFile, '');
     $result = $this->smarty->_read_file($tmpFile);
     // empty file returns empty string or false depending on implementation
-    $this->assertTrue($result === '' || $result === false);
+    $this->assertTrue($result === '' || $result === FALSE);
     unlink($tmpFile);
   }
 

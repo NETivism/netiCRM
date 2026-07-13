@@ -370,6 +370,14 @@ class CRM_Event_BAO_Query {
         $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
         return;
 
+      case 'participant_fee_level':
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.fee_level", $op, $value, 'String'
+        );
+        $query->_qill[$grouping][] = ts('Fee level') . " $op $value";
+        $query->_tables['civicrm_participant'] = $query->_whereTables['civicrm_participant'] = 1;
+        return;
+
       case 'participant_fee_amount':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
           "civicrm_participant.fee_amount",

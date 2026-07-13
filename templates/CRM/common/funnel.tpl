@@ -1,6 +1,6 @@
 {if $funnel.series}
   {js src=packages/ncfunnel/ncfunnel.js group=999 weight=998 library=civicrm/civicrm-js-ncfunnel}{/js}
-  <link rel="stylesheet" href="{$config->resourceBase}packages/ncfunnel/ncfunnel.css">
+  {css src=packages/ncfunnel/ncfunnel.css library=civicrm/civicrm-css-ncfunnel}{/css}
 
   {php}
     $chart_classes = array('ncfunnel-chart');

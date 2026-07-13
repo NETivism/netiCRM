@@ -118,7 +118,7 @@
           cj( contactHiddenElement ).val(data[1]);
       }).focus( );
 
-      cj( contactElement ).click( function( ) {
+      cj( contactElement ).on('input', function() {
           cj( contactHiddenElement ).val('');
       });
                                   

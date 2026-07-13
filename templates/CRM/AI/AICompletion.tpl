@@ -1,26 +1,13 @@
 {* Magnific Popup *}
-<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-aicompletion}{/css}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 
 {* AICompletion files start *}
 {* TODO: File used temporarily during development, to be removed later *}
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
+{css src=packages/mailingEditor/mailingEditor.css library=civicrm/civicrm-css-aicompletion}{/css}
 {* style files *}
-{*
-  The `<link rel="stylesheet">` tag placed inside the `<body>` is valid according to the specifications. For more information:
-
-  - [HTML Standard 4.2.4 The link element](https://html.spec.whatwg.org/multipage/semantics.html#the-link-element) and search for "body-ok"
-  - [Keywords that are body-ok affect whether link elements are allowed in the body](https://html.spec.whatwg.org/multipage/links.html#body-ok)
-
-  Keywords that are "body-ok" determine whether link elements are allowed in the body. The "body-ok" keywords include dns-prefetch, modulepreload, pingback, preconnect, prefetch, preload, and stylesheet.
-
-  However, both the `<link rel="stylesheet">` tag and `@import url` inside the `<body>` are not considered best practices. This is because if CSS is imported within the <body> tag, it may cause flickering or changes in styles during page rendering, which goes against the principle of separating concerns.
-
-  Consider creating a smarty `{css}` similar to the way JavaScript is loaded, allowing CSS to be placed in the `<head>` section. This can help improve the overall performance and adhere to the best practices.
-
-  refs #37730 46f
-*}
-<link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
+{* Load css via {css} block so stylesheets go into <head> instead of <body>, avoiding FOUC. refs #37730 #45479 *}
+{css src=packages/AICompletion/AICompletion.css library=civicrm/civicrm-css-aicompletion}{/css}
 
 {* script files *}
 {js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}

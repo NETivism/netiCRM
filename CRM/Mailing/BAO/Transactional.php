@@ -52,7 +52,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    *
    * @return bool True if a mail was sent, else false.
    */
-  public static function send(&$params, $callback = NULL) {
+  public static function send(&$params, $callback = NULL, &$failReason = NULL) {
     $config = CRM_Core_Config::singleton();
 
     // when transactional email not enabled, fallback to use common send
@@ -71,12 +71,14 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       $rule = ['CRM_Utils_Rule', $type];
       if (empty($params[$field])) {
         CRM_Core_Error::debug_log_message('Transactional Email Error: missing required field '.$field);
-        return;
+        $failReason = 'missing_field_' . $field;
+        return FALSE;
       }
       $valid = call_user_func($rule, $params[$field]);
       if (!$valid) {
         CRM_Core_Error::debug_log_message('Transactional Email Error: type validation error of field: '.$field.' - '.$type);
-        return;
+        $failReason = 'invalid_field_' . $field;
+        return FALSE;
       }
     }
 
@@ -105,7 +107,8 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $tmail = new CRM_Mailing_BAO_Transactional($params);
     if (empty($tmail->id)) {
       CRM_Core_Error::debug_log_message("Cannot start transactional email because init error. ".__LINE__);
-
+      $failReason = 'mailing_init_failed';
+      return FALSE;
     }
 
     $emailId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 ORDER BY is_primary DESC', [
@@ -115,7 +118,8 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     if (empty($emailId)) {
       CRM_Core_Error::debug_log_message('Transactional Email Error: contact '.$params['contactId'].' doesn\'t have email '.$params['toEmail']);
-      return;
+      $failReason = 'email_not_found';
+      return FALSE;
     }
 
     // create mailing recipient
@@ -199,6 +203,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
           CRM_Core_Error::setCallback();
           if (is_a($result, 'PEAR_Error')) {
             self::bounced($queue->id, $tmail->_job->id, $queue->hash, $result->getMessage());
+            $failReason = 'mailer_error';
             return FALSE;
           }
           else {
@@ -208,6 +213,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         }
       }
     }
+    $failReason = 'queue_creation_failed';
     return FALSE;
   }
 
@@ -244,6 +250,22 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       if ($queue) {
         self::delivered($queue->id, $queue->job_id, $queue->hash);
       }
+    }
+
+    if ($error) {
+      $logData = [
+        'sent'    => FALSE,
+        'to'      => CRM_Utils_String::maskEmail($params['to']),
+        'queueId' => $queue ? $queue->id : NULL,
+        'reason'  => 'mailer_error',
+        'error'   => $result->getMessage(),
+        'source' => __FUNCTION__.":".__LINE__,
+      ];
+      CRM_Core_Error::debug_log_message(
+        'sendNonBlocking result: ' . json_encode($logData),
+        FALSE,
+        'MailError'
+      );
     }
 
     if (!empty($params['callback'][$error])) {
@@ -606,7 +628,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     //CRM-5058
     //token replacement of subject
-    $headers['Subject'] = $mailingSubject;
+    $headers['Subject'] = $mailParams['Subject'];    
 
     CRM_Utils_Mail::setMimeParams($message);
     $headers = $message->headers($headers);

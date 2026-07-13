@@ -31,7 +31,7 @@ There's the potential for collisions (two different labels having the same short
 - Note the whole output gets contained within a <form> with name="Report".
 *}
 <script src="{$config->resourceBase}js/Audit/audit.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="{$config->resourceBase}css/Audit/style.css" />
+{css src=css/Audit/style.css library=civicrm/civicrm-css-audit}{/css}
 <input type="hidden" name="currentSelection" value="1" />
 
 <table class = "form-layout">

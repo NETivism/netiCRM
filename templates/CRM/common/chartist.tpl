@@ -1,23 +1,17 @@
 
-{php}
-global $crmChartistAdded;
-if (!$crmChartistAdded) {
-{/php}
-  <script type="text/javascript" src="{$config->resourceBase}packages/moment/moment.min.js"></script>
-  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/dist/chartist.min.js"></script>
-  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-axistitle.js"></script>
-  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/dist/chartist.min.css">
-  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css">
-  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css">
-  <link rel="stylesheet" href="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css">
-  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
-  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js"></script>
-  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js"></script>
-  <script type="text/javascript" src="{$config->resourceBase}packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend.js"></script>
-{php}
-  $crmChartistAdded = TRUE;
-}
-{/php}
+{* Shared chartist libs load in <head> via {js}/{css}; both auto-dedupe so
+   multiple charts on one page load them only once (replaces $crmChartistAdded). *}
+{js src=packages/moment/moment.min.js library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/dist/chartist.min.js library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-axistitle.js library=civicrm/civicrm-js-chartist}{/js}
+{css src=packages/chartist/dist/chartist.min.css library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css library=civicrm/civicrm-css-chartist}{/css}
+{js src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend.js library=civicrm/civicrm-js-chartist}{/js}
 <div class="chartist-wrapper">
 {if $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}

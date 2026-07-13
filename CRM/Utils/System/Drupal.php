@@ -44,6 +44,7 @@ class CRM_Utils_System_Drupal {
   private static $_version;
   private static $_loaded = FALSE;
   public static $jsLibraries;
+  public static $cssLibraries;
 
   /**
    * Construct will make sure durpal fully bootstrap
@@ -618,6 +619,119 @@ class CRM_Utils_System_Drupal {
             \Drupal::service('civicrm.page_state')->addJs($text, $params['type']);
             break;
         }
+      }
+    }
+
+    return;
+  }
+
+  /**
+   * Append a css file or inline style
+   *
+   * Mirrors addJs() so {css} blocks behave like {js} blocks: on Drupal 7 the
+   * file is loaded via drupal_add_css(), on Drupal 8+ the css library declared
+   * by the `library` param is queued for attachment (see civicrm.module).
+   *
+   * @param array $params   template call's parameters
+   * @param string $text    {css} block contents from the template
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  public static function addCss($params, $text) {
+    global $civicrm_root;
+    $crmRelativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $civicrm_root);
+    $version = self::$_version;
+    $data = NULL;
+
+    if ($version >= 6 && $version < 7) {
+      $type = 'module';
+      $media = 'all';
+      $preprocess = TRUE;
+
+      if (!empty($params) && isset($params['src']) && $params['src'] !== '') {
+        $data = $params['src'];
+
+        // Check file path
+        if (preg_match('/^https?:/i', $data)) {
+          // If the path is absolute
+          $data = preg_replace('/^https?:\/\/[^\/]*\//', '', $data);
+        }
+        else {
+          // If the path is relative
+          if (substr($data, 0, 1) === '/') {
+            $data = ltrim($data, '/');
+          }
+          else {
+            $crmRelativePath = ltrim($crmRelativePath, '/');
+            $data = $crmRelativePath . $data;
+          }
+        }
+
+        if (isset($params['media'])) {
+          $media = $params['media'];
+        }
+
+        drupal_add_css($data, $type, $media, $preprocess);
+      }
+    }
+    elseif ($version >= 7 && $version < 8) {
+      // civicrm.css is added with weight 990 and extras.css with 991 (see
+      // civicrm.module). Stylesheets from templates used to be inline <link>
+      // inside the body, so they have to keep loading after core css. Default
+      // to weight 992 and up, following template order. A file keeps the weight
+      // it got on first use, so a later {css} call for the same file cannot jump
+      // ahead of files that override it.
+      static $cssWeights = [];
+      $options = NULL;
+
+      if (!empty($params)) {
+        $options = [];
+        $possibleVars = ['media', 'group', 'every_page', 'weight', 'preprocess'];
+
+        foreach ($possibleVars as $varName) {
+          if (isset($params[$varName])) {
+            $options[$varName] = $params[$varName];
+          }
+        }
+
+        if (isset($params['src']) && $params['src'] !== '') {
+          $data = $params['src'];
+
+          // Check file path
+          if (!preg_match('/^https?:/i', $data)) {
+            // If the path is relative
+            if (substr($data, 0, 1) === '/') {
+              $data = ltrim($data, '/');
+            }
+            else {
+              $crmRelativePath = ltrim($crmRelativePath, '/');
+              $data = $crmRelativePath . $data;
+            }
+          }
+          else {
+            $options['type'] = 'external';
+          }
+
+          if (!isset($options['weight'])) {
+            if (!isset($cssWeights[$data])) {
+              $cssWeights[$data] = 992 + count($cssWeights);
+            }
+            $options['weight'] = $cssWeights[$data];
+          }
+
+          drupal_add_css($data, $options);
+        }
+      }
+    }
+    elseif ($version >= 8) {
+      // special case for drupal 8+
+      // like addJs(), css files are declared as a drupal library first
+      // (see civicrm_library_info_build) and only the library name can be
+      // attached dynamically here. src is ignored on drupal 8+.
+      if (!empty($params['library'])) {
+        self::$cssLibraries[$params['library']] = 1;
       }
     }
 

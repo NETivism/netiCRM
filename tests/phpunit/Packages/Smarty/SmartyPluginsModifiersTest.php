@@ -149,7 +149,7 @@ class SmartyPluginsModifiersTest extends TestCase {
   }
 
   public function testCountCharactersWithSpaces() {
-    $this->assertSame(11, smarty_modifier_count_characters('hello world', true));
+    $this->assertSame(11, smarty_modifier_count_characters('hello world', TRUE));
   }
 
   public function testCountCharactersEmpty() {
@@ -220,17 +220,17 @@ class SmartyPluginsModifiersTest extends TestCase {
   }
 
   public function testDebugPrintVarBoolTrue() {
-    $result = smarty_modifier_debug_print_var(true);
+    $result = smarty_modifier_debug_print_var(TRUE);
     $this->assertStringContainsString('true', $result);
   }
 
   public function testDebugPrintVarBoolFalse() {
-    $result = smarty_modifier_debug_print_var(false);
+    $result = smarty_modifier_debug_print_var(FALSE);
     $this->assertStringContainsString('false', $result);
   }
 
   public function testDebugPrintVarNull() {
-    $result = smarty_modifier_debug_print_var(null);
+    $result = smarty_modifier_debug_print_var(NULL);
     $this->assertStringContainsString('null', $result);
   }
 
@@ -252,7 +252,7 @@ class SmartyPluginsModifiersTest extends TestCase {
   }
 
   public function testDefaultNull() {
-    $this->assertSame('fallback', smarty_modifier_default(null, 'fallback'));
+    $this->assertSame('fallback', smarty_modifier_default(NULL, 'fallback'));
   }
 
   // ---------------------------------------------------------------------------
@@ -417,7 +417,7 @@ class SmartyPluginsModifiersTest extends TestCase {
 
   public function testStripTagsNoReplace() {
     // replace_with_space=false uses PHP strip_tags
-    $this->assertSame('hello world', smarty_modifier_strip_tags('<p>hello world</p>', false));
+    $this->assertSame('hello world', smarty_modifier_strip_tags('<p>hello world</p>', FALSE));
   }
 
   public function testStripTagsNoTags() {
@@ -439,12 +439,12 @@ class SmartyPluginsModifiersTest extends TestCase {
   }
 
   public function testTruncateBreakWords() {
-    $result = smarty_modifier_truncate('abcdefghijklmnopqrstuvwxyz', 10, '...', true);
+    $result = smarty_modifier_truncate('abcdefghijklmnopqrstuvwxyz', 10, '...', TRUE);
     $this->assertSame('abcdefg...', $result);
   }
 
   public function testTruncateMiddle() {
-    $result = smarty_modifier_truncate('abcdefghijklmnopqrstuvwxyz', 10, '...', false, true);
+    $result = smarty_modifier_truncate('abcdefghijklmnopqrstuvwxyz', 10, '...', FALSE, TRUE);
     $this->assertStringContainsString('...', $result);
     $this->assertLessThanOrEqual(10, strlen($result));
   }

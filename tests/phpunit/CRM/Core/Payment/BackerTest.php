@@ -254,7 +254,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
       },
       "receipt": {
         "receipt_type": "紙本收據",
-        "choice": "單次寄送紙本收據",
+        "choice": "紙本收據（單次寄送）",
         "contact_name": "稅捐收據抬頭",
         "identity_card_number": "1234567890",
         "country": "TW",
@@ -343,7 +343,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
       },
       "receipt": {
         "receipt_type": "紙本收據",
-        "choice": "單次寄送紙本收據",
+        "choice": "紙本收據（單次寄送）",
         "contact_name": "稅捐收據抬頭",
         "identity_card_number": "1234567890",
         "country": "TW",
@@ -425,7 +425,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
       },
       "receipt": {
         "receipt_type": "紙本收據",
-        "choice": "單次寄送紙本收據",
+        "choice": "紙本收據（單次寄送）",
         "contact_name": "稅捐收據抬頭",
         "identity_card_number": "1234567890",
         "country": "TW",
