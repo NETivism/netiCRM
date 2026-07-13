@@ -51,7 +51,7 @@ class CRM_Contact_Form_ImageDelete extends CRM_Core_Form {
 
   public function postProcess() {
     CRM_Contact_BAO_Contact::deleteContactImage($this->cid);
-    CRM_Core_Session::setStatus(ts('Contact image deleted successfully'), ts('Image Deleted'), 'success');
+    CRM_Core_Session::setStatus(ts('Contact image deleted successfully'), TRUE, 'success');
     CRM_Utils_System::redirect(CRM_Core_Session::singleton()->popUserContext());
   }
 
