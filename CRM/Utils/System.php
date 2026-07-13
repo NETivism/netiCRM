@@ -483,6 +483,20 @@ class CRM_Utils_System {
   }
 
   /**
+   * Append a CSS file or inline style.
+   *
+   * @param array $params
+   *   Template call's parameters.
+   * @param string $text
+   *   The {css} block contents from the Smarty template.
+   *
+   * @return void
+   */
+  public static function addCss($params, $text) {
+    return CRM_Core_Config::$_userSystem->addCss($params, $text);
+  }
+
+  /**
    * Determine the POST URL for a form.
    *
    * @param string $action

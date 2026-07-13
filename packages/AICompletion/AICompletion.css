@@ -210,7 +210,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
     background-position: 100% 100%;
   }
 }
-.netiaic-container .netiaic-form-container .crm-section {
+.crm-container .netiaic-container .netiaic-form-container .crm-section {
   display: flex;
   padding: 0;
   margin: 0 0 16px 0;
@@ -225,7 +225,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-container .crm-section > .label label {
   margin: 0;
 }
-.netiaic-container .crm-section > .content {
+.crm-container .netiaic-container .crm-section > .content {
   flex: 0 0 80%;
   margin: 0;
   padding: 0 0 0 10px;

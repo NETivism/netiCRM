@@ -169,14 +169,14 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 }
 
 /* nm container */
-.nme-container {
+.crm-container .nme-container {
   position: relative;
   margin: 50px 0;
   padding: 50px 20px;
   border: 2px solid #ccc;
   background: #fff;
 }
-.nme-container .nme-mail-inner {
+.crm-container .nme-container .nme-mail-inner {
   padding: 0;
 }
 .nme-tpl {
@@ -278,16 +278,16 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-block.is-edit:first-child .editable-container {
   margin-top: 47px;
 }
-.nme-container .nme-block .nme-title {
+.crm-container .nme-container .nme-block .nme-title {
   font-size: 1.5rem;
 }
-.nme-container .nme-block .nme-title a {
+.crm-container .nme-container .nme-block .nme-title a {
   color: #000;
 }
-.nme-container .nme-block .nme-title a:hover {
+.crm-container .nme-container .nme-block .nme-title a:hover {
   text-decoration: none;
 }
-.nme-container .nme-block .nme-text {
+.crm-container .nme-container .nme-block .nme-text {
   font-size: 1rem;
 }
 .nme-block[data-type="paragraph"][data-parent-type="rc-float"]:not(.is-edit):hover > .nme-block-inner > .nme-block-content {
@@ -419,7 +419,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
   color: #fff;
   background: #999;
 }
-.nme-container .nme-setting-section .nme-setting-section-content {
+.crm-container .nme-container .nme-setting-section .nme-setting-section-content {
   padding: 0 5px;
 }
 .nme-setting-panels .nme-setting-panel .nme-setting-field {
@@ -488,7 +488,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-setting-panels ul.nme-setting-item-list button:hover::before {
   content: "\f275";
 }
-.nme-container ul.nme-select-tpl-list button:hover::before {
+.crm-container .nme-container ul.nme-select-tpl-list button:hover::before {
   content: "\f30b";
 }
 .nme-setting-panels .nme-setting-panel #nme-theme-setting {
@@ -522,7 +522,7 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-setting-panels .nme-theme-thumb:hover {
   box-shadow: 0 0 5px rgba(0,0,0,.3);
 }
-.nme-container .form-radio:checked + .elem-label .nme-theme-thumb {
+.crm-container .nme-container .form-radio:checked + .elem-label .nme-theme-thumb {
   box-shadow: 0 0 5px rgba(0,0,0,.5);
 }
 
@@ -764,21 +764,24 @@ a.editable-click[data-type="xquill"] + .editable-container .editable-buttons {
 .nme-mail-output {
   display: none;
 }
-.nme-container table {
+.crm-container .nme-container table {
   width: auto;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
+  border: 0;
 }
-.nme-container table[width="100%"] {
+.crm-container .nme-container table[width="100%"] {
   width: 100%;
 }
-.nme-container tr,
-.nme-container tr:hover {
+.crm-container .nme-container tr,
+.crm-container .nme-container tr:hover {
   background: none;
+  border: 0;
 }
-.nme-container td {
+.crm-container .nme-container td {
   height: auto;
+  border: 0;
 }
 .nme-mail-container {
   max-width: 680px;
