@@ -677,6 +677,13 @@ class CRM_Utils_System_Drupal {
       }
     }
     elseif ($version >= 7 && $version < 8) {
+      // civicrm.css is added with weight 990 and extras.css with 991 (see
+      // civicrm.module). Stylesheets from templates used to be inline <link>
+      // inside the body, so they have to keep loading after core css. Default
+      // to weight 992 and up, following template order. A file keeps the weight
+      // it got on first use, so a later {css} call for the same file cannot jump
+      // ahead of files that override it.
+      static $cssWeights = [];
       $options = NULL;
 
       if (!empty($params)) {
@@ -705,6 +712,13 @@ class CRM_Utils_System_Drupal {
           }
           else {
             $options['type'] = 'external';
+          }
+
+          if (!isset($options['weight'])) {
+            if (!isset($cssWeights[$data])) {
+              $cssWeights[$data] = 992 + count($cssWeights);
+            }
+            $options['weight'] = $cssWeights[$data];
           }
 
           drupal_add_css($data, $options);
