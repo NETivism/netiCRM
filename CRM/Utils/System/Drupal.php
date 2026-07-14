@@ -677,13 +677,20 @@ class CRM_Utils_System_Drupal {
       }
     }
     elseif ($version >= 7 && $version < 8) {
-      // civicrm.css is added with weight 990 and extras.css with 991 (see
-      // civicrm.module). Stylesheets from templates used to be inline <link>
-      // inside the body, so they have to keep loading after core css. Default
-      // to weight 992 and up, following template order. A file keeps the weight
-      // it got on first use, so a later {css} call for the same file cannot jump
-      // ahead of files that override it.
-      static $cssWeights = [];
+      // Stylesheets from templates used to be inline <link> inside the body, so
+      // they won over every stylesheet in <head>. Templates keep that by passing
+      // the same group / weight scale {js} already uses:
+      //
+      //   group  999  a group of its own, past CSS_SYSTEM / CSS_DEFAULT /
+      //               CSS_THEME, so component css always lands after core css
+      //               (civicrm.css, extras.css) and the site custom css
+      //   weight 997  vendor css a component depends on (magnific-popup, quill,
+      //               poshytip, pickr, chartist ...)
+      //   weight 998  the component's own css, overriding the vendor css above
+      //   weight 999  css overriding another component's css
+      //
+      // Files sharing a weight keep template order: drupal_add_css() adds a
+      // count/1000 fraction to conserve the insertion order.
       $options = NULL;
 
       if (!empty($params)) {
@@ -714,11 +721,13 @@ class CRM_Utils_System_Drupal {
             $options['type'] = 'external';
           }
 
+          // Fall back to the vendor layer when a template passes no group /
+          // weight, so component css never ends up before core css.
+          if (!isset($options['group'])) {
+            $options['group'] = 999;
+          }
           if (!isset($options['weight'])) {
-            if (!isset($cssWeights[$data])) {
-              $cssWeights[$data] = 992 + count($cssWeights);
-            }
-            $options['weight'] = $cssWeights[$data];
+            $options['weight'] = 997;
           }
 
           drupal_add_css($data, $options);

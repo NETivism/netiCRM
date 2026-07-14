@@ -78,19 +78,19 @@ window.nmEditor = {
 {/literal}
 </script>
 <!-- poshytip -->
-{css src=packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/poshytip/src/tip-yellowsimple/tip-yellowsimple.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
 {js src=packages/poshytip/src/jquery.poshytip.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 <!-- x-editable -->
-{css src=packages/x-editable/dist/jquery-editable/css/jquery-editable.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/x-editable/dist/jquery-editable/css/jquery-editable.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
 {js src=packages/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
-{css src=packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css library=civicrm/civicrm-css-mailingeditor}{/css}
-{css src=packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css library=civicrm/civicrm-css-mailingeditor}{/css}
-{css src=packages/mailingEditor/quill.override.css library=civicrm/civicrm-css-mailingeditor}{/css}
-{css src=packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.css library=civicrm/civicrm-css-mailingeditor}{/css}
-{css src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/x-editable/dist/inputs-ext/quill/lib/quill.snow.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/x-editable/dist/inputs-ext/quill/lib/quill.bubble.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/mailingEditor/quill.override.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/x-editable/dist/inputs-ext/quill/lib/emoji/quill-emoji.min.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
 {if $tsLocale == 'zh_TW'}
-{css src=packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/x-editable/dist/inputs-ext/quill/lib/l10n.zh_TW.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
 {/if}
 {js src=packages/x-editable/dist/inputs-ext/quill/lib/quill.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 {js src=packages/x-editable/dist/inputs-ext/quill/lib/placeholder/quill.placeholder.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
@@ -99,15 +99,15 @@ window.nmEditor = {
 
 
 <!-- pickr -->
-{css src=packages/pickr/dist/themes/nano.min.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/pickr/dist/themes/nano.min.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
 {js src=packages/pickr/dist/pickr.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 <!-- Magnific Popup -->
-{css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/Magnific-Popup/dist/magnific-popup.css group=999 weight=997 library=civicrm/civicrm-css-mailingeditor}{/css}
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
 
 <!-- mailingEditor -->
-{css src=packages/mailingEditor/mailingEditor.css library=civicrm/civicrm-css-mailingeditor}{/css}
+{css src=packages/mailingEditor/mailingEditor.css group=999 weight=998 library=civicrm/civicrm-css-mailingeditor}{/css}
 {include file="../packages/mailingEditor/templates/mailingEditorTemplates.tpl"}
 {literal}
 <style>

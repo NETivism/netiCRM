@@ -351,7 +351,7 @@
 {/if}
 
 {* RFM popup start *}
-{css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-magnific-popup}{/css}
+{css src=packages/Magnific-Popup/dist/magnific-popup.css group=999 weight=997 library=civicrm/civicrm-css-magnific-popup}{/css}
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 <div id="rfm-popup" class="rfm-popup crm-popup-sm crm-popup mfp-hide">
   <div class="crm-popup-inner">
@@ -433,5 +433,5 @@
 </div>
 
 {* RFM package *}
-{css src=packages/RFM/RFM.css library=civicrm/civicrm-css-rfm}{/css}
+{css src=packages/RFM/RFM.css group=999 weight=998 library=civicrm/civicrm-css-rfm}{/css}
 {js src=packages/RFM/RFM.js group=999 weight=998 library=civicrm/civicrm-js-rfm}{/js}

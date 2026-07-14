@@ -4,10 +4,10 @@
 {js src=packages/moment/moment.min.js library=civicrm/civicrm-js-chartist}{/js}
 {js src=packages/chartist/dist/chartist.min.js library=civicrm/civicrm-js-chartist}{/js}
 {js src=packages/chartist/plugin/chartist-plugin-axistitle.js library=civicrm/civicrm-js-chartist}{/js}
-{css src=packages/chartist/dist/chartist.min.css library=civicrm/civicrm-css-chartist}{/css}
-{css src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css library=civicrm/civicrm-css-chartist}{/css}
-{css src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css library=civicrm/civicrm-css-chartist}{/css}
-{css src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/dist/chartist.min.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
 {js src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js library=civicrm/civicrm-js-chartist}{/js}
 {js src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js library=civicrm/civicrm-js-chartist}{/js}
 {js src=packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js library=civicrm/civicrm-js-chartist}{/js}
