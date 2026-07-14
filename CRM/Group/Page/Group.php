@@ -314,6 +314,8 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         $newLinks = $links;
         $values[$object->id] = [];
         CRM_Core_DAO::storeValues($object, $values[$object->id]);
+        $values[$object->id]['title'] = htmlentities((string) ($values[$object->id]['title'] ?? ''));
+        $values[$object->id]['description'] = htmlentities((string) ($values[$object->id]['description'] ?? ''));
         $values[$object->id]['mode'] = ts('Normal');
         if ($object->saved_search_id) {
           $values[$object->id]['mode'] = ts('Smart');
@@ -376,7 +378,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
         );
         if (property_exists($object, 'orgName')) {
           if ($object->orgName) {
-            $values[$object->id]['org_name'] = $object->orgName;
+            $values[$object->id]['org_name'] = htmlentities((string) $object->orgName);
             $values[$object->id]['org_id'] = $object->orgID;
           }
         }
