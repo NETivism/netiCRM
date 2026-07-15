@@ -5,7 +5,7 @@
 
 {* AIImageGeneration CSS *}
 {css src=packages/AIImageGeneration/AIImageGeneration.css group=999 weight=998 library=civicrm/civicrm-css-aiimagegeneration}{/css}
-{css src=packages/AIImageGeneration/AIImageGeneration-History.css group=999 weight=999 library=civicrm/civicrm-css-aiimagegeneration}{/css}
+{css src=packages/AIImageGeneration/AIImageGeneration-History.css group=999 weight=998 library=civicrm/civicrm-css-aiimagegeneration}{/css}
 
 {* AIImageGeneration JavaScript *}
 {js src=packages/AIImageGeneration/AIImageGeneration.js group=999 weight=998 library=civicrm/civicrm-js-aiimagegeneration}{/js}
