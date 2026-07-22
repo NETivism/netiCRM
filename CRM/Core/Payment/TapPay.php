@@ -1501,22 +1501,46 @@ LIMIT 0, 100
       }
     }
 
-    // Convert expired recurring to Failed if no successful contribution in past 6 months
-    // refs #45628, temporarily disabled
-    /*
-    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
-    $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
+    // Convert expired recurring to Failed 6 months after its latest 5->6 status
+    // transition in civicrm_log. Filtered by cycle_day since civicrm_log.data
+    // has no usable index and this runs daily.
+    $time = time();
+    $thisMonth = date('m', $time);
+    $theMonthNextDay = date('m', $time + 86400);
+    $today = date('j', $time);
+    if ($thisMonth == $theMonthNextDay) {
+      $cycleDayFilter = 'r.cycle_day = '.$today.' ';
+    }
+    else {
+      $days = [];
+      for ($i = $today; $i <= 31 ; $i++) {
+        $days[] = $i;
+      }
+      $cycleDayFilter = 'r.cycle_day IN ('.CRM_Utils_Array::implode(',', $days).')';
+    }
+    $statusLogPattern = '%"before"%contribution_status_id";s:1:"5"%"after"%contribution_status_id";i:6%';
+    $sql = 'SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
- AND r.start_date < %1
- AND r.id NOT IN (
-   SELECT DISTINCT contribution_recur_id
-   FROM civicrm_contribution
-   WHERE contribution_status_id = 1
-   AND receive_date >= %1
-   AND contribution_recur_id IN(SELECT id FROM civicrm_contribution_recur WHERE contribution_status_id = 6)
- )";
+ AND '.$cycleDayFilter.'
+ AND (
+   SELECT MAX(l.modified_date) FROM civicrm_log l
+   WHERE l.entity_table = \'civicrm_contribution_recur\'
+   AND l.entity_id = r.id
+   AND l.data LIKE %1
+ ) <= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+ AND NOT EXISTS (
+   SELECT 1 FROM civicrm_contribution c
+   WHERE c.contribution_recur_id = r.id
+   AND c.contribution_status_id = 1
+   AND c.receive_date >= (
+     SELECT MAX(l.modified_date) FROM civicrm_log l
+     WHERE l.entity_table = \'civicrm_contribution_recur\'
+     AND l.entity_id = r.id
+     AND l.data LIKE %1
+   )
+ )';
     $dao = CRM_Core_DAO::executeQuery($sql, [
-      1 => [$sixMonthsAgo, 'String'],
+      1 => [$statusLogPattern, 'String'],
     ]);
     $processorTypeCache = [];
     while ($dao->fetch()) {
@@ -1537,7 +1561,6 @@ LIMIT 0, 100
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $noteMessage);
       }
     }
-    */
   }
 
   /**
