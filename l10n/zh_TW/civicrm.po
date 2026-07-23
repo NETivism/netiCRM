@@ -16,7 +16,7 @@
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # SIAOLING HUANG, 2024
 # SIAOLING HUANG, 2024
-# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
+# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022,2026
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2024
 # 馮 佳今, 2022-2026
@@ -45,7 +45,7 @@ msgstr "聯絡人"
 #: CRM/ACL/BAO/ACL.php CRM/ACL/Form/EntityRole.php
 #: templates/CRM/ACL/Page/EntityRole.tpl
 msgid "ACL Role"
-msgstr "權限角色"
+msgstr "權限/角色"
 
 #: CRM/ACL/BAO/ACL.php CRM/ACL/BAO/EntityRole.php CRM/ACL/Form/ACL.php
 #: CRM/ACL/Page/ACL.php CRM/Contact/Form/Search/Custom/PostalMailing.php
