@@ -3,12 +3,9 @@ on: [push, pull_request]
 jobs:
   test7:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
+    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') }}
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Login to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - uses: actions/checkout@v4
 
       - name: Initialize submodules
         run: |
@@ -125,12 +122,9 @@ jobs:
 
   test8:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
+    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') }}
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Login to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - uses: actions/checkout@v4
 
       - name: Initialize submodules
         run: |
@@ -247,12 +241,9 @@ jobs:
 
   test8-d10:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '#skip-build') }}
+    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') }}
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Login to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - uses: actions/checkout@v4
 
       - name: Initialize submodules
         run: |
@@ -366,35 +357,3 @@ jobs:
           name: playwright-report-test8-d10
           path: tests/playwright/playwright-report
           retention-days: 30
-
-  notification:
-    if: ${{ failure() }}
-    needs: [test7, test8, test8-d10]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Shorten sha
-        id: vars
-        shell: bash
-        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
-
-      - name: Notification
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{secrets.NETIVISM_EMAIL_HOST}}
-          server_port: ${{secrets.NETIVISM_EMAIL_PORT}}
-          username: ${{secrets.NETIVISM_EMAIL_LOGIN}}
-          password: ${{secrets.NETIVISM_EMAIL_PASSWD}}
-          to: ${{secrets.NETIVISM_NOTIFICATION_TARGET}}
-          from: Github Workflow
-          secure: false
-          ignore_cert: true
-          convert_markdown: true
-          subject: '[${{github.repository}}] Run failed: ${{github.workflow}} - ${{github.ref_name}} (${{steps.vars.outputs.sha_short}})'
-          body: |
-            Executed by: ${{github.actor}}
-            Job name: ${{github.job}}
-            Repository: ${{github.repository}}
-            Status: ${{job.status}}
-            SHA: ${{github.sha}}
-            Message: ${{ github.event.head_commit.message }}
-            Link: ${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}
