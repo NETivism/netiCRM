@@ -45,7 +45,7 @@
        <tr class="crm-contribution-form-block-accounting_code">
     	  <td class="label">{$form.accounting_code.label}</td>
 	  <td class="html-adjust">{$form.accounting_code.html}{if $hasReceiptsLocked} <a href="#" class="ct-unlock-field" data-target="accounting_code">{ts}Change{/ts}</a>{/if}<br />
-       	      <span class="description">{ts}Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package.{/ts}</span>
+       	      <span class="description">{ts}Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package.{/ts}<br />{ts}Accounting Code cannot contain hyphen (-).{/ts}</span>
 	  </td>
        </tr>
        <tr class="crm-contribution-form-block-is_deductible">
