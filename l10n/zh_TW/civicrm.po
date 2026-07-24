@@ -52248,3 +52248,11 @@ msgid ""
 "LINE Pay recurring contributions only support monthly, yearly is not "
 "available."
 msgstr ""
+
+#: CRM/Contribute/Form/ContributionType.php:124
+msgid "Accounting Code cannot contain hyphen (-). Please remove it before saving."
+msgstr "會計代碼不可包含連字號 (-)，請移除後再儲存。"
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:48
+msgid "Accounting Code cannot contain hyphen (-)."
+msgstr "會計代碼不可包含連字號 (-)。"

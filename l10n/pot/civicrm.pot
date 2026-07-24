@@ -51318,3 +51318,11 @@ msgstr ""
 #: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
 msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
 msgstr ""
+
+#: CRM/Contribute/Form/ContributionType.php:124
+msgid "Accounting Code cannot contain hyphen (-). Please remove it before saving."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:48
+msgid "Accounting Code cannot contain hyphen (-)."
+msgstr ""
