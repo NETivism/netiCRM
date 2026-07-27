@@ -27945,7 +27945,27 @@ msgid "I want to contribute this amount every %1 %2(s) for %3 installments."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"I want to contribute this amount every %1 %2(s) via %3 for %4 installments."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid "I want to contribute this amount every %1 %2(s) until I cancel."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"I want to contribute this amount every %1 %2(s) via %3 until I cancel."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid "I want to contribute this amount every %1 %2(s) until credit card expires."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"I want to contribute this amount every %1 %2(s) via %3 until credit card "
+"expires or I cancel."
 msgstr ""
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
@@ -51437,4 +51457,8 @@ msgstr ""
 
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "LINE Pay recurring contributions only support monthly, yearly is not available."
+msgstr ""
+
+#: neticrm/civicrm_instrument/civicrm_instrument.module
+msgid "You have to use credit card or LINE Pay for recurring contribution."
 msgstr ""

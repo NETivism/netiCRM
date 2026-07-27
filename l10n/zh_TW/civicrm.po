@@ -27947,8 +27947,28 @@ msgstr "我想要每%1個%2捐款此金額，總共捐款%3期。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
+"I want to contribute this amount every %1 %2(s) via %3 for %4 installments."
+msgstr "我想要每%1個%2透過%3捐款此金額，總共捐款%4期。"
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid "I want to contribute this amount every %1 %2(s) until I cancel."
+msgstr "我想要每%1個%2捐款此金額，直到我取消為止。"
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"I want to contribute this amount every %1 %2(s) via %3 until I cancel."
+msgstr "我想要每%1個%2透過%3捐款此金額，直到我取消為止。"
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
 "I want to contribute this amount every %1 %2(s) until credit card expires."
 msgstr "我每%1個%2以此金額捐款至信用卡有效期。"
+
+#: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
+msgid ""
+"I want to contribute this amount every %1 %2(s) via %3 until credit card "
+"expires or I cancel."
+msgstr "我想要每%1個%2透過%3以此金額捐款，直到信用卡到期或我取消為止。"
 
 #: templates/CRM/Contribute/Form/Contribution/Confirm.tpl
 msgid ""
@@ -52218,3 +52238,7 @@ msgstr "需先完成 LINE Pay 定期定額申請流程再勾選"
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "LINE Pay recurring contributions only support monthly, yearly is not available."
 msgstr "LINE Pay 定期定額只支援每月扣款，不支援每年扣款。"
+
+#: neticrm/civicrm_instrument/civicrm_instrument.module
+msgid "You have to use credit card or LINE Pay for recurring contribution."
+msgstr "定期定額捐款請使用信用卡或 LINE Pay。"
