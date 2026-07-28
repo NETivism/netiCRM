@@ -105,6 +105,9 @@ class CRM_Core_Payment_LinePay {
     if (!empty($params['membershipID'])) {
       $confirmQuery .= "&mid={$params['membershipID']}";
     }
+    if (!empty($params['contributionRecurID'])) {
+      $confirmQuery .= "&crid={$params['contributionRecurID']}";
+    }
 
     $confirmUrl = CRM_Utils_System::url('civicrm/linepay/confirm', $confirmQuery, TRUE, NULL, FALSE);
 
@@ -213,6 +216,7 @@ class CRM_Core_Payment_LinePay {
       'pid' => CRM_Utils_Request::retrieve('pid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET'),
       'eid' => CRM_Utils_Request::retrieve('eid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET'),
       'mid' => CRM_Utils_Request::retrieve('mid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET'),
+      'crid' => CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET'),
       'transactionId' => CRM_Utils_Request::retrieve('transactionId', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'GET'),
     ];
     $paymentProcessor = self::getPaymentProcessor($params['ppid']);
@@ -292,7 +296,8 @@ class CRM_Core_Payment_LinePay {
         $input['payment_instrument_id'] = $contribution->payment_instrument_id;
         $input['amount'] = $contribution->total_amount;
         $objects['contribution']->receive_date = date('YmdHis');
-        $ipn->completeTransaction($input, $ids, $objects, $transaction);
+        $isRecur = !empty($contribution->contribution_recur_id);
+        $ipn->completeTransaction($input, $ids, $objects, $transaction, $isRecur);
         // refs #45587, the first successful charge of a preapproved recurring
         // activates it: move Pending (2) to In Progress (5) so the recurring
         // batch (which only picks In Progress) starts charging it.
@@ -928,7 +933,7 @@ LIMIT 1";
       $input['payment_instrument_id'] = $objects['contribution']->payment_instrument_id;
       $input['amount'] = $objects['contribution']->total_amount;
       $objects['contribution']->receive_date = date('YmdHis');
-      $ipn->completeTransaction($input, $ids, $objects, $transaction, NULL, $sendMail);
+      $ipn->completeTransaction($input, $ids, $objects, $transaction, TRUE, $sendMail);
     }
     else {
       $error = '';
