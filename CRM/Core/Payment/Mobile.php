@@ -791,4 +791,25 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     return $text . $js;
   }
 
+  /**
+   * Function called from contributionRecur page to show tappay detail information
+   *
+   * @param int $contributionId the contribution id
+   *
+   * @return array The label as the key to value.
+   */
+  public static function getRecordDetail($contributionId) {
+    $table = [];
+
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    if (empty($contribution->payment_processor_id)) {
+      return NULL;
+    }
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    $table[ts('Payment Processor')] = $paymentProcessor['name']." - ".ts('ID').$paymentProcessor['id'];
+    return $table;
+  }
 }

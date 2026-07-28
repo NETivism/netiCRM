@@ -759,16 +759,16 @@ LIMIT 1";
    *
    * @param int $recurId contribution recur ID
    *
-   * @return void
+   * @return bool
    */
   public static function expireRegKey($recurId) {
     $regKey = self::getRegKey($recurId);
     if (empty($regKey)) {
-      return;
+      return FALSE;
     }
     $paymentProcessor = self::getRecurPaymentProcessor($recurId);
     if (empty($paymentProcessor)) {
-      return;
+      return FALSE;
     }
     $api = CRM_Core_Payment_LinePayAPI::create($paymentProcessor, 'recurring/expire');
     $api->request(['regKey' => $regKey]);
@@ -778,10 +778,12 @@ LIMIT 1";
         1 => [$recurId, 'Positive'],
       ]);
       CRM_Core_Error::debug_log_message("LinePay regKey discarded for recur $recurId (code $returnCode).");
+      return TRUE;
     }
     else {
       CRM_Core_Error::debug_log_message("LinePay regKey discard failed for recur $recurId (code $returnCode).");
     }
+    return FALSE;
   }
 
   /**
@@ -1082,9 +1084,14 @@ LIMIT 0, 100
     // refs #45597, terminal statuses Cancelled (3) must never
     // charge again: discard the regKey and stop.
     if ($recurStatus === 3) {
-      self::expireRegKey($recurId);
-      $resultNote .= ts("Recurring already in a terminal status (%1); preapproved key discarded.", [1 => CRM_Contribute_PseudoConstant::contributionStatus($recurStatus)]);
-      CRM_Core_Error::debug_log_message($resultNote);
+      $successExpired = self::expireRegKey($recurId);
+      if ($successExpired) {
+        $resultNote .= ts("Recurring already in a terminal status (%1); preapproved key discarded.", [1 => CRM_Contribute_PseudoConstant::contributionStatus($recurStatus)]);
+        CRM_Core_Error::debug_log_message($resultNote);
+      }
+      else {
+        $resultNote .= ts("Recurring expire failed. Check system log for more information");
+      }
       return $resultNote;
     }
 
@@ -1104,9 +1111,14 @@ LIMIT 0, 100
           $resultNote .= "\n" . $note;
         }
         else {
-          $note = ts("Paused recurring exceeded the %1-day LINE Pay key window; expiring.", [1 => self::REGKEY_VALID_DAYS]);
-          self::expireRegKey($recurId);
-          self::setRecurStatus($recurId, 6, $note);
+          $successExpired = self::expireRegKey($recurId);
+          if ($successExpired) {
+            $note = ts("Paused recurring exceeded the %1-day LINE Pay key window; expiring.", [1 => self::REGKEY_VALID_DAYS]);
+            self::setRecurStatus($recurId, 6, $note);
+          }
+          else {
+            $note = ts("Paused recurring exceeded the %1-day LINE Pay key window, but expire failed. Check system log for more information.", [1 => self::REGKEY_VALID_DAYS]);
+          }
           $resultNote .= "\n" . $note;
         }
       }
@@ -1301,8 +1313,13 @@ LIMIT 0, 100
         return $result;
       }
       if (in_array($newStatus, [3], TRUE)) {
-        self::expireRegKey($recurId);
-        $result['msg'] = ts('The LINE Pay preapproved key for this recurring contribution has been discarded; it will never be charged again.');
+        $successExpired = self::expireRegKey($recurId);
+        if ($successExpired) {
+          $result['msg'] = ts('The LINE Pay preapproved key for this recurring contribution has been discarded; it will never be charged again.');
+        }
+        else {
+          $result['msg'] = ts('LINE Pay preapproved key discard failed. Check system log for more information.');
+        }
       }
     }
     return $result;
