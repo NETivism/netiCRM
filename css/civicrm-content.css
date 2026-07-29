@@ -5,11 +5,17 @@
  * and various CiviCRM frontend content containers.
  *
  * Using :is() pseudo-class for maximum compatibility with iOS 17 (N-2 policy).
+ *
+ * Every selector must stay scoped under .crm-container, including .ck-content.
+ * This library is attached on any Drupal page where CiviCRM is bootstrapped, and
+ * .ck-content is also used by Drupal core's own CKEditor 5, so an unscoped
+ * .ck-content would restyle the editor on Drupal node forms. Scoping costs no
+ * specificity here: :is() already takes (0,2,0) from the .crm-container entries.
  */
 
 /* 1. Base Container Styles */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -24,7 +30,7 @@
 
 /* 2. Blockquote */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -44,7 +50,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -58,7 +64,7 @@
 
 /* 3. Paragraphs & Lists */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -73,7 +79,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -87,7 +93,7 @@
 
 /* 4. Headings */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -102,7 +108,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -117,7 +123,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -133,7 +139,7 @@
 
 /* 5. Utility Classes (Alignment) */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -146,7 +152,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -160,7 +166,7 @@
 
 /* 6. Indentation Classes */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -171,7 +177,7 @@
 ) .Indent1 { margin-left: 40px; }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -182,7 +188,7 @@
 ) .Indent2 { margin-left: 80px; }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -193,7 +199,7 @@
 ) .Indent3 { margin-left: 120px; }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -204,7 +210,7 @@
 ) .Indent4 { margin-left: 160px; }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -215,7 +221,7 @@
 ) .Indent5 { margin-left: 200px; }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -227,7 +233,7 @@
 
 /* 7. Tables */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -248,7 +254,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -264,7 +270,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -281,7 +287,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -297,7 +303,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -310,7 +316,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -325,7 +331,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -339,7 +345,7 @@
 
 /* 8. Borderless Tables */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -349,7 +355,7 @@
   .crm-container .profile-group-help-post
 ) table[border="0"],
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -363,7 +369,7 @@
 
 /* 9. Horizontal Rule */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -378,7 +384,7 @@
 
 /* 10. CKEditor Specific Widget Styles */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -391,7 +397,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -405,7 +411,7 @@
 
 /* 11. Image Alignment & Wrapping */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -420,7 +426,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -436,7 +442,7 @@
 
 /* Legacy inline float styles (CKEditor 4 / HTML content compatibility) */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -450,7 +456,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -464,7 +470,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -479,7 +485,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -494,7 +500,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -509,7 +515,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -550,7 +556,7 @@
 
 /* 13. Figure & Figcaption */
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -565,7 +571,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
@@ -580,7 +586,7 @@
 }
 
 :is(
-  .ck-content,
+  .crm-container .ck-content,
   .crm-container .event_description-section,
   .crm-container .intro_text-section,
   .crm-container .pcp-page-text,
