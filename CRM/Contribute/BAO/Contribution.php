@@ -2601,6 +2601,13 @@ SELECT source_contact_id
     foreach ($needs as $n) {
       if ($contribution->$n === 'null') {
         $contribution->$n = NULL;
+      }
+      // refs #46007, #46641 regression fix: back-fill any field that is empty on the
+      // passed-in object (not only the literal string 'null'). A partially
+      // populated contribution (e.g. import "update" mode carrying only
+      // receipt_date) would otherwise miss contribution_status_id / type and
+      // the receipt-id gate below would never pass.
+      if (empty($contribution->$n) && !empty($contribution->id)) {
         $missingFields[] = $n;
       }
     }

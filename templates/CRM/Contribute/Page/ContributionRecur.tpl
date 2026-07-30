@@ -45,7 +45,7 @@
                     <a href="#" class="button url-copy" onclick="document.querySelector('textarea[name=url_to_copy]').select(); document.execCommand('copy'); return false;"><i class="zmdi zmdi-link"></i>{ts}Copy{/ts}</a>
                   </span>
                   <span>
-                    <a href="#" class="button url-shorten" data-url-shorten="url_to_copy" data-page-id="" data-page-type=""><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
+                    <a href="#" class="button url-shorten" data-url-shorten="url_to_copy" data-page-id="{$recur.id}" data-page-type="civicrm_contribution_recur"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
                   </span>
                 </div>
                 <div class="description font-red"><i class="zmdi zmdi-alert-triangle font-red"></i>{ts}URL will extract personal data from this contact to URL visitor. Make sure send this link to their personal device / email address.{/ts}</div>
@@ -58,6 +58,7 @@
                   {/if}
                 </div>
                 {include file="CRM/common/ShortenURL.tpl"}
+                {include file="CRM/common/ShortenURLHistory.tpl" history=$shorten_history pageType="civicrm_contribution_recur" pageId=$recur.id}
               </td>
             </tr>
             {/if}

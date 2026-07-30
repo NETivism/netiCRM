@@ -579,14 +579,14 @@ WHERE cc.receive_date > mm.time_stamp AND cc.receive_date < DATE_ADD(mm.time_sta
       $row[0] = $origArray['label'][$key];
       $v_sum = $origArray['sum'][$key];
       $row[1] = CRM_Utils_Money::format($v_sum);
-      $row[2] = round(100 * $v_sum / $sum_sum) . '%';
+      $row[2] = round($sum_sum == 0 ? 0 : 100 * $v_sum / $sum_sum) . '%';
       $v_count = $origArray['count'][$key];
       $row[3] = CRM_Utils_Money::format($v_count == 0 ? 0 : $v_sum / $v_count);
       $row[4] = $origArray['count'][$key];
       $row[5] = $origArray['people'][$key];
       $returnArray[] = $row;
     }
-    $returnArray[] = [ts('Total'),CRM_Utils_Money::format($sum_sum),'100%', CRM_Utils_Money::format($sum_sum / $sum_count) ,$sum_count, ''];
+    $returnArray[] = [ts('Total'),CRM_Utils_Money::format($sum_sum),'100%', CRM_Utils_Money::format($sum_count == 0 ? 0 : $sum_sum / $sum_count) ,$sum_count, ''];
     return $returnArray;
   }
 

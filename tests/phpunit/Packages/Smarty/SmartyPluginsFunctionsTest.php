@@ -16,8 +16,8 @@ use PHPUnit\Framework\TestCase;
  * Minimal Smarty stand-in for plugin unit tests.
  */
 class SmartyStub {
-  public $request_use_auto_globals = true;
-  public $security = false;
+  public $request_use_auto_globals = TRUE;
+  public $security = FALSE;
   public $_smarty_vars = [];
   private $_vars = [];
 
@@ -30,7 +30,7 @@ class SmartyStub {
     trigger_error($msg, $type);
   }
 
-  public function assign($key, $val = null) {
+  public function assign($key, $val = NULL) {
     if (is_array($key)) {
       foreach ($key as $k => $v) {
         $this->_vars[$k] = $v;
@@ -41,11 +41,11 @@ class SmartyStub {
     }
   }
 
-  public function get_template_vars($key = null) {
-    if ($key === null) {
+  public function get_template_vars($key = NULL) {
+    if ($key === NULL) {
       return $this->_vars;
     }
-    return isset($this->_vars[$key]) ? $this->_vars[$key] : null;
+    return $this->_vars[$key] ?? NULL;
   }
 }
 
@@ -101,7 +101,7 @@ class SmartyPluginsFunctionsTest extends TestCase {
   }
 
   public function testTextformatNullContentReturnsNull() {
-    $result = smarty_block_textformat([], null, $this->smarty);
+    $result = smarty_block_textformat([], NULL, $this->smarty);
     $this->assertNull($result);
   }
 
@@ -169,7 +169,7 @@ class SmartyPluginsFunctionsTest extends TestCase {
   public function testCycleReset() {
     smarty_function_cycle(['name' => 'cy_reset', 'values' => 'a,b,c'], $this->smarty);
     smarty_function_cycle(['name' => 'cy_reset'], $this->smarty);
-    $result = smarty_function_cycle(['name' => 'cy_reset', 'reset' => true], $this->smarty);
+    $result = smarty_function_cycle(['name' => 'cy_reset', 'reset' => TRUE], $this->smarty);
     $this->assertSame('a', $result);
   }
 

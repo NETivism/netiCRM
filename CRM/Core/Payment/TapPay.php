@@ -973,6 +973,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     $currentDate = date('Y-m-01 00:00:00', $time);
+    $currentDay = date('Y-m-d', $time);
 
     // #25443, only trigger when current month doesn't have any contribution yet
     $sql = "
@@ -999,6 +1000,7 @@ WHERE
 AND r.contribution_status_id in (5,6)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
+AND (r.last_execute_date IS NULL OR r.last_execute_date < '$currentDay')
 GROUP BY r.id
 ORDER BY r.id
 LIMIT 0, 100
@@ -1008,7 +1010,7 @@ LIMIT 0, 100
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
-        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay']));
+        CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay'])." recur_id: ".$dao->recur_id);
         continue;
       }
 
@@ -1016,7 +1018,7 @@ LIMIT 0, 100
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
       if (!empty($dao->last_execute_date) && $currentDayTime <= $lastExecuteDayTime) {
-        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date."));
+        CRM_Core_Error::debug_log_message(ts("Last execute date of recur is over the date.")." recur_id: ".$dao->recur_id);
         continue;
       }
 
@@ -1082,8 +1084,9 @@ LIMIT 0, 100
             $activeTokenOverride = TRUE;
           }
           else {
-            $resultNote = "Token status is $tokenStatus, skip payment. ";
+            $resultNote = "Token status is $tokenStatus, skip payment. recur_id: ".$recurId;
             CRM_Core_Error::debug_log_message($resultNote);
+            CRM_Core_Error::debug_log_message("TapPay synchronize finished: ".$recurId);
             return $resultNote;
           }
         }
@@ -1131,9 +1134,11 @@ LIMIT 0, 100
     if ($goPayment) {
       // Check if Credit card over date, unless it's expired recurring with active token
       if ($time <= strtotime($currentExpiryDate) || ($activeTokenOverride && $time > strtotime($currentExpiryDate))) {
-        // Change status to In Progress when card expiry date has been updated
-        if ($activeTokenOverride && !empty($newExpiryDate) && strtotime($newExpiryDate) >= strtotime($currentExpiryDate) && $time > strtotime($currentExpiryDate)) {
-          $isProgress = TRUE;
+        // Change status to In Progress only when TapPay returns a future expiry date.
+        if ($activeTokenOverride && !empty($newExpiryDate)) {
+          if ($newExpiryDate >= date('Ym', $time) && $newExpiryDate >= date('Ym', strtotime($currentExpiryDate))) {
+            $isProgress = TRUE;
+          }
         }
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
@@ -1496,20 +1501,46 @@ LIMIT 0, 100
       }
     }
 
-    // Convert expired recurring to Failed if no successful contribution in past 6 months
-    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
-    $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
+    // Convert expired recurring to Failed 6 months after its latest 5->6 status
+    // transition in civicrm_log. Filtered by cycle_day since civicrm_log.data
+    // has no usable index and this runs daily.
+    $time = time();
+    $thisMonth = date('m', $time);
+    $theMonthNextDay = date('m', $time + 86400);
+    $today = date('j', $time);
+    if ($thisMonth == $theMonthNextDay) {
+      $cycleDayFilter = 'r.cycle_day = '.$today.' ';
+    }
+    else {
+      $days = [];
+      for ($i = $today; $i <= 31 ; $i++) {
+        $days[] = $i;
+      }
+      $cycleDayFilter = 'r.cycle_day IN ('.CRM_Utils_Array::implode(',', $days).')';
+    }
+    $statusLogPattern = '%"before"%contribution_status_id";s:1:"5"%"after"%contribution_status_id";i:6%';
+    $sql = 'SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
- AND r.start_date < %1
- AND r.id NOT IN (
-   SELECT DISTINCT contribution_recur_id
-   FROM civicrm_contribution
-   WHERE contribution_status_id = 1
-   AND receive_date >= %1
-   AND contribution_recur_id IN(SELECT id FROM civicrm_contribution_recur WHERE contribution_status_id = 6)
- )";
+ AND '.$cycleDayFilter.'
+ AND (
+   SELECT MAX(l.modified_date) FROM civicrm_log l
+   WHERE l.entity_table = \'civicrm_contribution_recur\'
+   AND l.entity_id = r.id
+   AND l.data LIKE %1
+ ) <= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+ AND NOT EXISTS (
+   SELECT 1 FROM civicrm_contribution c
+   WHERE c.contribution_recur_id = r.id
+   AND c.contribution_status_id = 1
+   AND c.receive_date >= (
+     SELECT MAX(l.modified_date) FROM civicrm_log l
+     WHERE l.entity_table = \'civicrm_contribution_recur\'
+     AND l.entity_id = r.id
+     AND l.data LIKE %1
+   )
+ )';
     $dao = CRM_Core_DAO::executeQuery($sql, [
-      1 => [$sixMonthsAgo, 'String'],
+      1 => [$statusLogPattern, 'String'],
     ]);
     $processorTypeCache = [];
     while ($dao->fetch()) {

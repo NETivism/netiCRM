@@ -417,6 +417,7 @@ class CRM_Utils_System_Drupal8 {
    */
   public function permissionDenied() {
     \Drupal::service('civicrm.page_state')->setAccessDenied();
+    throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
   }
 
   /**

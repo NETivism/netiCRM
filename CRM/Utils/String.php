@@ -841,6 +841,17 @@ class CRM_Utils_String {
     return $str;
   }
 
+  public static function maskEmail($email) {
+    if (empty($email)) {
+      return '';
+    }
+    $atPos = strpos($email, '@');
+    if ($atPos === FALSE) {
+      return self::mask($email);
+    }
+    return self::mask(substr($email, 0, $atPos)) . substr($email, $atPos);
+  }
+
   /**
    * Transliterate a UTF-8 string to ASCII.
    *

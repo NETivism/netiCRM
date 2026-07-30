@@ -119,7 +119,6 @@
         </tr>
         <tr class="crm-contribution-contributionpage-amount-form-block-amount_block_is_active"><th scope="row" class="label">{$form.amount_block_is_active.label}</th>
             <td>{$form.amount_block_is_active.html}<br />
-            <span class="description">{ts}Uncheck this box if you are using this contribution page for membership signup and renewal only - and you do NOT want users to select or enter any additional contribution amounts.{/ts}</span></td>
         </tr>
 
 	<tr id="priceSet" class="crm-contribution-contributionpage-amount-form-block-priceSet">

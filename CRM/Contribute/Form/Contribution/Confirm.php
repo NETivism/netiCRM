@@ -292,8 +292,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->buildCustom($this->_values['custom_pre_id'], 'customPre', TRUE);
     $this->buildCustom($this->_values['custom_post_id'], 'customPost', TRUE);
 
-    // donate from oid should remove some rule
-    if (!empty($this->_originalId)) {
+    // donate from oid (or a tryagian retry of one) should remove some rule
+    if (!empty($this->_originalValues)) {
       foreach ($this->_rules as $fieldName => &$qfField) {
         if (preg_match('/^custom_\d+/', $fieldName) && isset($this->_originalValues[$fieldName]) && strstr($params[$fieldName], CRM_Utils_String::MASK)) {
           foreach ($qfField as $idx => $rule) {
@@ -429,6 +429,16 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $session = CRM_Core_Session::singleton();
     if (!$session->get('userID')) {
       $params = $this->controller->exportValues('Main');
+      // restore masked fields to their real value before caching for retry
+      $maskedFieldNames = [];
+      if (!empty($this->_originalValues)) {
+        foreach ($this->_originalValues as $key => $val) {
+          if (isset($params[$key]) && strstr($params[$key], CRM_Utils_String::MASK) && !empty($val) && $val !== $params[$key]) {
+            $params[$key] = $val;
+            $maskedFieldNames[] = $key;
+          }
+        }
+      }
       $ignores = [
         'qfKey',
       ];
@@ -441,6 +451,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             $key = str_replace('state_province', 'state_province_id', $k);
             $params[$key] = $v;
           }
+        }
+        if (!empty($maskedFieldNames)) {
+          $params['_maskedFieldNames'] = $maskedFieldNames;
         }
         $params['expires'] = CRM_REQUEST_TIME + 1800;
         $session->set('user_contribution_prepopulate', $params);
@@ -551,7 +564,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    */
   public function postProcess() {
     $config = CRM_Core_Config::singleton();
-    if (!empty($this->_originalValues) && !empty($this->get('originalId'))) {
+    // restore masked fields to their real value before saving/charging
+    if (!empty($this->_originalValues)) {
       foreach ($this->_originalValues as $key => $val) {
         if (strstr($this->_params[$key], CRM_Utils_String::MASK) && !empty($val) && $val !== $this->_params[$key]) {
           $this->_params[$key] = $val;

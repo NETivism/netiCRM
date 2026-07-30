@@ -22,14 +22,15 @@
       const $el = cj(el);
       const currentType = $el.data('current-editor-type') || ($el.hasClass('ckeditor5-processed') ? 'cke5' : 'cke4');
       if (format === currentType) return;
-
-      const $container = $el.closest('.crm-section').find('.editor-switch-status');
-      $container.text('Switching...').css('color', '#666');
+      const $switcherStatus = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-switch-status');
+      const $switcher = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-format-switcher');
+      $switcher.prop('disabled', true);
+      $switcherStatus.html('<i class="zmdi zmdi-spinner zmdi-hc-spin"></i>');
 
       try {
         const content = await this.getCurrentContent(el, currentType);
         await this.destroyEditor(el, currentType);
-        
+
         await new Promise(resolve => setTimeout(resolve, 200));
 
         if (format === 'cke4') {
@@ -39,10 +40,12 @@
         }
 
         $el.data('current-editor-type', format);
-        $container.text('✓ Switched').css('color', 'green');
+        $switcherStatus.empty();
+        $switcher.prop('disabled', false);
       } catch (error) {
         console.error('Switch error:', error);
-        $container.text('✗ Failed: ' + error.message).css('color', 'red');
+        $switcherStatus.empty();
+        $switcher.prop('disabled', false);
       }
     },
 
