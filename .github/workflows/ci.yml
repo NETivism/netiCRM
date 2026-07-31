@@ -249,7 +249,7 @@ jobs:
 
   test8-d10:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') && github.server_url == 'https://github.com' }}
+    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') }}
     steps:
       - uses: actions/checkout@v4
 
