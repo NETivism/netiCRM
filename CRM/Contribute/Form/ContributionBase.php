@@ -755,6 +755,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->assign('max_amount', (float) $this->_values['max_amount']);
       // refs #45587, expose LINE Pay preapproved recurring to the special page JS
       // so recurring can be set up with the LINE Pay instrument, not only credit card.
+      // On "Go Back" visits from the confirm page, $this->_paymentProcessors is
+      // never repopulated, so restore it from session here, otherwise linepayRecur
+      // below wrongly evaluates to FALSE.
+      if (empty($this->_paymentProcessors)) {
+        $this->_paymentProcessors = $this->get('paymentProcessors');
+      }
       $linepayRecur = FALSE;
       if (!empty($this->_paymentProcessors)) {
         foreach ($this->_paymentProcessors as $eachPP) {
