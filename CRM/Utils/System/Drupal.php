@@ -677,6 +677,20 @@ class CRM_Utils_System_Drupal {
       }
     }
     elseif ($version >= 7 && $version < 8) {
+      // Stylesheets from templates used to be inline <link> inside the body, so
+      // they won over every stylesheet in <head>. Templates keep that by passing
+      // the same group / weight scale {js} already uses:
+      //
+      //   group  999  a group of its own, past CSS_SYSTEM / CSS_DEFAULT /
+      //               CSS_THEME, so component css always lands after core css
+      //               (civicrm.css, extras.css) and the site custom css
+      //   weight 997  vendor css a component depends on (magnific-popup, quill,
+      //               poshytip, pickr, chartist ...)
+      //   weight 998  the component's own css, overriding the vendor css above
+      //   weight 999  css overriding another component's css
+      //
+      // Files sharing a weight keep template order: drupal_add_css() adds a
+      // count/1000 fraction to conserve the insertion order.
       $options = NULL;
 
       if (!empty($params)) {
@@ -705,6 +719,15 @@ class CRM_Utils_System_Drupal {
           }
           else {
             $options['type'] = 'external';
+          }
+
+          // Fall back to the vendor layer when a template passes no group /
+          // weight, so component css never ends up before core css.
+          if (!isset($options['group'])) {
+            $options['group'] = 999;
+          }
+          if (!isset($options['weight'])) {
+            $options['weight'] = 997;
           }
 
           drupal_add_css($data, $options);

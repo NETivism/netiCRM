@@ -228,11 +228,11 @@ class CRM_Utils_System {
   /**
    * Display a permission denied page via the CMS.
    *
-   * @return mixed
-   *   CMS-specific return value for permission denied handling.
+   * This method is always terminal - it will never return normally.
    */
   public static function permissionDenied() {
-    return CRM_Core_Config::$_userSystem->permissionDenied();
+    CRM_Core_Config::$_userSystem->permissionDenied();
+    return CRM_Utils_System::civiExit();
   }
 
   /**

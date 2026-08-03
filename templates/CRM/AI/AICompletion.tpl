@@ -1,13 +1,13 @@
 {* Magnific Popup *}
-{css src=packages/Magnific-Popup/dist/magnific-popup.css library=civicrm/civicrm-css-aicompletion}{/css}
+{css src=packages/Magnific-Popup/dist/magnific-popup.css group=999 weight=997 library=civicrm/civicrm-css-aicompletion}{/css}
 {js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 
 {* AICompletion files start *}
 {* TODO: File used temporarily during development, to be removed later *}
-{css src=packages/mailingEditor/mailingEditor.css library=civicrm/civicrm-css-aicompletion}{/css}
+{css src=packages/mailingEditor/mailingEditor.css group=999 weight=998 library=civicrm/civicrm-css-aicompletion}{/css}
 {* style files *}
 {* Load css via {css} block so stylesheets go into <head> instead of <body>, avoiding FOUC. refs #37730 #45479 *}
-{css src=packages/AICompletion/AICompletion.css library=civicrm/civicrm-css-aicompletion}{/css}
+{css src=packages/AICompletion/AICompletion.css group=999 weight=999 library=civicrm/civicrm-css-aicompletion}{/css}
 
 {* script files *}
 {js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}

@@ -7,7 +7,7 @@
 {/if}
 
 <!-- sidePanel files start -->
-{css src=packages/sidePanel/sidePanel.css library=civicrm/civicrm-css-sidepanel}{/css}
+{css src=packages/sidePanel/sidePanel.css group=999 weight=998 library=civicrm/civicrm-css-sidepanel}{/css}
 {js src=packages/sidePanel/sidePanel.js group=999 weight=998 library=civicrm/civicrm-js-sidepanel}{/js}
 {literal}
 <script type="text/javascript">
