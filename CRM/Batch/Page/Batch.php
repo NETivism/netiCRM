@@ -165,15 +165,15 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       }
       $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->created_id);
       $row['id'] = $dao->id;
-      $row['label'] = $dao->label;
+      $row['label'] = htmlentities((string) $dao->label);
       if ($dao->description) {
-        $row['description'] = $dao->description;
+        $row['description'] = htmlentities((string) $dao->description);
       }
-      $row['created_by'] = $contact[0];
+      $row['created_by'] = htmlentities((string) ($contact[0] ?? ''));
       $row['created_date'] = $dao->created_date;
       $row['modified_date'] = $dao->modified_date;
-      $row['batch_status'] = $batchStatusLabel[$dao->status_id];
-      $row['batch_type'] = $batchTypeLabel[$dao->type_id];
+      $row['batch_status'] = htmlentities((string) ($batchStatusLabel[$dao->status_id] ?? ''));
+      $row['batch_type'] = htmlentities((string) ($batchTypeLabel[$dao->type_id] ?? ''));
       if (!empty($meta['total'])) {
         $row['processed'] = $meta['processed'].' / '.$meta['total'];
       }

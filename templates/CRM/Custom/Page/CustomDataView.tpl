@@ -32,7 +32,7 @@
 	    {if $editOwnCustomData or ($showEdit and $editCustomData and $groupId)}	
 		<tr>
 		    <td>
-			<a href="{crmURL p="civicrm/contact/view/cd/edit" q="tableId=`$contactId`&cid=`$contactId`&groupId=`$groupId`&action=update&reset=1"}" class="button" style="margin-left: 6px;"><span><div class="zmdi zmdi-edit"></div>{ts 1=$cd_edit.title}Edit %1{/ts}</span></a><br/><br/>
+			<a href="{crmURL p="civicrm/contact/view/cd/edit" q="tableId=`$contactId`&cid=`$contactId`&groupId=`$groupId`&action=update&reset=1"}" class="button" style="margin-left: 6px;"><span><div class="zmdi zmdi-edit"></div>{ts 1=$cd_edit.title|escape}Edit %1{/ts}</span></a><br/><br/>
 		    </td>
 		</tr>      
 	    {/if}
@@ -45,12 +45,12 @@
 		    <div class="crm-accordion-wrapper crm-accordion_title-accordion {if $cd_edit.collapse_display eq 0 }crm-accordion-open{else}crm-accordion-closed{/if}">
              <div class="crm-accordion-header">
               <div class="zmdi crm-accordion-pointer"></div> 
-		      {$cd_edit.title}
+		      {$cd_edit.title|escape}
              </div>
             <div class="crm-accordion-body">			   
 	        {if $groupId and $cvID and $editCustomData}
 	        <div class="crm-submit-buttons">
-			<a href="javascript:showDelete( {$cvID}, '{$cd_edit.name}_{$index}', {$customGroupId}, {$contactId} );" class="button delete-button" title="{ts 1=$cd_edit.title}Delete this %1 record{/ts}">
+			<a href="javascript:showDelete( {$cvID}, '{$cd_edit.name}_{$index}', {$customGroupId}, {$contactId} );" class="button delete-button" title="{ts 1=$cd_edit.title|escape}Delete this %1 record{/ts}">
 			 <span><div class="zmdi zmdi-delete"></div>{ts}Delete{/ts}</span>
             </a>
             </div>
@@ -59,15 +59,15 @@
 			    <table class="crm-info-panel">
 				<tr>
 				    {if $element.options_per_line != 0}
-					<td class="label">{$element.field_title}</td>
+					<td class="label">{$element.field_title|escape}</td>
 					<td class="html-adjust">
 					    {* sort by fails for option per line. Added a variable to iterate through the element array*}
 					    {foreach from=$element.field_value item=val}
-						{$val}<br/>
+						{$val|escape}<br/>
 					    {/foreach}
 					</td>
 				    {else}
-					<td class="label">{$element.field_title}</td>
+					<td class="label">{$element.field_title|escape}</td>
 					{if $element.field_type == 'File'}
 					    {if $element.field_value.image}
 						<td class="html-adjust">{include file='CRM/common/modal.tpl' modalImage=$element.field_value.image}</td>
@@ -75,7 +75,7 @@
 						<td class="html-adjust"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName}</a></td>
 					    {/if}
 					{else}
-					    <td class="html-adjust">{$element.field_value}</td>
+					    <td class="html-adjust">{$element.field_value|escape}</td>
 					{/if}
 				    {/if}
 				</tr>

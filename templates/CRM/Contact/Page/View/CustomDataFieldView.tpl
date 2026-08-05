@@ -25,15 +25,15 @@
 *}
 <tr class="{if $cd_edit.collapse_display}hiddenElement{/if}">
 {if $element.options_per_line != 0}
-      <td class="label">{$element.field_title}</td>
+      <td class="label">{$element.field_title|escape}</td>
       <td class="crm-custom_data">
           {* sort by fails for option per line. Added a variable to iterate through the element array*}
           {foreach from=$element.field_value item=val}
-              {$val}
+              {$val|escape}
           {/foreach}
       </td>
   {else}
-      <td class="label">{$element.field_title}</td>
+      <td class="label">{$element.field_title|escape}</td>
       {if $element.field_type == 'File'}
           {if $element.field_value.image}
               <td class="crm-custom_data crm-displayURL">{include file='CRM/common/modal.tpl' modalImage=$element.field_value.image}</td>
@@ -43,10 +43,10 @@
       {elseif $element.field_data_type EQ 'ContactReference' && $element.contact_ref_id}
           {*Contact ref id passed if user has sufficient permissions - so make a link.*}
           <td class="html-adjust crm-custom-data crm-contact-reference">
-              <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$element.contact_ref_id`"}" title="View contact">{$element.field_value}</a>
+              <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$element.contact_ref_id`"}" title="View contact">{$element.field_value|escape}</a>
           </td>
       {else}
-          <td class="html-adjust crm-custom-data">{$element.field_value}</td>
+          <td class="html-adjust crm-custom-data">{$element.field_value|escape}</td>
       {/if}
 {/if}
 </tr>
