@@ -67,12 +67,6 @@ class CRM_Core_Page_File extends CRM_Core_Page {
       CRM_Core_Error::fatal('Could not retrieve the file');
     }
 
-    if (empty($downloadName) && substr($path, -8) === '.unknown') {
-      $mimeType = 'application/octet-stream';
-      header('Content-Security-Policy: default-src \'none\'');
-      header('X-Content-Type-Options: nosniff');
-    }
-
     $buffer = file_get_contents($path);
     if ($buffer === FALSE) {
       CRM_Core_Error::fatal('The file is either empty or you do not have permission to retrieve the file');

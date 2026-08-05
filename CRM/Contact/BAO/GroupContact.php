@@ -694,11 +694,6 @@ AND civicrm_group_contact.group_id = %2";
     $tracking = NULL
   ) {
 
-    $contactIDs = array_map('intval', $contactIDs);
-    $groupID = (int) $groupID;
-    $method = CRM_Core_DAO::escapeString($method);
-    $status = CRM_Core_DAO::escapeString($status);
-    $tracking = CRM_Core_DAO::escapeString($tracking ?: '');
     $numContactsAdded = 0;
     $numContactsNotAdded = 0;
 

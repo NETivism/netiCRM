@@ -76,7 +76,7 @@
         </thead>
         {foreach from=$priceField key=fid item=row}
 	    <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
-            <td>{$row.label|escape}</td>
+            <td>{$row.label}</td>
             <td>{$row.html_type}</td>
             <td class="nowrap weight-order">{$row.order}</td>
             <td>{if $row.is_required eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>

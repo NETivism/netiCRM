@@ -61,7 +61,7 @@
         {foreach from=$rows item=row}
           <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">
             <td>{$row.id}</td>
-            <td class="crm-event-type">{$row.event_type|escape}</td>
+            <td class="crm-event-type">{$row.event_type}</td>
             <td class="crm-event-title crm-event_{$row.id}">
               <a href="{crmURL p='civicrm/event/search' q="reset=1&force=1&event=`$row.id`"}" class="bold">{$row.title|smarty:nodefaults|purify}</a>
               <ul class="crm-nav-menu crm-nav-links-event">

@@ -38,7 +38,7 @@
           {if $element.field_value.image}
               <td class="crm-custom_data crm-displayURL">{include file='CRM/common/modal.tpl' modalImage=$element.field_value.image}</td>
           {else}
-              <td class="html-adjust crm-custom_data crm-fileURL"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName|escape}</a></td>
+              <td class="html-adjust crm-custom_data crm-fileURL"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName}</a></td>
           {/if}
       {elseif $element.field_data_type EQ 'ContactReference' && $element.contact_ref_id}
           {*Contact ref id passed if user has sufficient permissions - so make a link.*}
