@@ -278,6 +278,11 @@
       if (nspOpenedDefault && nspOpenedDefault != 'false') {
         _nspMain.open();
       }
+      else {
+        // Mark the closed state on load, otherwise the panel stays closed
+        // without the is-closed styles on the trigger button.
+        _nspMain.close();
+      }
     },
     open: function() {
       $(_container).addClass(OPEN_CLASS);
