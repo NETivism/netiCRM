@@ -21,6 +21,7 @@ class CRM_Core_BAO_ShortenURLHistory {
    */
   public const ALLOWED_PAGE_TYPES = [
     'civicrm_contribution_page',
+    'civicrm_contribution_recur',
     'civicrm_pcp',
     'civicrm_event.info',
     'civicrm_event.register',

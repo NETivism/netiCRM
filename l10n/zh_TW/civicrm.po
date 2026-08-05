@@ -16,7 +16,7 @@
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # SIAOLING HUANG, 2024
 # SIAOLING HUANG, 2024
-# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
+# charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022,2026
 # 淑涵 詹 <amy0222@netivism.com.tw>, 2020-2021
 # 花玉婷 <klavier1976@netivism.com.tw>, 2016-2019,2021-2024
 # 馮 佳今, 2022-2026
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: SIAOLING HUANG, 2024\n"
+"Last-Translator: charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022,2026\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +45,7 @@ msgstr "聯絡人"
 #: CRM/ACL/BAO/ACL.php CRM/ACL/Form/EntityRole.php
 #: templates/CRM/ACL/Page/EntityRole.tpl
 msgid "ACL Role"
-msgstr "權限角色"
+msgstr "權限/角色"
 
 #: CRM/ACL/BAO/ACL.php CRM/ACL/BAO/EntityRole.php CRM/ACL/Form/ACL.php
 #: CRM/ACL/Page/ACL.php CRM/Contact/Form/Search/Custom/PostalMailing.php
@@ -52047,7 +52047,7 @@ msgid ""
 "code will affect the consistency of historical receipts. If needed, it is "
 "recommended to create a new contribution type instead. Are you sure you want"
 " to continue?"
-msgstr ""
+msgstr "此費用類型已有收據紀錄，修改名稱或會計代碼會影響歷史收據一致性，若有需要，建議新增費用類型。確定要繼續修改？"
 
 #: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php
 #: CRM/Core/Payment/TapPay.php
@@ -52065,25 +52065,186 @@ msgid "HTML Security Filter"
 msgstr "HTML 安全性過濾"
 
 #: templates/CRM/Admin/Form/Preferences/Display.tpl:113
-msgid "By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts."
+msgid ""
+"By default, dangerous HTML is filtered to prevent XSS attacks — including "
+"&lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler "
+"attributes (e.g., onclick, onload), and javascript: URLs. Enabling this "
+"option removes all these protections. Only enable this if you trust all "
+"editors and require embedded scripts."
 msgstr "預設會過濾危險的 HTML 以防範 XSS 攻擊，包含 &lt;script&gt;、&lt;style&gt; 和 &lt;link&gt; 標籤、所有事件處理屬性（如 onclick、onload）及 javascript: 網址。啟用此選項將移除所有上述防護措施，請僅在信任所有編輯人員且確實需要嵌入指令碼時才啟用。"
 
 #: CRM/Admin/Form/Preferences/Display.php:102
 msgid "Disable Security Filter (Allow all content & scripts)"
 msgstr "停用安全性過濾器（允許所有內容與指令碼）"
 
-#: packages/HTML/QuickForm/ckeditor.php:161 packages/HTML/QuickForm/ckeditor5.php:244
+#: packages/HTML/QuickForm/ckeditor.php:161
+#: packages/HTML/QuickForm/ckeditor5.php:244
 msgid "Switch Editor:"
 msgstr "切換編輯器："
 
-#: packages/HTML/QuickForm/ckeditor.php:163 packages/HTML/QuickForm/ckeditor5.php:246
+#: packages/HTML/QuickForm/ckeditor.php:163
+#: packages/HTML/QuickForm/ckeditor5.php:246
 msgid "CKEditor 4 (Legacy)"
 msgstr "CKEditor 4（舊版）"
 
-#: packages/HTML/QuickForm/ckeditor.php:164 packages/HTML/QuickForm/ckeditor5.php:247
+#: packages/HTML/QuickForm/ckeditor.php:164
+#: packages/HTML/QuickForm/ckeditor5.php:247
 msgid "CKEditor 5 (New)"
 msgstr "CKEditor 5（新版）"
 
-#: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
-msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
+#: packages/HTML/QuickForm/ckeditor.php:155
+#: packages/HTML/QuickForm/ckeditor5.php:238
+msgid ""
+"CKEditor 5 is currently in testing. You can switch to the new version to try"
+" it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
 msgstr "CKEditor 5 目前處於測試階段，您可以切換至新版進行試用。<a href=\"%1\" target=\"_blank\">有問題歡迎回報</a>。"
+
+#: CRM/Core/Payment/LinePay.php:195
+msgid "LINE Pay request failed."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:715
+msgid ""
+"LINE Pay preapproved key was voided by the gateway (code %1: %2). The donor "
+"must subscribe again."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:843
+msgid "Could not find the contribution."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:902
+msgid ""
+"LINE Pay returned code 1193: the preapproved key has expired, so the "
+"recurring contribution is set to Expired."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1072
+msgid "Recurring already in a skip status (%s); skipped execute payment."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1081
+msgid ""
+"Recurring already in a terminal status (%1); preapproved key discarded."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1098
+msgid ""
+"Paused recurring exceeded the %1-day LINE Pay key window, but the "
+"preapproved key is still confirmed valid; keep it."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1102
+msgid "Paused recurring exceeded the %1-day LINE Pay key window; expiring."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1109
+msgid "never"
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1110
+msgid "Recurring is paused (last charge: %1); skip charging."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1118
+msgid ""
+"LINE Pay preapproved key unused for over %1 days. We will try execute one "
+"payment to see if it's really expired."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1179
+msgid ""
+"Charge failed because the preapproved key has expired (code 1193); recurring"
+" set to Expired."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1170
+msgid ""
+"Charge failed and the preapproved key was voided (code %1); recurring set to"
+" Failed."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1290
+msgid "This status can only be set by the system."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1295
+msgid ""
+"This recurring contribution no longer has a usable LINE Pay preapproved key,"
+" so its status cannot be changed."
+msgstr ""
+
+#: CRM/Core/Payment/LinePay.php:1300
+msgid ""
+"The LINE Pay preapproved key for this recurring contribution has been "
+"discarded; it will never be charged again."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:371
+msgid "Recurring contribution %1 doesn't have LINE Pay Recurring enabled."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:377
+msgid "The latest contribution of recurring %1 was not paid with LINE Pay."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:789
+msgid "Please edit recurring and change status to 'Cancelled'."
+msgstr ""
+
+#: CRM/Contribute/DAO/LinePay.php:221
+msgid "Contribution Recur ID"
+msgstr ""
+
+#: CRM/Contribute/DAO/LinePay.php:284
+msgid "Preapproved Payment regKey"
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl:468
+msgid "LINE Pay Recurring"
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl:511
+msgid "Line Pay Only"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:448
+msgid "Confirm Cancellation"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:449
+msgid ""
+"If you choose this status, this recurring contribution will never be charged"
+" again. Are you sure you want to continue?"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:484
+msgid ""
+"If you choose this status, this recurring contribution will never be charged"
+" again."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:487
+msgid ""
+"If you choose this status, this recurring contribution will resume and be "
+"charged again on the regular monthly billing date."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionRecur.tpl:490
+msgid ""
+"The LINE Pay preapproved key is valid for 180 days. The last successful "
+"charge was on %1. If no charge succeeds before %2, the system will "
+"automatically set this recurring contribution to Expired."
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid ""
+"Please complete the LINE Pay Recurring application process before checking "
+"this option."
+msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid ""
+"LINE Pay recurring contributions only support monthly, yearly is not "
+"available."
+msgstr ""

@@ -176,7 +176,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url($this->userContext($mode), $this->userContextParams($mode)));
     }
-    if ($id !== NULL) {
+    if ($id) {
       $this->_controller->set('id', $id);
     }
     $this->_controller->set('BAOName', $this->getBAOName());
