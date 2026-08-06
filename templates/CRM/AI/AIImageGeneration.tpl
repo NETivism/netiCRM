@@ -6,10 +6,12 @@
 {* AIImageGeneration CSS *}
 {css src=packages/AIImageGeneration/AIImageGeneration.css group=999 weight=998 library=civicrm/civicrm-css-aiimagegeneration}{/css}
 {css src=packages/AIImageGeneration/AIImageGeneration-History.css group=999 weight=998 library=civicrm/civicrm-css-aiimagegeneration}{/css}
+{css src=packages/AIImageGeneration/AIImageGeneration-Samples.css group=999 weight=998 library=civicrm/civicrm-css-aiimagegeneration}{/css}
 
 {* AIImageGeneration JavaScript *}
 {js src=packages/AIImageGeneration/AIImageGeneration.js group=999 weight=998 library=civicrm/civicrm-js-aiimagegeneration}{/js}
 {js src=packages/AIImageGeneration/AIImageGeneration-History.js group=999 weight=999 library=civicrm/civicrm-js-aiimagegeneration}{/js}
+{js src=packages/AIImageGeneration/AIImageGeneration-Samples.js group=999 weight=999 library=civicrm/civicrm-js-aiimagegeneration}{/js}
 
 {* Added global js variable: AIImageGeneration *}
 {literal}
@@ -96,6 +98,9 @@ window.AIImageGeneration = {
     "historyNext": "{/literal}{ts}Next Page{/ts}{literal}",
     "historyShowing": "{/literal}{ts}Showing{/ts}{literal}",
     "historyOf": "{/literal}{ts}of{/ts}{literal}",
+    "samplesAllStyles": "{/literal}{ts}All Styles{/ts}{literal}",
+    "samplesAllRatios": "{/literal}{ts}All Aspect Ratios{/ts}{literal}",
+    "samplesLoadFailed": "{/literal}{ts}Failed to load sample gallery, please try again{/ts}{literal}",
     "loadingSampleImage": "{/literal}{ts}Loading sample image...{/ts}{literal}",
     "confirmDialogTitle": "{/literal}{ts}Load Appropriate Example Image?{/ts}{literal}",
     "confirmDialogMainText": "{/literal}{ts}You clicked \"Generate images using AI\". The system will load a example image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.{/ts}{literal}",
@@ -297,44 +302,99 @@ window.AIImageGeneration = {
       {* History section with real data *}
       <div class="history-section">
         <div class="history-header">
-          <label class="control-label">{ts}Generated Images History{/ts}</label>
-        </div>
-
-        {* Loading state for history *}
-        <div class="history-loading" style="display: none;">
-          <div class="history-loading-spinner"></div>
-          <span class="history-loading-text">{ts}Loading history...{/ts}</span>
-        </div>
-
-        {* Empty state for history *}
-        <div class="history-empty" style="display: none;">
-          <div class="history-empty-icon">
-            <i class="zmdi zmdi-collection-image-o"></i>
+          <div class="netiaiig-tabs" role="tablist">
+            <button type="button" class="netiaiig-tab is-active" data-tab="history" role="tab" aria-selected="true">{ts}Generated Images History{/ts}</button>
+            <button type="button" class="netiaiig-tab" data-tab="samples" role="tab" aria-selected="false">{ts}Sample Gallery{/ts}</button>
           </div>
-          <div class="history-empty-text">{ts}No image generation history yet{/ts}</div>
-          <div class="history-empty-subtext">{ts}Generated images will appear here{/ts}</div>
         </div>
 
-        {* History grid container *}
-        <div class="history-grid">
-          {* History items will be dynamically loaded here *}
-        </div>
-
-        {* Pagination controls *}
-        <div class="history-pagination" style="display: none;">
-          <div class="pagination-info">
-            <span class="pagination-text">{ts}Showing{/ts} <span class="pagination-start">1</span>-<span class="pagination-end">10</span> {ts}of{/ts} <span class="pagination-total">0</span></span>
+        {* Generated images history pane *}
+        <div class="netiaiig-tabpane is-active" data-tab="history" role="tabpanel">
+          {* Loading state for history *}
+          <div class="history-loading" style="display: none;">
+            <div class="history-loading-spinner"></div>
+            <span class="history-loading-text">{ts}Loading history...{/ts}</span>
           </div>
-          <div class="pagination-controls">
-            <button type="button" class="pagination-btn pagination-prev" title="{ts}Previous Page{/ts}" disabled>
-              <i class="zmdi zmdi-chevron-left"></i>
-            </button>
-            <span class="pagination-current">1</span>
-            <span class="pagination-separator">/</span>
-            <span class="pagination-total-pages">1</span>
-            <button type="button" class="pagination-btn pagination-next" title="{ts}Next Page{/ts}" disabled>
-              <i class="zmdi zmdi-chevron-right"></i>
-            </button>
+
+          {* Empty state for history *}
+          <div class="history-empty" style="display: none;">
+            <div class="history-empty-icon">
+              <i class="zmdi zmdi-collection-image-o"></i>
+            </div>
+            <div class="history-empty-text">{ts}No image generation history yet{/ts}</div>
+            <div class="history-empty-subtext">{ts}Generated images will appear here{/ts}</div>
+          </div>
+
+          {* History grid container *}
+          <div class="history-grid">
+            {* History items will be dynamically loaded here *}
+          </div>
+
+          {* Pagination controls *}
+          <div class="history-pagination" style="display: none;">
+            <div class="pagination-info">
+              <span class="pagination-text">{ts}Showing{/ts} <span class="pagination-start">1</span>-<span class="pagination-end">10</span> {ts}of{/ts} <span class="pagination-total">0</span></span>
+            </div>
+            <div class="pagination-controls">
+              <button type="button" class="pagination-btn pagination-prev" title="{ts}Previous Page{/ts}" disabled>
+                <i class="zmdi zmdi-chevron-left"></i>
+              </button>
+              <span class="pagination-current">1</span>
+              <span class="pagination-separator">/</span>
+              <span class="pagination-total-pages">1</span>
+              <button type="button" class="pagination-btn pagination-next" title="{ts}Next Page{/ts}" disabled>
+                <i class="zmdi zmdi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {* Sample gallery pane *}
+        <div class="netiaiig-tabpane" data-tab="samples" role="tabpanel" style="display: none;">
+          {* Filter controls, options are built from the sample data *}
+          <div class="samples-filters">
+            <div class="netiaiig-dropdown" id="samplesStyleDropdown">
+              <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Filter by Style{/ts}" data-tooltip data-tooltip-placement="n">
+                <i class="zmdi zmdi-flower-alt"></i>
+                <span class="samples-style-text">{ts}All Styles{/ts}</span>
+                <i class="zmdi zmdi-chevron-down"></i>
+              </button>
+              <div class="style-dropdown-menu">
+                <div class="style-grid">
+                  {* Style filter options will be dynamically loaded here *}
+                </div>
+              </div>
+            </div>
+
+            <div class="netiaiig-dropdown" id="samplesRatioDropdown">
+              <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Filter by Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="n">
+                <i class="zmdi zmdi-aspect-ratio-alt"></i>
+                <span class="samples-ratio-text">{ts}All Aspect Ratios{/ts}</span>
+                <i class="zmdi zmdi-chevron-down"></i>
+              </button>
+              <div class="dropdown-menu">
+                {* Ratio filter options will be dynamically loaded here *}
+              </div>
+            </div>
+          </div>
+
+          {* Loading state for sample gallery *}
+          <div class="samples-loading" style="display: none;">
+            <div class="history-loading-spinner"></div>
+            <span class="history-loading-text">{ts}Loading sample gallery...{/ts}</span>
+          </div>
+
+          {* Empty state for sample gallery *}
+          <div class="samples-empty" style="display: none;">
+            <div class="history-empty-icon">
+              <i class="zmdi zmdi-collection-image-o"></i>
+            </div>
+            <div class="history-empty-text">{ts}No sample images match the selected filters{/ts}</div>
+          </div>
+
+          {* Sample grid container *}
+          <div class="samples-grid">
+            {* Sample items will be dynamically loaded here *}
           </div>
         </div>
       </div>

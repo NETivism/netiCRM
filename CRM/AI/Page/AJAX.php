@@ -20,6 +20,9 @@ class CRM_AI_Page_AJAX {
   public const HTTP_SERVICE_UNAVAILABLE = 503;
   public const HTTP_GATEWAY_TIMEOUT = 504;
 
+  // Locales that ship sample prompts data
+  public const SAMPLE_LOCALES = ['en_US', 'zh_TW'];
+
   /**
    * Handle chat request.
    *
@@ -647,29 +650,17 @@ class CRM_AI_Page_AJAX {
       $locale = $jsondata['locale'];
 
       // Validate locale format
-      if (!in_array($locale, ['en_US', 'zh_TW'])) {
+      if (!in_array($locale, self::SAMPLE_LOCALES)) {
         self::responseError([
           'status' => 0,
           'message' => 'Invalid locale format.',
         ]);
       }
 
-      // Load sample prompts data using CiviCRM root path
-      global $civicrm_root;
-      $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
-      $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+      // Load sample prompts data for the requested locale
+      $prompts = self::loadSamplePrompts($locale);
 
-      if (!file_exists($dataPath)) {
-        self::responseError([
-          'status' => 0,
-          'message' => 'Sample prompts data not found for the specified locale.',
-        ]);
-      }
-
-      $jsonContent = file_get_contents($dataPath);
-      $promptsData = json_decode($jsonContent, TRUE);
-
-      if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
+      if ($prompts === NULL) {
         self::responseError([
           'status' => 0,
           'message' => 'Invalid or empty sample prompts data.',
@@ -677,7 +668,6 @@ class CRM_AI_Page_AJAX {
       }
 
       // Filter prompts based on optional parameters
-      $prompts = $promptsData['prompts'];
       $filteredPrompts = self::filterPrompts($prompts, $jsondata);
 
       if (empty($filteredPrompts)) {
@@ -694,12 +684,6 @@ class CRM_AI_Page_AJAX {
       $randomIndex = array_rand($filteredPrompts);
       $randomPrompt = $filteredPrompts[$randomIndex];
 
-      // Create image URL
-      $config = CRM_Core_Config::singleton();
-      $baseUrl = $config->userFrameworkResourceURL;
-      $imagePath = "packages/AIImageGeneration/images/samples/{$randomPrompt['filename']}";
-      $imageUrl = $baseUrl . $imagePath;
-
       self::responseSucess([
         'status' => 1,
         'message' => 'Sample image retrieved successfully.',
@@ -708,8 +692,8 @@ class CRM_AI_Page_AJAX {
           'style' => $randomPrompt['style'],
           'ratio' => $randomPrompt['ratio'],
           'filename' => $randomPrompt['filename'],
-          'image_url' => $imageUrl,
-          'image_path' => $imagePath,
+          'image_url' => $randomPrompt['image_url'],
+          'image_path' => $randomPrompt['image_path'],
         ],
       ]);
     }
@@ -719,6 +703,89 @@ class CRM_AI_Page_AJAX {
       'status' => 0,
       'message' => 'Invalid request method or missing data.',
     ]);
+  }
+
+  /**
+   * Get the complete sample image list for the current UI locale.
+   *
+   * Unlike getSampleImage(), this returns every sample at once so the client
+   * can render a gallery and filter it locally.
+   *
+   * @return void
+   */
+  public static function getSampleImageList() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      // Resolve locale on server side, client does not need to send anything
+      $config = CRM_Core_Config::singleton();
+      $locale = $config->lcMessages;
+
+      if (!in_array($locale, self::SAMPLE_LOCALES)) {
+        $locale = 'en_US';
+      }
+
+      $prompts = self::loadSamplePrompts($locale);
+
+      if ($prompts === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Invalid or empty sample prompts data.',
+        ]);
+      }
+
+      self::responseSucess([
+        'status' => 1,
+        'message' => 'Sample image list retrieved successfully.',
+        'data' => [
+          'images' => $prompts,
+          'total' => count($prompts),
+        ],
+      ]);
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
+  /**
+   * Load sample prompts data for a locale and attach image url/path to each item.
+   *
+   * @param string $locale Locale directory name, eg. zh_TW
+   * @return array|null Prompt items, or NULL when data is missing or invalid
+   */
+  private static function loadSamplePrompts($locale) {
+    global $civicrm_root;
+    $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
+    $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+
+    if (!file_exists($dataPath)) {
+      return NULL;
+    }
+
+    $jsonContent = file_get_contents($dataPath);
+    $promptsData = json_decode($jsonContent, TRUE);
+
+    if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
+      return NULL;
+    }
+
+    $config = CRM_Core_Config::singleton();
+    $baseUrl = $config->userFrameworkResourceURL;
+    $prompts = [];
+
+    foreach ($promptsData['prompts'] as $prompt) {
+      if (empty($prompt['filename'])) {
+        continue;
+      }
+      $imagePath = "packages/AIImageGeneration/images/samples/{$prompt['filename']}";
+      $prompt['image_path'] = $imagePath;
+      $prompt['image_url'] = $baseUrl . $imagePath;
+      $prompts[] = $prompt;
+    }
+
+    return empty($prompts) ? NULL : $prompts;
   }
 
   /**

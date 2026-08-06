@@ -1,0 +1,74 @@
+/**
+ * AI Image Generation Sample Gallery Styles
+ * Only holds what is new, grid and item styles are shared with the history grid
+ */
+
+/* Tabs */
+.netiaiig-container .netiaiig-tabs {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.netiaiig-container .netiaiig-tab {
+  padding: 8px 16px;
+  margin: 0 0 -1px 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.netiaiig-container .netiaiig-tab:hover {
+  color: #374151;
+  background: none;
+}
+
+.netiaiig-container .netiaiig-tab:focus {
+  outline: 2px solid #536DFE;
+  outline-offset: -2px;
+}
+
+.netiaiig-container .netiaiig-tab.is-active {
+  color: #536DFE;
+  border-bottom-color: #536DFE;
+}
+
+/* Sample gallery filters */
+.netiaiig-container .samples-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Round preview of the "all styles" filter option */
+.netiaiig-container .style-preview.samples-style-preview-all {
+  background: linear-gradient(135deg, #e0e7ff 0%, #f5f5f7 100%);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .netiaiig-container .netiaiig-tab {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .netiaiig-container .samples-filters {
+    gap: 6px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .netiaiig-container .netiaiig-tab {
+    transition: none;
+  }
+}
