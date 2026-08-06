@@ -704,26 +704,7 @@
       const imageUrl = $image.attr('src');
 
 
-      // Extract file extension from URL or default to webp
-      const getFileExtension = (url) => {
-        const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
-        return match ? match[1] : 'webp';
-      };
-
-      const fileExtension = getFileExtension(imageUrl);
-      const timestamp = Date.now();
-      const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
-
-      // Create download link
-      const link = document.createElement('a');
-      link.href = imageUrl;
-      link.download = fileName;
-      link.click();
-
-      const message = window.AIImageGeneration && window.AIImageGeneration.translation
-        ? window.AIImageGeneration.translation.downloadStarted
-        : 'Image download started';
-      this.showLightboxMessage(message, 'success');
+      this.downloadImageByUrl(imageUrl);
     },
 
     // Note: loadHistoryImage function removed as history items now use lightbox directly
@@ -1613,26 +1594,68 @@
       img.src = imageUrl;
     },
 
-    // Download image by URL
+    // Download image by URL, always converted to PNG
     downloadImageByUrl: function(imageUrl) {
-      const getFileExtension = (url) => {
-        const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
-        return match ? match[1] : 'webp';
+      const self = this;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = function() {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          ctx.drawImage(img, 0, 0);
+
+          // Re-encode as PNG so the downloaded file is always PNG
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageProcessFailed
+                : 'Image processing failed';
+              self.showLightboxMessage(message, 'error');
+              return;
+            }
+
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = `ai-generated-image-${Date.now()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            // Delay revoking, some browsers abort the download when released immediately
+            setTimeout(function() {
+              URL.revokeObjectURL(objectUrl);
+            }, 1000);
+
+            const message = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.downloadStarted
+              : 'Image download started';
+            self.showLightboxMessage(message, 'success');
+          }, 'image/png');
+
+        } catch (error) {
+          console.error('Error processing image for download:', error);
+          const message = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.imageProcessError
+            : 'Error occurred during image processing';
+          self.showLightboxMessage(message, 'error');
+        }
       };
 
-      const fileExtension = getFileExtension(imageUrl);
-      const timestamp = Date.now();
-      const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
+      img.onerror = function() {
+        console.error('Failed to load image for download');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.imageLoadFailed
+          : 'Failed to load image, please try again';
+        self.showLightboxMessage(message, 'error');
+      };
 
-      const link = document.createElement('a');
-      link.href = imageUrl;
-      link.download = fileName;
-      link.click();
-
-      const message = window.AIImageGeneration && window.AIImageGeneration.translation
-        ? window.AIImageGeneration.translation.downloadStarted
-        : 'Image download started';
-      this.showLightboxMessage(message, 'success');
+      img.src = imageUrl;
     },
 
     // Show success message
