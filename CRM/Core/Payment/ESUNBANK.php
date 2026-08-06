@@ -127,4 +127,31 @@ class CRM_Core_Payment_Esunbank extends CRM_Core_Payment {
       civicrm_esunbank_do_transfer_checkout($params, $component, $this->_paymentProcessor, $this->_paymentForm);
     }
   }
+
+  /**
+   * Function called from contributionRecur page to show tappay detail information
+   *
+   * @param int $contributionId the contribution id
+   *
+   * @return array The label as the key to value.
+   */
+  public static function getRecordDetail($contributionId) {
+    $table = [];
+
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $is_test = $contribution->is_test ? 'test' : '';
+    if (empty($contribution->payment_processor_id)) {
+      return $table;
+    }
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $is_test);
+    $table[ts('Payment Processor')] = $paymentProcessor['name']." - ".ts('ID').$paymentProcessor['id'];
+
+    if (function_exists('civicrm_esunbank_get_record_detail')) {
+      civicrm_esunbank_get_record_detail($contributionId, $table);
+    }
+
+    return $table;
+  }
 }

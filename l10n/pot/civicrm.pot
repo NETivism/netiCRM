@@ -51461,4 +51461,23 @@ msgstr ""
 
 #: neticrm/civicrm_instrument/civicrm_instrument.module
 msgid "You have to use credit card or LINE Pay for recurring contribution."
+#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
+msgid "Are you sure you want to delete contact image?"
+msgstr ""
+
+#: CRM/Contribute/Form/ContributionType.php:124
+msgid ""
+"Accounting Code cannot contain hyphen (-). Please remove it before saving."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:48
+msgid "Accounting Code cannot contain hyphen (-)."
+msgstr ""
+
+#: CRM/Admin/Page/AuditRecords.php:67
+msgid "Website User Email Changed"
+msgstr ""
+
+#: CRM/Admin/Page/AuditRecords.php:69
+msgid "User email before changed"
 msgstr ""

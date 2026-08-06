@@ -63,6 +63,11 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
           $userId = $dao->entity_id;
           $data = ts("Role IDs before changed").': '.$dao->data;
           break;
+        case 'audit.users.mail':
+          $auditStatusName = ts('Website User Email Changed');
+          $userId = $dao->entity_id;
+          $data = ts("User email before changed").': '.$dao->data;
+          break;
         case 'audit.users.civicrm':
           $auditStatusName = ts('New CiviCRM Access User');
           $userId = $dao->entity_id;

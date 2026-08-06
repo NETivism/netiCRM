@@ -2876,7 +2876,7 @@ msgid "Could not get a contact_id and/or contact_type"
 msgstr "無法取得聯絡人系統編號或聯絡人類別"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image."
+msgid "Are you sure you want to delete contact image?"
 msgstr "您確定要刪除聯絡人頭像？"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
@@ -52242,3 +52242,19 @@ msgstr "LINE Pay 定期定額只支援每月扣款，不支援每年扣款。"
 #: neticrm/civicrm_instrument/civicrm_instrument.module
 msgid "You have to use credit card or LINE Pay for recurring contribution."
 msgstr "定期定額捐款請使用信用卡或 LINE Pay。"
+#: CRM/Contribute/Form/ContributionType.php:124
+msgid ""
+"Accounting Code cannot contain hyphen (-). Please remove it before saving."
+msgstr "會計代碼不可包含連字號 (-)，請移除後再儲存。"
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:48
+msgid "Accounting Code cannot contain hyphen (-)."
+msgstr "會計代碼不可包含連字號 (-)。"
+
+#: CRM/Admin/Page/AuditRecords.php:67
+msgid "Website User Email Changed"
+msgstr "網站使用者電子郵件修改"
+
+#: CRM/Admin/Page/AuditRecords.php:69
+msgid "User email before changed"
+msgstr "修改前電子郵件"
