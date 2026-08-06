@@ -40,4 +40,9 @@
     <page_callback>CRM_AI_Page_AJAX::getImageHistory</page_callback>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/ai/images/sample-list</path>
+    <page_callback>CRM_AI_Page_AJAX::getSampleImageList</page_callback>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
