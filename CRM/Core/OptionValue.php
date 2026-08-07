@@ -419,7 +419,7 @@ FROM
       $where .= " AND option_value.is_active = " . $isActive;
     }
 
-    $order = " ORDER BY " . $orderBy;
+    $order = " ORDER BY " . CRM_Utils_Type::escape($orderBy, 'MysqlColumnName');
 
     $groupId = CRM_Utils_Array::value('id', $groupParams);
     $groupName = CRM_Utils_Array::value('name', $groupParams);
