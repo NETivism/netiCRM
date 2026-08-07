@@ -969,10 +969,10 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
           $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
           $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
           $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
-          if ($form->_submitValues['payment_processor']) {
-            $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
-          }
           if ($form) {
+            if (!empty($form->_submitValues['payment_processor'])) {
+              $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
+            }
             $form->set('paymentProcessors', $pps);
           }
         }
