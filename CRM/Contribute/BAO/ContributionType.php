@@ -177,7 +177,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
         'title' => $dao->title,
         'is_active' => (bool) $dao->is_active,
         'type' => 'contribute',
-        'url' => CRM_Utils_System::url('civicrm/admin/contribute/amount', "reset=1&action=update&id={$dao->id}"),
+        'url' => CRM_Utils_System::url('civicrm/admin/contribute/settings', "reset=1&action=update&id={$dao->id}"),
       ];
     }
 
