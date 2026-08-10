@@ -234,11 +234,11 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       }
     }
     if (!empty($paymentClass)) {
-      if (isset($paymentClass::$_editableFields) && is_array($paymentClass::$_editableFields)) {
-        $activeFields = $paymentClass::$_editableFields;
-      }
-      elseif (method_exists($paymentClass, 'getEditableFields')) {
+      if (method_exists($paymentClass, 'getEditableFields')) {
         $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
+      }
+      elseif (isset($paymentClass::$_editableFields) && is_array($paymentClass::$_editableFields)) {
+        $activeFields = $paymentClass::$_editableFields;
       }
     }
 
@@ -390,11 +390,11 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       $mode = $recur['is_test'] ? 'test' : 'live';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur['processor_id'], $mode);
       $paymentClass = &CRM_Core_Payment::singleton($mode, $paymentProcessor, $this);
-      if (!empty($paymentClass::$_editableFields)) {
-        $activeFields = $paymentClass::$_editableFields;
-      }
-      elseif (method_exists($paymentClass, 'getEditableFields')) {
+      if (method_exists($paymentClass, 'getEditableFields')) {
         $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
+      }
+      elseif (!empty($paymentClass::$_editableFields)) {
+        $activeFields = $paymentClass::$_editableFields;
       }
       if (method_exists($paymentClass, 'doUpdateRecur') && !empty($activeFields)) {
         // For Payment which has doUpdateRecur and _editableFields, Like Spgateway.
