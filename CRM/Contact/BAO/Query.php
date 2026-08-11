@@ -2743,7 +2743,7 @@ class CRM_Contact_BAO_Query {
         }
       }
 
-      if ($op === 'IN') {
+      if ($op === 'IN' || $op === '=') {
         $groupClause = "EXISTS (SELECT 1 FROM civicrm_group_contact cgc WHERE cgc.contact_id = contact_a.id AND cgc.group_id IN ($groupIds){$statusSql})";
       }
       else {
