@@ -24,6 +24,7 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php7
+          docker rm -f neticrm-ci
           docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "DRUPAL=7" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php7
 
       - name: Install netiCRM
@@ -147,6 +148,7 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php8
+          docker rm -f neticrm-ci
           docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "DRUPAL=7" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php8
 
       - name: Install netiCRM
@@ -270,6 +272,7 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php83-d10
+          docker rm -f neticrm-ci
           docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-10/civicrm -e "DRUPAL=10" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php83-d10
 
       - name: Install netiCRM

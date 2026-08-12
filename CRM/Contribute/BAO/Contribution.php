@@ -943,7 +943,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
           if (!empty($pending_status[$participant_status_id])) {
             // full but pending status can count in
             if ($is_full) {
-              if (!empty($positive_status[$participant_status_id])) {
+              if (!empty($positive_status[$participant_status_id]) && in_array($contribution_status_id, [2, 3, 4])) {
                 $return = TRUE;
               }
             }
@@ -969,17 +969,18 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
           $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
           $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
           $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
-          if ($form->_submitValues['payment_processor']) {
-            $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
-          }
           if ($form) {
+            if (!empty($form->_submitValues['payment_processor'])) {
+              $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
+            }
             $form->set('paymentProcessors', $pps);
           }
         }
         break;
       case 'contribute':
         $page_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_page_id');
-        if ($page_id) {
+        $contribution_status_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_status_id');
+        if ($page_id && in_array($contribution_status_id, [2, 3, 4])) {
           if ($ids['membership']) {
             $membership_type_ids = [];
             // Retrive actived membership type list.

@@ -55,6 +55,8 @@
       // creditCardOnly : "{/literal}{$credit_card_only}{literal}",
       minAmount : {/literal}{if $min_amount}"{$min_amount}"{else}false{/if}{literal},
       maxAmount : {/literal}{if $max_amount}"{$max_amount}"{else}false{/if}{literal},
+      linepayRecur : {/literal}{if $linepay_recur}1{else}0{/if}{literal},
+      linepayInstrumentId : "{/literal}{$linepay_instrument_id}{literal}",
       {/literal}{if $thankyou_text and $payment_result_type eq 4}thankyouTitle : "{$thankyou_title}",{/if}{literal}
       ts: {
         "Monthly Installments" : "{/literal}{ts}Monthly Installments{/ts}{literal}",

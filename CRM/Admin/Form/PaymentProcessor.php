@@ -540,6 +540,14 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     // also copy meta fields from the info DAO
     $dao->is_recur = $this->_ppDAO->is_recur;
+
+    // refs #45587, Mobile (LINE Pay) recurring is enabled per-processor by
+    // filling in the subject field, so is_recur cannot simply be inherited
+    // from the processor type.
+    if ($this->_ppDAO->class_name === 'Payment_Mobile') {
+      $dao->is_recur = empty($dao->subject) || $dao->subject === 'null' ? 0 : 1;
+    }
+
     $dao->billing_mode = $this->_ppDAO->billing_mode;
     $dao->class_name = $this->_ppDAO->class_name;
     $dao->payment_type = $this->_ppDAO->payment_type;

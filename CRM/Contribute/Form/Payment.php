@@ -91,7 +91,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
         else {
           $this->_paymentProcessors = $this->get('paymentProcessors');
           $this->_paymentProcessor = $this->get('paymentProcessor');
-          if (!count($this->_paymentProcessors)) {
+          if (empty($this->_paymentProcessors)) {
             return CRM_Core_Error::statusBounce(ts("We don't have available method for this payment."));
           }
         }
