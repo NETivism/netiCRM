@@ -887,12 +887,24 @@ class CRM_Core_Payment_BaseIPN {
       unset($c->invoice_id);
       unset($c->receipt_id);
       unset($c->receipt_date);
+      // Financial and thank-you data belong to a single installment.
+      // Always exclude them, regardless of the "Exclude to sync" setting.
+      unset($c->fee_amount);
+      unset($c->net_amount);
+      unset($c->thankyou_date);
       $c->contribution_status_id = 2;
       $c->trxn_id = $trxn_id;
       $c->created_date = date('YmdHis');
       $config = CRM_Core_Config::singleton();
       if ($config->copyContributionTypeSource == 1) {
         $c->contribution_type_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $c->contribution_page_id, 'contribution_type_id');
+      }
+      // Non-deductible amount is copied by default, which is correct for
+      // non-deductible contribution types. Site admins can opt out via the
+      // "Exclude to sync" setting, then the DB default (0) applies.
+      $exclude = !empty($config->recurringSyncExclude) ? $config->recurringSyncExclude : [];
+      if (in_array('non_deductible_amount', $exclude, TRUE)) {
+        unset($c->non_deductible_amount);
       }
       $transaction = new CRM_Core_Transaction();
       $c->save();

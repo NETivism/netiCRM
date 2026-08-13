@@ -241,8 +241,20 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     if (CRM_Utils_Rule::qfKey($this->_searchKey)) {
       $urlParams .= "&qfKey=$this->_searchKey";
     }
-    elseif ($context == 'search') {
+    elseif ($context == 'search' || $context == 'custom') {
       $urlParams .= "&qfKey={$this->controller->_key}";
+    }
+    if ($context == 'custom') {
+      $ssID = $this->get('ssID');
+      if (isset($ssID)) {
+        $urlParams .= "&ssID={$ssID}";
+      }
+      else {
+        $csID = $this->get('customSearchID');
+        if (isset($csID)) {
+          $urlParams .= "&csid={$csID}";
+        }
+      }
     }
     $urlString = "civicrm/contact/search/$context";
     if ($context == 'search') {

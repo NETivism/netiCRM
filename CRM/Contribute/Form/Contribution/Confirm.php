@@ -168,6 +168,14 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       $this->assign('pay_later_receipt', $this->_values['pay_later_receipt']);
     }
 
+    // refs #45587, the recurring summary names the payment instrument the donor
+    // chose (credit card, LINE Pay ...). payment_instrument_id is not resolved
+    // until the payment completes, so use the instrument selected on Main.
+    if (!empty($this->_params['civicrm_instrument_id'])) {
+      $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
+      $this->assign('payment_instrument', CRM_Utils_Array::value($this->_params['civicrm_instrument_id'], $instruments));
+    }
+
     // if onbehalf-of-organization
     if (CRM_Utils_Array::value('is_for_organization', $this->_params)) {
       if (CRM_Utils_Array::value('org_option', $this->_params) &&

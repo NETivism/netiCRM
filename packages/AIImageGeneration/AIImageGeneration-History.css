@@ -170,7 +170,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.2s ease;
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.netiaiig-container .history-item img.is-loaded {
+  opacity: 1;
 }
 
 .netiaiig-container .history-item:hover img {

@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   test7:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') }}
+    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') && github.server_url == 'https://github.com' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +24,7 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php7
+          docker rm -f neticrm-ci
           docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "DRUPAL=7" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php7
 
       - name: Install netiCRM
@@ -114,15 +115,19 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && github.server_url == 'https://github.com'
         with:
           name: playwright-report-test7
           path: tests/playwright/playwright-report
           retention-days: 30
 
+      - name: Remove container
+        if: always()
+        run: docker rm -f neticrm-ci
+
   test8:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') }}
+    if: ${{ !contains(github.event.head_commit.message || github.event.pull_request.title, '#skip-build') && github.server_url == 'https://github.com' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -143,6 +148,7 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php8
+          docker rm -f neticrm-ci
           docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-7/civicrm -e "DRUPAL=7" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php8
 
       - name: Install netiCRM
@@ -233,11 +239,15 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && github.server_url == 'https://github.com'
         with:
           name: playwright-report-test8
           path: tests/playwright/playwright-report
           retention-days: 30
+
+      - name: Remove container
+        if: always()
+        run: docker rm -f neticrm-ci
 
   test8-d10:
     runs-on: ubuntu-latest
@@ -262,6 +272,7 @@ jobs:
       - name: Prepare container
         run: |
           docker pull ghcr.io/netivism/docker-neticrm-ci:drone-php83-d10
+          docker rm -f neticrm-ci
           docker run -d --name neticrm-ci -p 8080:8080 -v $GITHUB_WORKSPACE:/mnt/neticrm-10/civicrm -e "DRUPAL=10" -e "TZ=Asia/Taipei" -e "RUNPORT=8080" -e "DRUPAL_ROOT=/var/www/html" -e "CIVICRM_TEST_DSN=mysql://root@localhost/neticrmci" ghcr.io/netivism/docker-neticrm-ci:drone-php83-d10
 
       - name: Install netiCRM
@@ -352,8 +363,12 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && github.server_url == 'https://github.com'
         with:
           name: playwright-report-test8-d10
           path: tests/playwright/playwright-report
           retention-days: 30
+
+      - name: Remove container
+        if: always()
+        run: docker rm -f neticrm-ci

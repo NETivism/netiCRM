@@ -654,6 +654,44 @@ class CRM_Utils_System_Drupal8 {
   }
 
   /**
+   * Language code to use instead of the current language when building
+   * language-negotiated URLs. Set by switchUFLocale().
+   *
+   * @var string|null
+   */
+  public $ufLocaleOverride = NULL;
+
+  /**
+   * Mark the target language for languageNegotiationURL()
+   *
+   * @param string $crmLocale CiviCRM locale, e.g. en_US, zh_TW
+   *
+   * @return void
+   */
+  public function switchUFLocale($crmLocale = NULL) {
+    if (empty($crmLocale) || !class_exists('Drupal') || !\Drupal::hasContainer()) {
+      return;
+    }
+    switch ($crmLocale) {
+      case 'zh_TW':
+        $langcode = 'zh-hant';
+        break;
+
+      case 'zh_CN':
+        $langcode = 'zh-hans';
+        break;
+
+      default:
+        $langcode = strtolower(substr($crmLocale, 0, 2));
+        break;
+    }
+    $languages = \Drupal::languageManager()->getLanguages();
+    if (isset($languages[$langcode])) {
+      $this->ufLocaleOverride = $langcode;
+    }
+  }
+
+  /**
    * Helper function to extract path, query and route name from Civicrm URLs.
    *
    * For example, 'civicrm/contact/view?reset=1&cid=66' will be returned as:
@@ -740,7 +778,7 @@ class CRM_Utils_System_Drupal8 {
       return $url;
     }
 
-    $language = $this->getCurrentLanguage();
+    $language = $this->ufLocaleOverride ?: $this->getCurrentLanguage();
     if (\Drupal::service('module_handler')->moduleExists('language')) {
       $config = \Drupal::config('language.negotiation')->get('url');
 

@@ -401,6 +401,11 @@
         console.warn('Failed to load sample image:', item.image_url);
         $link.addClass('image-error');
         $(this).attr('src', IMAGE_ERROR_PLACEHOLDER);
+        $(this).addClass('is-loaded');
+      });
+
+      $img.on('load', function() {
+        $(this).addClass('is-loaded');
       });
 
       $link.append($img);
