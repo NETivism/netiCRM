@@ -887,6 +887,11 @@ class CRM_Core_Payment_BaseIPN {
       unset($c->invoice_id);
       unset($c->receipt_id);
       unset($c->receipt_date);
+      // Financial and thank-you data belong to a single installment.
+      // Always exclude them, regardless of the "Exclude to sync" setting.
+      unset($c->fee_amount);
+      unset($c->net_amount);
+      unset($c->thankyou_date);
       $c->contribution_status_id = 2;
       $c->trxn_id = $trxn_id;
       $c->created_date = date('YmdHis');
