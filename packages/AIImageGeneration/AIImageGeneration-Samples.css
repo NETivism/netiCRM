@@ -32,8 +32,8 @@
 }
 
 .netiaiig-container .netiaiig-tab:focus {
-  outline: 2px solid #536DFE;
-  outline-offset: -2px;
+  color: inherit;
+  background: inherit;
 }
 
 .netiaiig-container .netiaiig-tab.is-active {
