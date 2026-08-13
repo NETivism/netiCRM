@@ -1022,6 +1022,36 @@ cj(function() {
       $errorMsg['contribution_status_id'] = ts("Please select a valid payment status before updating.");
     }
 
+    // validate trxn_id uniqueness when record_contribution is checked (AC-1, AC-2, AC-3)
+    if (CRM_Utils_Array::value('record_contribution', $values) &&
+      !empty($values['trxn_id'])
+    ) {
+      $trxnId = $values['trxn_id'];
+      $excludeContributionId = NULL;
+
+      // AC-3: When editing a participant that already has a payment linked,
+      // exclude that participant's own contribution from the duplicate check.
+      if ($self->_id && $self->_paymentId) {
+        $excludeContributionId = CRM_Core_DAO::getFieldValue(
+          'CRM_Event_DAO_ParticipantPayment',
+          $self->_id,
+          'contribution_id',
+          'participant_id'
+        );
+      }
+
+      $dupQuery = "SELECT id FROM civicrm_contribution WHERE trxn_id = %1";
+      $dupParams = [1 => [$trxnId, 'String']];
+      if ($excludeContributionId) {
+        $dupQuery .= " AND id != %2";
+        $dupParams[2] = [$excludeContributionId, 'Integer'];
+      }
+      $dupDao = CRM_Core_DAO::executeQuery($dupQuery, $dupParams);
+      if ($dupDao->fetch()) {
+        $errorMsg['trxn_id'] = ts('此交易編號已存在於資料庫。');
+      }
+    }
+
     // do the amount validations.
     //skip for update mode since amount is freeze, CRM-6052
     if ((
