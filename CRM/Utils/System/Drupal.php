@@ -1085,6 +1085,10 @@ class CRM_Utils_System_Drupal {
       global $tsLocale;
       $crmLocale = $tsLocale;
     }
+    if (self::$_version >= 8) {
+      CRM_Core_Config::$_userSystem->versionalClass->switchUFLocale($crmLocale);
+      return;
+    }
     if (function_exists('language_list') && !empty($crmLocale)) {
       global $language;
       $locale = $language->language;
