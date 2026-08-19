@@ -248,8 +248,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       require_once 'CRM/Core/Smarty/resources/String.php';
       civicrm_smarty_register_string_resource();
       $smarty = &CRM_Core_Smarty::singleton();
+      // refs #47609, the body comes from the database, compile it in secure
+      // mode instead of on the shared singleton
       foreach (['subject', 'text', 'html'] as $elem) {
-        $$elem = $smarty->fetch("string:{*msg_tpl-$messageTemplateID-$elem*}{$$elem}");
+        $$elem = CRM_Core_Smarty::fetchUntrusted("string:{*msg_tpl-$messageTemplateID-$elem*}{$$elem}", $smarty);
       }
 
       $sent = FALSE;
@@ -437,8 +439,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
         $smarty->assign($name, $value);
       }
     }
+    // refs #47609, the body comes from the database, compile it in secure
+    // mode instead of on the caller's instance
     foreach (['subject', 'text', 'html'] as $elem) {
-      $$elem = $smarty->fetch("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}");
+      $$elem = CRM_Core_Smarty::fetchUntrusted("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}", $smarty);
     }
 
     // send the template, honouring the target user’s preferences (if any)
