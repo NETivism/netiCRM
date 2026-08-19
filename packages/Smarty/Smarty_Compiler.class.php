@@ -1039,6 +1039,19 @@ class Smarty_Compiler extends Smarty {
      */
     function _compile_include_php_tag($tag_args)
     {
+        /* netiCRM refs #47609: {include_php} runs an arbitrary php file and is
+           the one built in tag Smarty leaves ungated at compile time. At run
+           time smarty_core_get_php_resource() does refuse an untrusted file,
+           but smarty_core_smarty_include_php() ignores its return value and
+           goes on to _include() an unset $php_resource, which on php 8 raises
+           an uncaught ValueError. Reject it here instead, while there is still
+           somewhere sensible to report it. Only reachable with security on, so
+           templates loaded from disk are unaffected. */
+        if ($this->security && empty($this->trusted_dir)) {
+            $this->_syntax_error("(secure mode) include_php not permitted", E_USER_ERROR, __FILE__, __LINE__);
+            return '';
+        }
+
         $attrs = $this->_parse_attrs($tag_args);
 
         if (empty($attrs['file'])) {
@@ -1415,10 +1428,30 @@ class Smarty_Compiler extends Smarty {
                             if($this->security &&
                                !in_array($token, $this->security_settings['IF_FUNCS'])) {
                                 $this->_syntax_error("(secure mode) '$token' not allowed in if statement", E_USER_ERROR, __FILE__, __LINE__);
+                                /* netiCRM refs #47609: same as the quoted case
+                                   below, reporting alone leaves the call in the
+                                   compiled output when the error handler does
+                                   not halt php */
+                                $token = 'array';
                             }
                     } elseif(preg_match('~^' . $this->_var_regexp . '$~', $token) && (strpos('+-*/^%&|', substr($token, -1)) === false) && isset($tokens[$i+1]) && $tokens[$i+1] == '(') {
-                        // variable function call
-                        $this->_syntax_error("variable function call '$token' not allowed in if statement", E_USER_ERROR, __FILE__, __LINE__);                      
+                        /* variable function call. netiCRM refs #47609: _var_regexp
+                           accepts a quoted string, so {if "system"("id")} lands
+                           here instead of on the IF_FUNCS check above. Smarty
+                           reports it and carries on, expecting E_USER_ERROR to
+                           halt php; drupal's error handler does not halt, so the
+                           call used to be emitted and executed anyway. Carry the
+                           same marker as the other security refusals so the
+                           caller can stop the compile, and neutralise the token
+                           in case nobody is listening. 'array' is used because,
+                           unlike the other IF_FUNCS entries, it stays valid php
+                           whatever arguments follow. */
+                        if ($this->security) {
+                            $this->_syntax_error("(secure mode) variable function call '$token' not allowed in if statement", E_USER_ERROR, __FILE__, __LINE__);
+                            $token = 'array';
+                        } else {
+                            $this->_syntax_error("variable function call '$token' not allowed in if statement", E_USER_ERROR, __FILE__, __LINE__);
+                        }
                     } elseif(preg_match('~^' . $this->_obj_call_regexp . '|' . $this->_var_regexp . '(?:' . $this->_mod_regexp . '*)$~', $token)) {
                         // object or variable
                         $token = $this->_parse_var_props($token);
@@ -1831,10 +1864,13 @@ class Smarty_Compiler extends Smarty {
                     if(substr($_index,2,2) == '__') {
                         $this->_syntax_error('call to internal object members is not allowed', E_USER_ERROR, __FILE__, __LINE__);
                     } elseif($this->security && substr($_index, 2, 1) == '_') {
-                        $this->_syntax_error('(secure) call to private object member is not allowed', E_USER_ERROR, __FILE__, __LINE__);
+                        /* netiCRM refs #47609: was '(secure)', renamed so every
+                           security refusal carries the one marker callers match on */
+                        $this->_syntax_error('(secure mode) call to private object member is not allowed', E_USER_ERROR, __FILE__, __LINE__);
                     } elseif (substr($_index, 2, 1) == '$') {
                         if ($this->security) {
-                            $this->_syntax_error('(secure) call to dynamic object member is not allowed', E_USER_ERROR, __FILE__, __LINE__);
+                            /* netiCRM refs #47609: was '(secure)', see above */
+                            $this->_syntax_error('(secure mode) call to dynamic object member is not allowed', E_USER_ERROR, __FILE__, __LINE__);
                         } else {
                             $_output .= '->{(($_var=$this->_tpl_vars[\''.substr($_index,3).'\']) && substr($_var,0,2)!=\'__\') ? $_var : $this->trigger_error("cannot access property \\"$_var\\"")}';
                         }
