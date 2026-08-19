@@ -1628,7 +1628,8 @@ WHERE ( $contributionCond  OR $contactCond )";
            componentPayment.contribution_id as contribution_id,
            contribution.source source,
            contribution.contribution_status_id as contribution_status_id,
-           contribution.is_pay_later as is_pay_later
+           contribution.is_pay_later as is_pay_later,
+           contribution.payment_processor_id as payment_processor_id
      FROM  $componentTable component
 LEFT JOIN  $paymentTable componentPayment    ON ( componentPayment.{$idName} = component.id )
 LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_id = contribution.id )
@@ -1639,6 +1640,7 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
     while ($dao->fetch()) {
       if ($dao->contribution_id &&
         $dao->is_pay_later &&
+        empty($dao->payment_processor_id) &&
         $dao->contribution_status_id == $pendingStatusId &&
         strpos($dao->source, $source) !== FALSE
       ) {
