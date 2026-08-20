@@ -30,7 +30,12 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
      * @access public
      */
     var $height = '400';
-            
+
+    /**
+     * Date when every site is switched to CKEditor 5 automatically (ref #45339).
+     */
+    const CKE5_AUTO_SWITCH_DATE = '2026-12-23';
+
     /**
      * Class constructor
      *
@@ -178,6 +183,20 @@ cj( function( ) {
                 $hintMessage = '<span class="editor-switcher-hint">' . ts('CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href="%1" target="_blank">Please report any issues</a>.', [1 => 'https://neticrm.tw/support']) . '</span>';
               }
 
+              // CKEditor 4 sunset notice. Only meaningful while CKE4 is the
+              // active editor, so editor-switcher.js toggles it on switch.
+              $cke4Notice = '<div class="editor-switcher-cke4-notice">';
+              $cke4Notice .= ts('Your editor will automatically switch to the new version (CKEditor 5) on <strong>%1</strong>. You can try out the new editor before then.', [1 => self::CKE5_AUTO_SWITCH_DATE]);
+              $docUrl = CRM_Utils_System::docURL2('WYSIWYG Editor', TRUE);
+              if (!empty($docUrl)) {
+                $cke4Notice .= ' ' . ts('See our <a href="%1" target="_blank">documentation</a> for details.', [1 => $docUrl]);
+              }
+              if (CRM_Core_Permission::check('administer CiviCRM')) {
+                $settingUrl = CRM_Utils_System::url('civicrm/admin/setting/preferences/display', 'reset=1');
+                $cke4Notice .= ' ' . ts('You can also <a href="%1" target="_blank">go to Site Preferences</a> to change the default editor yourself.', [1 => $settingUrl]);
+              }
+              $cke4Notice .= '</div>';
+
               $switcherHtml = '
               <div class="crm-section editor-switcher-container">
                 <div class="editor-switcher-row">
@@ -189,6 +208,7 @@ cj( function( ) {
                   <span class="editor-switch-status"></span>
                 </div>
                 ' . $hintMessage . '
+                ' . $cke4Notice . '
               </div>';
               
               $html = $switcherHtml . $html;

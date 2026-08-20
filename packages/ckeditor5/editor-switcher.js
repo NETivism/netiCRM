@@ -24,6 +24,7 @@
       if (format === currentType) return;
       const $switcherStatus = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-switch-status');
       const $switcher = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-format-switcher');
+      const $cke4Notice = $el.closest('.crm-form-elem').prev('.crm-section').find('.editor-switcher-cke4-notice');
       $switcher.prop('disabled', true);
       $switcherStatus.html('<i class="zmdi zmdi-spinner zmdi-hc-spin"></i>');
 
@@ -40,6 +41,8 @@
         }
 
         $el.data('current-editor-type', format);
+        // The sunset notice only applies while CKE4 is active.
+        $cke4Notice.toggle(format === 'cke4');
         $switcherStatus.empty();
         $switcher.prop('disabled', false);
       } catch (error) {
