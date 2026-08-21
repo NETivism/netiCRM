@@ -943,7 +943,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
           if (!empty($pending_status[$participant_status_id])) {
             // full but pending status can count in
             if ($is_full) {
-              if (!empty($positive_status[$participant_status_id])) {
+              if (!empty($positive_status[$participant_status_id]) && in_array($contribution_status_id, [2, 3, 4])) {
                 $return = TRUE;
               }
             }
@@ -969,17 +969,18 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
           $pp = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $ids['event'], 'payment_processor');
           $ppids = explode(CRM_Core_DAO::VALUE_SEPARATOR, $pp);
           $pps = CRM_Core_BAO_PaymentProcessor::getPayments($ppids, $mode);
-          if ($form->_submitValues['payment_processor']) {
-            $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
-          }
           if ($form) {
+            if (!empty($form->_submitValues['payment_processor'])) {
+              $form->set('paymentProcessor', $pps[$form->_submitValues['payment_processor']]);
+            }
             $form->set('paymentProcessors', $pps);
           }
         }
         break;
       case 'contribute':
         $page_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_page_id');
-        if ($page_id) {
+        $contribution_status_id = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $id, 'contribution_status_id');
+        if ($page_id && in_array($contribution_status_id, [2, 3, 4])) {
           if ($ids['membership']) {
             $membership_type_ids = [];
             // Retrive actived membership type list.
@@ -1627,7 +1628,8 @@ WHERE ( $contributionCond  OR $contactCond )";
            componentPayment.contribution_id as contribution_id,
            contribution.source source,
            contribution.contribution_status_id as contribution_status_id,
-           contribution.is_pay_later as is_pay_later
+           contribution.is_pay_later as is_pay_later,
+           contribution.payment_processor_id as payment_processor_id
      FROM  $componentTable component
 LEFT JOIN  $paymentTable componentPayment    ON ( componentPayment.{$idName} = component.id )
 LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_id = contribution.id )
@@ -1638,6 +1640,7 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
     while ($dao->fetch()) {
       if ($dao->contribution_id &&
         $dao->is_pay_later &&
+        empty($dao->payment_processor_id) &&
         $dao->contribution_status_id == $pendingStatusId &&
         strpos($dao->source, $source) !== FALSE
       ) {

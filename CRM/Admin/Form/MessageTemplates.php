@@ -242,10 +242,53 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
+    // refs #32614, refuse template syntax that would be rejected at send time
+    $this->addFormRule(['CRM_Admin_Form_MessageTemplates', 'formRule']);
+
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
       CRM_Utils_System::setTitle(ts('View System Default Message Template'));
     }
+  }
+
+  /**
+   * Reject template syntax that CRM_Core_Smarty::fetchUntrusted() would refuse.
+   *
+   * Templates are compiled with smarty security on when they are sent, so
+   * {php}, PHP calls inside {if}, PHP functions used as modifiers and reading
+   * files outside the template directory all fail there. Catching it here
+   * gives the author a usable error instead of a silently empty message.
+   *
+   * This is the friendlier of the two checks, not the enforcing one: the API,
+   * imports and direct database writes all bypass it, which is why the send
+   * path does its own checking.
+   *
+   * refs #32614, disable smarty evaluation functions
+   *
+   * @param array $values submitted form values
+   *
+   * @return array|bool TRUE if the values are fine, error messages otherwise
+   */
+  public static function formRule($values) {
+    $errors = [];
+
+    $fields = [
+      'msg_subject' => ts('Message Subject'),
+      'msg_text' => ts('Text Message'),
+      'msg_html' => ts('HTML Message'),
+    ];
+
+    foreach ($fields as $field => $label) {
+      $problems = CRM_Core_Smarty::validateUntrusted(CRM_Utils_Array::value($field, $values));
+      if ($problems) {
+        $errors[$field] = ts(
+          '%1 uses template syntax that is not allowed for security reasons: %2',
+          [1 => $label, 2 => CRM_Utils_Array::implode('; ', $problems)]
+        );
+      }
+    }
+
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**

@@ -88,13 +88,20 @@
             {/if}
             {if $is_recur}
                 {if $installments}
-                    <p><strong>{ts 1=$frequency_interval 2=$frequency_unit 3=$installments}I want to contribute this amount every %1 %2(s) for %3 installments.{/ts}</strong></p>
+                    <p><strong>{ts 1=$frequency_interval 2=$frequency_unit 3=$payment_instrument 4=$installments}I want to contribute this amount every %1 %2(s) via %3 for %4 installments.{/ts}</strong></p>
+                    <p>{ts}Your initial contribution will be processed once you complete the confirmation step. You will be able to modify or cancel future contributions at any time by contact us.{/ts}</p>
+
                 {else}
-                    <p><strong>{ts 1=$frequency_interval 2=$frequency_unit}I want to contribute this amount every %1 %2(s) until credit card expires.{/ts}</strong></p>
-                {/if}
-                <p>{ts}Your initial contribution will be processed once you complete the confirmation step. You will be able to modify or cancel future contributions at any time by contact us.{/ts}</p>
-                {if !$installments}
-                {ts}Since you didn't assign the expiration date of your donation installment plan, the recurring payments will be canceled when your credit card expires.{/ts}
+                    {* refs #45587, LINE Pay (Mobile) has no card to expire, it runs until cancelled. *}
+                    {if $paymentProcessor.payment_processor_type EQ 'Mobile'}
+                        <p><strong>{ts 1=$frequency_interval 2=$frequency_unit 3=$payment_instrument}I want to contribute this amount every %1 %2(s) via %3 until I cancel.{/ts}</strong></p>
+                    {else}
+                        <p><strong>{ts 1=$frequency_interval 2=$frequency_unit 3=$payment_instrument}I want to contribute this amount every %1 %2(s) via %3 until credit card expires or I cancel.{/ts}</strong></p>
+                    {/if}
+                    <p>{ts}Your initial contribution will be processed once you complete the confirmation step. You will be able to modify or cancel future contributions at any time by contact us.{/ts}</p>
+                    {if $paymentProcessor.payment_processor_type EQ 'SPGATEWAY'}
+                        {ts}Since you didn't assign the expiration date of your donation installment plan, the recurring payments will be canceled when your credit card expires.{/ts}
+                    {/if}
                 {/if}
             {/if}
             {if $is_pledge }
