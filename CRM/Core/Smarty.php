@@ -272,8 +272,7 @@ class CRM_Core_Smarty extends Smarty {
       '~\(secure mode\) \'(?:crmapi|insert|eval)\' is not permitted in a database stored template~i',
     ];
 
-    $previous = NULL;
-    $handler = function ($errno, $errstr, $errfile = NULL, $errline = NULL) use (&$previous, $executionViolations) {
+    $handler = function ($errno, $errstr) use ($executionViolations) {
       if ($errno == E_USER_ERROR && strpos($errstr, '(secure mode)') !== FALSE) {
         // trigger_error() html encodes the message, quotes included on php 8.1+
         $message = html_entity_decode($errstr, ENT_QUOTES, 'UTF-8');
@@ -290,13 +289,11 @@ class CRM_Core_Smarty extends Smarty {
         CRM_Core_Error::debug_log_message('Ignored in a database stored template: ' . $message);
         return TRUE;
       }
-      // Anything else is none of our business, hand it back to Drupal.
-      if ($previous) {
-        return call_user_func($previous, $errno, $errstr, $errfile, $errline);
-      }
+      // Anything else is none of our business, let php handle it as usual.
       return FALSE;
     };
-    $previous = set_error_handler($handler);
+    // E_USER_ERROR only, so nothing else even reaches the handler.
+    set_error_handler($handler, E_USER_ERROR);
 
     // fetch() renders inside ob_start() and drops its error_reporting override
     // only on the way out. Throwing from the handler skips both, so remember
@@ -421,11 +418,21 @@ class CRM_Core_Smarty extends Smarty {
     $copy->security_settings['ALLOW_CONSTANTS'] = FALSE;
     $copy->security_settings['ALLOW_SUPER_GLOBALS'] = FALSE;
 
-    // IF_FUNCS and MODIFIER_FUNCS stay on the Smarty defaults. Every modifier
-    // our templates use (crmMoney, crmDate, truncate, date_format, nl2br,
-    // escape, string_format) resolves as a plugin and never reaches the
-    // MODIFIER_FUNCS check, and {if} only ever calls in_array, which the
-    // default IF_FUNCS list already allows.
+    // IF_FUNCS stays on the Smarty default; {if} only ever calls in_array,
+    // which that list already allows.
+
+    // MODIFIER_FUNCS does not. Every modifier the shipped templates use
+    // (crmMoney, crmDate, truncate, date_format, nl2br, escape, string_format)
+    // resolves as a plugin and never reaches this check, but templates written
+    // in the admin UI reach for plain php functions, and _parse_modifiers()
+    // refuses any that is not listed here (Smarty_Compiler.class.php:1988).
+    // The Smarty default is count alone, so |number_format:0 in a receipt
+    // aborts the whole render. These are formatting only: no file, network,
+    // process or eval reachable through any of them.
+    $copy->security_settings['MODIFIER_FUNCS'] = [
+      'count', 'number_format', 'sprintf', 'trim',
+      'strtolower', 'strtoupper', 'ucfirst', 'ucwords', 'strlen',
+    ];
 
     // INCLUDE_ANY is off, but {include file="CRM/..."} still resolves because
     // smarty_core_is_secure() treats template_dir as a trusted base path.
