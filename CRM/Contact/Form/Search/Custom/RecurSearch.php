@@ -45,6 +45,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
   protected $_filled = NULL;
   protected $_context = NULL;
   protected $_cpage = NULL;
+  protected $_contributionStatuses = [];
+  protected $_queryParams = [];
 
   public static $_primaryIDName = 'id';
 
@@ -60,7 +62,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
     if (empty($this->_tableName)) {
       $this->_tableName = "civicrm_temp_custom_recursearch";
       $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
-      $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
+      $this->_contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus();
+      $this->_cstatus = $this->_contributionStatuses;
       $this->_cstatus[1] = ts('Recurring ended');
       $this->_gender = CRM_Core_PseudoConstant::gender();
       $this->_config = CRM_Core_Config::singleton();
@@ -88,9 +91,20 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       $date = CRM_Utils_Date::setDateDefaults($highDate);
       $this->_formValues['start_date_to'] = $date[0];
     }
-    $cstatus_id = CRM_Utils_Request::retrieve('status', 'Int', CRM_Core_DAO::$_nullObject);
-    if (!empty($cstatus_id)) {
-      $this->_formValues['status'] = $cstatus_id;
+    $requestStatus = CRM_Utils_Array::value('status', $this->_formValues);
+    $cstatus_id = NULL;
+    if (!is_array($requestStatus)) {
+      $cstatus_id = CRM_Utils_Request::retrieve('status', 'Int', CRM_Core_DAO::$_nullObject);
+    }
+    if (is_array($requestStatus)) {
+      $this->_formValues['status'] = $requestStatus;
+    }
+    elseif (!empty($cstatus_id)) {
+      $this->_formValues['status'] = [$cstatus_id => $cstatus_id];
+    }
+    elseif (is_numeric(CRM_Utils_Array::value('status', $this->_formValues))) {
+      $selectedStatus = (int) $this->_formValues['status'];
+      $this->_formValues['status'] = [$selectedStatus => $selectedStatus];
     }
   }
 
@@ -104,6 +118,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       'r.contact_id' => 'contact_id',
       'contact_email.email' => 'email',
       'ROUND(r.amount,0)' => 'amount',
+      'payment_processor.name' => 'payment_processor',
+      'r.cycle_day' => 'cycle_day',
       'COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'completed_count',
       'CAST(r.installments AS SIGNED) - COUNT(IF(c.contribution_status_id = 1, 1, NULL))' => 'remain_installments',
       'r.installments' => 'installments',
@@ -118,10 +134,21 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       'lfd.last_failed_date' => 'last_failed_date',
       'c.contribution_page_id' => 'contribution_page_id',
     ];
+    if ($this->hasAuditDateRange()) {
+      $this->_queryColumns += [
+        'r.frequency_unit' => 'frequency_unit',
+        'r.last_execute_date' => 'last_execute_date',
+        'audit.audit_status_ids' => 'audit_status_ids',
+        'audit.audit_count' => 'audit_count',
+        '0' => 'audit_not_executed',
+      ];
+    }
     $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
-      ts('Amount') => 'amount',
+      ts('Agreed Amount') => 'amount',
+      ts('Payment Processor') => 'payment_processor',
+      ts('Recurring Donation Day') => 'cycle_day',
       ts('Remain Installments') => 'remain_installments',
       ts('Processed Installments').' /<br>'.ts('Total Installments') => 'installments',
       ts('Start Date') => 'start_date',
@@ -136,6 +163,9 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       ts('Contribution Page ID') => 'contribution_page_id',
       1 => 'total_count',
     ];
+    if ($this->hasAuditDateRange()) {
+      $this->_columns[ts('Audit Period Debit Status')] = 'audit_status_ids';
+    }
   }
 
   /**
@@ -151,7 +181,16 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, ['id'])) {
         continue;
       }
-      if ($field == 'remain_installments' || strstr($field, 'amount') || strstr($field, '_id')) {
+      if (in_array($field, ['payment_processor', 'audit_status_ids'])) {
+        $type = $field === 'payment_processor'
+          ? "VARCHAR(255) default ''"
+          : "VARCHAR(32) default ''";
+      }
+      elseif (
+        in_array($field, ['remain_installments', 'cycle_day', 'audit_count', 'audit_not_executed']) ||
+        strstr($field, 'amount') ||
+        strstr($field, '_id')
+      ) {
         $type = "INTEGER(10) default NULL";
       }
       else {
@@ -184,6 +223,7 @@ PRIMARY KEY (id)
   public function fillTable() {
     $this->dropTempTable();
     $this->buildTempTable();
+    $this->_queryParams = [];
 
     $select = [];
     foreach ($this->_queryColumns as $k => $v) {
@@ -204,9 +244,14 @@ WHERE  $where
 GROUP BY r.id
 $having
 ";
-    $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
+    $loggedSql = CRM_Core_DAO::composeQuery($sql, $this->_queryParams, TRUE);
+    CRM_Core_Error::debug_log_message("[RecurSearch] Search query:\n$loggedSql");
+    $dao = CRM_Core_DAO::executeQuery($sql, $this->_queryParams);
 
     while ($dao->fetch()) {
+      if ($this->hasAuditDateRange()) {
+        $dao->audit_not_executed = empty($dao->audit_count) && $this->isScheduledInAuditRange($dao) ? 1 : 0;
+      }
       $values = [];
       foreach ($this->_queryColumns as $name) {
         if ($name == 'id') {
@@ -231,12 +276,31 @@ $having
    * @return string
    */
   public function tempFrom() {
-    return "civicrm_contribution_recur AS r 
+    $from = "civicrm_contribution_recur AS r
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
+    LEFT JOIN civicrm_payment_processor AS payment_processor ON payment_processor.id = r.processor_id
     LEFT JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(receive_date) AS last_receive_date FROM civicrm_contribution WHERE contribution_status_id = 1 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lrd ON lrd.rid = r.id
     LEFT JOIN (SELECT contribution_recur_id AS rid, MAX(cancel_date) AS last_failed_date FROM civicrm_contribution WHERE contribution_status_id = 4 AND contribution_recur_id IS NOT NULL GROUP BY contribution_recur_id) lfd ON lfd.rid = r.id";
+
+    $auditDateRange = $this->getAuditDateRange();
+    if ($auditDateRange) {
+      $dateFrom = $this->addQueryParam($auditDateRange['from'], 'Timestamp');
+      $dateTo = $this->addQueryParam($auditDateRange['to'], 'Timestamp');
+      $from .= "
+    LEFT JOIN (
+      SELECT
+        contribution_recur_id AS rid,
+        GROUP_CONCAT(DISTINCT contribution_status_id ORDER BY contribution_status_id SEPARATOR ',') AS audit_status_ids,
+        COUNT(id) AS audit_count
+      FROM civicrm_contribution
+      WHERE created_date >= $dateFrom AND created_date <= $dateTo
+      GROUP BY contribution_recur_id
+    ) audit ON audit.rid = r.id";
+    }
+
+    return $from;
   }
 
   /**
@@ -256,13 +320,27 @@ $having
     if ($startDateFrom) {
       $clauses[] = "(r.start_date >= '$startDateFrom')";
     }
-    $startDateTo = CRM_Utils_Date::processDate($this->_formValues['start_date_to'].' 23:59:59');
+    $startDateTo = $this->_formValues['start_date_to'];
     if ($startDateTo) {
-      $clauses[] = "(r.start_date <= '$startDateTo')";
+      $startDateTo = CRM_Utils_Date::processDate($startDateTo . ' 23:59:59');
+      if ($startDateTo) {
+        $clauses[] = "(r.start_date <= '$startDateTo')";
+      }
     }
 
-    if ($this->_formValues['status'] && is_numeric($this->_formValues['status'])) {
-      $clauses[] = "(r.contribution_status_id = {$this->_formValues['status']})";
+    $auditDateRange = $this->getAuditDateRange();
+    if ($auditDateRange) {
+      $auditDateTo = $this->addQueryParam($auditDateRange['to'], 'Timestamp');
+      $clauses[] = "(r.start_date <= $auditDateTo)";
+    }
+
+    $recurringStatuses = $this->getSelectedRecurringStatuses();
+    if ($recurringStatuses) {
+      $statusParams = [];
+      foreach ($recurringStatuses as $statusId) {
+        $statusParams[] = $this->addQueryParam($statusId, 'Integer');
+      }
+      $clauses[] = '(r.contribution_status_id IN (' . CRM_Utils_Array::implode(', ', $statusParams) . '))';
     }
 
     $sort_name = $this->_formValues['sort_name'];
@@ -282,6 +360,15 @@ $having
     $contributionPage = $this->_formValues['contribution_page_id'];
     if (!empty($contributionPage)) {
       $clauses[] = "c.contribution_page_id IN (".CRM_Utils_Array::implode(",", $contributionPage).")";
+    }
+
+    $processorIds = $this->getSelectedProcessorIds();
+    if ($processorIds) {
+      $processorParams = [];
+      foreach ($processorIds as $processorId) {
+        $processorParams[] = $this->addQueryParam($processorId, 'Integer');
+      }
+      $clauses[] = '(r.processor_id IN (' . CRM_Utils_Array::implode(', ', $processorParams) . '))';
     }
 
     return CRM_Utils_Array::implode(' AND ', $clauses);
@@ -304,6 +391,22 @@ $having
         $clauses[] = "(remain_installments = $installments)";
       }
 
+    }
+    if ($this->hasAuditDateRange()) {
+      $auditClauses = [];
+      $selectedAuditStatuses = $this->getSelectedAuditStatuses();
+      if ($selectedAuditStatuses) {
+        foreach ($selectedAuditStatuses as $statusId) {
+          $auditClauses[] = "FIND_IN_SET($statusId, audit.audit_status_ids)";
+        }
+      }
+      else {
+        $auditClauses[] = 'COALESCE(audit.audit_count, 0) > 0';
+      }
+      if (!empty($this->_formValues['audit_not_executed'])) {
+        $auditClauses[] = '(COALESCE(audit.audit_count, 0) = 0 AND ' . $this->getAuditScheduleClause() . ')';
+      }
+      $clauses[] = '(' . CRM_Utils_Array::implode(' OR ', $auditClauses) . ')';
     }
     if (count($clauses)) {
       return CRM_Utils_Array::implode(' AND ', $clauses);
@@ -342,11 +445,18 @@ $having
       $form->setDefaults($defaults);
     }
 
-    $status = $this->_cstatus;
-    foreach ([5,2,3,6,7,1] as $key) {
-      $statuses[$key] = $status[$key];
+    $statuses = [];
+    foreach ([5, 2, 3, 4, 6, 7, 1] as $key) {
+      $statuses[] = $form->createElement(
+        'advcheckbox',
+        $key,
+        NULL,
+        $this->_cstatus[$key],
+        NULL,
+        $key
+      );
     }
-    $form->addRadio('status', ts('Recurring Status'), $statuses, ['allowClear' => TRUE]);
+    $form->addGroup($statuses, 'status', ts('Recurring Status'));
 
     $installments = [
       '' => ts('- select -'),
@@ -359,14 +469,103 @@ $having
     $form->addElement('select', 'installments', ts('Installments Left'), $installments);
 
     $contributionPage = $this->_cpage;
-    $attrs = ['multiple' => 'multiple'];
-    $form->addElement('select', 'contribution_page_id', ts('Contribution Page'), $contributionPage, $attrs);
+    $multipleSelectAttributes = ['multiple' => 'multiple'];
+    $form->addElement(
+      'select',
+      'contribution_page_id',
+      ts('Contribution Page'),
+      $contributionPage,
+      $multipleSelectAttributes
+    );
+
+    $paymentProcessors = [];
+    foreach (CRM_Core_PseudoConstant::paymentProcessor(TRUE) as $processorId => $processorName) {
+      $paymentProcessors[$processorId] = $processorName . ' (' . $processorId . ')';
+    }
+    $form->addElement(
+      'select',
+      'processor_id',
+      ts('Payment Processor'),
+      $paymentProcessors,
+      $multipleSelectAttributes
+    );
+
+    if ($this->supportsContributionAudit()) {
+      $form->addDateRange('audit_date', ts('Audit Date Range'), NULL, FALSE);
+      $auditStatuses = [];
+      foreach ([1, 2, 3, 4] as $statusId) {
+        $auditStatuses[] = $form->createElement(
+          'advcheckbox',
+          $statusId,
+          NULL,
+          $this->_contributionStatuses[$statusId]
+        );
+      }
+      $form->addGroup($auditStatuses, 'audit_status_id', ts('Audit Period Debit Status'));
+      $form->addElement(
+        'checkbox',
+        'audit_not_executed',
+        ts('Not Executed'),
+        ts('No contribution record exists in the audit period')
+      );
+      $notExecutedInitialized = CRM_Utils_Array::value(
+        'audit_not_executed_initialized',
+        $this->_formValues,
+        0
+      );
+      $form->addElement(
+        'hidden',
+        'audit_not_executed_initialized',
+        $notExecutedInitialized ? 1 : 0,
+        ['id' => 'audit_not_executed_initialized']
+      );
+      $form->addFormRule(['CRM_Contact_Form_Search_Custom_RecurSearch', 'formRule']);
+      $form->assign('recurAuditEnabled', TRUE);
+      $form->assign('auditRangeComplete', $this->hasAuditDateRange());
+    }
 
     /**
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign('elements', ['status', 'installments', 'sort_name', 'email', 'contribution_page_id']);
+    $form->assign('elements', ['status', 'installments', 'sort_name', 'email', 'contribution_page_id', 'processor_id']);
+  }
+
+  /**
+   * Validate the contribution audit criteria.
+   *
+   * @param array $fields
+   *
+   * @return array|bool
+   */
+  public static function formRule($fields) {
+    $errors = [];
+    $dateFrom = CRM_Utils_Array::value('audit_date_from', $fields);
+    $dateTo = CRM_Utils_Array::value('audit_date_to', $fields);
+    $hasAuditFilter = !empty($fields['audit_not_executed']);
+    foreach (CRM_Utils_Array::value('audit_status_id', $fields, []) as $selected) {
+      if ($selected) {
+        $hasAuditFilter = TRUE;
+        break;
+      }
+    }
+
+    if (($dateFrom && !$dateTo) || (!$dateFrom && $dateTo) || ($hasAuditFilter && (!$dateFrom || !$dateTo))) {
+      $errors['audit_date_from'] = ts('Enter both dates for the audit date range.');
+    }
+    elseif ($dateFrom && $dateTo) {
+      $processedFrom = CRM_Utils_Date::processDate($dateFrom);
+      $processedTo = CRM_Utils_Date::processDate($dateTo.' 23:59:59');
+      $earliestAuditDate = date('Ym01', strtotime('first day of previous month'));
+      if (substr($processedFrom, 0, 8) < $earliestAuditDate) {
+        $errors['audit_date_from'] = ts('The audit start date cannot be earlier than the first day of the previous month.');
+      }
+      elseif ($processedFrom > $processedTo) {
+        $errors['audit_date_to'] = ts('The audit end date must not be earlier than the start date.');
+      }
+    }
+
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**
@@ -375,13 +574,14 @@ $having
    * @return array
    */
   public function setDefaultValues() {
+    $defaults = [];
     if ($this->_mode == 'booster') {
-      return [
-        'status' => 5,
+      $defaults += [
+        'status' => [5 => 5],
         'installments' => '1',
       ];
     }
-    return [];
+    return $defaults;
   }
 
   /**
@@ -597,6 +797,111 @@ $having
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
     }
 
+    $searchCriteria = $this->getSearchCriteria();
+    if ($searchCriteria) {
+      $summary['search_criteria'] = [
+        'label' => ts('Search Criteria'),
+        'items' => $searchCriteria,
+      ];
+    }
+
+    if ($this->hasAuditDateRange()) {
+      $recurringStatuses = $this->getSelectedRecurringStatuses();
+      if (!$recurringStatuses || in_array(5, $recurringStatuses, TRUE)) {
+        $inProgressCount = CRM_Core_DAO::singleValueQuery(
+          "SELECT COUNT(*) FROM {$this->_tableName} WHERE contribution_status_id = 5"
+        );
+        $summary['audit_recurring_status'] = [
+          'label' => ts('Recurring Status'),
+          'items' => [[
+            'label' => $this->_cstatus[5],
+            'value' => (int) $inProgressCount,
+            'status_class' => 'recurring',
+          ]],
+        ];
+      }
+
+      $auditDateRange = $this->getAuditDateRange();
+      $auditSummaryParams = [
+        1 => [$auditDateRange['from'], 'Timestamp'],
+        2 => [$auditDateRange['to'], 'Timestamp'],
+      ];
+      $auditStatusParams = [];
+      foreach ($this->getSelectedAuditStatuses() as $statusId) {
+        $paramIndex = count($auditSummaryParams) + 1;
+        $auditSummaryParams[$paramIndex] = [$statusId, 'Integer'];
+        $auditStatusParams[] = '%' . $paramIndex;
+      }
+      $auditStatusClause = '';
+      if ($auditStatusParams) {
+        $auditStatusClause = "
+  AND c.contribution_status_id IN (" . CRM_Utils_Array::implode(', ', $auditStatusParams) . ')';
+      }
+      $auditSummarySql = "
+SELECT
+  COUNT(IF(c.contribution_status_id = 1, c.id, NULL)) AS completed_count,
+  COUNT(IF(c.contribution_status_id = 2, c.id, NULL)) AS pending_count,
+  COUNT(IF(c.contribution_status_id = 3, c.id, NULL)) AS cancelled_count,
+  COUNT(IF(c.contribution_status_id = 4, c.id, NULL)) AS failed_count,
+  COUNT(DISTINCT IF(result.audit_not_executed = 1, result.id, NULL)) AS not_executed_count
+FROM {$this->_tableName} AS result
+LEFT JOIN civicrm_contribution AS c
+  ON c.contribution_recur_id = result.id
+  AND c.created_date >= %1
+  AND c.created_date <= %2
+$auditStatusClause
+";
+      $loggedAuditSummarySql = CRM_Core_DAO::composeQuery(
+        $auditSummarySql,
+        $auditSummaryParams,
+        TRUE
+      );
+      CRM_Core_Error::debug_log_message("[RecurSearch] Audit summary query:
+$loggedAuditSummarySql");
+      $auditSummary = CRM_Core_DAO::executeQuery($auditSummarySql, $auditSummaryParams);
+      $auditSummary->fetch();
+
+      $summary['audit_criteria'] = [
+        'label' => ts('Applied Recurring Debit Audit Criteria'),
+        'items' => $this->getAuditCriteria(),
+      ];
+      $summary['audit_contribution_status'] = [
+        'label' => ts('Audit Period Debit Status'),
+        'items' => [
+          [
+            'label' => $this->_contributionStatuses[1],
+            'value' => (int) $auditSummary->completed_count,
+            'status_class' => 'completed',
+          ],
+          [
+            'label' => $this->_contributionStatuses[2],
+            'value' => (int) $auditSummary->pending_count,
+            'status_class' => 'pending',
+          ],
+          [
+            'label' => $this->_contributionStatuses[3],
+            'value' => (int) $auditSummary->cancelled_count,
+            'status_class' => 'cancelled',
+          ],
+          [
+            'label' => $this->_contributionStatuses[4],
+            'value' => (int) $auditSummary->failed_count,
+            'status_class' => 'failed',
+          ],
+        ],
+      ];
+      if (!empty($this->_formValues['audit_not_executed'])) {
+        $summary['audit_not_executed'] = [
+          'label' => ts('Not Executed'),
+          'items' => [[
+            'label' => ts('Recurring Contributions'),
+            'value' => (int) $auditSummary->not_executed_count,
+            'status_class' => 'not-executed',
+          ]],
+        ];
+      }
+    }
+
     return $summary;
   }
 
@@ -626,6 +931,26 @@ $having
       $row['completed_count'] = '0 / '.$row['total_count'];
     }
     unset($row['total_count']);
+
+    if (array_key_exists('audit_status_ids', $row)) {
+      $auditStatuses = [];
+      if (!empty($row['audit_status_ids'])) {
+        foreach (explode(',', $row['audit_status_ids']) as $statusId) {
+          if (isset($this->_contributionStatuses[$statusId])) {
+            $auditStatuses[] = $this->_contributionStatuses[$statusId];
+          }
+        }
+      }
+      if (!empty($row['audit_not_executed'])) {
+        $auditStatuses[] = ts('Not Executed');
+      }
+      $row['audit_status_ids'] = CRM_Utils_Array::implode(', ', $auditStatuses);
+      unset($row['frequency_unit'], $row['last_execute_date'], $row['audit_count'], $row['audit_not_executed']);
+    }
+
+    if (!empty($row['payment_processor']) && empty($this->_isExport)) {
+      $row['payment_processor'] = htmlspecialchars($row['payment_processor'], ENT_QUOTES, 'UTF-8');
+    }
 
     if ($row['contribution_page_id'] && empty($this->_isExport)) {
       $params = [
@@ -674,5 +999,367 @@ $having
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
+  }
+
+  /**
+   * Check whether this search supports contribution auditing.
+   *
+   * @return bool
+   */
+  protected function supportsContributionAudit() {
+    return get_class($this) === __CLASS__;
+  }
+
+  /**
+   * Get the complete audit date range in database format.
+   *
+   * @return array|null
+   */
+  protected function getAuditDateRange() {
+    if (!$this->supportsContributionAudit()) {
+      return NULL;
+    }
+    $dateFrom = CRM_Utils_Array::value('audit_date_from', $this->_formValues);
+    $dateTo = CRM_Utils_Array::value('audit_date_to', $this->_formValues);
+    if (!$dateFrom || !$dateTo) {
+      return NULL;
+    }
+
+    return [
+      'from' => CRM_Utils_Date::processDate($dateFrom),
+      'to' => CRM_Utils_Date::processDate($dateTo.' 23:59:59'),
+    ];
+  }
+
+  /**
+   * Check whether a complete audit date range was submitted.
+   *
+   * @return bool
+   */
+  protected function hasAuditDateRange() {
+    return (bool) $this->getAuditDateRange();
+  }
+
+  /**
+   * Get the selected recurring contribution statuses.
+   *
+   * @return array
+   */
+  protected function getSelectedRecurringStatuses() {
+    $selectedStatuses = CRM_Utils_Array::value('status', $this->_formValues, []);
+    if (!is_array($selectedStatuses)) {
+      if (!is_numeric($selectedStatuses)) {
+        return [];
+      }
+      $statusId = (int) $selectedStatuses;
+      $selectedStatuses = [$statusId => $statusId];
+    }
+
+    $statusIds = [];
+    foreach ([5, 2, 3, 4, 6, 7, 1] as $statusId) {
+      if (!empty($selectedStatuses[$statusId])) {
+        $statusIds[] = $statusId;
+      }
+    }
+    return $statusIds;
+  }
+
+  /**
+   * Get the selected payment processor IDs.
+   *
+   * @return array
+   */
+  protected function getSelectedProcessorIds() {
+    $selectedProcessors = CRM_Utils_Array::value('processor_id', $this->_formValues, []);
+    if (!is_array($selectedProcessors)) {
+      $selectedProcessors = [$selectedProcessors];
+    }
+
+    $processorIds = [];
+    foreach ($selectedProcessors as $processorId) {
+      if (is_numeric($processorId) && (int) $processorId > 0) {
+        $processorId = (int) $processorId;
+        $processorIds[$processorId] = $processorId;
+      }
+    }
+    return array_values($processorIds);
+  }
+
+  /**
+   * Get the selected contribution statuses supported by the audit.
+   *
+   * @return array
+   */
+  protected function getSelectedAuditStatuses() {
+    $selectedStatuses = CRM_Utils_Array::value('audit_status_id', $this->_formValues, []);
+    $statusIds = [];
+    foreach ([1, 2, 3, 4] as $statusId) {
+      if (!empty($selectedStatuses[$statusId])) {
+        $statusIds[] = $statusId;
+      }
+    }
+    return $statusIds;
+  }
+
+  /**
+   * Get the applied standard search criteria for display.
+   *
+   * @return array
+   */
+  protected function getSearchCriteria() {
+    $criteria = [];
+
+    if ($this->_mode !== 'booster') {
+      $dateLabels = [
+        'start_date_from' => ts('From'),
+        'start_date_to' => ts('To'),
+      ];
+      $dates = [];
+      foreach ($dateLabels as $field => $label) {
+        $date = CRM_Utils_Array::value($field, $this->_formValues);
+        $date = $date ? CRM_Utils_Date::processDate($date) : NULL;
+        if ($date) {
+          $dates[] = $label . ': ' . $this->normalizeDate($date);
+        }
+      }
+      if ($dates) {
+        $criteria[] = [
+          'label' => ts('First recurring date'),
+          'value' => CRM_Utils_Array::implode(', ', $dates),
+        ];
+      }
+    }
+
+    $statusLabels = [];
+    foreach ($this->getSelectedRecurringStatuses() as $statusId) {
+      if (isset($this->_cstatus[$statusId])) {
+        $statusLabels[] = $this->_cstatus[$statusId];
+      }
+    }
+    if ($statusLabels) {
+      $criteria[] = [
+        'label' => ts('Recurring Status'),
+        'value' => CRM_Utils_Array::implode(', ', $statusLabels),
+      ];
+    }
+
+    $installments = CRM_Utils_Array::value('installments', $this->_formValues, '');
+    if ($installments === 'none' || ($installments !== '' && is_numeric($installments))) {
+      if ($installments === 'none') {
+        $installments = ts('no installments specified');
+      }
+      elseif ((int) $installments === 0) {
+        $installments = ts('Installments is full.');
+      }
+      else {
+        $installments = ts('%1 installments left', [1 => (int) $installments]);
+      }
+      $criteria[] = [
+        'label' => ts('Installments Left'),
+        'value' => $installments,
+      ];
+    }
+
+    if ($this->_mode !== 'booster') {
+      $textFields = [
+        'sort_name' => ts('Contact Name'),
+        'email' => ts('Email'),
+      ];
+      foreach ($textFields as $field => $label) {
+        $value = CRM_Utils_Array::value($field, $this->_formValues);
+        if ($value !== NULL && $value !== '') {
+          $criteria[] = ['label' => $label, 'value' => $value];
+        }
+      }
+    }
+
+    $pageLabels = [];
+    $pageIds = (array) CRM_Utils_Array::value('contribution_page_id', $this->_formValues, []);
+    foreach ($pageIds as $pageId) {
+      if ($pageId) {
+        $pageLabels[] = isset($this->_cpage[$pageId]) ? $this->_cpage[$pageId] : $pageId;
+      }
+    }
+    if ($pageLabels) {
+      $criteria[] = [
+        'label' => ts('Contribution Page'),
+        'value' => CRM_Utils_Array::implode(', ', $pageLabels),
+      ];
+    }
+
+    $processorLabels = [];
+    $paymentProcessors = CRM_Core_PseudoConstant::paymentProcessor(TRUE);
+    foreach ($this->getSelectedProcessorIds() as $processorId) {
+      $processorName = isset($paymentProcessors[$processorId])
+        ? $paymentProcessors[$processorId] . ' '
+        : '';
+      $processorLabels[] = $processorName . '(' . $processorId . ')';
+    }
+    if ($processorLabels) {
+      $criteria[] = [
+        'label' => ts('Payment Processor'),
+        'value' => CRM_Utils_Array::implode(', ', $processorLabels),
+      ];
+    }
+
+    return $criteria;
+  }
+
+  /**
+   * Get the applied recurring debit audit criteria for display.
+   *
+   * @return array
+   */
+  protected function getAuditCriteria() {
+    $auditDateRange = $this->getAuditDateRange();
+    if (!$auditDateRange) {
+      return [];
+    }
+
+    $selectedAuditStatusLabels = [];
+    foreach ($this->getSelectedAuditStatuses() as $statusId) {
+      $selectedAuditStatusLabels[] = $this->_contributionStatuses[$statusId];
+    }
+    if (!$selectedAuditStatusLabels) {
+      $selectedAuditStatusLabels[] = ts('All');
+    }
+
+    return [
+      [
+        'label' => ts('Audit Date Range'),
+        'value' => ts('%1 to %2', [
+          1 => $this->normalizeDate($auditDateRange['from']),
+          2 => $this->normalizeDate($auditDateRange['to']),
+        ]),
+      ],
+      [
+        'label' => ts('Audit Period Debit Status'),
+        'value' => CRM_Utils_Array::implode(', ', $selectedAuditStatusLabels),
+      ],
+      [
+        'label' => ts('Not Executed'),
+        'value' => !empty($this->_formValues['audit_not_executed'])
+          ? ts('Included')
+          : ts('Excluded'),
+      ],
+    ];
+  }
+
+  /**
+   * Add a safely typed value to the temporary table query parameters.
+   *
+   * @param mixed $value
+   * @param string $type
+   *
+   * @return string
+   */
+  protected function addQueryParam($value, $type) {
+    $index = count($this->_queryParams) + 1;
+    $this->_queryParams[$index] = [$value, $type];
+    return '%'.$index;
+  }
+
+  /**
+   * Build the SQL condition for a monthly debit scheduled in the audit range.
+   *
+   * Cycle days beyond the end of a month are treated as the final day of that
+   * month, matching recurring payment execution behavior.
+   *
+   * @return string
+   */
+  protected function getAuditScheduleClause() {
+    $auditDateRange = $this->getAuditDateRange();
+    if (!$auditDateRange) {
+      return '0';
+    }
+
+    $dateFrom = $this->addQueryParam($auditDateRange['from'], 'Timestamp');
+    $dateTo = $this->addQueryParam($auditDateRange['to'], 'Timestamp');
+    $dayAfterLastExecute = "COALESCE(DATE_ADD(DATE(r.last_execute_date), INTERVAL 1 DAY), '1000-01-01')";
+    $effectiveStart = "GREATEST(DATE($dateFrom), DATE(r.start_date), $dayAfterLastExecute)";
+    $effectiveEnd = "LEAST(DATE($dateTo), COALESCE(DATE(r.end_date), '9999-12-31'), COALESCE(DATE(r.cancel_date), '9999-12-31'))";
+    $startMonth = "DATE_FORMAT($effectiveStart, '%Y-%m-01')";
+    $scheduledInStartMonth = "DATE_ADD($startMonth, INTERVAL (LEAST(r.cycle_day, DAY(LAST_DAY($effectiveStart))) - 1) DAY)";
+    $nextMonth = "DATE_ADD($startMonth, INTERVAL 1 MONTH)";
+    $scheduledInNextMonth = "DATE_ADD($nextMonth, INTERVAL (LEAST(r.cycle_day, DAY(LAST_DAY($nextMonth))) - 1) DAY)";
+
+    return "(
+      r.frequency_unit = 'month'
+      AND r.cycle_day BETWEEN 1 AND 31
+      AND $effectiveStart <= $effectiveEnd
+      AND (
+        $scheduledInStartMonth BETWEEN $effectiveStart AND $effectiveEnd
+        OR $scheduledInNextMonth BETWEEN $effectiveStart AND $effectiveEnd
+      )
+    )";
+  }
+
+  /**
+   * Normalize a database date to ISO date format.
+   *
+   * @param string $date
+   *
+   * @return string
+   */
+  protected function normalizeDate($date) {
+    if (preg_match('/^\d{8}/', $date)) {
+      return substr($date, 0, 4).'-'.substr($date, 4, 2).'-'.substr($date, 6, 2);
+    }
+    return substr($date, 0, 10);
+  }
+
+  /**
+   * Check whether a result row had a monthly debit scheduled in the audit range.
+   *
+   * @param object $row
+   *
+   * @return bool
+   */
+  protected function isScheduledInAuditRange($row) {
+    $auditDateRange = $this->getAuditDateRange();
+    if (!$auditDateRange || $row->frequency_unit !== 'month') {
+      return FALSE;
+    }
+    $cycleDay = (int) $row->cycle_day;
+    if ($cycleDay < 1 || $cycleDay > 31) {
+      return FALSE;
+    }
+
+    $effectiveStartDates = [
+      $this->normalizeDate($auditDateRange['from']),
+      $this->normalizeDate($row->start_date),
+    ];
+    if (!empty($row->last_execute_date)) {
+      $dayAfterLastExecute = new DateTime($this->normalizeDate($row->last_execute_date));
+      $dayAfterLastExecute->modify('+1 day');
+      $effectiveStartDates[] = $dayAfterLastExecute->format('Y-m-d');
+    }
+    $effectiveStart = new DateTime(max($effectiveStartDates));
+    $effectiveEndDates = [$this->normalizeDate($auditDateRange['to'])];
+    foreach (['end_date', 'cancel_date'] as $fieldName) {
+      if (!empty($row->$fieldName)) {
+        $effectiveEndDates[] = $this->normalizeDate($row->$fieldName);
+      }
+    }
+    $effectiveEnd = new DateTime(min($effectiveEndDates));
+    if ($effectiveStart > $effectiveEnd) {
+      return FALSE;
+    }
+
+    $month = clone $effectiveStart;
+    $month->modify('first day of this month');
+    for ($i = 0; $i < 2; $i++) {
+      $scheduledDate = clone $month;
+      $scheduledDate->setDate(
+        (int) $month->format('Y'),
+        (int) $month->format('m'),
+        min($cycleDay, (int) $month->format('t'))
+      );
+      if ($scheduledDate >= $effectiveStart && $scheduledDate <= $effectiveEnd) {
+        return TRUE;
+      }
+      $month->modify('first day of next month');
+    }
+    return FALSE;
   }
 }

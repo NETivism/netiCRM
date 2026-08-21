@@ -396,8 +396,9 @@ $having
       }
     }
 
-    if ($this->_formValues['status'] && is_numeric($this->_formValues['status'])) {
-      $clauses[] = "(contribution_status_id = '{$this->_formValues['status']}')";
+    $recurringStatuses = $this->getSelectedRecurringStatuses();
+    if ($recurringStatuses) {
+      $clauses[] = '(contribution_status_id IN ('.CRM_Utils_Array::implode(', ', $recurringStatuses).'))';
     }
 
     if (isset($this->_formValues['stamp_verification']) && is_numeric($this->_formValues['stamp_verification'])) {
