@@ -437,6 +437,8 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
         $smarty->assign($name, $value);
       }
     }
+    // refs #47609, the body comes from the database, compile it in secure
+    // mode instead of on the caller's instance
     foreach (['subject', 'text', 'html'] as $elem) {
       $$elem = $smarty->fetch("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}");
     }
