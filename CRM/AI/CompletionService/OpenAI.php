@@ -135,6 +135,26 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   }
 
   /**
+   * Split raw stream bytes into complete lines
+   *
+   * cURL hands the write callback raw socket buffers, so a single SSE line
+   * can be cut in half between two callbacks. Both halves would then fail to
+   * decode and that piece of the reply would be lost. The unfinished tail is
+   * kept in $buffer until the rest of the line arrives.
+   *
+   * @param string $data The bytes just received.
+   * @param string $buffer The carry over buffer (reference).
+   * @return array The complete lines, blank ones removed.
+   */
+  public static function extractStreamLines($data, &$buffer) {
+    $buffer .= $data;
+    $lines = explode("\n", $buffer);
+    // The last piece has no line break yet, hold it for the next callback
+    $buffer = array_pop($lines);
+    return array_filter($lines);
+  }
+
+  /**
    * Sending request using service API
    *
    * Error handling should using try - catch when doing request
@@ -178,18 +198,22 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         'status_id' => 2, // 2: pending, 5: processing, 1: finished,
         'id' => $this->_id,
       ];
-      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData) {
-        $chunks = explode("\n", $data);
-        if (is_array($chunks)) {
-          $chunks = array_filter($chunks);
-        }
+      // Carries the unfinished tail of a line between write callbacks
+      $streamBuffer = '';
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData, &$streamBuffer) {
+        $chunks = self::extractStreamLines($data, $streamBuffer);
         foreach ($chunks as $resp) {
           $json = preg_replace('/^data:\s/', '', $resp);
           $decoded = json_decode($json, TRUE);
-          if ($decoded === FALSE) {
-
+          if ($decoded === NULL) {
+            // A line we cannot parse means output text is silently lost,
+            // so make it visible in the log instead of dropping it quietly.
+            // "data: [DONE]" is not JSON and is the expected end of stream.
+            if (trim($resp) !== '' && trim($resp) !== 'data: [DONE]') {
+              CRM_Core_Error::debug_log_message('AICompletion: unparsable stream line: '.$resp);
+            }
           }
-          elseif ($decoded['error']['message'] != "") {
+          elseif (!empty($decoded['error']['message'])) {
             CRM_Core_Error::debug_log_message($decoded['error']['message']);
             // error handler
             // some error message for $decoded['error']['message'] example:
@@ -206,7 +230,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
             );
           }
           else {
-            if (trim($data) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
+            if (trim($resp) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
               // log response to variable
               $responseData['message'] .= $decoded["choices"][0]["delta"]["content"];
               // output data
