@@ -5,7 +5,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // default completion service
     COMPLETION_SERVICE = 'OpenAI',
     // default model base on above service
-    COMPLETION_MODEL = 'gpt-3.5-turbo',
+    COMPLETION_MODEL = 'gpt-5.6-terra',
     // default max tokens base on model
     COMPLETION_MAX_TOKENS = 4096,
 
