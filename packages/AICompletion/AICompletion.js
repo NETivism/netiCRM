@@ -10,7 +10,6 @@
   const INIT_CLASS = 'is-initialized',
         ACTIVE_CLASS = 'is-active',
         ERROR_CLASS = 'is-error',
-        SENT_CLASS = 'is-sent',
         PROCESS_CLASS = 'is-processing',
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
@@ -18,6 +17,11 @@
         SHOW_CLASS = 'is-show',
         HIDE_CLASS = 'is-hide',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
+        STATE_INITIAL_CLASS = 'is-state-initial',
+        STATE_ACTIVE_CLASS = 'is-state-active',
+        TURN_LIMIT_CODE = 'CONVERSATION_TURN_LIMIT',
+        TITLE_MAX_LENGTH = 20,
+        HTTP_FORBIDDEN = 403,
         TIMEOUT = 30000;
 
   /**
@@ -34,13 +38,22 @@
     ts = {},
     endpoint = {},
     chatData = {
-      messages: []
+      messages: [],
+      // Multi turn conversation, refs #46672. Stays null for a brand new
+      // conversation and is never sent as a key while it is null: the backend
+      // reads a missing key as "start a new conversation", null fails validation.
+      conversationId: null,
+      state: 'initial',
+      // The stream in flight, so a new conversation can cut it off instead of
+      // letting the previous reply land in the fresh thread.
+      stream: null
     },
     colon = ':',
     debug = false,
     component,
     errorMessage,
-    errorMessageDefault;
+    errorMessageDefault,
+    promptPlaceholderDefault = '';
 
   // Default configuration options
   var defaultOptions = {
@@ -680,12 +693,10 @@
           if (mode == 'error') {
             $container.find('.msg[id="' + id + '"]').addClass('error-msg');
 
+            // AC-7: no "try again" button, a new attempt is a normal submit or
+            // a follow up message.
             if ($submit.hasClass(ACTIVE_CLASS)) {
               $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-            }
-
-            if (!$submit.hasClass(SENT_CLASS)) {
-              $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
             }
           }
         }
@@ -773,6 +784,102 @@
         usageUsed++;
         $usageUsed.text(usageUsed);
       }
+    },
+
+    setChatState: function(state) {
+      let $container = AICompletion.prototype.container,
+          $promptContent = $container.find('.netiaic-prompt-content-textarea'),
+          isActive = state === 'active';
+
+      chatData.state = isActive ? 'active' : 'initial';
+      $container.toggleClass(STATE_ACTIVE_CLASS, isActive).toggleClass(STATE_INITIAL_CLASS, !isActive);
+
+      // Follow up mode hints at what can be typed, the template links are hidden
+      // by CSS through the state class above (AC-7).
+      $promptContent.attr('placeholder', isActive
+        ? ts['Enter a follow-up request, for example: make it shorter, or use a livelier tone.']
+        : promptPlaceholderDefault);
+    },
+
+    setConversationTitle: function(text) {
+      let $title = AICompletion.prototype.container.find('.netiaic-conversation-title'),
+          title = isEmpty(text) ? '' : String(text).trim();
+
+      // The title lives on the client for now. Phase 4 stores it server side and
+      // only the body of this function changes, callers stay as they are.
+      if (countCharacters(title) > TITLE_MAX_LENGTH) {
+        title = Array.from(title).slice(0, TITLE_MAX_LENGTH).join('') + '…';
+      }
+
+      $title.text(title === '' ? ts['New conversation'] : title);
+    },
+
+    resetConversation: function() {
+      let $container = AICompletion.prototype.container,
+          $promptContent = $container.find('.netiaic-prompt-content-textarea'),
+          $submit = $container.find('.netiaic-form-submit');
+
+      // A reply still streaming belongs to the conversation being left behind.
+      if (chatData.stream) {
+        chatData.stream.close();
+        chatData.stream = null;
+        $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+      }
+
+      // Keep the greeting, drop every exchange so no old context is carried over.
+      $container.find('.netiaic-chat > .inner .msg').not('#ai-msg-welcome').remove();
+      chatData.conversationId = null;
+      chatData.messages = [];
+
+      // Role and tone are settings rather than context, they stay as they are.
+      $promptContent.val('');
+      AICompletion.prototype.promptContentCounterUpdate($promptContent);
+      AICompletion.prototype.setConversationTitle('');
+      AICompletion.prototype.setChatState('initial');
+    },
+
+    confirmNewConversation: function() {
+      let modal = AICompletion.prototype.modal,
+          modalTitle = ts['New conversation'],
+          modalCallbacks = {},
+          modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-mini mfp-netiaic-new-conversation',
+          modalContent = `<div class="new-conversation-form">
+            <div class="desc"><p>${ts['After opening a new conversation, you will no longer see the current one. Continue?']}</p></div>
+            <div class="form-actions">
+              <button type="button" class="new-conversation-cancel form-submit">${ts['Cancel']}</button>
+              <button type="button" class="new-conversation-confirm form-submit form-submit-primary">${ts['Confirm']}</button>
+            </div>
+          </div>`;
+
+      modalCallbacks.open = function() {
+        $('.new-conversation-form').on('click', '.new-conversation-confirm', function(event) {
+          event.preventDefault();
+          AICompletion.prototype.resetConversation();
+          modal.close();
+        });
+
+        $('.new-conversation-form').on('click', '.new-conversation-cancel', function(event) {
+          event.preventDefault();
+          modal.close();
+        });
+      }
+
+      modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
+    },
+
+    handleChatError: function(status, body, aiMsgID, userMsgID) {
+      let message = errorMessageDefault;
+
+      // The turn limit and the ownership check both need their own wording, a
+      // generic failure message would leave the user with no way forward.
+      if (isObject(body) && body.error_code === TURN_LIMIT_CODE) {
+        message = ts['This conversation has reached its length limit. Please start a new conversation.'];
+      }
+      else if (status === HTTP_FORBIDDEN) {
+        message = ts['This conversation is not available. Please start a new conversation.'];
+      }
+
+      AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'error');
     },
 
     formUiOperation: function() {
@@ -890,6 +997,12 @@
           AICompletion.prototype.formSubmit();
         }
       });
+
+      // AC-5: the confirmation is a modal, not window.confirm.
+      $container.on('click', '.netiaic-new-conversation', function(event) {
+        event.preventDefault();
+        AICompletion.prototype.confirmNewConversation();
+      });
     },
 
     formSubmit: function() {
@@ -910,6 +1023,11 @@
           isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
           userMessage = isEmptyPrompt ? '(n/a)' : formData;
 
+      // Follow up turn. A missing key is what tells the backend to start a new
+      // conversation, so the key is only added once we really have an id.
+      if (chatData.conversationId) {
+        formData.conversation_id = chatData.conversationId;
+      }
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
         $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
@@ -951,13 +1069,44 @@
               throw new Error('Unknown response data type');
             }
           } else {
-            throw new Error('Network request error');
+            // The turn limit (422) and the ownership check (403) answer with a
+            // body that tells them apart from a generic failure, so read it
+            // before deciding what to show. refs #46672
+            return response.json().catch(function() {
+              return {};
+            }).then(function(body) {
+              AICompletion.prototype.handleChatError(response.status, body, aiMsgID, userMsgID);
+              return null;
+            });
           }
         })
         .then(function(result) {
+          if (result === null) {
+            // Already reported by handleChatError().
+            return;
+          }
+
+          // Purely additive: a backend without multi turn support does not send
+          // this key, and then nothing is ever sent back either.
+          if (result.data && result.data.conversation_id) {
+            chatData.conversationId = result.data.conversation_id;
+          }
+
+          if (chatData.state !== 'active') {
+            AICompletion.prototype.setConversationTitle(formData.content);
+            AICompletion.prototype.setChatState('active');
+          }
+
+          // Clear the box so a follow up starts empty, role and tone carry over.
+          let $promptContent = $container.find('.netiaic-prompt-content-textarea');
+          $promptContent.val('');
+          AICompletion.prototype.promptContentCounterUpdate($promptContent);
+
           var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
             withCredentials: false,
           });
+
+          chatData.stream = evtSource;
 
           evtSource.onmessage = (event) => {
             try {
@@ -965,13 +1114,12 @@
               if (typeof eventData !== "undefined") {
                 if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
                   evtSource.close();
+                  chatData.stream = null;
 
+                  // AC-7: the button goes back to plain submit, ready for the
+                  // next follow up.
                   if ($submit.hasClass(ACTIVE_CLASS)) {
                     $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-                  }
-
-                  if (!$submit.hasClass(SENT_CLASS)) {
-                    $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
                   }
 
                   if (eventData.is_finished) {
@@ -1083,6 +1231,7 @@
           evtSource.onerror = function(event) {
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
+            chatData.stream = null;
           };
         })
         .catch(function(error) {
@@ -1116,6 +1265,10 @@
       errorMessageDefault = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
       errorMessage = errorMessageDefault;
 
+      // Follow up mode swaps the placeholder, so keep the original around to be
+      // able to restore exactly this text when a new conversation starts.
+      promptPlaceholderDefault = $container.find('.netiaic-prompt-content-textarea').attr('placeholder') || '';
+
       // TODO: For development and testing only, need to be removed afterwards
       this.devTestUse();
 
@@ -1125,6 +1278,9 @@
       this.useTemplates();
       this.setTemplate();
       this.setShare();
+
+      // No conversation yet: template links visible, no header. refs #46672
+      this.setChatState('initial');
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);

@@ -6,6 +6,7 @@
   --nsp-width: 500px;
   --nsp-content-height: calc(100vh - 66px);
   --netiaic-form-height: 350px;
+  --netiaic-header-height: 44px;
   --loader-size: 10px;
   --loader-dot-gap: 24px;
   --loader-color: #ddd;
@@ -98,12 +99,51 @@ button.form-submit-primary,
   font-size: 20px;
   color: #CDDC39;
 }
+/* Conversation header, only visible while a conversation is running. refs #46672 */
+.netiaic-container .netiaic-header {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--netiaic-header-height);
+  padding: 5px 20px;
+  background: #f2f2f2;
+  border-bottom: 1px solid #e0e0e0;
+}
+.netiaic-container.is-state-active .netiaic-header {
+  display: flex;
+}
+.netiaic-container .netiaic-new-conversation {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid #c5cae9;
+  border-radius: 16px;
+  background: #fff;
+  color: #3F51B5;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.netiaic-container .netiaic-conversation-title {
+  flex: 1;
+  overflow: hidden;
+  color: #424242;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* AC-7: the template links belong to the initial state only. */
+.netiaic-container.is-state-active .netiaic-use-tpl {
+  display: none;
+}
 .netiaic-chat {
   min-height: 150px;
   max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height));
   overflow-y: auto;
   padding: 20px;
   background: #a0aab3;
+}
+.netiaic-container.is-state-active .netiaic-chat {
+  max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height) - var(--netiaic-header-height));
 }
 .netiaic-chat .msg {
   display: flex;

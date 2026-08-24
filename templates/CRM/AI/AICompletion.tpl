@@ -65,6 +65,13 @@ window.AICompletion = {
     "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.": "{/literal}{ts}We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.{/ts}{literal}",
     "Our service is currently busy, please try again later. If needed, please contact our customer service team.": "{/literal}{ts}Our service is currently busy, please try again later. If needed, please contact our customer service team.{/ts}{literal}",
     "Please enter the %1 copy you would like AI to generate.": "{/literal}{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}{literal}",
+    "New conversation": "{/literal}{ts}New conversation{/ts}{literal}",
+    "Confirm": "{/literal}{ts}Confirm{/ts}{literal}",
+    "Cancel": "{/literal}{ts}Cancel{/ts}{literal}",
+    "After opening a new conversation, you will no longer see the current one. Continue?": "{/literal}{ts}After opening a new conversation, you will no longer see the current one. Continue?{/ts}{literal}",
+    "Enter a follow-up request, for example: make it shorter, or use a livelier tone.": "{/literal}{ts}Enter a follow-up request, for example: make it shorter, or use a livelier tone.{/ts}{literal}",
+    "This conversation has reached its length limit. Please start a new conversation.": "{/literal}{ts}This conversation has reached its length limit. Please start a new conversation.{/ts}{literal}",
+    "This conversation is not available. Please start a new conversation.": "{/literal}{ts}This conversation is not available. Please start a new conversation.{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -76,6 +83,14 @@ window.AICompletion = {
   <div class="netiaic-inner">
     <div class="netiaic-content">
       <div class="inner">
+        {* Only shown once a conversation is running, hidden by CSS in initial state. refs #46672 *}
+        <div class="netiaic-header">
+          <button type="button" class="netiaic-new-conversation" title="{ts}New conversation{/ts}">
+            <i class="zmdi zmdi-plus"></i>
+            <span class="text">{ts}New conversation{/ts}</span>
+          </button>
+          <div class="netiaic-conversation-title"></div>
+        </div>
         <div class="netiaic-chat">
           <div class="inner">
             <div id="ai-msg-welcome" class="ai-msg msg is-finished">
