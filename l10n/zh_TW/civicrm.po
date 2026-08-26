@@ -43838,7 +43838,7 @@ msgid "Henan"
 msgstr "河南省"
 
 msgid "Hubei"
-msgstr "河北省"
+msgstr "湖北省"
 
 msgid "Hunan"
 msgstr "湖南省"
