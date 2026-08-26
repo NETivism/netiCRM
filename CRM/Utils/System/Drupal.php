@@ -964,25 +964,26 @@ class CRM_Utils_System_Drupal {
     }
     if (self::$_version >= 8) {
       CRM_Core_Config::$_userSystem->versionalClass->switchUFLocale($crmLocale);
-      return;
     }
-    if (function_exists('language_list') && !empty($crmLocale)) {
-      global $language;
-      $locale = $language->language;
-      $languages = language_list();
-      switch ($crmLocale) {
-        case 'zh_TW':
-          $locale = 'zh-hant';
-          break;
-        case 'zh_CN':
-          $locale = 'zh-hans';
-          break;
-        default:
-          $locale = CRM_Core_I18n_PseudoConstant::shortForLong(substr($crmLocale, 0, 2));
-          break;
-      }
-      if (!empty($languages[$locale])) {
-        $language = $languages[$locale];
+    else {
+      if (function_exists('language_list') && !empty($crmLocale)) {
+        global $language;
+        $locale = $language->language;
+        $languages = language_list();
+        switch ($crmLocale) {
+          case 'zh_TW':
+            $locale = 'zh-hant';
+            break;
+          case 'zh_CN':
+            $locale = 'zh-hans';
+            break;
+          default:
+            $locale = CRM_Core_I18n_PseudoConstant::shortForLong(substr($crmLocale, 0, 2));
+            break;
+        }
+        if (!empty($languages[$locale])) {
+          $language = $languages[$locale];
+        }
       }
     }
   }
