@@ -19,7 +19,15 @@
         MFP_ACTIVE_CLASS = 'mfp-is-active',
         STATE_INITIAL_CLASS = 'is-state-initial',
         STATE_ACTIVE_CLASS = 'is-state-active',
+        OPEN_CLASS = 'is-open',
+        SELECTED_CLASS = 'is-selected',
+        EMPTY_CLASS = 'is-empty',
+        FILTER_PILLS_CLASS = 'has-filter-pills',
+        FILTER_EVENT_NS = '.netiaic-filter',
+        DROPPED_CLASS = 'is-dropped',
         TURN_LIMIT_CODE = 'CONVERSATION_TURN_LIMIT',
+        MENU_MIN_HEIGHT = 120,
+        MENU_MAX_HEIGHT = 280,
         TITLE_MAX_LENGTH = 20,
         HTTP_FORBIDDEN = 403,
         TIMEOUT = 30000;
@@ -46,7 +54,13 @@
       state: 'initial',
       // The stream in flight, so a new conversation can cut it off instead of
       // letting the previous reply land in the fresh thread.
-      stream: null
+      stream: null,
+      // Role and tone as they went out with the last turn, so the pills can say
+      // "carried over" while they have not been touched since.
+      lastFilters: {
+        role: null,
+        tone: null
+      }
     },
     colon = ':',
     debug = false,
@@ -78,6 +92,17 @@
 
   var isEmpty = function(value) {
     return value === undefined || value === null || String(value).trim() === "";
+  }
+
+  // Role and tone can hold anything the user typed, and they end up inside both
+  // text and attribute positions of the pill menu markup. refs #46672
+  var escapeHtml = function(value) {
+    return String(value === undefined || value === null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   var getFirstCharacter = function(input) {
@@ -288,7 +313,9 @@
       if ($elem.length) {
         let textLength = countCharacters($elem.val()),
             $section = $elem.closest('.crm-section'),
-            $desc = $elem.next('.description'),
+            // Not next(): the textarea shares a row with the submit button since
+            // the input area was rebuilt. refs #46672
+            $desc = $elem.closest('.crm-form-elem').find('.description'),
             $current = $desc.find('.current'),
             limitMax = 1500;
 
@@ -457,11 +484,12 @@
       $container.on('click', '.msg-tools .save-btn:not([disabled])', function(event) {
         event.preventDefault();
 
+        // The button now lives in the AI reply, whose data-ref-id points back at
+        // the request it answered. refs #46672
         let $saveBtn = $(this),
-            $userMsg = $saveBtn.closest('.msg'),
-            userMsgID = $userMsg.attr('id'),
-            aiMsgID = $userMsg.attr('data-ref-id'),
-            $aiMsg = $userMsg.next('.msg'),
+            $aiMsg = $saveBtn.closest('.msg'),
+            aiMsgID = $aiMsg.attr('id'),
+            userMsgID = $aiMsg.attr('data-ref-id'),
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Save prompt as shared template'],
             modalCallbacks = {},
@@ -522,11 +550,11 @@
     },
 
     formIsEmpty: function() {
+      // The selects are read directly now that the pill menu replaced select2,
+      // refs #46672.
       let $container = AICompletion.prototype.container,
-          roleSelectData = $container.find('.netiaic-prompt-role-select').select2('data'),
-          toneSelectData = $container.find('.netiaic-prompt-tone-select').select2('data'),
-          hasRoleSelected = roleSelectData.length > 0 && roleSelectData[0].id !== "",
-          hasToneSelected = toneSelectData.length > 0 && toneSelectData[0].id !== "",
+          hasRoleSelected = !isEmpty($container.find('.netiaic-prompt-role-select').val()),
+          hasToneSelected = !isEmpty($container.find('.netiaic-prompt-tone-select').val()),
           hasContent = $container.find('.netiaic-prompt-content-textarea').val().trim() !== '';
 
       if (hasRoleSelected || hasToneSelected || hasContent) {
@@ -553,7 +581,8 @@
         $selectElement.val(value).trigger('change');
       }
       else {
-        // [Create option if not exists](https://select2.org/programmatic-control/add-select-clear-items#create-if-not-exists)
+        // Create the option if it does not exist yet, which is how a value from
+        // a template outside the configured list gets in.
         let optionData = {
           id: value,
           text: value
@@ -667,20 +696,20 @@
           output = `<div id="${id}" data-ref-id="${refID}" class="user-msg msg is-finished">
             <div class="msg-avatar">${firstCharacter}</div>
             <div class="msg-content">${msg}</div>
-            <ul class='msg-tools'>
-              <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
-              <li><button type="button" title="${ts['Recommend']}" class="recommend-btn handle-btn"><i class="zmdi zmdi-accounts-alt"></i> ${ts['Recommend']}</button></li>
-            </ul>
             </div>`;
         }
 
         if (type == 'ai') {
           msg = data;
+          // AC-7: saving and recommending belong under the reply they produced,
+          // not under the request. refs #46672
           output = `<div id="${id}" data-ref-id="${refID}" class="ai-msg msg">
             <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
             <div class="msg-content">${msg}</div>
             <ul class='msg-tools'>
               <li><button type="button" title="${ts['Copy']}" class="copy-btn handle-btn"><i class="zmdi zmdi-copy"></i> ${ts['Copy']}</button></li>
+              <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
+              <li><button type="button" title="${ts['Recommend']}" class="recommend-btn handle-btn"><i class="zmdi zmdi-accounts-alt"></i> ${ts['Recommend']}</button></li>
             </ul>
             <div class="msg-tip"><i class="zmdi zmdi-info-outline"></i>${ts['Remember to verify AI-generated text before using it.']}</div>
             </div>`;
@@ -716,11 +745,11 @@
       $container.on('click', '.msg-tools .recommend-btn:not([disabled])', function(event) {
         event.preventDefault();
 
+        // Same move as setTemplate(): the button sits in the AI reply now.
         let $shareBtn = $(this),
-            $userMsg = $shareBtn.closest('.msg'),
-            userMsgID = $userMsg.attr('id'),
-            aiMsgID = $userMsg.attr('data-ref-id'),
-            $aiMsg = $userMsg.next('.msg'),
+            $aiMsg = $shareBtn.closest('.msg'),
+            aiMsgID = $aiMsg.attr('id'),
+            userMsgID = $aiMsg.attr('data-ref-id'),
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Recommend a Template to Other Organizations'],
             modalCallbacks = {},
@@ -799,6 +828,8 @@
       $promptContent.attr('placeholder', isActive
         ? ts['Enter a follow-up request, for example: make it shorter, or use a livelier tone.']
         : promptPlaceholderDefault);
+
+      AICompletion.prototype.updateInheritedLabel();
     },
 
     setConversationTitle: function(text) {
@@ -831,7 +862,11 @@
       chatData.conversationId = null;
       chatData.messages = [];
 
-      // Role and tone are settings rather than context, they stay as they are.
+      // Role and tone are settings rather than context, they stay as they are,
+      // but they are no longer carried over from a turn of the old conversation.
+      chatData.lastFilters = { role: null, tone: null };
+      AICompletion.prototype.closeFilterMenus();
+
       $promptContent.val('');
       AICompletion.prototype.promptContentCounterUpdate($promptContent);
       AICompletion.prototype.setConversationTitle('');
@@ -882,6 +917,235 @@
       AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'error');
     },
 
+    getFilterSelect: function(type) {
+      return AICompletion.prototype.container.find(`.netiaic-prompt-${type}-select`);
+    },
+
+    // Description and icon for one option, keyed by its value in
+    // templates/CRM/AI/defaults/filters*.tpl. A site with its own copy of that
+    // file has no such table, and then the option is drawn with its text alone.
+    getFilterMeta: function(type, value) {
+      let options = defaultData.filter_options;
+
+      if (isObject(options) && isObject(options[type]) && isObject(options[type][value])) {
+        return options[type][value];
+      }
+
+      return null;
+    },
+
+    // AC-4: role and tone are pills with a popup menu. The select stays the only
+    // data source, this only draws it, so applying a template or any other
+    // caller of setSelectOption() lands here through the change event.
+    renderFilterDropdown: function($dropdown) {
+      let type = $dropdown.attr('data-filter'),
+          $select = AICompletion.prototype.getFilterSelect(type),
+          selected = $select.val(),
+          hasSelected = !isEmpty(selected),
+          label = type === 'role' ? ts['Copywriting Role'] : ts['Tone Style'],
+          pillIcon = type === 'role' ? 'zmdi-account' : 'zmdi-palette',
+          placeholder = $select.attr('data-placeholder'),
+          optionsHtml = '';
+
+      $select.find('option').each(function() {
+        let value = $(this).attr('value');
+
+        if (isEmpty(value)) {
+          // The empty option is offered as "not specified" further down.
+          return;
+        }
+
+        let meta = AICompletion.prototype.getFilterMeta(type, value),
+            icon = meta && meta.icon ? meta.icon : 'zmdi-label',
+            desc = meta && meta.desc ? `<span class="desc">${escapeHtml(meta.desc)}</span>` : '',
+            isCurrent = hasSelected && value === selected;
+
+        optionsHtml += `<li><button type="button" class="netiaic-filter-option${isCurrent ? ' ' + SELECTED_CLASS : ''}" data-value="${escapeHtml(value)}">
+          <span class="icon"><i class="zmdi ${escapeHtml(icon)}"></i></span>
+          <span class="body"><span class="title">${escapeHtml(value)}</span>${desc}</span>
+          <i class="zmdi zmdi-check"></i>
+          </button></li>`;
+      });
+
+      $dropdown.html(`<button type="button" class="netiaic-filter-pill">
+        <i class="zmdi ${pillIcon}"></i>
+        <span class="text">${escapeHtml(hasSelected ? selected : label)}</span>
+        <i class="zmdi zmdi-chevron-down"></i>
+        </button>
+        <div class="netiaic-filter-menu">
+        <div class="netiaic-filter-menu-title">${label}</div>
+        <ul class="netiaic-filter-option-list">${optionsHtml}</ul>
+        <ul class="netiaic-filter-option-list netiaic-filter-extra">
+        <li><button type="button" class="netiaic-filter-option${hasSelected ? '' : ' ' + SELECTED_CLASS}" data-value="">
+          <span class="icon"><i class="zmdi zmdi-minus-circle-outline"></i></span>
+          <span class="body"><span class="title">${ts['Not specified']}</span></span>
+          <i class="zmdi zmdi-check"></i>
+          </button></li>
+        <li class="netiaic-filter-custom">
+          <button type="button" class="netiaic-filter-custom-toggle">
+            <span class="icon"><i class="zmdi zmdi-plus"></i></span>
+            <span class="body"><span class="title">${ts['Custom...']}</span></span>
+          </button>
+          <div class="netiaic-filter-custom-form">
+            <input type="text" class="netiaic-filter-custom-input form-text" placeholder="${escapeHtml(placeholder)}">
+            <button type="button" class="netiaic-filter-custom-submit form-submit form-submit-primary">${ts['Save']}</button>
+          </div>
+        </li>
+        </ul>
+        </div>`);
+
+      $dropdown.toggleClass(EMPTY_CLASS, !hasSelected);
+    },
+
+    // The menu opens upwards, since the input area sits at the bottom of the
+    // panel. In a short panel, or on a phone with the keyboard up, there may not
+    // be room: then it is capped to what is available, or dropped below the pill
+    // when that side has more space.
+    positionFilterMenu: function($dropdown) {
+      let $menu = $dropdown.find('.netiaic-filter-menu'),
+          row = $dropdown.closest('.netiaic-prompt-filters').get(0);
+
+      if (!$menu.length || !row || !row.getBoundingClientRect) {
+        return;
+      }
+
+      let rect = row.getBoundingClientRect(),
+          spaceAbove = rect.top - 8,
+          spaceBelow = (window.innerHeight || document.documentElement.clientHeight) - rect.bottom - 8,
+          openUp = spaceAbove >= MENU_MIN_HEIGHT || spaceAbove >= spaceBelow,
+          space = openUp ? spaceAbove : spaceBelow;
+
+      $dropdown.toggleClass(DROPPED_CLASS, !openUp);
+      $menu.css('max-height', Math.max(MENU_MIN_HEIGHT, Math.min(MENU_MAX_HEIGHT, space)) + 'px');
+    },
+
+    toggleFilterMenu: function($dropdown) {
+      let wasOpen = $dropdown.hasClass(OPEN_CLASS);
+
+      AICompletion.prototype.closeFilterMenus();
+
+      if (!wasOpen) {
+        $dropdown.addClass(OPEN_CLASS);
+        AICompletion.prototype.positionFilterMenu($dropdown);
+
+        let menu = $dropdown.find('.netiaic-filter-menu').get(0);
+        if (menu && menu.scrollIntoView) {
+          menu.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    },
+
+    closeFilterMenus: function() {
+      let $container = AICompletion.prototype.container;
+
+      if (!$container || !$container.length) {
+        return;
+      }
+
+      $container.find('.netiaic-filter-dropdown').removeClass(`${OPEN_CLASS} ${DROPPED_CLASS}`);
+      $container.find('.netiaic-filter-custom').removeClass(ACTIVE_CLASS);
+    },
+
+    applyCustomFilter: function($dropdown) {
+      let value = $dropdown.find('.netiaic-filter-custom-input').val();
+
+      if (isEmpty(value)) {
+        return;
+      }
+
+      // Same path a value coming from a template takes, so a typed value and an
+      // applied one end up in exactly the same state.
+      AICompletion.prototype.setSelectOption(
+        AICompletion.prototype.getFilterSelect($dropdown.attr('data-filter')),
+        value.trim()
+      );
+      AICompletion.prototype.closeFilterMenus();
+    },
+
+    // Shown while the settings are still the ones the last turn went out with.
+    updateInheritedLabel: function() {
+      let $container = AICompletion.prototype.container,
+          isUnchanged = chatData.state === 'active'
+            && $container.find('.netiaic-prompt-role-select').val() === chatData.lastFilters.role
+            && $container.find('.netiaic-prompt-tone-select').val() === chatData.lastFilters.tone;
+
+      $container.find('.netiaic-filter-inherited').toggleClass(ACTIVE_CLASS, isUnchanged);
+    },
+
+    filterUiOperation: function() {
+      let $container = AICompletion.prototype.container;
+
+      $container.find('.netiaic-filter-dropdown').each(function() {
+        let $dropdown = $(this);
+
+        AICompletion.prototype.renderFilterDropdown($dropdown);
+
+        AICompletion.prototype.getFilterSelect($dropdown.attr('data-filter')).on('change', function() {
+          AICompletion.prototype.renderFilterDropdown($dropdown);
+          AICompletion.prototype.updateInheritedLabel();
+        });
+      });
+
+      // Same shape as the image generator dropdowns (AIImageGeneration.js): the
+      // toggle and the menu stop the event, a click anywhere else closes.
+      $container.on('click', '.netiaic-filter-pill', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        AICompletion.prototype.toggleFilterMenu($(this).closest('.netiaic-filter-dropdown'));
+      });
+
+      $container.on('click', '.netiaic-filter-menu', function(event) {
+        event.stopPropagation();
+      });
+
+      // iOS does not bubble click from elements that are not interactive, so the
+      // document handler below would never run on a phone. Stopping touchstart
+      // here keeps a tap on the pill from closing the menu it just opened.
+      $container.on('touchstart', '.netiaic-filter-pill, .netiaic-filter-menu', function(event) {
+        event.stopPropagation();
+      });
+
+      $(document).off(FILTER_EVENT_NS).on(`click${FILTER_EVENT_NS} touchstart${FILTER_EVENT_NS}`, function() {
+        AICompletion.prototype.closeFilterMenus();
+      });
+
+      $container.on('click', '.netiaic-filter-option', function(event) {
+        event.preventDefault();
+        let $option = $(this),
+            $dropdown = $option.closest('.netiaic-filter-dropdown');
+
+        AICompletion.prototype.getFilterSelect($dropdown.attr('data-filter'))
+          .val($option.attr('data-value'))
+          .trigger('change');
+        AICompletion.prototype.closeFilterMenus();
+      });
+
+      $container.on('click', '.netiaic-filter-custom-toggle', function(event) {
+        event.preventDefault();
+        let $custom = $(this).closest('.netiaic-filter-custom');
+
+        $custom.addClass(ACTIVE_CLASS);
+        $custom.find('.netiaic-filter-custom-input').focus();
+      });
+
+      $container.on('click', '.netiaic-filter-custom-submit', function(event) {
+        event.preventDefault();
+        AICompletion.prototype.applyCustomFilter($(this).closest('.netiaic-filter-dropdown'));
+      });
+
+      $container.on('keydown', '.netiaic-filter-custom-input', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          AICompletion.prototype.applyCustomFilter($(this).closest('.netiaic-filter-dropdown'));
+        }
+      });
+
+      // Only now are the pills usable, so only now are the selects hidden: a
+      // browser still running the cached previous script never gets this class
+      // and keeps the select boxes it knows how to drive. refs #46672
+      $container.addClass(FILTER_PILLS_CLASS);
+    },
+
     formUiOperation: function() {
       let $container = AICompletion.prototype.container,
           $promptContent = $container.find('.netiaic-prompt-content-textarea'),
@@ -897,15 +1161,13 @@
         }
       }
 
-      // Initialize the select dropdowns with Select2 plugin
-      $container.find('.form-select').select2({
-        allowClear: true,
-        dropdownAutoWidth: true,
-        width: '100%',
-        tags: true // Select2 can dynamically create new options from text input by the user in the search box
-      });
+      // The pill menu replaced select2 on these two selects, refs #46672. Free
+      // text is still accepted, through the "custom" row of the menu.
+      AICompletion.prototype.filterUiOperation();
 
       // Enhance select2 search field focus styling
+      // Kept as is: this is a document level handler that also reaches the
+      // select2 widgets of other components on the same page.
       $(document).on('select2:open', function(e) {
         let selectId = e.target.id,
             $select2Element = $(e.target),
@@ -1092,9 +1354,16 @@
             chatData.conversationId = result.data.conversation_id;
           }
 
+          // What this turn went out with, so the pills can say "carried over"
+          // until one of them is touched again.
+          chatData.lastFilters = { role: formData.role, tone: formData.tone };
+
           if (chatData.state !== 'active') {
             AICompletion.prototype.setConversationTitle(formData.content);
             AICompletion.prototype.setChatState('active');
+          }
+          else {
+            AICompletion.prototype.updateInheritedLabel();
           }
 
           // Clear the box so a follow up starts empty, role and tone carry over.
