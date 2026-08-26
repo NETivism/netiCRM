@@ -68,11 +68,6 @@ button.form-submit-primary,
 .nsp-container .nme-aicompletion {
   background: #f2f2f2;
 }
-.netiaic-chat .msg-tools .handle-btn {
-  color: #fff !important;
-  border: none !important;
-  background: none !important;
-}
 .shine-btn {
   position: relative;
   overflow: hidden;
@@ -141,7 +136,7 @@ button.form-submit-primary,
   max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height));
   overflow-y: auto;
   padding: 20px;
-  background: #a0aab3;
+  background: #fff;
 }
 .netiaic-container.is-state-active .netiaic-chat {
   max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height) - var(--netiaic-header-height));
@@ -179,6 +174,7 @@ button.form-submit-primary,
 .netiaic-chat .msg-avatar i {
   color: #fff;
   font-size: 1.5rem;
+  margin: 0;
 }
 .netiaic-chat .msg-tools {
   display: none;
@@ -190,14 +186,15 @@ button.form-submit-primary,
   margin: 0;
   padding: 0;
   line-height: 20px;
-  color: #fff;
+  color: #5f5e5a;
   background: none;
 }
-.netiaic-chat .msg-tools .handle-btn:hover {
-  text-shadow: 1px 1px 4px #000;
-}
 .netiaic-chat .msg-tools .handle-btn i {
-  color: #fff;
+  color: #5f5e5a;
+}
+.netiaic-chat .msg-tools .handle-btn:hover,
+.netiaic-chat .msg-tools .handle-btn:hover i {
+  color: #000;
 }
 .netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
 .netiaic-chat .ai-msg.is-finished .msg-tools {
@@ -213,10 +210,10 @@ button.form-submit-primary,
   flex: 0 1 auto;
   max-width: calc(100% - 40px);
   padding: 16px;
-  background: #fff;
+  background: #f5f5f2;
   border-radius: 8px;
   border-top-left-radius: 0;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border: 1px solid #e3e2dd;
 }
 .netiaic-chat .user-msg .msg-content {
   /* Narrower than a reply on purpose: the request reads as an aside, while a
@@ -224,7 +221,8 @@ button.form-submit-primary,
   max-width: 80%;
   border-top-left-radius: 8px;
   border-top-right-radius: 0;
-  background: #eceff1;
+  background: #EEF1FB;
+  border-color: #C5CAE9;
 }
 /* Grouped so it can carry its own style, separate from the plain content text
    below it. Only rendered on a turn where role/tone changed. refs #46672 */
@@ -232,16 +230,12 @@ button.form-submit-primary,
   display: flex;
   flex-wrap: wrap;
   gap: 4px 16px;
-  margin: 0 0 10px 0;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: #e8eaf6;
-  color: #3949ab;
+  color: #5f5e5a;
   font-size: .8125rem;
+  margin-bottom: 5px;
 }
 .netiaic-chat .msg-filters .label {
   margin-right: 2px;
-  font-weight: 600;
 }
 .netiaic-chat .is-error .msg-content {
   color: var(--color-error);
@@ -252,7 +246,7 @@ button.form-submit-primary,
 }
 .netiaic-chat .msg.msg.is-finished .msg-tip i {
   font-size: 18px;
-  color: #fff;
+  color: #00000099;
 }
 /* In the flow rather than pinned to the bottom of the message: the reply now
    carries three actions instead of one and they would overlap. refs #46672 */
@@ -263,12 +257,13 @@ button.form-submit-primary,
   margin: 6px 0 0 40px;
   width: calc(100% - 40px);
   font-size: .875rem;
-  color: transparent;
+  color: #00000099;
   background-clip: text;
   -webkit-background-clip: text;
-  background-image: linear-gradient(-90deg, #fff 35%, #00000099 36%, #000 39%, #fff 39%);
+  background-image: linear-gradient(-90deg, #00000099 35%, #fff 36%, #fff 39%, #00000099 39%);
   background-size: 250% 100%;
   animation: text-shiny 10s both infinite;
+  justify-content: flex-end;
 }
 html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   font-size: .75rem;
