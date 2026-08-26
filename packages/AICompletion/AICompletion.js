@@ -674,20 +674,28 @@
               msg = '(n/a)';
             }
             else {
-              if (data.role) {
-                msg += `${ts['Copywriting Role']}: ${data.role}\n`;
-              }
+              // AC-4 layout: role/tone get their own styled group and only show
+              // up again once they differ from the previous turn - a turn that
+              // just carries them over stays quiet. No "Content" label, the
+              // text speaks for itself. refs #46672
+              if ((data.role || data.tone) && !AICompletion.prototype.isFiltersCarriedOver(data.role, data.tone)) {
+                msg += '<div class="msg-filters">';
 
-              if (data.tone) {
-                msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
+                if (data.role) {
+                  msg += `<span class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${escapeHtml(data.role)}</span>`;
+                }
+
+                if (data.tone) {
+                  msg += `<span class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${escapeHtml(data.tone)}</span>`;
+                }
+
+                msg += '</div>';
               }
 
               if (data.content) {
-                msg += `${ts['Content']}: ${data.content}\n`;
+                msg += `<div class="msg-text">${escapeHtml(data.content).replace(/\n/g, '<br>')}</div>`;
               }
             }
-
-            msg = msg.replace(/\n/g, '<br>');
           }
           else {
             msg = data;
@@ -1062,12 +1070,23 @@
       AICompletion.prototype.closeFilterMenus();
     },
 
+    // True while role/tone are still the ones the last turn went out with, i.e.
+    // nothing has been changed since. Shared by the "carried over" pill label
+    // and the user message bubble (createMessage()), so both agree on the same
+    // turn. refs #46672
+    isFiltersCarriedOver: function(role, tone) {
+      return chatData.state === 'active'
+        && role === chatData.lastFilters.role
+        && tone === chatData.lastFilters.tone;
+    },
+
     // Shown while the settings are still the ones the last turn went out with.
     updateInheritedLabel: function() {
       let $container = AICompletion.prototype.container,
-          isUnchanged = chatData.state === 'active'
-            && $container.find('.netiaic-prompt-role-select').val() === chatData.lastFilters.role
-            && $container.find('.netiaic-prompt-tone-select').val() === chatData.lastFilters.tone;
+          isUnchanged = AICompletion.prototype.isFiltersCarriedOver(
+            $container.find('.netiaic-prompt-role-select').val(),
+            $container.find('.netiaic-prompt-tone-select').val()
+          );
 
       $container.find('.netiaic-filter-inherited').toggleClass(ACTIVE_CLASS, isUnchanged);
     },

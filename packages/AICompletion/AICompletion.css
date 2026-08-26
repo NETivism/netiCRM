@@ -226,6 +226,23 @@ button.form-submit-primary,
   border-top-right-radius: 0;
   background: #eceff1;
 }
+/* Grouped so it can carry its own style, separate from the plain content text
+   below it. Only rendered on a turn where role/tone changed. refs #46672 */
+.netiaic-chat .msg-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0 0 10px 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #e8eaf6;
+  color: #3949ab;
+  font-size: .8125rem;
+}
+.netiaic-chat .msg-filters .label {
+  margin-right: 2px;
+  font-weight: 600;
+}
 .netiaic-chat .is-error .msg-content {
   color: var(--color-error);
   background: var(--bg-color-error);
