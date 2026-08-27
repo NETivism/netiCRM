@@ -49,7 +49,7 @@ a.btn:hover {
   bottom: 0;
   width: var(--nsp-width);
   border: 1px solid #bbb;
-  background: #eee;
+  background: #fff;
   -webkit-transform: translate3d(var(--nsp-width), 0, 0);
   -moz-transform: translate3d(var(--nsp-width), 0, 0);
   transform: translate3d(var(--nsp-width), 0, 0);
@@ -73,6 +73,9 @@ a.btn:hover {
 }
 .nsp-container * {
   box-sizing: border-box;
+}
+.nsp-container a {
+  color: #3F51B5;
 }
 .nsp-inner {
   position: relative;
@@ -184,7 +187,8 @@ a.btn:hover {
   padding: 15px 20px;
 }
 .nsp-container .nsp-header {
-  background: #ddd;
+  border-bottom: 1px solid #e3e2dd;
+  background: #fff;
 }
 .nsp-container .nsp-content {
   padding-top: 20px;
@@ -240,6 +244,7 @@ ul.nme-setting-panels-tabs {
   margin: 0;
   padding: 0;
   list-style: none;
+  gap: 10px;
 }
 
 ul.nme-setting-panels-tabs li {
@@ -255,25 +260,26 @@ ul.nme-setting-panels-tabs li::before {
 
 ul.nme-setting-panels-tabs li a {
   display: block;
-  padding: 5px;
+  padding: 10px 5px;
   text-align: center;
   color: #333;
   text-decoration: none;
-  border: 1px solid #ccc;
+  border: 0;
   border-bottom: 0;
   background: #fff;
 }
 
 ul.nme-setting-panels-tabs li a:hover {
   text-decoration: none;
-  color: #fff;
-  background: #555;
+  color: #000;
+  background: none;
 }
 
 ul.nme-setting-panels-tabs li a.is-active {
   color: #fff;
-  background: #3F51B5;
+  border-radius: 6px;
   border-color: #3F51B5;
+  background: #3F51B5;
 }
 
 /* Tabs panel styles */
