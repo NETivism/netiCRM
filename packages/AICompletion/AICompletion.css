@@ -66,7 +66,7 @@ button.form-submit-primary,
   height: var(--nsp-content-height);
 }
 .nsp-container .nme-aicompletion {
-  background: #f2f2f2;
+  background: #fff;
 }
 .shine-btn {
   position: relative;
@@ -282,7 +282,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .crm-container .netiaic-container .netiaic-form-container .crm-section {
   display: flex;
   padding: 0;
-  margin: 0 0 16px 0;
+  margin: 0 0 10px 0;
 }
 .netiaic-container .crm-section > .crm-form-elem {
   flex: 0 0 100%;
@@ -309,6 +309,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-form-container {
   max-height: var(--netiaic-form-height);
+  border-top: 1px solid #e3e2dd;
 }
 .netiaic-form-container > .inner {
   max-height: var(--netiaic-form-height);
@@ -330,11 +331,11 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-container .netiaic-use-tpl {
   display: flex;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   padding: 10px 0 10px 30px;
   list-style: none;
   font-size: .875rem;
-  background: url(images/icon--magic.svg) no-repeat 0 50%;
+  background: url(images/icon--magic.svg) no-repeat 0 50% / 20px;
 }
 .netiaic-container .netiaic-use-tpl > li {
   display: flex;
@@ -343,8 +344,6 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-container .netiaic-use-tpl > li:not(:last-child) {
   margin-right: 10px;
-  padding-right: 10px;
-  border-right: 1px solid #bdbdbd;
 }
 .netiaic-use-tpl li {
   list-style: none;
@@ -375,7 +374,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   display: inline-flex;
   max-width: 100%;
 }
-.netiaic-container .netiaic-filter-pill {
+.netiaic-container .netiaic-filter-dropdown  .netiaic-filter-pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -384,7 +383,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   max-width: 100%;
   min-height: 32px;
   font-family: inherit;
-  font-size: .8125rem;
+  font-size: .875rem;
   line-height: 1.2;
   color: #3F51B5;
   border: 1px solid #c5cae9;
@@ -429,7 +428,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   bottom: calc(100% + 6px);
   z-index: 10;
   padding: 6px;
-  width: 260px;
+  width: 300px;
   max-width: 100%;
   max-height: min(50vh, 280px);
   /* The script caps max-height to the room it has, which only holds if the
@@ -492,8 +491,8 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   background: none;
   cursor: pointer;
 }
-.netiaic-container .netiaic-filter-option .icon,
-.netiaic-container .netiaic-filter-custom-toggle .icon {
+.netiaic-container .netiaic-filter-option .option-icon,
+.netiaic-container .netiaic-filter-custom-toggle .option-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -503,21 +502,21 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   border-radius: 6px;
   background: #eef1fb;
 }
-.netiaic-container .netiaic-filter-option .body,
-.netiaic-container .netiaic-filter-custom-toggle .body {
+.netiaic-container .netiaic-filter-option .option-body,
+.netiaic-container .netiaic-filter-custom-toggle .option-body {
   flex: 1 1 auto;
   min-width: 0;
 }
 .netiaic-container .netiaic-filter-option .title,
 .netiaic-container .netiaic-filter-custom-toggle .title {
   display: block;
-  font-size: .8125rem;
+  font-size: .875rem;
   line-height: 1.3;
 }
 .netiaic-container .netiaic-filter-option .desc {
   display: block;
   margin-top: 2px;
-  font-size: .6875rem;
+  font-size: .75rem;
   line-height: 1.35;
   color: #757575;
 }
@@ -810,10 +809,11 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  padding: 6px 6px 6px 14px;
-  border: 1px solid #bdbdbd;
-  border-radius: 20px;
+  padding: 8px 8px 8px 13px;
+  border: 1px solid #cfcec8;
+  border-radius: 16px;
   background: #fff;
+  margin-bottom: 10px;
 }
 .netiaic-container .netiaic-input-row:focus-within {
   border-color: #3F51B5;
@@ -837,17 +837,20 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .crm-container .netiaic-input-row .netiaic-form-submit {
   flex: 0 0 auto;
-  border-radius: 20px;
+  border-radius: 50%;
+}
+.crm-container .netiaic-input-row .netiaic-form-submit .text {
+  display: none;
 }
 .crm-container .netiaic-form-submit {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   margin: 0;
-  min-width: 110px;
-  min-height: 40px;
   color: #fff;
   background: #3F51B5;
+  width: 32px;
+  height: 32px;
 }
 .crm-container .netiaic-form-submit:hover,
 .crm-container .netiaic-form-submit:focus {
@@ -866,6 +869,8 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   box-shadow: calc(-1 * var(--loader-dot-gap)) 0 var(--loader-color), var(--loader-dot-gap) 0 var(--loader-color);
   box-sizing: border-box;
   animation: sendLoader 2s linear infinite;
+  margin: 0;
+  min-width: auto;
 }
 @keyframes sendLoader {
   33% {
@@ -883,6 +888,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .crm-container .netiaic-form-submit i {
   color: #fff;
+  margin: 0;
 }
 .crm-container .netiaic-form-submit.is-active i,
 .crm-container .netiaic-form-submit.is-active .text {

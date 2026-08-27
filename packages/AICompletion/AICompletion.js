@@ -969,8 +969,8 @@
             isCurrent = hasSelected && value === selected;
 
         optionsHtml += `<li><button type="button" class="netiaic-filter-option${isCurrent ? ' ' + SELECTED_CLASS : ''}" data-value="${escapeHtml(value)}">
-          <span class="icon"><i class="zmdi ${escapeHtml(icon)}"></i></span>
-          <span class="body"><span class="title">${escapeHtml(value)}</span>${desc}</span>
+          <span class="option-icon"><i class="zmdi ${escapeHtml(icon)}"></i></span>
+          <span class="option-body"><span class="title">${escapeHtml(value)}</span>${desc}</span>
           <i class="zmdi zmdi-check"></i>
           </button></li>`;
       });
@@ -985,14 +985,14 @@
         <ul class="netiaic-filter-option-list">${optionsHtml}</ul>
         <ul class="netiaic-filter-option-list netiaic-filter-extra">
         <li><button type="button" class="netiaic-filter-option${hasSelected ? '' : ' ' + SELECTED_CLASS}" data-value="">
-          <span class="icon"><i class="zmdi zmdi-minus-circle-outline"></i></span>
-          <span class="body"><span class="title">${ts['Not specified']}</span></span>
+          <span class="option-icon"><i class="zmdi zmdi-minus-circle-outline"></i></span>
+          <span class="option-body"><span class="title">${ts['Not specified']}</span></span>
           <i class="zmdi zmdi-check"></i>
           </button></li>
         <li class="netiaic-filter-custom">
           <button type="button" class="netiaic-filter-custom-toggle">
-            <span class="icon"><i class="zmdi zmdi-plus"></i></span>
-            <span class="body"><span class="title">${ts['Custom...']}</span></span>
+            <span class="option-icon"><i class="zmdi zmdi-plus"></i></span>
+            <span class="option-body"><span class="title">${ts['Custom...']}</span></span>
           </button>
           <div class="netiaic-filter-custom-form">
             <input type="text" class="netiaic-filter-custom-input form-text" placeholder="${escapeHtml(placeholder)}">
