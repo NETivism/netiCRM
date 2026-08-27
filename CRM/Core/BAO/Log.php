@@ -54,6 +54,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
     $log->orderBy('modified_date '.$order);
     $log->limit(1);
     $result = [];
+    $displayName = $contactImage = NULL;
     if ($log->find(TRUE)) {
       if (!empty($log->modified_id)) {
         list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($log->modified_id);
