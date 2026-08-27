@@ -20,6 +20,14 @@
 class CRM_Utils_System_Drupal8 {
 
   /**
+   * Language code to use instead of the current language when building
+   * language-negotiated URLs. Set by switchUFLocale().
+   *
+   * @var string|null
+   */
+  public $ufLocaleOverride = NULL;
+
+  /**
    * @inheritDoc
    */
   public function createUser(&$params, $mail) {
@@ -652,14 +660,6 @@ class CRM_Utils_System_Drupal8 {
 
     return \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
-
-  /**
-   * Language code to use instead of the current language when building
-   * language-negotiated URLs. Set by switchUFLocale().
-   *
-   * @var string|null
-   */
-  public $ufLocaleOverride = NULL;
 
   /**
    * Mark the target language for languageNegotiationURL()
