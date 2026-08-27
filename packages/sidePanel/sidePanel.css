@@ -2,14 +2,21 @@
 
 :root {
   --nsp-width: 320px;
+  --nsp-padding-top: 0;
+  --nsp-header-height: 75px;
+  --nsp-content-height-buffer: 10px;
+  --nsp-button-size: 44px;
   --admin-sidebar-width: 230px;
-  --sidepanel-button-size: 44px;
+  --neticrmp-next-admin-header-header: 0;
   --civicrm-menu-height: 25px;
   --drupal-toolbar-height: 40px;
   --drupal-horizontal-toolbar-open-height: calc(var(--drupal-toolbar-height) + 45px);
 }
+body:has(#admin-header) {
+  --neticrmp-next-admin-header-header: 60px;
+}
 .nsp-is-fullscreen {
-  --nsp-width: calc(100% - var(--admin-sidebar-width) - var(--sidepanel-button-size));
+  --nsp-width: calc(100% - var(--admin-sidebar-width) - var(--nsp-button-size));
 }
 .admin-sidebar-mini.nsp-is-fullscreen {
   --admin-sidebar-width: 60px;
@@ -170,15 +177,18 @@ a.btn:hover {
 }
 /* fix side panel layout for Drupal 10+ toolbar */
 .user-logged-in.civicrm-menu-enabled .nsp-container .nsp-inner {
-  padding-top: var(--civicrm-menu-height);
+  --nsp-padding-top: calc(var(--neticrmp-next-admin-header-header) + var(--civicrm-menu-height)); 
+  padding-top: var(--nsp-padding-top);
 }
 .user-logged-in.civicrm-menu-enabled.toolbar-horizontal .nsp-container .nsp-inner,
 .user-logged-in.civicrm-menu-enabled.toolbar-vertical .nsp-container .nsp-inner,
 .user-logged-in.civicrm-menu-enabled.toolbar-tray-open .nsp-container .nsp-inner {
-  padding-top: calc(var(--civicrm-menu-height) + var(--drupal-toolbar-height));
+  --nsp-padding-top: calc(var(--neticrmp-next-admin-header-header) + var(--civicrm-menu-height) + var(--drupal-toolbar-height));
+  padding-top: var(--nsp-padding-top);
 }
 .user-logged-in.civicrm-menu-enabled.toolbar-horizontal.toolbar-tray-open .nsp-container .nsp-inner {
-  padding-top: calc(var(--civicrm-menu-height) + var(--drupal-horizontal-toolbar-open-height));
+  --nsp-padding-top: calc(var(--neticrmp-next-admin-header-header) + var(--civicrm-menu-height) + var(--drupal-horizontal-toolbar-open-height));
+  padding-top: var(--nsp-padding-top);
 }
 
 .nsp-container .nsp-header,

@@ -7,7 +7,7 @@
   --nsp-content-height: calc(100vh - 66px);
   /* Role and tone moved from two select rows into one pill row. refs #46672 */
   --netiaic-form-height: 300px;
-  --netiaic-header-height: 44px;
+  --netiaic-header-height: 54px;
   --loader-size: 10px;
   --loader-dot-gap: 24px;
   --loader-color: #ddd;
@@ -50,19 +50,11 @@ button.form-submit-primary,
 .nsp-container.is-opened {
   max-width: 1100px;
 }
-.nsp-container .nsp-content {
-  height: var(--nsp-content-height);
-}
-.civicrm-menu-enabled .nsp-container .nsp-content {
-  --nsp-content-height: calc(100vh - 30px - 66px);
-  height: var(--nsp-content-height);
-}
-.is-civicrm-user .nsp-container .nsp-content {
-  --nsp-content-height: calc(100vh - 60px - 66px);
-  height: var(--nsp-content-height);
-}
+.nsp-container .nsp-content,
+.civicrm-menu-enabled .nsp-container .nsp-content,
+.is-civicrm-user .nsp-container .nsp-content,
 .is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-content {
-  --nsp-content-height: calc(100vh - 30px - 60px - 66px);
+  --nsp-content-height: calc(100vh - var(--sidepanel-padding-top) - var(--sidepanel-header-height) + var(--sidepanel-content-height-buffer));
   height: var(--nsp-content-height);
 }
 .nsp-container .nme-aicompletion {
@@ -435,7 +427,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   z-index: 10;
   margin-top: 6px;
   padding: 6px;
-  width: 320px;
+  width: 297px;
   max-width: 100%;
   max-height: min(50vh, 280px);
   /* The script caps max-height to the room it has, which only holds if the
@@ -483,7 +475,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-container .netiaic-filter-custom-toggle {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 4px;
   margin: 0;
   padding: 8px 6px;
   width: 100%;
@@ -496,6 +488,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   border-radius: 6px;
   background: none;
   cursor: pointer;
+  position: relative;
 }
 .netiaic-container .netiaic-filter-option:hover,
 .netiaic-container .netiaic-filter-custom-toggle:hover {
@@ -521,6 +514,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-container .netiaic-filter-custom-toggle .option-body {
   flex: 1 1 auto;
   min-width: 0;
+  padding-left: 3px;
 }
 .netiaic-container .netiaic-filter-option .title,
 .netiaic-container .netiaic-filter-custom-toggle .title {
@@ -540,6 +534,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   margin-left: auto;
   color: #3F51B5;
   visibility: hidden;
+  margin-right: 0;
 }
 .netiaic-container .netiaic-filter-option.is-selected {
   background: #eef1fb;
