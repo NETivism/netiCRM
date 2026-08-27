@@ -304,14 +304,14 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page.locator('table tr.crm-contact-custom-search-form-row-status td.label label')).toHaveText('Recurring Status');
 
             /* select multiple "Recurring Status" values */
-            element = 'input[name="status[5]"]';
+            element = 'input[type="checkbox"][name="status[5]"]';
             await utils.findElement(page, element);
             await expect(page.locator(element)).toBeChecked();
-            element = 'input[name="status[2]"]';
+            element = 'input[type="checkbox"][name="status[2]"]';
             await utils.findElement(page, element);
             await utils.clickElement(page, page.locator(element));
             await expect(page.locator(element)).toBeChecked();
-            await expect(page.locator('input[name="status[5]"]')).toBeChecked();
+            await expect(page.locator('input[type="checkbox"][name="status[5]"]')).toBeChecked();
 
             /* click "Search" button */
             element = '#_qf_Custom_refresh-top';
