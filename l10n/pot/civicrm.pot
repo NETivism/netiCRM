@@ -51461,8 +51461,6 @@ msgstr ""
 
 #: neticrm/civicrm_instrument/civicrm_instrument.module
 msgid "You have to use credit card or LINE Pay for recurring contribution."
-#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image?"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionType.php:124
@@ -51480,4 +51478,40 @@ msgstr ""
 
 #: CRM/Admin/Page/AuditRecords.php:69
 msgid "User email before changed"
+msgstr ""
+
+#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
+msgid "Are you sure you want to delete contact image."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:101
+msgid "All Styles"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:102
+msgid "All Aspect Ratios"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:103
+msgid "Failed to load sample gallery, please try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:307
+msgid "Sample Gallery"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:357
+msgid "Filter by Style"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:370
+msgid "Filter by Aspect Ratio"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:384
+msgid "Loading sample gallery..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:392
+msgid "No sample images match the selected filters"
 msgstr ""

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2026\n"
+"Last-Translator: SIAOLING HUANG, 2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2876,7 +2876,7 @@ msgid "Could not get a contact_id and/or contact_type"
 msgstr "無法取得聯絡人系統編號或聯絡人類別"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image."
+msgid "Are you sure you want to delete contact image?"
 msgstr "您確定要刪除聯絡人頭像？"
 
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
@@ -52269,9 +52269,8 @@ msgid ""
 msgstr "LINE Pay 定期定額只支援每月扣款，不支援每年扣款。"
 
 #: neticrm/civicrm_instrument/civicrm_instrument.module
-#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image?"
-msgstr "您確定要刪除聯絡人頭像？"
+msgid "You have to use credit card or LINE Pay for recurring contribution."
+msgstr ""
 
 #: CRM/Contribute/Form/ContributionType.php:124
 msgid ""
@@ -52289,3 +52288,77 @@ msgstr "網站使用者電子郵件修改"
 #: CRM/Admin/Page/AuditRecords.php:69
 msgid "User email before changed"
 msgstr "修改前電子郵件"
+
+#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
+msgid "Are you sure you want to delete contact image."
+msgstr "您確定要刪除聯絡人頭像？"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "New conversation"
+msgstr "新對話"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"After opening a new conversation, you will no longer see the current one. "
+"Continue?"
+msgstr "開啟新對話後，將不再顯示目前的對話內容，確定要繼續嗎？"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"Enter a follow-up request, for example: make it shorter, or use a livelier "
+"tone."
+msgstr "請輸入後續調整需求，例如：改短一點、語氣更活潑一些。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"This conversation has reached its length limit. Please start a new "
+"conversation."
+msgstr "此對話已達長度上限，請開啟新對話。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "This conversation is not available. Please start a new conversation."
+msgstr "此對話目前無法使用，請開啟新對話。"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Custom..."
+msgstr "自訂..."
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Not specified"
+msgstr "未指定"
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Carried over"
+msgstr "沿用中"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:101
+msgid "All Styles"
+msgstr "所有風格"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:102
+msgid "All Aspect Ratios"
+msgstr "所有長寬比"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:103
+msgid "Failed to load sample gallery, please try again"
+msgstr "載入範例圖庫失敗，請再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:307
+msgid "Sample Gallery"
+msgstr "範例圖庫"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:357
+msgid "Filter by Style"
+msgstr "依風格篩選"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:370
+msgid "Filter by Aspect Ratio"
+msgstr "依長寬比篩選"
+
+#: templates/CRM/AI/AIImageGeneration.tpl:384
+msgid "Loading sample gallery..."
+msgstr "正在載入範例圖庫..."
+
+#: templates/CRM/AI/AIImageGeneration.tpl:392
+msgid "No sample images match the selected filters"
+msgstr "沒有符合篩選條件的範例圖片"
