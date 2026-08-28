@@ -43837,7 +43837,7 @@ msgstr ""
 msgid "Guangdong"
 msgstr ""
 
-msgid "Gulzhou"
+msgid "Guizhou"
 msgstr ""
 
 msgid "Hainan"

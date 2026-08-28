@@ -1070,6 +1070,9 @@ HAVING MAX(t.expiry_date) < %2";
     $oldReceiveDate = date('Y-m-d H:i:s', strtotime('-7 month'));
     $pastEndDate = date('Y-m-d H:i:s', strtotime('-1 day'));
     $oldStartDate = date('Y-m-d H:i:s', strtotime('-7 month'));
+    // civicrm_log anchor for the 5 -> 6 transition, and a contribution older than that anchor
+    $oldLogDate = date('Y-m-d H:i:s', strtotime('-7 month'));
+    $olderReceiveDate = date('Y-m-d H:i:s', strtotime('-8 month'));
 
     // Scenario 1: end_date is due (status=5, end_date < now) -> status changes to 1
     $endDateData = $this->createRecurringContributionWithTapPay([
@@ -1105,23 +1108,36 @@ HAVING MAX(t.expiry_date) < %2";
     ]);
 
     // Scenario 3: status=6 and no successful contribution in past 6 months -> status changes to 4 (Failed)
+    // Start at status=5 (not 6): the anchor query only matches a real 5->6 transition
     $oldData = $this->createRecurringContributionWithTapPay([
       'amount' => 300,
-      'status_id' => 6,
+      'status_id' => 5,
       'expiry_offset' => '+12 month',
       'source' => 'AUTO: doStatusCheck - no recent success',
     ]);
     $recurringOld = $oldData['recurring'];
     $contributionOld = $oldData['contribution'];
-    // Backdate start_date to satisfy the r.start_date < 6 months ago condition
-    CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_recur SET processor_id = %1, start_date = %2 WHERE id = %3", [
+    // Match today's cycle_day so the daily cycle_day filter picks up this recurring
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_recur SET processor_id = %1, cycle_day = %2 WHERE id = %3", [
       1 => [$tappayProcessorId, 'Integer'],
-      2 => [$oldStartDate, 'String'],
+      2 => [date('j'), 'Integer'],
       3 => [$recurringOld->id, 'Integer'],
     ]);
-    // Mark the only success contribution as older than 6 months
+    // Transition status 5 -> 6 so civicrm_log records the auto-fail anchor
+    $params = [
+        'id' => $recurringOld->id,
+        'contribution_status_id' => 6,
+        'message' => ts("Card expiry date is due."),
+      ];
+    CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+    // Backdate the anchor log to more than 6 months ago
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_log SET modified_date = %1 WHERE entity_table = 'civicrm_contribution_recur' AND entity_id = %2", [
+      1 => [$oldLogDate, 'String'],
+      2 => [$recurringOld->id, 'Integer'],
+    ]);
+    // Mark the only success contribution as older than the anchor
     CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET receive_date = %1 WHERE id = %2", [
-      1 => [$oldReceiveDate, 'String'],
+      1 => [$olderReceiveDate, 'String'],
       2 => [$contributionOld->id, 'Integer'],
     ]);
 
@@ -1173,7 +1189,7 @@ HAVING MAX(t.expiry_date) < %2";
     $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurringExpiry->id, 'contribution_status_id', 'id', 6, "Scenario 2 (card expiry due). In line " . __LINE__);
 
     // Scenario 3: status changed from 6 to 4
-    // $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurringOld->id, 'contribution_status_id', 'id', 4, "Scenario 3 (no recent success). In line " . __LINE__);
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurringOld->id, 'contribution_status_id', 'id', 4, "Scenario 3 (no recent success). In line " . __LINE__);
 
     // Scenario 4: status remains 6 (not changed)
     $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurringRecent->id, 'contribution_status_id', 'id', 6, "Scenario 4 (recent success). In line " . __LINE__);
