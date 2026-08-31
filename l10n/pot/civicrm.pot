@@ -3653,7 +3653,8 @@ msgstr ""
 msgid "Contribution ID"
 msgstr ""
 
-#: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/AdditionalInfo.php
+#: CRM/Admin/Form/Setting/Recurring.php CRM/Contribute/DAO/Contribution.php
+#: CRM/Contribute/Form/AdditionalInfo.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Non-deductible Amount"
 msgstr ""
@@ -43837,7 +43838,7 @@ msgstr ""
 msgid "Guangdong"
 msgstr ""
 
-msgid "Gulzhou"
+msgid "Guizhou"
 msgstr ""
 
 msgid "Hainan"
@@ -51461,8 +51462,6 @@ msgstr ""
 
 #: neticrm/civicrm_instrument/civicrm_instrument.module
 msgid "You have to use credit card or LINE Pay for recurring contribution."
-#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image?"
 msgstr ""
 
 #: CRM/Contribute/Form/ContributionType.php:124
@@ -51480,4 +51479,90 @@ msgstr ""
 
 #: CRM/Admin/Page/AuditRecords.php:69
 msgid "User email before changed"
+msgstr ""
+
+#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
+msgid "Are you sure you want to delete contact image."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "New conversation"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"After opening a new conversation, you will no longer see the current one. "
+"Continue?"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"Enter a follow-up request, for example: make it shorter, or use a livelier "
+"tone."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid ""
+"This conversation has reached its length limit. Please start a new "
+"conversation."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "This conversation is not available. Please start a new conversation."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Custom..."
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Not specified"
+msgstr ""
+
+#: templates/CRM/AI/AICompletion.tpl
+msgid "Carried over"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:101
+msgid "All Styles"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:102
+msgid "All Aspect Ratios"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:103
+msgid "Failed to load sample gallery, please try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:307
+msgid "Sample Gallery"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:357
+msgid "Filter by Style"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:370
+msgid "Filter by Aspect Ratio"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:384
+msgid "Loading sample gallery..."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl:392
+msgid "No sample images match the selected filters"
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:189
+msgid "Your editor will automatically switch to the new version (CKEditor 5) on <strong>%1</strong>. You can try out the new editor before then."
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:192
+msgid "See our <a href=\"%1\" target=\"_blank\">documentation</a> for details."
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:196
+msgid "You can also <a href=\"%1\" target=\"_blank\">go to Site Preferences</a> to change the default editor yourself."
 msgstr ""

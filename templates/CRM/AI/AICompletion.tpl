@@ -65,6 +65,15 @@ window.AICompletion = {
     "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.": "{/literal}{ts}We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.{/ts}{literal}",
     "Our service is currently busy, please try again later. If needed, please contact our customer service team.": "{/literal}{ts}Our service is currently busy, please try again later. If needed, please contact our customer service team.{/ts}{literal}",
     "Please enter the %1 copy you would like AI to generate.": "{/literal}{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}{literal}",
+    "New conversation": "{/literal}{ts}New conversation{/ts}{literal}",
+    "Confirm": "{/literal}{ts}Confirm{/ts}{literal}",
+    "Cancel": "{/literal}{ts}Cancel{/ts}{literal}",
+    "After opening a new conversation, you will no longer see the current one. Continue?": "{/literal}{ts}After opening a new conversation, you will no longer see the current one. Continue?{/ts}{literal}",
+    "Enter a follow-up request, for example: make it shorter, or use a livelier tone.": "{/literal}{ts}Enter a follow-up request, for example: make it shorter, or use a livelier tone.{/ts}{literal}",
+    "This conversation has reached its length limit. Please start a new conversation.": "{/literal}{ts}This conversation has reached its length limit. Please start a new conversation.{/ts}{literal}",
+    "This conversation is not available. Please start a new conversation.": "{/literal}{ts}This conversation is not available. Please start a new conversation.{/ts}{literal}",
+    "Custom...": "{/literal}{ts}Custom...{/ts}{literal}",
+    "Not specified": "{/literal}{ts}Not specified{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -76,6 +85,14 @@ window.AICompletion = {
   <div class="netiaic-inner">
     <div class="netiaic-content">
       <div class="inner">
+        {* Only shown once a conversation is running, hidden by CSS in initial state. refs #46672 *}
+        <div class="netiaic-header">
+          <button type="button" class="netiaic-new-conversation" title="{ts}New conversation{/ts}">
+            <i class="zmdi zmdi-plus"></i>
+            <span class="text">{ts}New conversation{/ts}</span>
+          </button>
+          <div class="netiaic-conversation-title"></div>
+        </div>
         <div class="netiaic-chat">
           <div class="inner">
             <div id="ai-msg-welcome" class="ai-msg msg is-finished">
@@ -107,9 +124,23 @@ window.AICompletion = {
                   </div>
                 </div>
               </div>
+              {* Pill buttons for role and tone, filled in by the JS from the two
+                 selects above. The selects stay as the only data source. refs #46672 *}
+              <div class="netiaic-prompt-filters">
+                <div class="netiaic-filter-dropdown" data-filter="role"></div>
+                <div class="netiaic-filter-dropdown" data-filter="tone"></div>
+                <span class="netiaic-filter-inherited">{ts}Carried over{/ts}</span>
+              </div>
               <div class="netiaic-prompt-content-section crm-section crm-textarea-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
-                  <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                  <div class="netiaic-input-row">
+                    <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                    <button type="button" class="shine-btn netiaic-form-submit">
+                      <i class="zmdi zmdi-mail-send"></i>
+                      <span class="text">{ts}Submit{/ts}</span>
+                      <span class="loader"></span>
+                    </button>
+                  </div>
                   <div class="description">{ts}Maximum character limit for this field is <span class="limit-max">1500</span> characters, and the current character count is <span class="current">0</span>.{/ts}</div>
                   <div class="netiaic-prompt-content-command netiaic-command">
                     <div class="inner">
@@ -132,11 +163,6 @@ window.AICompletion = {
                 <a href="{crmURL p='civicrm/admin/aicompletion' q='reset=1'}" target="_blank">
                 {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}</a>
               </div>
-              <button type="button" class="shine-btn netiaic-form-submit">
-                <i class="zmdi zmdi-mail-send"></i>
-                <span class="text">{ts}Submit{/ts}</span>
-                <span class="loader"></span>
-              </button>
             </div>
           </div>
         </div>

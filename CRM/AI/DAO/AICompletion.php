@@ -89,6 +89,12 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO {
    */
   public $contact_id;
   /**
+   * Groups rows of the same conversation. Points to the id of the first row in the thread.
+   *
+   * @var int unsigned
+   */
+  public $conversation_id;
+  /**
    * Set to 1 to indicate that this AI completion is saved as a template.
    *
    * @var boolean
@@ -242,6 +248,10 @@ class CRM_AI_DAO_AICompletion extends CRM_Core_DAO {
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
+        'conversation_id' => [
+          'name' => 'conversation_id',
+          'type' => CRM_Utils_Type::T_INT,
         ],
         'is_template' => [
           'name' => 'is_template',

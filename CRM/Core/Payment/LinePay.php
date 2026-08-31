@@ -974,9 +974,14 @@ LIMIT 1";
     $seq->timestamp = microtime(TRUE);
     $seq->insert();
 
+    $shouldAudit = CRM_Contribute_BAO_AuditContributionRecur::isCurrentExecutionTime($time);
     if (empty($time)) {
       $time = time();
     }
+    if ($shouldAudit) {
+      CRM_Contribute_BAO_AuditContributionRecur::recordEstimate('linepay', $time);
+    }
+
     $thisMonth = date('m', $time);
     $theMonthNextDay = date('m', $time + 86400);
     $today = date('j', $time);
@@ -1019,6 +1024,7 @@ ORDER BY r.id
 LIMIT 0, 100
 ";
     $dao = CRM_Core_DAO::executeQuery($sql);
+    $dispatchedRecurIds = [];
     while ($dao->fetch()) {
       $currentDayTime = strtotime(date('Y-m-d', $time));
       $lastExecuteDayTime = strtotime(date('Y-m-d', strtotime($dao->last_execute_date)));
@@ -1028,7 +1034,11 @@ LIMIT 0, 100
       }
       $command = 'drush neticrm-process-recurring --payment-processor=linepay --time=' . $time . ' --contribution-recur-id=' . $dao->recur_id . '&';
       popen($command, 'w');
+      $dispatchedRecurIds[] = (int) $dao->recur_id;
       usleep(1000000);
+    }
+    if ($shouldAudit) {
+      CRM_Contribute_BAO_AuditContributionRecur::recordDispatch('linepay', $dispatchedRecurIds, $time);
     }
 
     $checkSeq = new CRM_Core_DAO_Sequence();

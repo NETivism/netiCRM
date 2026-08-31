@@ -5,7 +5,9 @@
   --bg-color-error: rgba(255, 239, 237, 1);
   --nsp-width: 500px;
   --nsp-content-height: calc(100vh - 66px);
-  --netiaic-form-height: 350px;
+  /* Role and tone moved from two select rows into one pill row. refs #46672 */
+  --netiaic-form-height: 300px;
+  --netiaic-header-height: 54px;
   --loader-size: 10px;
   --loader-dot-gap: 24px;
   --loader-color: #ddd;
@@ -48,28 +50,15 @@ button.form-submit-primary,
 .nsp-container.is-opened {
   max-width: 1100px;
 }
-.nsp-container .nsp-content {
-  height: var(--nsp-content-height);
-}
-.civicrm-menu-enabled .nsp-container .nsp-content {
-  --nsp-content-height: calc(100vh - 30px - 66px);
-  height: var(--nsp-content-height);
-}
-.is-civicrm-user .nsp-container .nsp-content {
-  --nsp-content-height: calc(100vh - 60px - 66px);
-  height: var(--nsp-content-height);
-}
+.nsp-container .nsp-content,
+.civicrm-menu-enabled .nsp-container .nsp-content,
+.is-civicrm-user .nsp-container .nsp-content,
 .is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-content {
-  --nsp-content-height: calc(100vh - 30px - 60px - 66px);
+  --nsp-content-height: calc(100vh - var(--nsp-padding-top) - var(--nsp-header-height) + var(--nsp-content-height-buffer));
   height: var(--nsp-content-height);
 }
 .nsp-container .nme-aicompletion {
-  background: #f2f2f2;
-}
-.netiaic-chat .msg-tools .handle-btn {
-  color: #fff !important;
-  border: none !important;
-  background: none !important;
+  background: #fff;
 }
 .shine-btn {
   position: relative;
@@ -98,18 +87,68 @@ button.form-submit-primary,
   font-size: 20px;
   color: #CDDC39;
 }
+/* Conversation header, only visible while a conversation is running. refs #46672 */
+.netiaic-container .netiaic-header {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--netiaic-header-height);
+  padding: 5px 20px;
+  background: #f2f2f2;
+  border-bottom: 1px solid #e3e2dd;
+}
+.netiaic-container.is-state-active .netiaic-header {
+  display: flex;
+}
+.netiaic-container .netiaic-new-conversation {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid #cfcec8;
+  border-radius: 6px;
+  background: #fff;
+  color: #5f5e5a;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.netiaic-container .netiaic-new-conversation i {
+  margin: 0;
+}
+.netiaic-container .netiaic-new-conversation:hover i {
+  color: #fff;
+}
+.netiaic-container .netiaic-conversation-title {
+  flex: 1;
+  overflow: hidden;
+  color: #424242;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* AC-7: the template links belong to the initial state only. */
+.netiaic-container.is-state-active .netiaic-use-tpl {
+  display: none;
+}
 .netiaic-chat {
   min-height: 150px;
   max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height));
   overflow-y: auto;
   padding: 20px;
-  background: #a0aab3;
+  background: #fff;
+}
+.netiaic-container.is-state-active .netiaic-chat {
+  max-height: calc(var(--nsp-content-height) - var(--netiaic-form-height) - var(--netiaic-header-height));
 }
 .netiaic-chat .msg {
   display: flex;
   flex-wrap: wrap;
   position: relative;
   margin: 0 0 24px 0;
+}
+/* AC-3: the thread reads as a conversation, the request on the right and the
+   reply on the left. refs #46672 */
+.netiaic-chat .user-msg {
+  flex-direction: row-reverse;
 }
 .netiaic-chat .msg-avatar {
   display: flex;
@@ -126,11 +165,14 @@ button.form-submit-primary,
   text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
 }
 .netiaic-chat .user-msg .msg-avatar {
+  margin-right: 0;
+  margin-left: 8px;
   background: #f48fb1;
 }
 .netiaic-chat .msg-avatar i {
   color: #fff;
   font-size: 1.5rem;
+  margin: 0;
 }
 .netiaic-chat .msg-tools {
   display: none;
@@ -142,32 +184,56 @@ button.form-submit-primary,
   margin: 0;
   padding: 0;
   line-height: 20px;
-  color: #fff;
+  color: #5f5e5a;
   background: none;
 }
-.netiaic-chat .msg-tools .handle-btn:hover {
-  text-shadow: 1px 1px 4px #000;
-}
 .netiaic-chat .msg-tools .handle-btn i {
-  color: #fff;
+  color: #5f5e5a;
+}
+.netiaic-chat .msg-tools .handle-btn:hover,
+.netiaic-chat .msg-tools .handle-btn:hover i {
+  color: #000;
 }
 .netiaic-chat .user-msg.ai-msg-is-finished .msg-tools,
 .netiaic-chat .ai-msg.is-finished .msg-tools {
   display: flex;
   flex: 0 0 100%;
+  /* Three actions instead of one since #46672: they wrap rather than run off
+     the edge of a narrow panel. */
+  flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 5px 25px;
+  gap: 5px 20px;
 }
 .netiaic-chat .msg-content {
-  flex: 0 0 calc(100% - 40px);
+  flex: 0 1 auto;
+  max-width: calc(100% - 40px);
   padding: 16px;
-  background: #fff;
+  background: #f5f5f2;
   border-radius: 8px;
   border-top-left-radius: 0;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border: 1px solid #e3e2dd;
 }
 .netiaic-chat .user-msg .msg-content {
-  background: #eceff1;
+  /* Narrower than a reply on purpose: the request reads as an aside, while a
+     reply is meant to be read and copied in full. */
+  max-width: 80%;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 0;
+  background: #EEF1FB;
+  border-color: #C5CAE9;
+}
+/* Grouped so it can carry its own style, separate from the plain content text
+   below it. Only rendered on a turn where role/tone changed. refs #46672 */
+.netiaic-chat .msg-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  color: #5f5e5a;
+  font-size: .8125rem;
+  margin-bottom: 5px;
+}
+.netiaic-chat .msg-filters .label {
+  margin-right: 2px;
 }
 .netiaic-chat .is-error .msg-content {
   color: var(--color-error);
@@ -178,23 +244,24 @@ button.form-submit-primary,
 }
 .netiaic-chat .msg.msg.is-finished .msg-tip i {
   font-size: 18px;
-  color: #fff;
+  color: #00000099;
 }
+/* In the flow rather than pinned to the bottom of the message: the reply now
+   carries three actions instead of one and they would overlap. refs #46672 */
 .netiaic-chat .msg.msg.is-finished .msg-tip {
   display: flex;
   align-items: center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin-left: 40px;
-  width: calc(100% - 100px);
+  flex: 0 0 auto;
+  margin: 6px 0 0 40px;
+  width: calc(100% - 40px);
   font-size: .875rem;
-  color: transparent;
+  color: #00000099;
   background-clip: text;
   -webkit-background-clip: text;
-  background-image: linear-gradient(-90deg, #fff 35%, #00000099 36%, #000 39%, #fff 39%);
+  background-image: linear-gradient(-90deg, #00000099 35%, #fff 36%, #fff 39%, #00000099 39%);
   background-size: 250% 100%;
   animation: text-shiny 10s both infinite;
+  justify-content: flex-end;
 }
 html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   font-size: .75rem;
@@ -213,7 +280,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .crm-container .netiaic-container .netiaic-form-container .crm-section {
   display: flex;
   padding: 0;
-  margin: 0 0 16px 0;
+  margin: 0 0 10px 0;
 }
 .netiaic-container .crm-section > .crm-form-elem {
   flex: 0 0 100%;
@@ -240,13 +307,14 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-form-container {
   max-height: var(--netiaic-form-height);
+  border-top: 1px solid #e3e2dd;
 }
 .netiaic-form-container > .inner {
   max-height: var(--netiaic-form-height);
   padding: 15px 20px;
 }
 .netiaic-container.form-is-expanded {
-  --netiaic-form-height: calc(1em * 1.5 * 5 + 10px + 350px);
+  --netiaic-form-height: calc(1em * 1.5 * 5 + 10px + 300px);
 }
 .netiaic-form-container .crm-form-elem {
   max-width: 100%;
@@ -261,11 +329,11 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-container .netiaic-use-tpl {
   display: flex;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   padding: 10px 0 10px 30px;
   list-style: none;
   font-size: .875rem;
-  background: url(images/icon--magic.svg) no-repeat 0 50%;
+  background: url(images/icon--magic.svg) no-repeat 0 50% / 20px;
 }
 .netiaic-container .netiaic-use-tpl > li {
   display: flex;
@@ -274,11 +342,234 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .netiaic-container .netiaic-use-tpl > li:not(:last-child) {
   margin-right: 10px;
-  padding-right: 10px;
-  border-right: 1px solid #bdbdbd;
 }
 .netiaic-use-tpl li {
   list-style: none;
+}
+/* AC-4: role and tone are pills with a popup menu. The two select rows stay in
+   the markup as the only data source and are hidden only once the script has
+   built the pills, so a browser still running the cached previous script keeps
+   the controls it knows how to drive. refs #46672 */
+.netiaic-container .netiaic-prompt-filters {
+  display: none;
+}
+/* Spelled out down to .netiaic-form-content on purpose: both the crm-section
+   layout rule and the fullscreen two column rule at the end of this file would
+   otherwise put the select rows back on screen. */
+.netiaic-container.has-filter-pills .netiaic-form-container .netiaic-form-content .netiaic-prompt-role-section,
+.netiaic-container.has-filter-pills .netiaic-form-container .netiaic-form-content .netiaic-prompt-tone-section {
+  display: none;
+}
+.netiaic-container.has-filter-pills .netiaic-prompt-filters {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px 0;
+}
+.netiaic-container .netiaic-filter-dropdown {
+  display: inline-flex;
+  max-width: 100%;
+}
+.netiaic-container .netiaic-filter-dropdown  .netiaic-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 6px 12px;
+  max-width: 100%;
+  min-height: 32px;
+  font-family: inherit;
+  font-size: .875rem;
+  line-height: 1.2;
+  color: #3F51B5;
+  border: 1px solid #c5cae9;
+  border-radius: 16px;
+  background: #eef1fb;
+  cursor: pointer;
+}
+.netiaic-container .netiaic-filter-pill i {
+  color: inherit;
+  font-size: 1rem;
+}
+.netiaic-container .netiaic-filter-pill .text {
+  overflow: hidden;
+  max-width: 12em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.netiaic-container .netiaic-filter-dropdown.is-empty .netiaic-filter-pill {
+  color: #616161;
+  border-color: #bdbdbd;
+  background: #f5f5f5;
+}
+.netiaic-container .netiaic-filter-dropdown.is-open .netiaic-filter-pill {
+  color: #fff;
+  border-color: #3F51B5;
+  background: #3F51B5;
+}
+.netiaic-container .netiaic-filter-inherited {
+  display: none;
+  font-size: .75rem;
+  color: #9e9e9e;
+}
+.netiaic-container .netiaic-filter-inherited.is-active {
+  display: inline;
+}
+/* Anchored to the pill row rather than to one pill: whichever pill is open, the
+   menu can then never reach past the edge of the panel. */
+.netiaic-container .netiaic-filter-menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 10;
+  margin-top: 6px;
+  padding: 6px;
+  width: 297px;
+  max-width: 100%;
+  max-height: min(50vh, 280px);
+  /* The script caps max-height to the room it has, which only holds if the
+     padding and the border count towards it */
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+}
+.netiaic-container .netiaic-filter-dropdown[data-filter="tone"] .netiaic-filter-menu {
+  left: auto;
+}
+/* Set by the script when there is more room below the pills than above them */
+.netiaic-container .netiaic-filter-dropdown.is-dropped .netiaic-filter-menu {
+  top: calc(100% + 6px);
+  bottom: auto;
+}
+.netiaic-container .netiaic-filter-dropdown.is-open .netiaic-filter-menu {
+  display: block;
+}
+.netiaic-container .netiaic-filter-menu-title {
+  padding: 4px 6px 6px;
+  font-size: .75rem;
+  color: #9e9e9e;
+}
+.netiaic-container .netiaic-filter-option-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.netiaic-container .netiaic-filter-option-list li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.netiaic-container .netiaic-filter-extra {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #eee;
+}
+.netiaic-container .netiaic-filter-option,
+.netiaic-container .netiaic-filter-custom-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 6px;
+  width: 100%;
+  /* Comfortable target for a finger, not just for a mouse pointer */
+  min-height: 44px;
+  font-family: inherit;
+  text-align: left;
+  color: #212121;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+.netiaic-container .netiaic-filter-option:hover,
+.netiaic-container .netiaic-filter-custom-toggle:hover {
+  color: #212121
+}
+.netiaic-container .netiaic-filter-option .option-icon,
+.netiaic-container .netiaic-filter-custom-toggle .option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 26px;
+  height: 26px;
+  color: #7A4F02;
+  border-radius: 6px;
+  background: #F4F0E8;
+}
+.netiaic-container .netiaic-filter-option .option-icon i,
+.netiaic-container .netiaic-filter-custom-toggle .option-icon i {
+  margin: 0;
+  color: #7A4F02;
+}
+.netiaic-container .netiaic-filter-option .option-body,
+.netiaic-container .netiaic-filter-custom-toggle .option-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 3px;
+}
+.netiaic-container .netiaic-filter-option .title,
+.netiaic-container .netiaic-filter-custom-toggle .title {
+  display: block;
+  font-weight: 500;
+  font-size: .875rem;
+  line-height: 1.3;
+}
+.netiaic-container .netiaic-filter-option .desc {
+  display: block;
+  margin-top: 2px;
+  font-size: .75rem;
+  line-height: 1.35;
+  color: #757575;
+}
+.netiaic-container .netiaic-filter-option .zmdi-check {
+  margin-left: auto;
+  color: #3F51B5;
+  visibility: hidden;
+  margin-right: 0;
+}
+.netiaic-container .netiaic-filter-option.is-selected {
+  background: #eef1fb;
+}
+.netiaic-container .netiaic-filter-option.is-selected .zmdi-check {
+  visibility: visible;
+}
+/* Only where a pointer can really hover: on a touch screen the tapped row would
+   stay highlighted and read as a second selection. */
+@media (hover: hover) {
+  .netiaic-container .netiaic-filter-option:hover,
+  .netiaic-container .netiaic-filter-custom-toggle:hover {
+    background: #eef1fb;
+  }
+}
+.netiaic-container .netiaic-filter-custom-form {
+  display: none;
+  gap: 6px;
+  padding: 0 6px 6px;
+}
+.netiaic-container .netiaic-filter-custom.is-active .netiaic-filter-custom-toggle {
+  display: none;
+}
+.netiaic-container .netiaic-filter-custom.is-active .netiaic-filter-custom-form {
+  display: flex;
+}
+.netiaic-container .netiaic-filter-custom-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* 16px keeps iOS from zooming the page in when the field takes focus */
+  font-size: 16px;
+}
+.netiaic-container .netiaic-filter-custom-submit {
+  flex: 0 0 auto;
+  margin: 0;
 }
 .netiaic-modal {
   position: relative;
@@ -509,18 +800,68 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   line-height: 1.5;
   resize: none;
 }
-.netiaic-container .netiaic-prompt-content-textarea.is-expanded {
+/* Three rows to describe a piece of copy, two to ask a follow up. Not one: the
+   follow up hint runs onto a second line and would be cut off mid sentence. The
+   combinations below are spelled out so that typing more than fits always wins
+   over the state height whichever order the rules end up in. refs #46672 */
+.netiaic-container.is-state-initial .netiaic-prompt-content-textarea {
+  height: calc(1em * 1.5 * 3 + 10px);
+}
+.netiaic-container.is-state-active .netiaic-prompt-content-textarea {
+  height: calc(1em * 1.5 * 2 + 10px);
+}
+.netiaic-container .netiaic-prompt-content-textarea.is-expanded,
+.netiaic-container.is-state-initial .netiaic-prompt-content-textarea.is-expanded,
+.netiaic-container.is-state-active .netiaic-prompt-content-textarea.is-expanded {
   height: calc(1em * 1.5 * 7 + 10px);
+}
+/* AC-4: one input area, with the submit button inside the same rounded box. */
+.netiaic-container .netiaic-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 8px 8px 13px;
+  border: 1px solid #cfcec8;
+  border-radius: 16px;
+  background: #fff;
+  margin-bottom: 10px;
+}
+.netiaic-container .netiaic-input-row:focus-within {
+  border-color: #3F51B5;
+}
+/* The box carries the border now, so the over the limit warning moves with it */
+.netiaic-container .crm-section.is-error .netiaic-input-row {
+  border-color: var(--color-error);
+}
+.netiaic-container .netiaic-input-row .netiaic-prompt-content-textarea {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.netiaic-container .netiaic-input-row .netiaic-prompt-content-textarea:focus {
+  outline: 0;
+  box-shadow: none;
+}
+.crm-container .netiaic-input-row .netiaic-form-submit {
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+.crm-container .netiaic-input-row .netiaic-form-submit .text {
+  display: none;
 }
 .crm-container .netiaic-form-submit {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   margin: 0;
-  min-width: 110px;
-  min-height: 40px;
   color: #fff;
   background: #3F51B5;
+  width: 32px;
+  height: 32px;
 }
 .crm-container .netiaic-form-submit:hover,
 .crm-container .netiaic-form-submit:focus {
@@ -539,6 +880,8 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   box-shadow: calc(-1 * var(--loader-dot-gap)) 0 var(--loader-color), var(--loader-dot-gap) 0 var(--loader-color);
   box-sizing: border-box;
   animation: sendLoader 2s linear infinite;
+  margin: 0;
+  min-width: auto;
 }
 @keyframes sendLoader {
   33% {
@@ -556,6 +899,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 }
 .crm-container .netiaic-form-submit i {
   color: #fff;
+  margin: 0;
 }
 .crm-container .netiaic-form-submit.is-active i,
 .crm-container .netiaic-form-submit.is-active .text {
