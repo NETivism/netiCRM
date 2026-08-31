@@ -1022,14 +1022,12 @@ cj(function() {
       $errorMsg['contribution_status_id'] = ts("Please select a valid payment status before updating.");
     }
 
-    // validate trxn_id uniqueness when record_contribution is checked (AC-1, AC-2, AC-3)
     if (CRM_Utils_Array::value('record_contribution', $values) &&
       !empty($values['trxn_id'])
     ) {
       $trxnId = $values['trxn_id'];
       $excludeContributionId = NULL;
 
-      // AC-3: When editing a participant that already has a payment linked,
       // exclude that participant's own contribution from the duplicate check.
       if ($self->_id && $self->_paymentId) {
         $excludeContributionId = CRM_Core_DAO::getFieldValue(
