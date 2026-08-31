@@ -1048,7 +1048,7 @@ cj(function() {
       }
       $dupDao = CRM_Core_DAO::executeQuery($dupQuery, $dupParams);
       if ($dupDao->fetch()) {
-        $errorMsg['trxn_id'] = ts('此交易編號已存在於資料庫。');
+        $errorMsg['trxn_id'] = ts('Transaction ID already exists in Database.');
       }
     }
 
