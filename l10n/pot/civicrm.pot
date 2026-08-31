@@ -3653,7 +3653,8 @@ msgstr ""
 msgid "Contribution ID"
 msgstr ""
 
-#: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/AdditionalInfo.php
+#: CRM/Admin/Form/Setting/Recurring.php CRM/Contribute/DAO/Contribution.php
+#: CRM/Contribute/Form/AdditionalInfo.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Non-deductible Amount"
 msgstr ""

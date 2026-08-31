@@ -3675,7 +3675,8 @@ msgstr "貨幣"
 msgid "Contribution ID"
 msgstr "捐款編號"
 
-#: CRM/Contribute/DAO/Contribution.php CRM/Contribute/Form/AdditionalInfo.php
+#: CRM/Admin/Form/Setting/Recurring.php CRM/Contribute/DAO/Contribution.php
+#: CRM/Contribute/Form/AdditionalInfo.php
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Non-deductible Amount"
 msgstr "此筆捐款不能抵稅的金額"
