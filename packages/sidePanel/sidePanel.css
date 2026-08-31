@@ -11,6 +11,10 @@
   --civicrm-menu-height: 25px;
   --drupal-toolbar-height: 40px;
   --drupal-horizontal-toolbar-open-height: calc(var(--drupal-toolbar-height) + 45px);
+  --nsp-d7-admin-menu-height: 30px;
+  --nsp-d7-simplemenu-height: 30px;
+  --nsp-d7-civicrm-menu-height: 30px;
+  --nsp-d7-civicrm-user-height: 60px;
 }
 body:has(#admin-header) {
   --neticrmp-next-admin-header-header: 60px;
@@ -161,19 +165,38 @@ a.btn:hover {
   position: relative;
   height: 100%;
 }
-.admin-menu .nsp-container .nsp-inner,
-.simplemenu-enabled .nsp-container .nsp-inner,
+/* fix side panel layout for Drupal 7 admin-menu / simplemenu / CiviCRM menu toolbar */
+.admin-menu .nsp-container .nsp-inner {
+  --nsp-padding-top: var(--nsp-d7-admin-menu-height);
+  padding-top: var(--nsp-padding-top);
+}
+.simplemenu-enabled .nsp-container .nsp-inner {
+  --nsp-padding-top: var(--nsp-d7-simplemenu-height);
+  padding-top: var(--nsp-padding-top);
+}
 .civicrm-menu-enabled .nsp-container .nsp-inner {
-  padding-top: 30px;
+  --nsp-padding-top: var(--nsp-d7-civicrm-menu-height);
+  padding-top: var(--nsp-padding-top);
 }
-.is-civicrm-user .nsp-container .nsp-inner,
-.civicrm-menu-enabled.admin-menu .nsp-container .nsp-inner,
+.is-civicrm-user .nsp-container .nsp-inner {
+  --nsp-padding-top: var(--nsp-d7-civicrm-user-height);
+  padding-top: var(--nsp-padding-top);
+}
+.civicrm-menu-enabled.admin-menu .nsp-container .nsp-inner {
+  --nsp-padding-top: calc(var(--nsp-d7-civicrm-menu-height) + var(--nsp-d7-admin-menu-height));
+  padding-top: var(--nsp-padding-top);
+}
 .civicrm-menu-enabled.simplemenu-enabled .nsp-container .nsp-inner {
-  padding-top: 60px;
+  --nsp-padding-top: calc(var(--nsp-d7-civicrm-menu-height) + var(--nsp-d7-simplemenu-height));
+  padding-top: var(--nsp-padding-top);
 }
-.is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-inner,
+.is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-inner {
+  --nsp-padding-top: calc(var(--nsp-d7-civicrm-user-height) + var(--nsp-d7-civicrm-menu-height));
+  padding-top: var(--nsp-padding-top);
+}
 .civicrm-menu-enabled.admin-menu.simplemenu-enabled .nsp-container .nsp-inner {
-  padding-top: 90px;
+  --nsp-padding-top: calc(var(--nsp-d7-civicrm-menu-height) + var(--nsp-d7-admin-menu-height) + var(--nsp-d7-simplemenu-height));
+  padding-top: var(--nsp-padding-top);
 }
 /* fix side panel layout for Drupal 10+ toolbar */
 .user-logged-in.civicrm-menu-enabled .nsp-container .nsp-inner {
