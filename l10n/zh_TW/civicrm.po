@@ -52289,6 +52289,10 @@ msgstr "網站使用者電子郵件修改"
 msgid "User email before changed"
 msgstr "修改前電子郵件"
 
+#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
+msgid "Are you sure you want to delete contact image."
+msgstr "您確定要刪除聯絡人頭像？"
+
 #: templates/CRM/AI/AICompletion.tpl
 msgid "New conversation"
 msgstr "新對話"
@@ -52358,3 +52362,15 @@ msgstr "正在載入範例圖庫..."
 #: templates/CRM/AI/AIImageGeneration.tpl:392
 msgid "No sample images match the selected filters"
 msgstr "沒有符合篩選條件的範例圖片"
+
+#: packages/HTML/QuickForm/ckeditor.php:189
+msgid "Your editor will automatically switch to the new version (CKEditor 5) on <strong>%1</strong>. You can try out the new editor before then."
+msgstr "您使用的編輯工具將於 <strong>%1</strong> 自動切換為新版本（CKEditor 5），您可以盡早試用新版本編輯工具。"
+
+#: packages/HTML/QuickForm/ckeditor.php:192
+msgid "See our <a href=\"%1\" target=\"_blank\">documentation</a> for details."
+msgstr "詳情可參考我們的<a href=\"%1\" target=\"_blank\">手冊說明</a>。"
+
+#: packages/HTML/QuickForm/ckeditor.php:196
+msgid "You can also <a href=\"%1\" target=\"_blank\">go to Site Preferences</a> to change the default editor yourself."
+msgstr "您也可以前往<a href=\"%1\" target=\"_blank\">網站偏好設定</a>自行修改預設的編輯工具。"
