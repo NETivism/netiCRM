@@ -52289,10 +52289,6 @@ msgstr "網站使用者電子郵件修改"
 msgid "User email before changed"
 msgstr "修改前電子郵件"
 
-#: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
-msgid "Are you sure you want to delete contact image."
-msgstr "您確定要刪除聯絡人頭像？"
-
 #: templates/CRM/AI/AICompletion.tpl
 msgid "New conversation"
 msgstr "新對話"
