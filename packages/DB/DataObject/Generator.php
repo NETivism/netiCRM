@@ -1524,7 +1524,7 @@ class DB_DataObject_Generator extends DB_DataObject
                     break;
                     
                 case ($type & DB_DATAOBJECT_BOOL): 
-                    $defaults[$ar['Field']] = (int)(boolean) $ar['Default'];
+                    $defaults[$ar['Field']] = (int)(bool) $ar['Default'];
                     break;
                     
                 

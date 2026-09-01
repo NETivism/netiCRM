@@ -60,13 +60,23 @@ require_once 'Net/URL.php';
 /**#@+
  * Constants for HTTP request methods
  */
-define('HTTP_REQUEST_METHOD_GET',     'GET',     true);
-define('HTTP_REQUEST_METHOD_HEAD',    'HEAD',    true);
-define('HTTP_REQUEST_METHOD_POST',    'POST',    true);
-define('HTTP_REQUEST_METHOD_PUT',     'PUT',     true);
-define('HTTP_REQUEST_METHOD_DELETE',  'DELETE',  true);
-define('HTTP_REQUEST_METHOD_OPTIONS', 'OPTIONS', true);
-define('HTTP_REQUEST_METHOD_TRACE',   'TRACE',   true);
+if (PHP_VERSION_ID < 80000) {
+    @define('HTTP_REQUEST_METHOD_GET',     'GET',     true);
+    @define('HTTP_REQUEST_METHOD_HEAD',    'HEAD',    true);
+    @define('HTTP_REQUEST_METHOD_POST',    'POST',    true);
+    @define('HTTP_REQUEST_METHOD_PUT',     'PUT',     true);
+    @define('HTTP_REQUEST_METHOD_DELETE',  'DELETE',  true);
+    @define('HTTP_REQUEST_METHOD_OPTIONS', 'OPTIONS', true);
+    @define('HTTP_REQUEST_METHOD_TRACE',   'TRACE',   true);
+} else {
+    define('HTTP_REQUEST_METHOD_GET',     'GET');
+    define('HTTP_REQUEST_METHOD_HEAD',    'HEAD');
+    define('HTTP_REQUEST_METHOD_POST',    'POST');
+    define('HTTP_REQUEST_METHOD_PUT',     'PUT');
+    define('HTTP_REQUEST_METHOD_DELETE',  'DELETE');
+    define('HTTP_REQUEST_METHOD_OPTIONS', 'OPTIONS');
+    define('HTTP_REQUEST_METHOD_TRACE',   'TRACE');
+}
 /**#@-*/
 
 /**#@+
@@ -86,8 +96,13 @@ define('HTTP_REQUEST_ERROR_GZIP_CRC',       256);
 /**#@+
  * Constants for HTTP protocol versions
  */
-define('HTTP_REQUEST_HTTP_VER_1_0', '1.0', true);
-define('HTTP_REQUEST_HTTP_VER_1_1', '1.1', true);
+if (PHP_VERSION_ID < 80000) {
+    @define('HTTP_REQUEST_HTTP_VER_1_0', '1.0', true);
+    @define('HTTP_REQUEST_HTTP_VER_1_1', '1.1', true);
+} else {
+    define('HTTP_REQUEST_HTTP_VER_1_0', '1.0');
+    define('HTTP_REQUEST_HTTP_VER_1_1', '1.1');
+}
 /**#@-*/
 
 if (extension_loaded('mbstring') && (2 & ini_get('mbstring.func_overload'))) {
