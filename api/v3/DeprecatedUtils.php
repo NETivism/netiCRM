@@ -461,7 +461,7 @@ function _civicrm_api3_deprecated_formatted_param($params, &$values, $create = F
 
         //giving respect to pledge_payment flag.
         if (!CRM_Utils_Array::value('pledge_payment', $params)) {
-          continue;
+          break;
         }
 
         //get total amount of from import fields
