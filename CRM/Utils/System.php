@@ -1165,7 +1165,8 @@ class CRM_Utils_System {
    * @access public
    */
   public static function getDocBaseURL() {
-    return CRM_Core_Config::singleton()->docURLBase;
+    $config = CRM_Core_Config::singleton();
+    return $config->docURLBase ?? NULL;
   }
 
   /**

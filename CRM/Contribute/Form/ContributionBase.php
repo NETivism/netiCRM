@@ -377,7 +377,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         }
       }
       else {
-        if ($this->_values['is_internal'] > 0 && !CRM_Core_Permission::check('access CiviContribute')) {
+        if (CRM_Utils_Array::value('is_internal', $this->_values) > 0 && !CRM_Core_Permission::check('access CiviContribute')) {
           $config = CRM_Core_Config::singleton();
           $pageId = $config->defaultRenewalPageId;
           $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
@@ -501,7 +501,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         (isset($postProfileType) && $postProfileType == 'Membership') ||
           (isset($preProfileType) && $preProfileType == 'Membership')
       ) &&
-        !$this->_membershipBlock['is_active']
+        !CRM_Utils_Array::value('is_active', $this->_membershipBlock)
       ) {
         return CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
       }
@@ -678,14 +678,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     $this->_membershipBlock = $this->get('membershipBlock');
 
-    if (!$this->_values['amount_block_is_active'] &&
-      !$this->_membershipBlock['is_active'] &&
+    if (!CRM_Utils_Array::value('amount_block_is_active', $this->_values) &&
+      !CRM_Utils_Array::value('is_active', $this->_membershipBlock) &&
       !$this->_priceSetId
     ) {
       return CRM_Core_Error::statusBounce(ts('The requested online contribution page is missing a required Contribution Amount section or Membership section or Price Set. Please check with the site administrator for assistance.'));
     }
 
-    if ($this->_values['amount_block_is_active']) {
+    if (CRM_Utils_Array::value('amount_block_is_active', $this->_values)) {
       $this->set('amount_block_is_active', $this->_values['amount_block_is_active']);
     }
 
@@ -741,10 +741,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       self::cancelRecurring();
     }
 
-    if ($_GET['style'] == 'origin') {
+    if (CRM_Utils_Array::value('style', $_GET) == 'origin') {
       $this->set('style', 'origin');
     }
-    if ($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && $_GET['snippet'] != 4 && $this->get('style') != 'origin') {
+    if ($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && CRM_Utils_Array::value('snippet', $_GET) != 4 && $this->get('style') != 'origin') {
       $bgFile = basename($this->_values['background_URL']);
       $bgFileMobile = basename($this->_values['mobile_background_URL']);
       $this->assign('intro_text', $this->_values['intro_text']);

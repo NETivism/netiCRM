@@ -49,11 +49,13 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    */
   public static function add(&$params, &$ids = NULL) {
     $transaction = new CRM_Core_Transaction();
+    $oldRecurring = NULL;
 
     // pre-processing hooks
 
-    if (CRM_Utils_Array::value('id', $params)) {
-      CRM_Utils_Hook::pre('edit', 'ContributionRecur', $params['id'], $params);
+    $hookRecurringId = CRM_Utils_Array::value('id', $params);
+    if ($hookRecurringId) {
+      CRM_Utils_Hook::pre('edit', 'ContributionRecur', $hookRecurringId, $params);
     }
     else {
       CRM_Utils_Hook::pre('create', 'ContributionRecur', NULL, $params);
@@ -73,9 +75,12 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       return $error;
     }
 
-    if ($params['id']) {
+    // The pre hook receives $params by reference, so read the ID again after
+    // extensions have had a chance to adjust it.
+    $recurringId = CRM_Utils_Array::value('id', $params);
+    if ($recurringId) {
       $oldRecurring = new CRM_Contribute_BAO_ContributionRecur();
-      $oldRecurring->id = $params['id'];
+      $oldRecurring->id = $recurringId;
       $oldRecurring->find(TRUE);
     }
 
@@ -97,7 +102,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $transaction->commit();
 
     $params['id'] = $recurring->id;
-    if ($ids['log']) {
+    $logId = $message = NULL;
+    if (!empty($ids['log'])) {
       $logId = $ids['log'];
     }
     if (!empty($params['message'])) {
