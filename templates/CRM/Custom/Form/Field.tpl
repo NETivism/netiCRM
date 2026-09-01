@@ -333,7 +333,7 @@ cj().crmaccordions();
 </script>
 {/literal}
 
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}
+{if isset($config->docURLBase)}{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}{else}{include file="CRM/common/sidePanel.tpl" type="iframe" src="Data+and+Input+Field+Type+-+Alphanumeric:+Text" triggerText="Description of Data and Input Field Type" triggerIcon="zmdi-help-outline" width="400px"}{/if}
   {literal}
 <script type="text/Javascript">
   cj(function() {
@@ -357,7 +357,7 @@ cj().crmaccordions();
             "Contact Reference"
           ],
           parentType = parentTypeMapping[parentTypeIndex],
-          defaultDocURL = "{/literal}{$config->docURLBase}{literal}Data+and+Input+Field+Type+-+Alphanumeric:+Text";
+          defaultDocURL = "{/literal}{if isset($config->docURLBase)}{$config->docURLBase}{/if}{literal}Data+and+Input+Field+Type+-+Alphanumeric:+Text";
 
       let sidePanelShow = function() {
         cj(".nsp-container.visually-hidden").removeClass("visually-hidden");
@@ -380,7 +380,7 @@ cj().crmaccordions();
           parentType = parentType.replaceAll(/\//g, "");
         }
 
-        let docURL = "{/literal}{$config->docURLBase}{literal}Data+and+Input+Field+Type+-+" + parentType + ": " + childType;
+        let docURL = "{/literal}{if isset($config->docURLBase)}{$config->docURLBase}{/if}{literal}Data+and+Input+Field+Type+-+" + parentType + ": " + childType;
 
         if (defaultDocURL !== docURL) {
           cj(".nsp-container .nsp-iframe").attr("src", docURL);
