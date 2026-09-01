@@ -164,6 +164,29 @@ class CRM_Utils_Date {
   }
 
   /**
+   * Format a local timestamp using LC_TIME and POSIX date directives.
+   *
+   * @return string|false
+   */
+  public static function strftime($format, $timestamp = NULL) {
+    return func_num_args() < 2
+      ? CiviDateFormatter::strftime($format)
+      : CiviDateFormatter::strftime($format, $timestamp);
+  }
+
+  /**
+   * Format a UTC timestamp without changing the default timezone.
+   *
+   * @return string|false
+   */
+  public static function gmstrftime($format, $timestamp = NULL) {
+    if (func_num_args() < 2) {
+      $timestamp = time();
+    }
+    return CiviDateFormatter::strftime($format, $timestamp, TRUE);
+  }
+
+  /**
    * Return abbreviated weekday names according to the locale.
    *
    * @return array<int, string> 0-based array with abbreviated weekday names
@@ -176,7 +199,7 @@ class CRM_Utils_Date {
       // June 1st, 1970 was a Monday
       CRM_Core_I18n::setLcTime();
       for ($i = 0; $i < 7; $i++) {
-        $abbrWeekdayNames[$i] = strftime('%a', mktime(0, 0, 0, 6, $i, 1970));
+        $abbrWeekdayNames[$i] = self::strftime('%a', mktime(0, 0, 0, 6, $i, 1970));
       }
     }
     return $abbrWeekdayNames;
@@ -195,7 +218,7 @@ class CRM_Utils_Date {
       // June 1st, 1970 was a Monday
       CRM_Core_I18n::setLcTime();
       for ($i = 0; $i < 7; $i++) {
-        $fullWeekdayNames[$i] = strftime('%A', mktime(0, 0, 0, 6, $i, 1970));
+        $fullWeekdayNames[$i] = self::strftime('%A', mktime(0, 0, 0, 6, $i, 1970));
       }
     }
     return $fullWeekdayNames;
@@ -215,7 +238,7 @@ class CRM_Utils_Date {
       // set LC_TIME and build the arrays from locale-provided names
       CRM_Core_I18n::setLcTime();
       for ($i = 1; $i <= 12; $i++) {
-        $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i, 10, 1970));
+        $abbrMonthNames[$i] = self::strftime('%b', mktime(0, 0, 0, $i, 10, 1970));
       }
     }
     if ($month) {
@@ -236,7 +259,7 @@ class CRM_Utils_Date {
       // set LC_TIME and build the arrays from locale-provided names
       CRM_Core_I18n::setLcTime();
       for ($i = 1; $i <= 12; $i++) {
-        $fullMonthNames[$i] = strftime('%B', mktime(0, 0, 0, $i, 10, 1970));
+        $fullMonthNames[$i] = self::strftime('%B', mktime(0, 0, 0, $i, 10, 1970));
       }
     }
     return $fullMonthNames;

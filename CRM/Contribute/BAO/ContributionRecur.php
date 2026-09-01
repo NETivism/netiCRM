@@ -543,7 +543,7 @@ GROUP BY c.currency";
     foreach ($slot as $installment => $amount) {
       $increment += $amount;
       $amount = $unlimit + $over + $increment;
-      $labels[$installment] = strftime('%b', strtotime('+'.$installment.' '.$frequency_unit));
+      $labels[$installment] = CRM_Utils_Date::strftime('%b', strtotime('+'.$installment.' '.$frequency_unit));
       $values[$installment] = $amount;
     }
     ksort($values);

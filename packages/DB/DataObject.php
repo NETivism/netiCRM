@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 1) . '/CiviDateFormatter.php';
 /**
  * Object Based Database Query Builder and data store
  *
@@ -4040,7 +4041,7 @@ class DB_DataObject extends DB_DataObject_Overload
                 }
                 $guess = strtotime($this->$col);
                 if ($guess != -1) {
-                    return strftime($format, $guess);
+                    return CiviDateFormatter::strftime($format, $guess);
                 }
                 // eak... - no way to validate date time otherwise...
                 return $this->$col;
@@ -4050,7 +4051,7 @@ class DB_DataObject extends DB_DataObject_Overload
                 } 
                 $guess = strtotime($this->$col);
                 if ($guess != -1) {
-                    return strftime($format,$guess);
+                    return CiviDateFormatter::strftime($format,$guess);
                 }
                 // try date!!!!
                 require_once 'Date.php';
@@ -4063,7 +4064,7 @@ class DB_DataObject extends DB_DataObject_Overload
                 }
                 $guess = strtotime($this->$col);
                 if ($guess > -1) {
-                    return strftime($format, $guess);
+                    return CiviDateFormatter::strftime($format, $guess);
                 }
                 // otherwise an error in type...
                 return $this->$col;
