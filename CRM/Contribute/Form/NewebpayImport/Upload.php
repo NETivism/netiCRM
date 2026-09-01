@@ -141,7 +141,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
         $config = CRM_Core_Config::singleton();
         $rowsFromSheet = [];
         $i = 1;
-        while ($row = fgetcsv($fd, 0, $config->fieldSeparator)) {
+        while ($row = fgetcsv($fd, 0, $config->fieldSeparator, '"', '\\')) {
           $rowsFromSheet[$i] = $row;
           $i++;
         }
