@@ -164,6 +164,224 @@ class CRM_Utils_Date {
   }
 
   /**
+   * Format a local timestamp using strftime-style directives.
+   *
+   * PHP 8.1 deprecated strftime(). On newer PHP versions this method handles
+   * the POSIX directives used by CiviCRM and PEAR Log without calling the
+   * deprecated function. Locale-specific names and composite formats come
+   * from the current LC_TIME locale where nl_langinfo() is available.
+   *
+   * Formats containing unsupported directives, modifiers, or formatting
+   * flags use the native formatter as a compatibility fallback.
+   *
+   * @param string $format strftime-style output format
+   * @param int|null $timestamp Optional Unix timestamp; defaults to now
+   *
+   * @return string|false Formatted date string, or FALSE for an empty format
+   */
+  public static function strftime($format, $timestamp = NULL) {
+    if (PHP_VERSION_ID < 80100) {
+      if (func_num_args() < 2) {
+        return strftime($format);
+      }
+      return strftime($format, $timestamp);
+    }
+
+    if ($format === '' || $format === NULL || $format === FALSE) {
+      return FALSE;
+    }
+    if ($timestamp === NULL) {
+      $timestamp = time();
+    }
+
+    // PEAR Log accepts a caller-defined format. Keep platform-specific
+    // directives byte-compatible instead of returning a different value.
+    if (preg_match('/%(?![%aAbBcCdDeFgGhHIjklmMnPprRStTuUVwWxXyYzZ])/', $format)) {
+      return @strftime($format, $timestamp);
+    }
+
+    return preg_replace_callback('/%[%a-zA-Z]/', function($matches) use ($timestamp) {
+      return self::strftimeToken(substr($matches[0], 1), $timestamp);
+    }, $format);
+  }
+
+  /**
+   * Format one strftime directive.
+   *
+   * @param string $token Directive without its leading percent sign
+   * @param int $timestamp Unix timestamp
+   *
+   * @return string
+   */
+  private static function strftimeToken($token, $timestamp) {
+    switch ($token) {
+      case '%':
+        return '%';
+
+      case 'a':
+        $weekday = (int) date('w', $timestamp);
+        return self::strftimeLocaleValue('ABDAY_' . ($weekday + 1), date('D', $timestamp));
+
+      case 'A':
+        $weekday = (int) date('w', $timestamp);
+        return self::strftimeLocaleValue('DAY_' . ($weekday + 1), date('l', $timestamp));
+
+      case 'b':
+      case 'h':
+        $month = (int) date('n', $timestamp);
+        return self::strftimeLocaleValue('ABMON_' . $month, date('M', $timestamp));
+
+      case 'B':
+        $month = (int) date('n', $timestamp);
+        return self::strftimeLocaleValue('MON_' . $month, date('F', $timestamp));
+
+      case 'c':
+        return self::strftime(
+          self::strftimeLocaleValue('D_T_FMT', '%a %b %e %H:%M:%S %Y'),
+          $timestamp
+        );
+
+      case 'C':
+        return sprintf('%02d', (int) floor(((int) date('Y', $timestamp)) / 100));
+
+      case 'd':
+        return date('d', $timestamp);
+
+      case 'D':
+        return date('m/d/y', $timestamp);
+
+      case 'e':
+        return sprintf('%2d', (int) date('j', $timestamp));
+
+      case 'F':
+        return date('Y-m-d', $timestamp);
+
+      case 'g':
+        return substr(date('o', $timestamp), -2);
+
+      case 'G':
+        return date('o', $timestamp);
+
+      case 'H':
+        return date('H', $timestamp);
+
+      case 'I':
+        return date('h', $timestamp);
+
+      case 'j':
+        return sprintf('%03d', ((int) date('z', $timestamp)) + 1);
+
+      case 'k':
+        return sprintf('%2d', (int) date('G', $timestamp));
+
+      case 'l':
+        return sprintf('%2d', (int) date('g', $timestamp));
+
+      case 'm':
+        return date('m', $timestamp);
+
+      case 'M':
+        return date('i', $timestamp);
+
+      case 'n':
+        return "\n";
+
+      case 'p':
+        return self::strftimeLocaleValue(
+          ((int) date('G', $timestamp)) < 12 ? 'AM_STR' : 'PM_STR',
+          date('A', $timestamp)
+        );
+
+      case 'P':
+        $period = self::strftimeToken('p', $timestamp);
+        return function_exists('mb_strtolower') ? mb_strtolower($period, 'UTF-8') : strtolower($period);
+
+      case 'r':
+        return self::strftime(
+          self::strftimeLocaleValue('T_FMT_AMPM', '%I:%M:%S %p'),
+          $timestamp
+        );
+
+      case 'R':
+        return date('H:i', $timestamp);
+
+      case 'S':
+        return date('s', $timestamp);
+
+      case 't':
+        return "\t";
+
+      case 'T':
+        return date('H:i:s', $timestamp);
+
+      case 'u':
+        return date('N', $timestamp);
+
+      case 'U':
+        $dayOfYear = (int) date('z', $timestamp);
+        $weekday = (int) date('w', $timestamp);
+        return sprintf('%02d', (int) floor(($dayOfYear + 7 - $weekday) / 7));
+
+      case 'V':
+        return date('W', $timestamp);
+
+      case 'w':
+        return date('w', $timestamp);
+
+      case 'W':
+        $dayOfYear = (int) date('z', $timestamp);
+        $weekday = (int) date('w', $timestamp);
+        $mondayBasedWeekday = ($weekday + 6) % 7;
+        return sprintf('%02d', (int) floor(($dayOfYear + 7 - $mondayBasedWeekday) / 7));
+
+      case 'x':
+        return self::strftime(
+          self::strftimeLocaleValue('D_FMT', '%m/%d/%y'),
+          $timestamp
+        );
+
+      case 'X':
+        return self::strftime(
+          self::strftimeLocaleValue('T_FMT', '%H:%M:%S'),
+          $timestamp
+        );
+
+      case 'y':
+        return date('y', $timestamp);
+
+      case 'Y':
+        return date('Y', $timestamp);
+
+      case 'z':
+        return date('O', $timestamp);
+
+      case 'Z':
+        return date('T', $timestamp);
+
+      default:
+        return '%' . $token;
+    }
+  }
+
+  /**
+   * Read a value from the current LC_TIME locale.
+   *
+   * @param string $constantName nl_langinfo constant name
+   * @param string $fallback Value used when nl_langinfo is unavailable
+   *
+   * @return string
+   */
+  private static function strftimeLocaleValue($constantName, $fallback) {
+    if (function_exists('nl_langinfo') && defined($constantName)) {
+      $value = nl_langinfo(constant($constantName));
+      if ($value !== FALSE) {
+        return $value;
+      }
+    }
+    return $fallback;
+  }
+
+  /**
    * Return abbreviated weekday names according to the locale.
    *
    * @return array<int, string> 0-based array with abbreviated weekday names
@@ -176,7 +394,7 @@ class CRM_Utils_Date {
       // June 1st, 1970 was a Monday
       CRM_Core_I18n::setLcTime();
       for ($i = 0; $i < 7; $i++) {
-        $abbrWeekdayNames[$i] = strftime('%a', mktime(0, 0, 0, 6, $i, 1970));
+        $abbrWeekdayNames[$i] = self::strftime('%a', mktime(0, 0, 0, 6, $i, 1970));
       }
     }
     return $abbrWeekdayNames;
@@ -195,7 +413,7 @@ class CRM_Utils_Date {
       // June 1st, 1970 was a Monday
       CRM_Core_I18n::setLcTime();
       for ($i = 0; $i < 7; $i++) {
-        $fullWeekdayNames[$i] = strftime('%A', mktime(0, 0, 0, 6, $i, 1970));
+        $fullWeekdayNames[$i] = self::strftime('%A', mktime(0, 0, 0, 6, $i, 1970));
       }
     }
     return $fullWeekdayNames;
@@ -215,7 +433,7 @@ class CRM_Utils_Date {
       // set LC_TIME and build the arrays from locale-provided names
       CRM_Core_I18n::setLcTime();
       for ($i = 1; $i <= 12; $i++) {
-        $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i, 10, 1970));
+        $abbrMonthNames[$i] = self::strftime('%b', mktime(0, 0, 0, $i, 10, 1970));
       }
     }
     if ($month) {
@@ -236,7 +454,7 @@ class CRM_Utils_Date {
       // set LC_TIME and build the arrays from locale-provided names
       CRM_Core_I18n::setLcTime();
       for ($i = 1; $i <= 12; $i++) {
-        $fullMonthNames[$i] = strftime('%B', mktime(0, 0, 0, $i, 10, 1970));
+        $fullMonthNames[$i] = self::strftime('%B', mktime(0, 0, 0, $i, 10, 1970));
       }
     }
     return $fullMonthNames;

@@ -290,8 +290,11 @@ class Log_file extends Log
         $message = $this->_extractMessage($message);
 
         /* Build the string containing the complete log line. */
+        if (!class_exists('CRM_Utils_Date')) {
+            require_once dirname(__DIR__, 2) . '/CRM/Utils/Date.php';
+        }
         $line = $this->_format($this->_lineFormat,
-                               strftime($this->_timeFormat),
+                               CRM_Utils_Date::strftime($this->_timeFormat),
                                $priority, $message) . $this->_eol;
 
         /* If locking is enabled, acquire an exclusive lock on the file. */
