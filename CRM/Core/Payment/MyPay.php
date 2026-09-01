@@ -501,7 +501,9 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       CRM_Core_Error::debug_log_message("MyPay postData: Contribution ID-{$this->_contributionId} :: httpstatus-$status :: error-$errno :: $err");
       return [];
     }
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     if (!empty($result)) {
       $response = json_decode($result, TRUE);
       return $response;

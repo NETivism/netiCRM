@@ -1933,7 +1933,9 @@ class TCPDF_STATIC {
 				curl_setopt($crs, CURLOPT_SSL_VERIFYHOST, false);
 				curl_setopt($crs, CURLOPT_USERAGENT, 'tc-lib-file');
 				$ret = curl_exec($crs);
-				curl_close($crs);
+				if (is_resource($crs)) {
+					curl_close($crs);
+				}
 				if ($ret !== false) {
 					return $ret;
 				}

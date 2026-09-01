@@ -150,7 +150,9 @@ class CRM_Utils_Image {
         $this->gdCreateTmp($this->_info['width'], $this->_info['height']);
         if ($this->_tmp) {
           imagecopy($this->_tmp, $this->_resource, 0, 0, 0, 0, imagesx($this->_tmp), imagesy($this->_tmp));
-          imagedestroy($this->_resource);
+          if (is_resource($this->_resource)) {
+            imagedestroy($this->_resource);
+          }
           $this->_resource = $this->_tmp;
         }
       }
@@ -276,7 +278,9 @@ class CRM_Utils_Image {
       $this->_info['height']
     );
     if ($result) {
-      imagedestroy($this->_resource);
+      if (is_resource($this->_resource)) {
+        imagedestroy($this->_resource);
+      }
       $this->_resource = $this->_tmp;
       $this->_info['width'] = $width;
       $this->_info['height'] = $height;
@@ -338,7 +342,9 @@ class CRM_Utils_Image {
       $height
     );
     if ($result) {
-      imagedestroy($this->_resource);
+      if (is_resource($this->_resource)) {
+        imagedestroy($this->_resource);
+      }
       $this->_resource = $this->_tmp;
       $this->_info['width'] = $width;
       $this->_info['height'] = $height;
@@ -404,10 +410,14 @@ class CRM_Utils_Image {
    */
   public function __destruct() {
     if (!empty($this->_resource)) {
-      imagedestroy($this->_resource);
+      if (is_resource($this->_resource)) {
+        imagedestroy($this->_resource);
+      }
     }
     if (!empty($this->_tmp)) {
-      imagedestroy($this->_tmp);
+      if (is_resource($this->_tmp)) {
+        imagedestroy($this->_tmp);
+      }
     }
   }
 

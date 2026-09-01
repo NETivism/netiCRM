@@ -113,13 +113,17 @@ class PEAR_PackageFile_Parser_v1
         if (!xml_parse($xp, $data, 1)) {
             $code = xml_get_error_code($xp);
             $line = xml_get_current_line_number($xp);
-            xml_parser_free($xp);
+            if (is_resource($xp)) {
+                xml_parser_free($xp);
+            }
             $a = PEAR::raiseError(sprintf("XML error: %s at line %d",
                            $str = xml_error_string($code), $line), 2);
             return $a;
         }
 
-        xml_parser_free($xp);
+        if (is_resource($xp)) {
+            xml_parser_free($xp);
+        }
 
         $pf = new PEAR_PackageFile_v1;
         $pf->setConfig($this->_config);

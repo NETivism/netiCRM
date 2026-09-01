@@ -214,7 +214,9 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
         CRM_Core_Error::debug_var('mitake_send_error', $responseBody);
       }
     }
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
 
     // CRM_Core_Error::debug_var('response', $response);
     return $response;

@@ -1489,7 +1489,9 @@ class XML_RPC_Message extends XML_RPC_Base
                 $r = new XML_RPC_Response(0, $XML_RPC_err['http_error'],
                                           $XML_RPC_str['http_error'] . ' (' .
                                           $errstr . ')');
-                xml_parser_free($parser_resource);
+                if (is_resource($parser_resource)) {
+                    xml_parser_free($parser_resource);
+                }
                 return $r;
         }
 
@@ -1520,11 +1522,15 @@ class XML_RPC_Message extends XML_RPC_Base
             error_log($errstr);
             $r = new XML_RPC_Response(0, $XML_RPC_err['invalid_return'],
                                       $XML_RPC_str['invalid_return']);
-            xml_parser_free($parser_resource);
+            if (is_resource($parser_resource)) {
+                xml_parser_free($parser_resource);
+            }
             return $r;
         }
 
-        xml_parser_free($parser_resource);
+        if (is_resource($parser_resource)) {
+            xml_parser_free($parser_resource);
+        }
 
         if ($this->debug) {
             print "\n<pre>---PARSED---\n";

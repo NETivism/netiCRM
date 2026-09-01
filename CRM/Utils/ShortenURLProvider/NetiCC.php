@@ -40,7 +40,9 @@ class CRM_Utils_ShortenURLProvider_NetiCC extends CRM_Utils_ShortenURLProvider {
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
 
     $data = json_decode($response, TRUE);
     $apiMessage = $data['message'] ?? NULL;
@@ -106,7 +108,9 @@ class CRM_Utils_ShortenURLProvider_NetiCC extends CRM_Utils_ShortenURLProvider {
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
 
     $data = json_decode($response, TRUE);
     $apiMessage = $data['message'] ?? NULL;
@@ -172,7 +176,9 @@ class CRM_Utils_ShortenURLProvider_NetiCC extends CRM_Utils_ShortenURLProvider {
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
 
     $data = json_decode($response, TRUE);
     $apiMessage = $data['message'] ?? NULL;

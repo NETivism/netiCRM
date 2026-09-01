@@ -494,7 +494,9 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       CRM_Core_Error::debug('applepay_validate_curl_status', $status);
       CRM_Core_Error::debug('applepay_validate_curl_error', $curlError);
 
-      curl_close($ch);
+      if (is_resource($ch)) {
+        curl_close($ch);
+      }
     }
     echo $result;
     CRM_Utils_System::civiExit();

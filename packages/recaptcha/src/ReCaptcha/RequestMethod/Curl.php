@@ -69,6 +69,8 @@ class Curl
      */
     public function close($ch)
     {
-        curl_close($ch);
+        if (is_resource($ch)) {
+            curl_close($ch);
+        }
     }
 }

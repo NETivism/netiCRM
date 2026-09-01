@@ -93,7 +93,9 @@ class PEAR_Builder extends PEAR_Common
             $parser, array($this, '_parseConfigureOptionsStartElement'),
             array($this, '_parseConfigureOptionsEndElement'));
         xml_parse($parser, $data, true);
-        xml_parser_free($parser);
+        if (is_resource($parser)) {
+            xml_parser_free($parser);
+        }
     }
 
     /**

@@ -102,11 +102,15 @@ class PEAR_XMLParser
         if (!xml_parse($xp, $data)) {
             $msg = xml_error_string(xml_get_error_code($xp));
             $line = xml_get_current_line_number($xp);
-            xml_parser_free($xp);
+            if (is_resource($xp)) {
+                xml_parser_free($xp);
+            }
             include_once 'PEAR.php';
             return PEAR::raiseError("XML Error: '$msg' on line '$line'", 2);
         }
-        xml_parser_free($xp);
+        if (is_resource($xp)) {
+            xml_parser_free($xp);
+        }
         return true;
     }
 

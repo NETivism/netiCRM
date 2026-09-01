@@ -288,7 +288,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       if ($curl_errno > 0) {
         throw new CRM_Core_Exception("Curl Error. Error Number: {$curl_errno}. Error message: {$curl_error}");
       }
-      curl_close($ch);
+      if (is_resource($ch)) {
+        curl_close($ch);
+      }
     }
     else {
       // this will break when openai took too long to response
@@ -300,7 +302,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       if (curl_errno($ch)) {
         throw new CRM_Core_Exception(curl_error($ch));
       }
-      curl_close($ch);
+      if (is_resource($ch)) {
+        curl_close($ch);
+      }
       // Format the response and return it
       return $this->formatResponse($this->_responseData);
     }

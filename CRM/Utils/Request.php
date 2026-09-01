@@ -135,7 +135,9 @@ class CRM_Utils_Request {
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $redirect = curl_exec($ch);
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     if (preg_match('/<a href="([^"]*)"/i', $redirect, $match)) {
       $redirect = $match[1];
       if ($redirect) {

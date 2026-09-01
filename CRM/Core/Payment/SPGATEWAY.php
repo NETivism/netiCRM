@@ -829,7 +829,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       else {
         $curlError = [];
       }
-      curl_close($ch);
+      // curl_close() is a no-op from PHP 8.0 and deprecated in PHP 8.5.
+      if (is_resource($ch)) {
+        curl_close($ch);
+      }
       CRM_Core_Error::debug('applepay_transact_curl_error', $curlError);
 
       $result = json_decode($result);

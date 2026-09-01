@@ -2597,7 +2597,9 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
           //overwrite with same image
           imagepng($chart, $uploadImg);
           //delete the object
-          imagedestroy($chart);
+          if (is_resource($chart)) {
+            imagedestroy($chart);
+          }
         }
 
         CRM_Utils_PDF_Utils::html2pdf($content, "CiviReport.pdf");
