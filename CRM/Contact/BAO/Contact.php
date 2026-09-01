@@ -2187,11 +2187,21 @@ UNION
 
       // communication Prefferance
       $preffComm = $comm = [];
-      $comm = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $contact->preferred_communication_method);
+      $preferredCommunicationMethod = isset($contact->preferred_communication_method)
+        ? $contact->preferred_communication_method
+        : NULL;
+      $comm = explode(
+        CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $preferredCommunicationMethod === NULL ? '' : $preferredCommunicationMethod
+      );
       foreach ($comm as $value) {
         $preffComm[$value] = 1;
       }
-      $temp = ['preferred_communication_method' => $contact->preferred_communication_method];
+      $temp = [
+        'preferred_communication_method' => isset($contact->preferred_communication_method)
+          ? $contact->preferred_communication_method
+          : NULL,
+      ];
 
       $names = ['preferred_communication_method' => ['newName' => 'preferred_communication_method_display',
           'groupName' => 'preferred_communication_method',

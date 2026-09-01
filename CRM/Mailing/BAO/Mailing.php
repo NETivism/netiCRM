@@ -2551,10 +2551,11 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
 
           // communication Prefferance
 
-          $contactPcm = explode(
-            CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
-            $contactDetails[$contactID]['preferred_communication_method']
-          );
+          $preferredCommunicationMethod = CRM_Utils_Array::value('preferred_communication_method', $contactDetails[$contactID]);
+          if ($preferredCommunicationMethod === NULL) {
+            $preferredCommunicationMethod = '';
+          }
+          $contactPcm = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $preferredCommunicationMethod);
           $result = [];
           foreach ($contactPcm as $key => $val) {
             if ($val) {
@@ -3084,7 +3085,7 @@ ORDER BY civicrm_mailing.name";
    */
   public static function defaultFromMail($part = "") {
     $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
-    $localpart = rtrim($localpart, '+');
+    $localpart = rtrim($localpart === NULL ? '' : $localpart, '+');
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
     $part = empty($part) ? '' : '+'.$part;
     if (!empty($localpart) && !empty($emailDomain)) {

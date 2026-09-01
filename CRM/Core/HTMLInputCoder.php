@@ -153,7 +153,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
       }
     }
     elseif ($castToString || is_string($values)) {
-      $values = str_replace(['<', '>'], ['&lt;', '&gt;'], $values);
+      $values = str_replace(['<', '>'], ['&lt;', '&gt;'], $values === NULL ? '' : $values);
     }
   }
 
@@ -170,7 +170,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
       }
     }
     elseif ($castToString || is_string($values)) {
-      $values = str_replace(['&lt;', '&gt;'], ['<', '>'], $values);
+      $values = str_replace(['&lt;', '&gt;'], ['<', '>'], $values === NULL ? '' : $values);
     }
   }
 

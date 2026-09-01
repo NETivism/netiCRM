@@ -528,6 +528,10 @@ class CRM_Utils_Date {
     $abbrMonths = self::getAbbrMonthNames();
     $fullMonths = self::getFullMonthNames();
 
+    if ($dateString === NULL) {
+      $dateString = '';
+    }
+
     if (!$format) {
       $config = CRM_Core_Config::singleton();
 
@@ -658,6 +662,10 @@ class CRM_Utils_Date {
    * @return string Date/datetime in ISO format (e.g. '2023-10-15 14:30:00')
    */
   public static function mysqlToIso($mysql) {
+    if ($mysql === NULL) {
+      $mysql = '';
+    }
+
     $year = substr($mysql, 0, 4);
     $month = substr($mysql, 4, 2);
     $day = substr($mysql, 6, 2);
@@ -1638,6 +1646,9 @@ class CRM_Utils_Date {
 
     if (!empty($inputCustomFormat)) {
       $inputFormat = $inputCustomFormat;
+    }
+    if ($date === NULL) {
+      $date = '';
     }
     if ($inputFormat == 'dd/mm/yy') {
       $date = str_replace('/', '-', $date);

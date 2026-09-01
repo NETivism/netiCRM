@@ -224,6 +224,11 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       return;
     }
 
+    $groupUsage = CRM_Utils_Array::value('usage', $this->_groupInfo, '');
+    if ($groupUsage === NULL) {
+      $groupUsage = '';
+    }
+
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
       CRM_Core_BAO_UFField::retrieve($params, $defaults);
@@ -303,9 +308,9 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($fields['Organization'][$key]);
       }
     }
-    if (strstr($this->_groupInfo['usage'], 'User ') ||
-      strstr($this->_groupInfo['usage'], 'CiviContribute') ||
-      strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+    if (strstr($groupUsage, 'User ') ||
+      strstr($groupUsage, 'CiviContribute') ||
+      strstr($groupUsage, 'CiviEvent')) {
       unset($fields['Household']);
       unset($fields['Organization']);
     }
@@ -319,12 +324,12 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     unset($fields['Contact']['contact_type']);
 
-    if (strstr($this->_groupInfo['usage'], 'Profile') ||
-      strstr($this->_groupInfo['usage'], 'CiviContribute') ||
-      strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+    if (strstr($groupUsage, 'Profile') ||
+      strstr($groupUsage, 'CiviContribute') ||
+      strstr($groupUsage, 'CiviEvent')) {
       // refs #36509 Don't show specific field.
       foreach ($fields['Contact'] as $key => $field) {
-        if ($field['usage'] == 'System') {
+        if (CRM_Utils_Array::value('usage', $field) == 'System') {
           unset($fields['Contact'][$key]);
         }
       }
@@ -383,15 +388,15 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($contribFields['is_pay_later']);
         unset($contribFields['contribution_id']);
         // refs #36509 Don't show specific field.
-        if (strstr($this->_groupInfo['usage'], 'CiviContribute')) {
+        if (strstr($groupUsage, 'CiviContribute')) {
           foreach ($contribFields as $key => $field) {
-            if ($field['usage'] == 'System') {
+            if (CRM_Utils_Array::value('usage', $field) == 'System') {
               unset($contribFields[$key]);
             }
           }
           $fields['Contribution'] = &$contribFields;
         }
-        elseif (strstr($this->_groupInfo['usage'], 'System')) {
+        elseif (strstr($groupUsage, 'System')) {
           $fields['Contribution'] = &$contribFields;
         }
       }
@@ -408,15 +413,15 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($participantFields['participant_id']);
         unset($participantFields['participant_is_pay_later']);
         // refs #36509 Don't show specific field.
-        if (strstr($this->_groupInfo['usage'], 'CiviEvent')) {
+        if (strstr($groupUsage, 'CiviEvent')) {
           foreach ($participantFields as $key => $field) {
-            if ($field['usage'] == 'System') {
+            if (CRM_Utils_Array::value('usage', $field) == 'System') {
               unset($participantFields[$key]);
             }
           }
           $fields['Participant'] = &$participantFields;
         }
-        elseif (strstr($this->_groupInfo['usage'], 'System')) {
+        elseif (strstr($groupUsage, 'System')) {
           $fields['Participant'] = &$participantFields;
         }
       }
@@ -435,24 +440,24 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       unset($membershipFields['status_id']);
       unset($membershipFields['member_is_pay_later']);
       // refs #36509 Don't show specific field.
-      if (strstr($this->_groupInfo['usage'], 'CiviContribute')) {
+      if (strstr($groupUsage, 'CiviContribute')) {
         foreach ($membershipFields as $key => $field) {
-          if ($field['usage'] == 'System') {
+          if (CRM_Utils_Array::value('usage', $field) == 'System') {
             unset($membershipFields[$key]);
           }
         }
         $fields['Membership'] = &$membershipFields;
       }
-      elseif (strstr($this->_groupInfo['usage'], 'System')) {
+      elseif (strstr($groupUsage, 'System')) {
         $fields['Membership'] = &$membershipFields;
       }
     }
 
     $activityFields = CRM_Activity_BAO_Activity::exportableFields('Activity');
-    if (!strstr($this->_groupInfo['usage'], 'Profile') &&
-      !strstr($this->_groupInfo['usage'], 'User') &&
-      !strstr($this->_groupInfo['usage'], 'CiviEvent') &&
-      !strstr($this->_groupInfo['usage'], 'CiviContribute') &&
+    if (!strstr($groupUsage, 'Profile') &&
+      !strstr($groupUsage, 'User') &&
+      !strstr($groupUsage, 'CiviEvent') &&
+      !strstr($groupUsage, 'CiviContribute') &&
       !empty($activityFields)) {
       unset($activityFields['activity_id']);
       unset($activityFields['source_contact_id']);

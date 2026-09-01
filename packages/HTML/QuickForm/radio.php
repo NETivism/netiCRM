@@ -132,7 +132,7 @@ class HTML_QuickForm_radio extends HTML_QuickForm_input
     {
         $output = '';
 
-        if (0 == strlen($this->_text)) {
+        if (0 == strlen($this->_text === null ? '' : $this->_text)) {
             $label = '';
             $output = HTML_QuickForm_input::toHtml();
         }

@@ -728,7 +728,8 @@ AND    contact_id IN ( $contactStr )
       $presentIDs = [];
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       if ($dao->fetch()) {
-        $presentIDs = explode(',', $dao->contactStr);
+        $contactStr = isset($dao->contactStr) ? $dao->contactStr : NULL;
+        $presentIDs = explode(',', $contactStr === NULL ? '' : $contactStr);
         $presentIDs = array_flip($presentIDs);
       }
 

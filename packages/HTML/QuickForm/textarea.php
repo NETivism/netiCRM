@@ -204,7 +204,7 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
             return $this->_getTabs() .
                    '<div class="crm-form-elem crm-form-textarea"><textarea' . $this->_getAttrString($this->_attributes) . '>' .
                    // because we wrap the form later we don't want the text indented
-                   preg_replace("/(\r\n|\n|\r)/", '&#010;', htmlspecialchars($this->_value)) .
+                   preg_replace("/(\r\n|\n|\r)/", '&#010;', htmlspecialchars($this->_value === null ? '' : $this->_value)) .
                    '</textarea></div>';
         }
     } //end func toHtml
@@ -221,7 +221,8 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
      */
     function getFrozenHtml()
     {
-        $value = htmlspecialchars($this->getValue());
+        $value = $this->getValue();
+        $value = htmlspecialchars($value === null ? '' : $value);
         if ($this->getAttribute('wrap') == 'off') {
             $html = $this->_getTabs() . '<pre>' . $value."</pre>\n";
         } else {

@@ -2009,7 +2009,7 @@ class HTML_QuickForm extends HTML_Common
                 $this->filterValue( $value );
             }
         } else {
-            $values = str_replace(array('<', '>'), array('&lt;', '&gt;'), $values);
+            $values = str_replace(array('<', '>'), array('&lt;', '&gt;'), $values === null ? '' : $values);
         }
     }
 
