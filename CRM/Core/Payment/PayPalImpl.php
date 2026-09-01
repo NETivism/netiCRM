@@ -601,7 +601,9 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       return $e;
     }
     else {
-      curl_close($ch);
+      if (is_resource($ch)) {
+        curl_close($ch);
+      }
     }
 
     if (strtolower($result['ack']) != 'success' &&

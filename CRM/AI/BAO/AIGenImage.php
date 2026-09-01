@@ -268,7 +268,9 @@ class CRM_AI_BAO_AIGenImage {
         imagewebp($image, NULL, 80); // 80% quality for good balance of size/quality
         $webpData = ob_get_contents();
         ob_end_clean();
-        imagedestroy($image);
+        if (is_resource($image)) {
+          imagedestroy($image);
+        }
 
         // Use converted WebP data and update format
         $binaryData = $webpData;

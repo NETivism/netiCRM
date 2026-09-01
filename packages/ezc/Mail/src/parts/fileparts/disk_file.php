@@ -51,7 +51,10 @@ class ezcMailFile extends ezcMailFilePart
                 $this->contentType = self::CONTENT_TYPE_APPLICATION;
                 $this->mimeType = "octet-stream";
             }
-            finfo_close( $fileInfo );
+            if ( is_resource( $fileInfo ) )
+            {
+                finfo_close( $fileInfo );
+            }
         }
         else
         {

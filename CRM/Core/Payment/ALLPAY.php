@@ -891,7 +891,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     else {
       CRM_Core_Error::debug_log_message('AllPay: Request:'.$url."?".$field_string.'; Receive: '.$receive);
     }
-    curl_close($ch);
+    // curl_close() is a no-op from PHP 8.0 and deprecated in PHP 8.5.
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     if (!empty($receive)) {
       if ($json) {
         return json_decode($receive);

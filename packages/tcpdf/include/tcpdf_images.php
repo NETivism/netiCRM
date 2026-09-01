@@ -127,7 +127,9 @@ class TCPDF_IMAGES {
 		// create temporary PNG image
 		imagepng($image, $tempfile);
 		// remove image from memory
-		imagedestroy($image);
+		if (is_resource($image)) {
+			imagedestroy($image);
+		}
 		// get PNG image data
 		$retvars = self::_parsepng($tempfile);
 		// tidy up by removing temporary image
@@ -146,7 +148,9 @@ class TCPDF_IMAGES {
 	 */
 	public static function _toJPEG($image, $quality, $tempfile) {
 		imagejpeg($image, $tempfile, $quality);
-		imagedestroy($image);
+		if (is_resource($image)) {
+			imagedestroy($image);
+		}
 		$retvars = self::_parsejpeg($tempfile);
 		// tidy up by removing temporary image
 		unlink($tempfile);

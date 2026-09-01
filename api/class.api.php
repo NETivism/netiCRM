@@ -142,7 +142,9 @@ class civicrm_api3 {
 
       //execute post
       $result = curl_exec($ch);
-      curl_close($ch);
+      if (is_resource($ch)) {
+        curl_close($ch);
+      }
       return json_decode($result, TRUE);
       // not good, all in get when should be in post.
     }

@@ -32,7 +32,9 @@ if ($url_parsed['host'] == 'neti.cc') {
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
   $content = curl_exec($ch);
-  curl_close($ch);
+  if (is_resource($ch)) {
+    curl_close($ch);
+  }
   preg_match('/<a href="([^"]*)"/i', $content, $match);
   $url = $match[1];
   $url_parsed = CRM_Utils_String::parseUrl($url);

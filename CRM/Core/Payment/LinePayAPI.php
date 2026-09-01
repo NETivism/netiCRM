@@ -478,7 +478,9 @@ class CRM_Core_Payment_LinePayAPI {
     else {
       $curlError = [];
     }
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     if (!empty($result)) {
       $response = json_decode($result);
       $this->_response = $response;

@@ -136,7 +136,9 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     if (curl_errno($ch)) {
       throw new CRM_Core_Exception('Flydove: connection error. CURL:'.curl_error($ch));
     }
-    curl_close($ch);
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     // Format the response and return it
     if (!empty(CRM_Core_Config::singleton()->debug)) {
       CRM_Core_Error::debug_log_message('FlydoveReqDebug-'.$apiUrl.': '.$postFields);

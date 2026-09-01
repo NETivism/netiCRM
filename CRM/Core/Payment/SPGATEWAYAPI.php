@@ -248,7 +248,10 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     else {
       $curlError = [];
     }
-    curl_close($ch);
+    // curl_close() is a no-op from PHP 8.0 and deprecated in PHP 8.5.
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     if (!empty($result)) {
       $response = json_decode($result);
       $this->_response = json_decode(self::recurDecrypt($response->period, $this->_paymentProcessor));
@@ -467,7 +470,10 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       CRM_Core_Error::debug_log_message('civicrm_spgateway: Request:'.$url."?".$field_string);
       CRM_Core_Error::debug_log_message('civicrm_spgateway: Response:'.$response);
     }
-    curl_close($ch);
+    // curl_close() is a no-op from PHP 8.0 and deprecated in PHP 8.5.
+    if (is_resource($ch)) {
+      curl_close($ch);
+    }
     if (!empty($response)) {
       return json_decode($response);
     }

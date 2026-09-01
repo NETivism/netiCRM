@@ -307,7 +307,9 @@ final class Barcode39 {
             imagepng($img);
         }
 
-        imagedestroy($img);
+        if (is_resource($img)) {
+            imagedestroy($img);
+        }
 
         // valid barcode
         return true;
