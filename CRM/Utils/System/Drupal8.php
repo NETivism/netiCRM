@@ -30,7 +30,7 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function createUser(&$params, $mail) {
+  public function createUser($params, $mail) {
     $user = \Drupal::currentUser();
     $user_register_conf = \Drupal::config('user.settings')->get('register');
     $verify_mail_conf = \Drupal::config('user.settings')->get('verify_mail');
@@ -145,7 +145,7 @@ class CRM_Utils_System_Drupal8 {
    * @return array $errors
    *   Errors array with any validation messages.
    */
-  public static function checkUserNameEmailExists(&$params, $emailName = 'email') {
+  public static function checkUserNameEmailExists($params, $emailName = 'email') {
     $errors = [];
 
     // Check username using Drupal's native validation.

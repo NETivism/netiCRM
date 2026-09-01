@@ -147,6 +147,20 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Format a resource URL through the version-specific implementation.
+   *
+   * @param string $url Resource URL to update
+   *
+   * @return bool
+   */
+  public function formatResourceUrl(&$url) {
+    if (method_exists($this->versionalClass, 'formatResourceUrl')) {
+      return $this->versionalClass->formatResourceUrl($url);
+    }
+    return FALSE;
+  }
+
+  /**
    * Magic method handling
    *
    * Usage: CRM_Core_Config::singleton()->userSystem->$function

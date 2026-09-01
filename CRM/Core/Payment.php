@@ -100,7 +100,7 @@ abstract class CRM_Core_Payment {
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $paymentClass) . '.php');
       }
 
-      self::$_singleton[$processorId] = call_user_func_array([$paymentClass, 'singleton'], [$mode, $paymentProcessor]);
+      self::$_singleton[$processorId] = $paymentClass::singleton($mode, $paymentProcessor);
 
       if ($paymentForm !== NULL) {
         self::$_singleton[$processorId]->setForm($paymentForm);
