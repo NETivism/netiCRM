@@ -216,8 +216,13 @@ class CRM_Utils_System_Drupal8 {
    */
   public function appendBreadCrumb($breadcrumbs) {
     $civicrmPageState = \Drupal::service('civicrm.page_state');
+    if (!is_array($breadcrumbs) && !is_object($breadcrumbs)) {
+      return;
+    }
     foreach ($breadcrumbs as $breadcrumb) {
-      $civicrmPageState->addBreadcrumb($breadcrumb['title'], $breadcrumb['url']);
+      $title = @$breadcrumb['title'];
+      $url = @$breadcrumb['url'];
+      $civicrmPageState->addBreadcrumb($title, $url);
     }
   }
 

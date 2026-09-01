@@ -489,11 +489,16 @@ class HTML_QuickForm_Controller
         if (isset($pageName)) {
             $pages = array($pageName);
         } else {
-            $pages = array_keys($data['values']);
+            $storedValues = $data['values'] ?? NULL;
+            $pages = is_array($storedValues) ? array_keys($storedValues) : array();
         }
         foreach ($pages as $page) {
+            $pageValues = $data['values'][$page] ?? NULL;
+            if (!is_array($pageValues) && !is_object($pageValues)) {
+                continue;
+            }
             // skip elements representing actions
-            foreach ($data['values'][$page] as $key => $value) {
+            foreach ($pageValues as $key => $value) {
                 if (0 !== strpos($key, '_qf_')) {
                     if (isset($values[$key]) && is_array($value)) {
                         $values[$key] = HTML_QuickForm::arrayMerge($values[$key], $value);

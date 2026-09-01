@@ -323,7 +323,13 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       }
     }
 
-    $this->_submitValues = array_merge($this->_submitValues, $defaults);
+    if (is_array($this->_submitValues)) {
+      $this->_submitValues = array_merge($this->_submitValues, $defaults);
+    }
+    else {
+      // PHP 7 returned NULL after warning when array_merge received a non-array.
+      $this->_submitValues = NULL;
+    }
     $this->setDefaults($defaults);
 
     $values['entity_id'] = $this->_id;
