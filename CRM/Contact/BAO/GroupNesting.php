@@ -102,6 +102,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * which is the first group (according to _sortOrder) that
    * has no parent groups
    */
+  #[\ReturnTypeWillChange]
   public function rewind() {
     $this->_parentStack = [];
     // calling _getNextParentlessGroup w/ no arguments
@@ -118,6 +119,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * @return CRM_Contact_BAO_Group|null current group
    * @access public
    */
+  #[\ReturnTypeWillChange]
   public function current() {
     if ($this->_styleLabels &&
       $this->valid() &&
@@ -143,6 +145,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * @return string key
    * @access public
    */
+  #[\ReturnTypeWillChange]
   public function key() {
     $group = &$this->_current;
     $ids = [];
@@ -163,6 +166,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * @return CRM_Contact_BAO_Group|null next group
    * @access public
    */
+  #[\ReturnTypeWillChange]
   public function next() {
     $currentGroup = &$this->_current;
     $childGroup = $this->_getNextChildGroup($currentGroup);
@@ -199,6 +203,7 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * @return boolean true if valid
    * @access public
    */
+  #[\ReturnTypeWillChange]
   public function valid() {
     if ($this->_current) {
       return TRUE;
