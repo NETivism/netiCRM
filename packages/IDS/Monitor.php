@@ -329,8 +329,8 @@ class Monitor
         /*
          * Remove control chars before pre-check
          */
-        $tmpValue = preg_replace('/\p{C}/', null, $value);
-        $tmpKey = preg_replace('/\p{C}/', null, $key);
+        $tmpValue = preg_replace('/\p{C}/', '', $value);
+        $tmpKey = preg_replace('/\p{C}/', '', $key);
 
         $preCheck = '/<(script|iframe|applet|object)\W/i';
         return !(preg_match($preCheck, $tmpKey) || preg_match($preCheck, $tmpValue));
@@ -353,10 +353,10 @@ class Monitor
          * deal with over-sensitive alt-attribute addition of the purifier
          * and other common html formatting problems
          */
-        $purified = preg_replace('/\s+alt="[^"]*"/m', null, $purified);
-        $purified = preg_replace('/=?\s*"\s*"/m', null, $purified);
-        $original = preg_replace('/\s+alt="[^"]*"/m', null, $original);
-        $original = preg_replace('/=?\s*"\s*"/m', null, $original);
+        $purified = preg_replace('/\s+alt="[^"]*"/m', '', $purified);
+        $purified = preg_replace('/=?\s*"\s*"/m', '', $purified);
+        $original = preg_replace('/\s+alt="[^"]*"/m', '', $original);
+        $original = preg_replace('/=?\s*"\s*"/m', '', $original);
         $original = preg_replace('/style\s*=\s*([^"])/m', 'style = "$1', $original);
 
         # deal with oversensitive CSS normalization

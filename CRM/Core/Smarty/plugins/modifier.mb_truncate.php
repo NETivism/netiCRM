@@ -53,6 +53,9 @@ function smarty_modifier_mb_truncate(
   $etc = '...',
   $break_words = FALSE
 ) {
+  $stringForFunctions = $string === NULL ? '' : $string;
+  $etcForFunctions = $etc === NULL ? '' : $etc;
+
   if (function_exists('mb_internal_encoding') and function_exists('mb_strlen') and function_exists('mb_substr')) {
     mb_internal_encoding('UTF-8');
     $strlen = 'mb_strlen';
@@ -69,13 +72,13 @@ function smarty_modifier_mb_truncate(
 
   }
 
-  if ($strlen($string) > $length) {
-    $length -= $strlen($etc);
+  if ($strlen($stringForFunctions) > $length) {
+    $length -= $strlen($etcForFunctions);
     if (!$break_words) {
-      $string = preg_replace('/\s+?(\S+)?$/', '', $substr($string, 0, $length + 1));
+      $stringForFunctions = preg_replace('/\s+?(\S+)?$/', '', $substr($stringForFunctions, 0, $length + 1));
     }
 
-    return $substr($string, 0, $length) . $etc;
+    return $substr($stringForFunctions, 0, $length) . $etcForFunctions;
   }
   else {
     return $string;
