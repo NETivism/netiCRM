@@ -961,11 +961,8 @@ class XML_RPC_Client extends XML_RPC_Base {
         }
 
         if ($timeout) {
-            /*
-             * Using socket_set_timeout() because stream_set_timeout()
-             * was introduced in 4.3.0, but we need to support 4.2.0.
-             */
-            socket_set_timeout($fp, $timeout);
+            // stream_set_timeout() is supported by the minimum PHP version.
+            stream_set_timeout($fp, $timeout);
         }
 
         if (!fputs($fp, $op, strlen($op))) {
