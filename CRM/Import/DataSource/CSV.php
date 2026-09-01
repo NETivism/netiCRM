@@ -132,7 +132,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     }
 
     $config = CRM_Core_Config::singleton();
-    $firstrow = fgetcsv($fd, 0, $config->fieldSeparator);
+    $firstrow = fgetcsv($fd, 0, $config->fieldSeparator, '"', '\\');
 
     // create the column names from the CSV header or as col_0, col_1, etc.
     if ($headers) {
@@ -198,7 +198,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     $sql = NULL;
     $first = TRUE;
     $count = 0;
-    while ($row = fgetcsv($fd, 0, $config->fieldSeparator)) {
+    while ($row = fgetcsv($fd, 0, $config->fieldSeparator, '"', '\\')) {
       // skip rows that dont match column count, else we get a sql error
       if (count($row) != $numColumns) {
         continue;

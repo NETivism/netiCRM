@@ -400,7 +400,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$taiwanACH) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach.tpl', 'r');
       $parent = '';
-      while (($data = fgetcsv($fp, 100)) !== FALSE) {
+      while (($data = fgetcsv($fp, 100, ',', '"', '\\')) !== FALSE) {
         if (empty($data[1])) {
           $parent = $data[0];
           continue;
@@ -447,7 +447,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$taiwanACHFailedReason) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach_failed_reason.tpl', 'r');
       $parent = '';
-      while (($data = fgetcsv($fp, 100)) !== FALSE) {
+      while (($data = fgetcsv($fp, 100, ',', '"', '\\')) !== FALSE) {
         if (empty($data[1])) {
           $parent = explode('_', $data[0]);
           $instrumentName = $parent[0];
