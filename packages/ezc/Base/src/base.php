@@ -250,7 +250,7 @@ class ezcBase
             case "tarball":
                 ezcBase::$packageDir = $baseDir. "/../../";
                 break;
-            case "pear";
+            case "pear":
                 ezcBase::$packageDir = $baseDir. "/../";
                 break;
         }
