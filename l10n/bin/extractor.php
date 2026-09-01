@@ -63,10 +63,10 @@ $smartyExtractor = dirname(__FILE__) . '/smarty-extractor.php';
 $dir = $argv[2];
 
 $command = "find $dir/CRM $dir/packages/HTML/QuickForm $phpModifier -not -wholename '*/CRM/Core/I18n.php' -not -wholename '*/CRM/Core/Smarty/plugins/block.ts.php' | grep -v '/\.svn/' | sort | xargs $phpExtractor $dir";
-$phpPot = `$command`;
+$phpPot = shell_exec($command);
 
 $command = "find $dir/templates $dir/xml $smartyModifier | grep -v '/\.svn/' | sort | xargs $smartyExtractor $dir";
-$smartyPot = `$command`;
+$smartyPot = shell_exec($command);
 
 $originalArray = explode("\n", $phpPot . $smartyPot);
 
@@ -149,5 +149,4 @@ foreach ($msgidArray as $msgid => $commentsArray) {
 
 // output the $resultArray to STDOUT
 fwrite(STDOUT, implode("\n", $resultArray));
-
 

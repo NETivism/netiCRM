@@ -11,11 +11,23 @@ class HTMLPurifier_AttrDef_CSS_FontFamily extends HTMLPurifier_AttrDef
     public function __construct()
     {
         $this->mask = '_- ';
-        for ($c = 'a'; $c <= 'z'; $c++) {
-            $this->mask .= $c;
+        if (PHP_VERSION_ID >= 80300) {
+            for ($c = 'a'; $c <= 'z'; $c = str_increment($c)) {
+                $this->mask .= $c;
+            }
+        } else {
+            for ($c = 'a'; $c <= 'z'; $c++) {
+                $this->mask .= $c;
+            }
         }
-        for ($c = 'A'; $c <= 'Z'; $c++) {
-            $this->mask .= $c;
+        if (PHP_VERSION_ID >= 80300) {
+            for ($c = 'A'; $c <= 'Z'; $c = str_increment($c)) {
+                $this->mask .= $c;
+            }
+        } else {
+            for ($c = 'A'; $c <= 'Z'; $c++) {
+                $this->mask .= $c;
+            }
         }
         for ($c = '0'; $c <= '9'; $c++) {
             $this->mask .= $c;

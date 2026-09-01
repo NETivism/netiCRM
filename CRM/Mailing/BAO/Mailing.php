@@ -1071,7 +1071,7 @@ AND civicrm_contact.is_opt_out =0";
       $mailing_id = sprintf(
         "<%s%s.%s@%s>",
         $localpart,
-        base_convert(microtime(), 10, 36),
+        base_convert(preg_replace('/[^0-9]/', '', microtime()), 10, 36),
         base_convert(bin2hex(openssl_random_pseudo_bytes(8)), 16, 36),
         $host
       );

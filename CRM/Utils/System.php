@@ -1873,7 +1873,7 @@ class CRM_Utils_System {
     }
     else {
       // all except deprecated, strict, warning
-      error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
+      error_reporting(E_ALL & ~E_DEPRECATED & ~2048 & ~E_WARNING & ~E_NOTICE);
     }
   }
 

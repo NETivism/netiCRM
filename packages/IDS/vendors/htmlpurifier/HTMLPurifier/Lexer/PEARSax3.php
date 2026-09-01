@@ -130,7 +130,7 @@ class HTMLPurifier_Lexer_PEARSax3 extends HTMLPurifier_Lexer
      * An error handler that mutes strict errors
      */
     public function muteStrictErrorHandler($errno, $errstr, $errfile=null, $errline=null, $errcontext=null) {
-        if ($errno == E_STRICT) return;
+        if ($errno == 2048) return;
         return call_user_func($this->parent_handler, $errno, $errstr, $errfile, $errline, $errcontext);
     }
 

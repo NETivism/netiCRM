@@ -363,7 +363,7 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
       $svnversion = $argVersion;
     }
     else {
-      $svnversion = `svnversion .`;
+      $svnversion = shell_exec('svnversion .');
     }
     file_put_contents($this->tplCodePath . "/CRM/common/version.tpl", $svnversion);
   }
@@ -399,9 +399,9 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     }
 
     echo "Generating civicrm-version file\n";
-    $git_tag = `git describe --tags`;
+    $git_tag = shell_exec('git describe --tags');
     $git_tag = trim($git_tag);
-    $git_revision = `git rev-parse --short HEAD`;
+    $git_revision = shell_exec('git rev-parse --short HEAD');
     $git_revision = trim($git_revision);
 
     // Check if we're exactly on a tag (no -count-hash suffix)
