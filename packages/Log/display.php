@@ -148,7 +148,7 @@ class Log_display extends Log
 
         /* Build and output the complete log line. */
         echo $this->_format($this->_lineFormat,
-                            strftime($this->_timeFormat),
+                            self::_formatTime($this->_timeFormat),
                             $priority,
                             nl2br(htmlspecialchars($message)));
 

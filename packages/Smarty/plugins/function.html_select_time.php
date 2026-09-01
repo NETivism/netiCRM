@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 2) . '/CiviDateFormatter.php';
 /**
  * Smarty plugin
  * @package Smarty
@@ -180,7 +181,7 @@ function smarty_function_html_select_time($params, &$smarty)
         
         $html_result .= smarty_function_html_options(array('output'          => array('AM', 'PM'),
                                                            'values'          => array('am', 'pm'),
-                                                           'selected'      => strtolower(strftime('%p', $time)),
+                                                           'selected'      => strtolower(CiviDateFormatter::strftime('%p', $time)),
                                                            'print_result' => false),
                                                      $smarty);
         $html_result .= "</select>\n";
