@@ -153,6 +153,10 @@ class CRM_Utils_System_Drupal {
    */
   public function __call($method, $args) {
     if (method_exists($this->versionalClass, $method)) {
+      foreach ($args as &$arg) {
+        // call_user_func_array() requires referenced entries for by-reference parameters.
+      }
+      unset($arg);
       return call_user_func_array([$this->versionalClass, $method], $args);
     }
     else {
