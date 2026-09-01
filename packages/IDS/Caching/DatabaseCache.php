@@ -218,12 +218,15 @@ class DatabaseCache implements CacheInterface
 
         // try to connect
         try {
+            $bufferedQueryAttribute = defined('Pdo\\Mysql::ATTR_USE_BUFFERED_QUERY')
+                ? constant('Pdo\\Mysql::ATTR_USE_BUFFERED_QUERY')
+                : constant('PDO::MYSQL_ATTR_USE_BUFFERED_QUERY');
             $handle = new \PDO(
                 $this->config['wrapper'],
                 $this->config['user'],
                 $this->config['password']
             );
-            $handle->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $handle->setAttribute($bufferedQueryAttribute, true);
 
         } catch (\Exception $e) {
             throw new \Exception('PDOException: ' . $e->getMessage());
