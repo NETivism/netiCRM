@@ -24,10 +24,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   /**
    * mode of operation: live or test
    *
-   * @var object
-   * @static
+   * @var string|null
    */
-  protected static $_mode = NULL;
+  protected $_mode = NULL;
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 

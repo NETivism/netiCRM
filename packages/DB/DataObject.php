@@ -200,6 +200,7 @@ class DB_DataObject_Overload
  * @since    PHP 4.0
  */
  
+#[AllowDynamicProperties]
 class DB_DataObject extends DB_DataObject_Overload
 {
    public $_database_fields;
