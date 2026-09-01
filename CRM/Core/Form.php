@@ -243,7 +243,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     if (empty($this->_submissionCount)) {
       $this->_submissionCount = $this->get('submissionCount');
     }
-    if ($this->_preventMultipleSubmission) {
+    if (!empty($this->_preventMultipleSubmission)) {
       $this->_submissionCount++;
       $this->set('submissionCount', $this->_submissionCount);
       $this->preventMultipleSubmission();

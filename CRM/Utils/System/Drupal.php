@@ -422,7 +422,7 @@ class CRM_Utils_System_Drupal {
     }
     $version = self::$_version;
     if ($version >= 6 && $version < 7) {
-      if ($head['type'] == 'markup' && $head['markup']) {
+      if (($head['type'] ?? NULL) == 'markup' && !empty($head['markup'])) {
         drupal_set_html_head($head['markup']);
       }
       else {
@@ -459,8 +459,8 @@ class CRM_Utils_System_Drupal {
       return;
     }
     elseif ($version >= 8) {
-      if ($head['type'] == 'markup') {
-        $civicrm_head = $head['markup'];
+      if (($head['type'] ?? NULL) == 'markup') {
+        $civicrm_head = CRM_Utils_Array::value('markup', $head);
         \Drupal::service('civicrm.page_state')->addHtmlHeaderMarkup($civicrm_head);
       }
       else {

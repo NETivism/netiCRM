@@ -277,7 +277,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
     $this->assign('usedOptionsDiscount', $this->_usedOptionsDiscount);
     $this->assign('totalDiscount', $this->_totalDiscount);
-    $this->assign('couponDescription', $this->_coupon['description']);
+    $this->assign('couponDescription', CRM_Utils_Array::value('description', $this->_coupon));
 
     // can we blow away the session now to prevent hackery
     // $this->controller->reset();

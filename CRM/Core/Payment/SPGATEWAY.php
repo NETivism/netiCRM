@@ -259,7 +259,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
-    if (self::$_singleton[$processorName] === NULL) {
+    if (self::$_singleton === NULL || !array_key_exists($processorName, self::$_singleton) || self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
     }
     return self::$_singleton[$processorName];
@@ -414,7 +414,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $isPayLater = TRUE;
 
       // Set participant status to 'Pending from pay later', Accupied the seat.
-      if ($params['participantID']) {
+      if (!empty($params['participantID'])) {
         $participantStatus = CRM_Event_PseudoConstant::participantStatus();
         if ($newStatus = array_search('Pending from pay later', $participantStatus)) {
           CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $newStatus, 'id');
@@ -450,7 +450,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $params['trxn_id'] = $contribution->trxn_id;
 
     $arguments = $this->prepareOrderParams($contribution, $params, $instrumentCode, $formKey);
-    if (!$contrib_values['is_recur']) {
+    if (empty($contrib_values['is_recur'])) {
       CRM_Core_Payment_SPGATEWAYAPI::checkMacValue($arguments, $this->_paymentProcessor);
     }
     CRM_Core_Error::debug_var('spgateway_post_data_', $arguments);
@@ -574,7 +574,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
       }
     }
-    elseif (!$vars['is_recur']) {
+    elseif (empty($vars['is_recur'])) {
       $tradeInfo = [
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,

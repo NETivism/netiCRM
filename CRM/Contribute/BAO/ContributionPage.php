@@ -103,10 +103,11 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     ) = CRM_Core_BAO_UFJoin::getUFGroupIds($ufJoinParams);
 
     // add an accounting code also
-    if ($values['contribution_type_id']) {
+    $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values);
+    if ($contributionTypeId) {
       $values['accountingCode'] = CRM_Core_DAO::getFieldValue(
         'CRM_Contribute_DAO_ContributionType',
-        $values['contribution_type_id'],
+        $contributionTypeId,
         'accounting_code'
       );
     }
@@ -186,6 +187,10 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values);
       $deductible = CRM_Contribute_BAO_ContributionType::deductible($contributionTypeId, TRUE);
 
+      // Historically this lookup used an implicit NULL location type, which
+      // selects the primary email. Make that sentinel explicit for PHP 8.x.
+      $billingLocationTypeId = NULL;
+      $displayName = $email = NULL;
       if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
       }
@@ -194,10 +199,10 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
       }
 
-      if ($config->receiptEmailAuto && $haveAttachReceiptOption && !$is_pay_later && $deductible) {
+      if (!empty($config->receiptEmailAuto) && $haveAttachReceiptOption && !$is_pay_later && $deductible) {
         $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
         $receiptTask = new CRM_Contribute_Form_Task_PDF();
-        $receiptTask->makeReceipt($values['contribution_id'], $receiptEmailType, TRUE);
+        $receiptTask->makeReceipt(CRM_Utils_Array::value('contribution_id', $values), $receiptEmailType, TRUE);
         //set encrypt password
         if (!empty($config->receiptEmailEncryption) && $config->receiptEmailEncryption) {
           $receiptPwd = $email;
@@ -227,7 +232,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         // where location type is set to default.
 
         $locType = CRM_Core_BAO_LocationType::getDefault();
-        $billingLocationTypeId = $locType->id;
+        $billingLocationTypeId = $locType ? $locType->id : NULL;
       }
 
       //for display profile need to get individual contact id,
@@ -278,7 +283,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         'email' => $email,
         'receiptFromEmail' => $fromEmail,
         'contactID' => $contactID,
-        'contributionID' => $values['contribution_id'],
+        'contributionID' => CRM_Utils_Array::value('contribution_id', $values),
         'membershipID' => CRM_Utils_Array::value('membership_id', $values),
         // CRM-5095
         'lineItem' => CRM_Utils_Array::value('lineItem', $values),
@@ -290,7 +295,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       // #18853, tokenize thank you top text
       $receiptText = $template->get_template_vars('receipt_text');
       if ($receiptText) {
-        $receiptText = self::tokenize($contactID, $receiptText, $values['contribution_id']);
+        $receiptText = self::tokenize($contactID, $receiptText, CRM_Utils_Array::value('contribution_id', $values));
         $template->assign('receipt_text', $receiptText);
       }
 
@@ -338,7 +343,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       ];
 
       $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
-      $contribParams = ['id' => $values['contribution_id']];
+      $contribParams = ['id' => CRM_Utils_Array::value('contribution_id', $values)];
       $contribution = CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution', $contribParams, CRM_Core_DAO::$_nullArray);
       $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow($sendTemplateParams['groupName'], $sendTemplateParams['valueName']);
       if (!empty($pdfParams) && !empty($activityTypeId)) {
@@ -854,6 +859,10 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
   public static function goalAchieved($contributionPageId) {
     $page = $params = $whereClause = [];
     CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
+    $type = NULL;
+    $goalAmount = CRM_Utils_Array::value('goal_amount', $page);
+    $goalRecurring = CRM_Utils_Array::value('goal_recurring', $page);
+    $recurFrequencyUnit = CRM_Utils_Array::value('recur_frequency_unit', $page);
     $whereClause = [
       'c.contribution_page_id = %1',
       'c.contribution_status_id = 1',
@@ -863,13 +872,13 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       1 => [$contributionPageId, 'Integer'],
     ];
     // goal - recurring amount
-    if ($page['goal_recurring'] === '0' && $page['goal_amount'] > 0) {
+    if ($goalRecurring === '0' && $goalAmount > 0) {
       $type = 'recuramount';
       $label = '';
-      if ($page['recur_frequency_unit'] === 'month') {
+      if ($recurFrequencyUnit === 'month') {
         $label = ucfirst(ts('monthly'));
       }
-      if ($page['recur_frequency_unit'] === 'year') {
+      if ($recurFrequencyUnit === 'year') {
         $label = ucfirst(ts('yearly'));
       }
       if (preg_match('/^[a-z]+$/i', $label)) {
@@ -879,24 +888,24 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       $whereClause[] = "r.contribution_status_id = 5"; // In Progress
       $where = CRM_Utils_Array::implode(" AND ", $whereClause);
       $sql = "SELECT SUM(amount) as `sum`, COUNT(id) as `count` FROM (SELECT r.id, r.amount FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE $where GROUP BY c.contribution_recur_id) rr";
-      $goal = $page['goal_amount'];
+      $goal = $goalAmount;
     }
     // goal - amount
-    elseif (!empty($page['goal_amount']) && $page['goal_amount'] > 0) {
+    elseif (!empty($goalAmount) && $goalAmount > 0) {
       $type = 'amount';
       $label = ts('Goal Amount');
       $where = CRM_Utils_Array::implode(" AND ", $whereClause);
       $sql = "SELECT SUM(c.total_amount) as `sum`, COUNT(id) as `count` FROM civicrm_contribution c WHERE $where GROUP BY c.contribution_page_id";
-      $goal = $page['goal_amount'];
+      $goal = $goalAmount;
     }
     // goal - recurring people
-    elseif (!empty($page['goal_recurring']) && $page['goal_recurring'] > 0) {
+    elseif (!empty($goalRecurring) && $goalRecurring > 0) {
       $type = 'recurring';
       $label = ts('Goal Subscription');
       $whereClause[] = "r.contribution_status_id not in (3,7)";
       $where = CRM_Utils_Array::implode(" AND ", $whereClause);
       $sql = "SELECT SUM(subscription.total_amount) as `sum`, COUNT(subscription.id) as `count` FROM (SELECT c.total_amount, c.id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE $where GROUP BY r.id) as subscription";
-      $goal = $page['goal_recurring'];
+      $goal = $goalRecurring;
     }
 
     if ($type) {

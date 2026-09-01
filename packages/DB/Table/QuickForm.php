@@ -867,6 +867,7 @@ class DB_Table_QuickForm {
     static function addRules(&$form, $cols, $arrayName = null,
         $clientValidate = null)
     {
+        $message = $format = null;
         foreach ($cols as $name => $col) {
             
             if ($arrayName) {

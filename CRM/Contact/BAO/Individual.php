@@ -82,7 +82,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
     $params['is_deceased'] = CRM_Utils_Array::value('is_deceased', $params, FALSE);
 
     $individual = NULL;
-    if ($contact->id) {
+    if (!empty($contact->id)) {
       $individual = new CRM_Contact_BAO_Contact();
       $individual->id = $contact->id;
       if ($individual->find(TRUE)) {
@@ -266,7 +266,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
         }
       }
       $uniqId = CRM_Utils_Array::value('user_unique_id', $params);
-      if (!$email && $contact->id) {
+      if (!$email && !empty($contact->id)) {
         $email = CRM_Contact_BAO_Contact::getPrimaryEmail($contact->id);
       }
 
@@ -312,7 +312,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
       }
       $contact->birth_date = CRM_Utils_Date::processDate($date);
     }
-    elseif ($contact->birth_date) {
+    elseif (!empty($contact->birth_date)) {
       $contact->birth_date = CRM_Utils_Date::isoToMysql($contact->birth_date);
     }
 
@@ -336,7 +336,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
 
       $contact->deceased_date = CRM_Utils_Date::processDate($date);
     }
-    elseif ($contact->deceased_date) {
+    elseif (!empty($contact->deceased_date)) {
       $contact->deceased_date = CRM_Utils_Date::isoToMysql($contact->deceased_date);
     }
 

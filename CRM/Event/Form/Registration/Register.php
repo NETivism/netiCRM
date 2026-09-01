@@ -490,12 +490,13 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $freezePayLater = TRUE;
       if (is_array($this->_paymentProcessor)) {
         $freezePayLater = FALSE;
-        if (!in_array($this->_paymentProcessor['billing_mode'], [2, 4])) {
+        $billingMode = CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor);
+        if (!in_array($billingMode, [2, 4])) {
           $showHidePayfieldName = 'payment_information';
           $attributes = ['onclick' => "showHidePaymentInfo( );"];
         }
 
-        if ($this->_paymentProcessor['payment_processor_type'] == 'PayPal_Express') {
+        if (CRM_Utils_Array::value('payment_processor_type', $this->_paymentProcessor) == 'PayPal_Express') {
           $showHidePayfieldName = 'PayPalExpress';
           $attributes = ['onclick' => "showHidePayPalExpressOption();"];
         }
@@ -1065,7 +1066,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
       // return if this is express mode
       $config = CRM_Core_Config::singleton();
-      if ($self->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+      if (CRM_Utils_Array::value('billing_mode', $self->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         if (CRM_Utils_Array::value($self->_expressButtonName . '_x', $fields) ||
           CRM_Utils_Array::value($self->_expressButtonName . '_y', $fields) ||
           CRM_Utils_Array::value($self->_expressButtonName, $fields)
@@ -1156,12 +1157,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
+    $contactID = NULL;
 
     //set as Primary participant
     $params['is_primary'] = 1;
     if (!$this->_allowConfirmation) {
       // check if the participant is already registered
-      $params['contact_id'] = self::getRegistrationContactID($params, $this, FALSE);
+      $contactID = self::getRegistrationContactID($params, $this, FALSE);
+      $params['contact_id'] = $contactID;
     }
 
     if (CRM_Utils_Array::value('image_URL', $params)) {
@@ -1285,9 +1288,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         $this->set('usedOptionsDiscount', $this->_usedOptionsDiscount);
       }
       $this->set('totalDiscount', $this->_totalDiscount);
-      $this->set('couponDescription', $this->_coupon['description']);
+      $this->set('couponDescription', CRM_Utils_Array::value('description', $this->_coupon));
 
-      if ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+      if (CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         //get the button name
         $buttonName = $this->controller->getButtonName();
         if (in_array(
@@ -1341,10 +1344,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           CRM_Utils_System::redirect($paymentURL);
         }
       }
-      elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_NOTIFY) {
+      elseif (CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_NOTIFY) {
         $this->set('contributeMode', 'notify');
       }
-      elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_IFRAME) {
+      elseif (CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_IFRAME) {
         $this->set('contributeMode', 'iframe');
       }
     }
