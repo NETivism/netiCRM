@@ -49,7 +49,7 @@ class DomainName
      * @param int[] $codepoints
      * @param \MLocati\IDNA\CodepointConverter\CodepointConverterInterface|null $codepointConverter
      */
-    protected function __construct(array $codepoints, CodepointConverterInterface $codepointConverter = null)
+    protected function __construct(array $codepoints, ?CodepointConverterInterface $codepointConverter = null)
     {
         $this->codepointConverter = ($codepointConverter === null) ? static::getDefaultCodepointConverter() : $codepointConverter;
 
@@ -81,7 +81,7 @@ class DomainName
      *
      * @return static
      */
-    public static function fromName($name, CodepointConverterInterface $codepointConverter = null)
+    public static function fromName($name, ?CodepointConverterInterface $codepointConverter = null)
     {
         if ($codepointConverter === null) {
             $codepointConverter = static::getDefaultCodepointConverter();
@@ -101,7 +101,7 @@ class DomainName
      *
      * @return static
      */
-    public static function fromPunycode($punycode, CodepointConverterInterface $codepointConverter = null)
+    public static function fromPunycode($punycode, ?CodepointConverterInterface $codepointConverter = null)
     {
         return new static(Punycode::decodeDomainName($punycode), $codepointConverter);
     }

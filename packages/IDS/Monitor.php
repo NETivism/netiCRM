@@ -140,7 +140,7 @@ class Monitor
      * @param  array|null $tags list of tags to which filters should be applied
      * @return Monitor
      */
-    public function __construct(Init $init, array $tags = null)
+    public function __construct(Init $init, ?array $tags = null)
     {
         $this->storage    = new Storage($init);
         $this->tags       = $tags;

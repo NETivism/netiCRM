@@ -691,7 +691,7 @@ class Converter
      * @static
      * @return string
      */
-    public static function runCentrifuge($value, Monitor $monitor = null)
+    public static function runCentrifuge($value, ?Monitor $monitor = null)
     {
         $threshold = 3.49;
         if (strlen($value) > 25) {
