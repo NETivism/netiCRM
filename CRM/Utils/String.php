@@ -475,7 +475,7 @@ class CRM_Utils_String {
 
       // def needs after configure
       // fullscreen
-      $def = $purifierConfig->getHTMLDefinition();
+      $def = @$purifierConfig->getHTMLDefinition();
       $def->addAttribute('iframe', 'allowfullscreen', 'Bool');
 
       // figure / figcaption
