@@ -237,5 +237,5 @@ cj(function($) {
 
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Profile+Used+For" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px" opened="true"}
+{if isset($config->docURLBase)}{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Profile+Used+For" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px" opened="true"}{else}{include file="CRM/common/sidePanel.tpl" type="iframe" src="Profile+Used+For" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px" opened="true"}{/if}
   {literal}

@@ -187,7 +187,7 @@ if ( subtypes ) {
 </script>
 {/literal}
 
-{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Custom+Groups+Used+For+-+Contact" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px"}
+{if isset($config->docURLBase)}{include file="CRM/common/sidePanel.tpl" type="iframe" src="`$config->docURLBase`Custom+Groups+Used+For+-+Contact" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px"}{else}{include file="CRM/common/sidePanel.tpl" type="iframe" src="Custom+Groups+Used+For+-+Contact" triggerText="Description of Used For" triggerIcon="zmdi-help-outline" width="400px"}{/if}
 {literal}
 <script type="text/Javascript">
   if (cj(".nsp-container").length) {
@@ -223,7 +223,7 @@ if ( subtypes ) {
       let value = cj(this).val();
 
       if (value.trim() !== "") {
-        docURL = "{/literal}{$config->docURLBase}{literal}Custom+Groups+Used+For+-+" + value;
+        docURL = "{/literal}{if isset($config->docURLBase)}{$config->docURLBase}{/if}{literal}Custom+Groups+Used+For+-+" + value;
         cj(".nsp-container .nsp-iframe").attr("src", docURL);
         sidePanelShow();
       }
