@@ -32,7 +32,7 @@
 <div class="form-layout-compressed" >
 <table>
       <td class="label">{$form.select_year.label}{$form.select_year.html}</td>
-      <td>{ts 1=$generateDate}Generated at %1{/ts} (<a href="{crmURL p=civicrm/contribute q=reset=1&update=1}">{ts}Update{/ts}</a>)</td>
+      <td>{ts 1=$generateDate}Generated at %1{/ts} (<a href="{crmURL p='civicrm/contribute' q='reset'}">{ts}Update{/ts}</a>)</td>
 </table> 
 </div>
 {else}
