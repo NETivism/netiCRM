@@ -127,7 +127,7 @@ class SessionCache implements CacheInterface
     public function getCache()
     {
 
-        if ($this->type && $_SESSION['PHPIDS'][$this->type]) {
+        if ($this->type && !empty($_SESSION['PHPIDS'][$this->type])) {
             return $_SESSION['PHPIDS'][$this->type];
         }
 

@@ -454,7 +454,7 @@ class CRM_Utils_String {
     static $_purifier;
     $hash = md5(CRM_Utils_Array::implode(',', $allowedTags));
 
-    if (!$_purifier[$hash]) {
+    if (empty($_purifier[$hash])) {
       $config = CRM_Core_Config::singleton();
 
       // general setting
@@ -577,7 +577,7 @@ class CRM_Utils_String {
     $matches = [];
     preg_match('/-ALTERNATIVE ITEM 0-(.*?)-ALTERNATIVE ITEM 1-.*-ALTERNATIVE END-/s', $full, $matches);
 
-    if (trim(strip_tags($matches[1])) != '') {
+    if (isset($matches[1]) && trim(strip_tags($matches[1])) != '') {
       return $matches[1];
     }
     else {

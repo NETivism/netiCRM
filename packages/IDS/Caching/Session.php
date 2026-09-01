@@ -129,7 +129,7 @@ class IDS_Caching_Session implements IDS_Caching_Interface
     public function getCache() 
     {
 
-        if ($this->type && $_SESSION['PHPIDS'][$this->type]) {
+        if ($this->type && !empty($_SESSION['PHPIDS'][$this->type])) {
             return $_SESSION['PHPIDS'][$this->type];
         }
 

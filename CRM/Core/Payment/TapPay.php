@@ -44,10 +44,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
    *
-   * @var object
+   * @var array<string, CRM_Core_Payment_TapPay>
    * @static
    */
-  private static $_singleton = NULL;
+  private static $_singleton = [];
 
   /**
    * Class constructor.
@@ -55,7 +55,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    * @param array &$paymentProcessor payment processor parameters
    * @param CRM_Core_Form &$paymentForm payment form object
-   * @param string $apiType API type
+   * @param string|null $apiType API type
    */
   public function __construct($mode, &$paymentProcessor, &$paymentForm, $apiType) {
     $this->_mode = $mode;
@@ -69,16 +69,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    * @param array &$paymentProcessor payment processor parameters
    * @param CRM_Core_Form|null &$paymentForm payment form object
+   * @param string|null $apiType API type
    *
    * @return CRM_Core_Payment_TapPay
    */
-  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
-    $args = func_get_args();
-    if (isset($args[3])) {
-      $apiType = $args[3];
-    }
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL, $apiType = NULL) {
     $processorName = $paymentProcessor['name'];
-    if (self::$_singleton[$processorName] === NULL) {
+    if (!isset(self::$_singleton[$processorName])) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_TapPay($mode, $paymentProcessor, $paymentForm, $apiType);
     }
     return self::$_singleton[$processorName];

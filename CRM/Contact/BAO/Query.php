@@ -1321,7 +1321,7 @@ class CRM_Contact_BAO_Query {
         }
       }
       else {
-        if ($id == 'group' && $formValues['operator'] == 'AND') {
+        if ($id == 'group' && CRM_Utils_Array::value('operator', $formValues) == 'AND') {
           foreach ($values as $group_id => $ignore) {
             if (!empty($ignore)) {
               $group_ids = [$group_id => 1];

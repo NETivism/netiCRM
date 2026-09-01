@@ -694,8 +694,9 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     //max records that will be listed
     $searchValues = [];
     if (CRM_Utils_Array::value('rel_contact', $params)) {
-      if (is_numeric($params['rel_contact_id'])) {
-        $searchValues[] = ['contact_id', '=', $params['rel_contact_id'], 0, 1];
+      $relContactId = CRM_Utils_Array::value('rel_contact_id', $params);
+      if (is_numeric($relContactId)) {
+        $searchValues[] = ['contact_id', '=', $relContactId, 0, 1];
       }
       else {
         $searchValues[] = ['sort_name', 'LIKE', $params['rel_contact'], 0, 1];
@@ -703,11 +704,12 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     }
     $contactTypeAdded = FALSE;
 
-    $excludedContactIds = [$object->_contactId];
+    $excludedContactIds = [$object->_contactId ?? NULL];
 
-    if ($params['relationship_type_id']) {
+    $relationshipTypeId = CRM_Utils_Array::value('relationship_type_id', $params);
+    if ($relationshipTypeId) {
       $relationshipType = new CRM_Contact_DAO_RelationshipType();
-      list($rid, $direction) = explode('_', $params['relationship_type_id'], 2);
+      list($rid, $direction) = explode('_', $relationshipTypeId, 2);
 
       $relationshipType->id = $rid;
       if ($relationshipType->find(TRUE)) {

@@ -58,7 +58,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params['payment_processor'], $this->_mode);
     }
     if (!empty($this->_values['is_internal']) && !empty($this->_paymentProcessor)) {
-      if ($this->_paymentProcessor['class_name'] == 'Payment_TapPay') {
+      if (CRM_Utils_Array::value('class_name', $this->_paymentProcessor) == 'Payment_TapPay') {
         $this->assign('hideccv', 1);
       }
     }
@@ -318,14 +318,14 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->assign('lineItem', $this->_lineItem);
     $this->assign('priceSetID', $this->_priceSetId);
 
-    if ($this->_paymentProcessor['payment_processor_type'] == 'Google_Checkout'
-      && !$this->_params['is_pay_later']
+    if (CRM_Utils_Array::value('payment_processor_type', $this->_paymentProcessor) == 'Google_Checkout'
+      && !CRM_Utils_Array::value('is_pay_later', $this->_params, FALSE)
     ) {
       $this->_checkoutButtonName = $this->getButtonName('next', 'checkout');
       $this->add(
         'image',
         $this->_checkoutButtonName,
-        $this->_paymentProcessor['url_button'],
+        CRM_Utils_Array::value('url_button', $this->_paymentProcessor),
         ['class' => 'form-submit']
       );
 
@@ -338,8 +338,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       );
     }
     else {
-      if ($this->_contributeMode == 'notify' || !$this->_values['is_monetary'] ||
-        $this->_amount <= 0.0 || $this->_params['is_pay_later'] ||
+      if ($this->_contributeMode == 'notify' || !CRM_Utils_Array::value('is_monetary', $this->_values, FALSE) ||
+        $this->_amount <= 0.0 || CRM_Utils_Array::value('is_pay_later', $this->_params, FALSE) ||
         ($this->_separateMembershipPayment && $this->_amount <= 0.0)
       ) {
         $contribButton = ts('Continue >>');
@@ -378,7 +378,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
         // convert submit values to masks
-        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && $this->_fields[$name]['html_type'] === 'Text' && $this->get('csContactID')) {
+        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && ($this->_fields[$name]['html_type'] ?? NULL) === 'Text' && $this->get('csContactID')) {
           // when user enter new value
           // do not mask their current input
           if (!strstr($contact[$name], CRM_Utils_String::MASK)) {
@@ -584,7 +584,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $contactID = $this->_userID;
 
     // add a description field at the very beginning
-    $this->_params['description'] = ts('Online Contribution') . ': ' . (($this->_pcpInfo['title']) ? $this->_pcpInfo['title'] : $this->_values['title']);
+    $pcpTitle = CRM_Utils_Array::value('title', $this->_pcpInfo);
+    $this->_params['description'] = ts('Online Contribution') . ': ' . ($pcpTitle ? $pcpTitle : CRM_Utils_Array::value('title', $this->_values));
 
     // also add accounting code
     $this->_params['accountingCode'] = CRM_Utils_Array::value(
@@ -1390,11 +1391,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     $config = CRM_Core_Config::singleton();
     $recurParams['contact_id'] = $contactID;
-    $recurParams['amount'] = $params['amount'];
-    $recurParams['frequency_unit'] = $params['frequency_unit'];
-    $recurParams['frequency_interval'] = $params['frequency_interval'];
-    $recurParams['installments'] = $params['installments'];
-    $recurParams['contribution_type_id'] = $params['contribution_type_id'];
+    $recurParams['amount'] = CRM_Utils_Array::value('amount', $params);
+    $recurParams['frequency_unit'] = CRM_Utils_Array::value('frequency_unit', $params);
+    $recurParams['frequency_interval'] = CRM_Utils_Array::value('frequency_interval', $params);
+    $recurParams['installments'] = CRM_Utils_Array::value('installments', $params);
+    $recurParams['contribution_type_id'] = CRM_Utils_Array::value('contribution_type_id', $params);
     if (!empty($params['payment_processor'])) {
       $recurParams['processor_id'] = $params['payment_processor'];
     }
@@ -1405,13 +1406,14 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     $now = date('YmdHis');
     $recurParams['start_date'] = $recurParams['create_date'] = $recurParams['modified_date'] = $now;
-    $recurParams['invoice_id'] = $params['invoiceID'];
+    $invoiceID = CRM_Utils_Array::value('invoiceID', $params);
+    $recurParams['invoice_id'] = $invoiceID;
     $recurParams['contribution_status_id'] = 2;
     $recurParams['cycle_day'] = date('j');
 
     // we need to add a unique trxn_id to avoid a unique key error
     // in paypal IPN we reset this when paypal sends us the real trxn id, CRM-2991
-    $recurParams['trxn_id'] = CRM_Utils_Array::value('trxn_id', $params, $params['invoiceID']);
+    $recurParams['trxn_id'] = CRM_Utils_Array::value('trxn_id', $params, $invoiceID);
 
     $ids = [];
 
