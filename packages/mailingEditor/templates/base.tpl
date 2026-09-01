@@ -10,10 +10,7 @@
 	<title></title>
 	<!-- The title tag shows in email notifications, like Android 4.4. --><!-- Web Font / @font-face : BEGIN --><!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. --><!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. --><!--[if mso]>
     <style>
-      * {
-        font-family: sans-serif !important;
-      }
-    </style>
+      *     </style>
   <![endif]--><!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ --><!--[if !mso]><!--><!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> --><!--<![endif]--><!-- Web Font / @font-face : END --><!-- CSS Reset -->
   <style type="text/css">
     {literal}
