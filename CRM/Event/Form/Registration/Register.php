@@ -136,7 +136,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $params['site'] = $siteName;
     $params['title'] = $this->_values['event']['title'] . ' - ' . $siteName;
 
-    $description = $this->_values['event']['description'];
+    $eventDescription = CRM_Utils_Array::value('description', $this->_values['event']);
+    if ($eventDescription === NULL) {
+      $eventDescription = '';
+    }
+    $description = $eventDescription;
     $description = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $description);
     $description = strip_tags($description);
     $description = preg_replace("/(?:(?:&nbsp;)|\n|\r)+/", ' ', $description);
@@ -148,16 +152,24 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $values = $this->_values;
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $event, $event->_id, 0, $values['event']['event_type_id']);
     $config = CRM_Core_Config::singleton();
+    $image = NULL;
     foreach ($groupTree as $ufg_inner) {
-      if (is_array($ufg_inner['fields'])) {
-        foreach ($ufg_inner['fields'] as $uffield) {
+      $ufgFields = $ufg_inner['fields'] ?? NULL;
+      if (is_array($ufgFields)) {
+        foreach ($ufgFields as $uffield) {
           if (is_array($uffield)) {
-            if ($uffield['data_type'] == 'File') {
-              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['customValue'][1]['data'])) {
-                $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
-                break;
-                break;
-                break;
+            if (CRM_Utils_Array::value('data_type', $uffield) == 'File') {
+              if (!empty($uffield['customValue'][1])) {
+                $customFileData = $uffield['customValue'][1]['data'] ?? NULL;
+                if ($customFileData === NULL) {
+                  $customFileData = '';
+                }
+                if (preg_match('/\.(jpg|png|jpeg)$/', $customFileData)) {
+                  $image = $config->customFileUploadURL . $customFileData;
+                  break;
+                  break;
+                  break;
+                }
               }
             }
           }
@@ -165,7 +177,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
     }
     if (empty($image)) {
-      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $eventDescription, $matches);
       if (count($matches) >= 2) {
         $image = $matches[1];
       }

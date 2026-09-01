@@ -575,7 +575,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     // restore masked fields to their real value before saving/charging
     if (!empty($this->_originalValues)) {
       foreach ($this->_originalValues as $key => $val) {
-        if (strstr($this->_params[$key], CRM_Utils_String::MASK) && !empty($val) && $val !== $this->_params[$key]) {
+        if (isset($this->_params[$key]) && strstr($this->_params[$key], CRM_Utils_String::MASK) && !empty($val) && $val !== $this->_params[$key]) {
           $this->_params[$key] = $val;
         }
       }

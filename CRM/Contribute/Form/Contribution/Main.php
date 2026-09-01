@@ -207,24 +207,41 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $params['site'] = $siteName;
     $params['title'] = $this->_values['title'] . ' - ' . $siteName;
 
-    $description = $this->_values['intro_text'];
+    $introText = CRM_Utils_Array::value('intro_text', $this->_values);
+    if ($introText === NULL) {
+      $introText = '';
+    }
+    $description = $introText;
     $description = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $description);
     $description = strip_tags($description);
     $description = preg_replace("/(?:(?:&nbsp;)|\n|\r)/", '', $description);
     $description = trim(mb_substr($description, 0, 150));
     $params['description'] = $description;
 
-    if (is_array($this->_values['custom_data_view'])) {
+    $image = NULL;
+    $customDataView = CRM_Utils_Array::value('custom_data_view', $this->_values);
+    if (is_array($customDataView)) {
       $config = CRM_Core_Config::singleton();
-      foreach ($this->_values['custom_data_view'] as $ufg) {
+      foreach ($customDataView as $ufg) {
+        if (!is_array($ufg) && !is_object($ufg)) {
+          continue;
+        }
         foreach ($ufg as $ufg_inner) {
-          if (is_array($ufg_inner['fields'])) {
-            foreach ($ufg_inner['fields'] as $uffield) {
+          $ufgFields = $ufg_inner['fields'] ?? NULL;
+          if (is_array($ufgFields)) {
+            foreach ($ufgFields as $uffield) {
               if (is_array($uffield)) {
-                if ($uffield['field_type'] == 'File') {
-                  if (!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])) {
-                    $image = $config->customFileUploadURL . $uffield['field_value']['data'];
-                    break 3;
+                $fieldValue = CRM_Utils_Array::value('field_value', $uffield);
+                if (CRM_Utils_Array::value('field_type', $uffield) == 'File') {
+                  if (!empty($fieldValue['fileURL'])) {
+                    $fileData = $fieldValue['data'] ?? NULL;
+                    if ($fileData === NULL) {
+                      $fileData = '';
+                    }
+                    if (preg_match('/\.(jpg|png|jpeg)$/', $fileData)) {
+                      $image = $config->customFileUploadURL . $fileData;
+                      break 3;
+                    }
                   }
                 }
               }
@@ -235,7 +252,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     if (empty($image)) {
-      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $introText, $matches);
       if (count($matches) >= 2) {
         $image = $matches[1];
       }
