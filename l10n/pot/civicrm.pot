@@ -51461,6 +51461,8 @@ msgstr ""
 
 #: neticrm/civicrm_instrument/civicrm_instrument.module
 msgid "You have to use credit card or LINE Pay for recurring contribution."
+msgstr ""
+
 #: CRM/Contact/Form/Contact.php CRM/Core/BAO/UFGroup.php
 msgid "Are you sure you want to delete contact image?"
 msgstr ""

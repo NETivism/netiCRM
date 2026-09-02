@@ -52242,6 +52242,7 @@ msgstr "LINE Pay 定期定額只支援每月扣款，不支援每年扣款。"
 #: neticrm/civicrm_instrument/civicrm_instrument.module
 msgid "You have to use credit card or LINE Pay for recurring contribution."
 msgstr "定期定額捐款請使用信用卡或 LINE Pay。"
+
 #: CRM/Contribute/Form/ContributionType.php:124
 msgid ""
 "Accounting Code cannot contain hyphen (-). Please remove it before saving."
