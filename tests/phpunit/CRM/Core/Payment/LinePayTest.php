@@ -230,6 +230,37 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   }
 
   /**
+   * Count of failed contributions belonging to a recurring.
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return int
+   */
+  protected function failedCountOf($recurId) {
+    return (int) CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 4", [
+      1 => [$recurId, 'Positive'],
+    ]);
+  }
+
+  /**
+   * All payment-gateway notes recorded on a recurring, concatenated.
+   *
+   * @param int $recurId contribution recur ID
+   *
+   * @return string
+   */
+  protected function recurNotesOf($recurId) {
+    $notes = CRM_Core_DAO::executeQuery("SELECT CONCAT(COALESCE(subject, ''), ' ', COALESCE(note, '')) AS text FROM civicrm_note WHERE entity_table = 'civicrm_contribution_recur' AND entity_id = %1", [
+      1 => [$recurId, 'Positive'],
+    ]);
+    $text = '';
+    while ($notes->fetch()) {
+      $text .= $notes->text . "\n";
+    }
+    return $text;
+  }
+
+  /**
    * Current contribution_status_id of a recurring.
    *
    * @param int $recurId contribution recur ID
@@ -741,6 +772,55 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
 
     $this->assertEquals(6, $this->recurStatusOf($recurId), 'Paused + lapsed + invalid key should expire (6). ' . __LINE__);
     $this->assertEmpty($this->regKeyOf($recurId), 'Expired recurring should discard its regKey. ' . __LINE__);
+    $this->assertStringContainsString('1190', $this->recurNotesOf($recurId), 'The key check result code should be recorded on the recurring. ' . __LINE__);
+  }
+
+  /**
+   * E1b. The same expiry path when the key check answers 1193 (key expired).
+   *
+   * 1193 only means "expired" when it comes back from a check/expire call; the
+   * recurring reaches Expired (6) here, never from a charge attempt (see F3).
+   */
+  public function testPausedExpiresWhenKeyCheckSaysExpired() {
+    $old = date('YmdHis', time() - (CRM_Core_Payment_LinePay::REGKEY_VALID_DAYS + 5) * 86400);
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 7,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_PAUSED_1193',
+      'start_date' => $old,
+      'receive_date' => $old,
+    ]);
+    $recurId = $setup['recur']->id;
+
+    // recurring/check -> 1193 expired, then recurring/expire -> ok.
+    $this->queueResponse('1193');
+    $this->queueResponse('0000');
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertEquals(6, $this->recurStatusOf($recurId), 'A key confirmed expired should expire the recurring (6). ' . __LINE__);
+    $this->assertEmpty($this->regKeyOf($recurId), 'Expired recurring should discard its regKey. ' . __LINE__);
+    $this->assertEquals(0, $this->failedCountOf($recurId), 'The expiry path must not create a failed contribution. ' . __LINE__);
+    $this->assertStringContainsString('1193', $this->recurNotesOf($recurId), 'The key check result code should be recorded on the recurring. ' . __LINE__);
+  }
+
+  /**
+   * E3. A paused (7) recurring still inside the 180-day window is left alone:
+   * no check, no charge, no status change.
+   */
+  public function testPausedWithinWindowIsUntouched() {
+    $setup = $this->createLinePayRecur([
+      'recur_status' => 7,
+      'contribution_status' => 1,
+      'reg_key' => 'RK_PAUSED_RECENT',
+    ]);
+    $recurId = $setup['recur']->id;
+
+    $this->queueResponse('0000');
+    CRM_Core_Payment_LinePay::doCheckRecur($recurId);
+
+    $this->assertCount(1, CRM_Core_Payment_LinePayAPI::$_mockResponseQueue, 'A paused recurring inside the window must not call the gateway. ' . __LINE__);
+    $this->assertEquals(7, $this->recurStatusOf($recurId), 'Recurring stays paused. ' . __LINE__);
+    $this->assertEquals('RK_PAUSED_RECENT', $this->regKeyOf($recurId), 'The regKey is kept. ' . __LINE__);
   }
 
   /**
@@ -803,25 +883,6 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
 
     $this->assertEquals(4, $this->recurStatusOf($recurId), 'A voiding code should fail the recurring (4). ' . __LINE__);
     $this->assertEmpty($this->regKeyOf($recurId), 'A voiding code should discard the regKey. ' . __LINE__);
-  }
-
-  /**
-   * F3. Code 1193 (preapproved key expired) drops the key and expires the
-   * recurring (status 6).
-   */
-  public function testPayByRegKeyExpiredCodeExpiresRecur() {
-    $setup = $this->createLinePayRecur([
-      'recur_status' => 5,
-      'contribution_status' => 1,
-      'reg_key' => 'RK_1193',
-    ]);
-    $recurId = $setup['recur']->id;
-
-    $this->queueResponse('1193');
-    CRM_Core_Payment_LinePay::payByRegKey($recurId, NULL, FALSE);
-
-    $this->assertEquals(6, $this->recurStatusOf($recurId), 'Code 1193 should expire the recurring (6). ' . __LINE__);
-    $this->assertEmpty($this->regKeyOf($recurId), 'Code 1193 should discard the regKey. ' . __LINE__);
   }
 
   /**

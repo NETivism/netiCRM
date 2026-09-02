@@ -615,9 +615,11 @@ LIMIT 1";
   /**
    * Whether a LINE Pay result code voids the preapproved regKey.
    *
-   * refs #45587. Per the v4 docs, return codes 1141, 1282-1287 and 1290-1295
-   * revoke the regKey; once revoked it can never be recovered and the donor has
-   * to subscribe again.
+   * refs #45587. Per the v4 docs, return codes 1141, 1193, 1282-1287 and
+   * 1290-1295 revoke the regKey; once revoked it can never be recovered and the
+   * donor has to subscribe again. 1193 (key expired) is returned by an actual
+   * charge attempt, so it is treated exactly like 1141: the charge failed, the
+   * key is gone, and the recurring goes to Failed (4).
    *
    * @param string $returnCode LINE Pay result code
    *
@@ -626,6 +628,7 @@ LIMIT 1";
   private static function isRegKeyVoidedCode($returnCode) {
     $code = (int) $returnCode;
     return $code === 1141
+      || $code === 1193
       || ($code >= 1282 && $code <= 1287)
       || ($code >= 1290 && $code <= 1295);
   }
@@ -731,22 +734,31 @@ LIMIT 1";
    * refs #45587. Used before discarding a regKey purely on the local
    * 180-day elapsed-time heuristic, in case the key is in fact still valid.
    *
+   * The raw result code is returned rather than a boolean so the caller can
+   * record what LINE Pay actually answered. The key is only confirmed valid on
+   * code 0000; anything else (1190 key not found, 1193 key expired, ...) means
+   * it is unusable. When the check cannot even be attempted the code is empty
+   * and the message explains why.
+   *
    * @param int $recurId contribution recur ID
    *
-   * @return bool TRUE when the regKey is confirmed valid (returnCode 0000)
+   * @return array [code => string, message => string]
    */
-  private static function isRegKeyValid($recurId) {
+  private static function checkRegKey($recurId) {
     $regKey = self::getRegKey($recurId);
     if (empty($regKey)) {
-      return FALSE;
+      return ['code' => '', 'message' => "No preapproved key is stored locally."];
     }
     $paymentProcessor = self::getRecurPaymentProcessor($recurId);
     if (empty($paymentProcessor)) {
-      return FALSE;
+      return ['code' => '', 'message' => "Could not determine the payment processor of this recurring contribution."];
     }
     $api = CRM_Core_Payment_LinePayAPI::create($paymentProcessor, 'recurring/check');
     $api->request(['regKey' => $regKey]);
-    return ($api->_response->returnCode ?? '') === '0000';
+    return [
+      'code' => $api->_response->returnCode ?? '',
+      'message' => $api->_response->returnMessage ?? '',
+    ];
   }
 
   /**
@@ -894,20 +906,12 @@ LIMIT 1";
     $returnMessage = $api->_response->returnMessage ?? '';
 
     // refs #45587, a voided regKey can never be reused: drop it and fail the
-    // recurring so the cron stops retrying. Other failures (e.g. 1142
-    // insufficient balance) keep the regKey and retry next cycle.
+    // recurring so the cron stops retrying. This covers 1193 (key expired)
+    // as well, since it is the result of a charge we already sent. Other
+    // failures (e.g. 1142 insufficient balance) keep the regKey and retry next
+    // cycle.
     if (self::isRegKeyVoidedCode($returnCode)) {
       self::voidRegKey($recurringId, $returnCode, $returnMessage);
-    }
-    // refs #45587, code 1193 means the preapproved regKey has already expired on
-    // the LINE Pay side, so it can never charge again. Drop the key locally and
-    // move the recurring to Expired (6).
-    elseif ($returnCode === '1193') {
-      CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_linepay SET reg_key = NULL WHERE contribution_recur_id = %1", [
-        1 => [$recurringId, 'Positive'],
-      ]);
-      $note = ts("LINE Pay returned code 1193: the preapproved key has expired, so the recurring contribution is set to Expired.");
-      self::setRecurStatus($recurringId, 6, $note);
     }
 
     return ['status' => $returnCode, 'msg' => $returnMessage];
@@ -1105,21 +1109,27 @@ LIMIT 0, 100
     if ($recurStatus === 7) {
       if ($regKeyExpired) {
         // refs #45587, the 180-day window is a local heuristic; confirm with
-        // LINE Pay before discarding a key that might still be valid.
-        if (self::isRegKeyValid($recurId)) {
+        // LINE Pay before discarding a key that might still be valid. Record the
+        // result code either way so the note says what the gateway answered.
+        $check = self::checkRegKey($recurId);
+        $checkNote = ts("LINE Pay key check returned code %1: %2", [
+          1 => $check['code'] !== '' ? $check['code'] : ts('none'),
+          2 => $check['message'],
+        ]);
+        if ($check['code'] === '0000') {
           $note = ts("Paused recurring exceeded the %1-day LINE Pay key window, but the preapproved key is still confirmed valid; keep it.", [1 => self::REGKEY_VALID_DAYS]);
-          $resultNote .= "\n" . $note;
+          $resultNote .= "\n" . $note . "\n" . $checkNote;
         }
         else {
           $successExpired = self::expireRegKey($recurId);
           if ($successExpired) {
             $note = ts("Paused recurring exceeded the %1-day LINE Pay key window; expiring.", [1 => self::REGKEY_VALID_DAYS]);
-            self::setRecurStatus($recurId, 6, $note);
+            self::setRecurStatus($recurId, 6, $note . "\n" . $checkNote);
           }
           else {
             $note = ts("Paused recurring exceeded the %1-day LINE Pay key window, but expire failed. Check system log for more information.", [1 => self::REGKEY_VALID_DAYS]);
           }
-          $resultNote .= "\n" . $note;
+          $resultNote .= "\n" . $note . "\n" . $checkNote;
         }
       }
       else {
@@ -1130,7 +1140,9 @@ LIMIT 0, 100
       return $resultNote;
     }
 
-    // Active but the regKey window lapsed: expire the recurring (6) and discard.
+    // Active but the regKey window lapsed: only note it here. The 180-day window
+    // is a local heuristic, so we still let the charge below run and let LINE Pay
+    // decide — a voided key comes back as 1141/1193 and fails the recurring.
     if ($regKeyExpired && $recurStatus === 5) {
       $note = ts("LINE Pay preapproved key unused for over %1 days. We will try execute one payment to see if it's really expired.", [1 => self::REGKEY_VALID_DAYS]);
       $resultNote .= "\n" . $note;
@@ -1189,16 +1201,6 @@ LIMIT 0, 100
         CRM_Core_Error::debug_log_message("LinePay synchronize finished: " . $recurId);
         return $resultNote;
       }
-
-      // refs #45587, code 1193 means the preapproved regKey has expired;
-      // payByRegKey already moved the recurring to Expired (6). Stop here.
-      if (($payResult['status'] ?? '') === '1193') {
-        $resultNote .= "\n" . ts("Charge failed because the preapproved key has expired (code 1193); recurring set to Expired.");
-        CRM_Core_Error::debug_log_message($resultNote);
-        CRM_Core_Error::debug_log_message("LinePay synchronize finished: " . $recurId);
-        return $resultNote;
-      }
-
     }
 
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
