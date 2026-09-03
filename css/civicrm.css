@@ -6316,13 +6316,22 @@ tbody.scrollContent tr.alternateRow {
   border-left: 1px solid var(--color-recur-audit-summary-border);
 }
 
+.crm-container .crm-recur-audit-summary-note {
+  padding: var(--recur-audit-summary-spacing);
+  border-top: 1px solid var(--color-recur-audit-summary-border);
+  color: var(--color-recur-audit-summary-neutral);
+  font-size: .85em;
+  line-height: 1.6;
+}
+
 .crm-container .crm-recur-audit-summary-value {
   display: block;
   color: var(--color-recur-audit-summary-neutral);
   font-size: var(--recur-audit-summary-value-font-size);
 }
 
-.crm-container .crm-recur-audit-summary-value--recurring {
+.crm-container .crm-recur-audit-summary-value--recurring,
+.crm-container .crm-recur-audit-summary-value--scheduled {
   color: var(--color-recur-audit-summary-recurring);
 }
 

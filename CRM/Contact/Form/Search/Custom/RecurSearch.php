@@ -505,8 +505,8 @@ $having
       $form->addElement(
         'checkbox',
         'audit_not_executed',
-        ts('Not Executed'),
-        ts('No contribution record exists in the audit period')
+        ts('No Record on Agreed Debit Date'),
+        ts('The audit date range covers the agreed debit date, and there is no contribution or debit execution record in the month of that debit date')
       );
       $notExecutedInitialized = CRM_Utils_Array::value(
         'audit_not_executed_initialized',
@@ -563,9 +563,38 @@ $having
       elseif ($processedFrom > $processedTo) {
         $errors['audit_date_to'] = ts('The audit end date must not be earlier than the start date.');
       }
+      elseif (substr($processedTo, 0, 8) > self::auditDateToMaximum(substr($processedFrom, 0, 8))) {
+        $errors['audit_date_to'] = ts('The audit date range cannot be longer than one month, counting from the start date.');
+      }
     }
 
     return empty($errors) ? TRUE : $errors;
+  }
+
+  /**
+   * Get the latest allowed audit end date, one month after the start date.
+   *
+   * The same rule is applied on the search form by the datepicker: 2025-08-05
+   * allows up to 2025-09-04, and 2025-09-01 allows up to 2025-09-30. When the
+   * next month is shorter than the start date day, its last day is used.
+   *
+   * @param string $startDate
+   *   Audit start date in Ymd format.
+   *
+   * @return string
+   *   The latest allowed end date in Ymd format.
+   */
+  public static function auditDateToMaximum($startDate) {
+    $year = (int) substr($startDate, 0, 4);
+    $month = (int) substr($startDate, 4, 2);
+    $day = (int) substr($startDate, 6, 2);
+
+    $nextMonth = mktime(0, 0, 0, $month + 1, $day, $year);
+    if ((int) date('j', $nextMonth) !== $day) {
+      // The next month is shorter, use its last day.
+      return date('Ymd', mktime(0, 0, 0, $month + 2, 0, $year));
+    }
+    return date('Ymd', mktime(0, 0, 0, $month + 1, $day - 1, $year));
   }
 
   /**
@@ -806,20 +835,12 @@ $having
     }
 
     if ($this->hasAuditDateRange()) {
-      $recurringStatuses = $this->getSelectedRecurringStatuses();
-      if (!$recurringStatuses || in_array(5, $recurringStatuses, TRUE)) {
-        $inProgressCount = CRM_Core_DAO::singleValueQuery(
-          "SELECT COUNT(*) FROM {$this->_tableName} WHERE contribution_status_id = 5"
-        );
-        $summary['audit_recurring_status'] = [
-          'label' => ts('Recurring Status'),
-          'items' => [[
-            'label' => $this->_cstatus[5],
-            'value' => (int) $inProgressCount,
-            'status_class' => 'recurring',
-          ]],
-        ];
-      }
+      $summary['audit_scheduled'] = [
+        'label' => ts('Debits Due'),
+        'description' => ts('Counted by recurring status and agreed debit date, this is the number of monthly recurring orders due to be debited within the audit date range.'),
+        'value' => $this->getScheduledDebitCount(),
+        'status_class' => 'scheduled',
+      ];
 
       $auditDateRange = $this->getAuditDateRange();
       $auditSummaryParams = [
@@ -866,7 +887,8 @@ $loggedAuditSummarySql");
         'items' => $this->getAuditCriteria(),
       ];
       $summary['audit_contribution_status'] = [
-        'label' => ts('Audit Period Debit Status'),
+        'label' => ts('Latest Debit Status in the Audit Period'),
+        'description' => ts('The total here may differ from the debits due on the left, because the two are counted with different conditions. A manual debit, a recurring status change, or an agreed debit date outside the audit date range can all cause a difference.'),
         'items' => [
           [
             'label' => $this->_contributionStatuses[1],
@@ -891,18 +913,43 @@ $loggedAuditSummarySql");
         ],
       ];
       if (!empty($this->_formValues['audit_not_executed'])) {
-        $summary['audit_not_executed'] = [
-          'label' => ts('Not Executed'),
-          'items' => [[
-            'label' => ts('Recurring Contributions'),
-            'value' => (int) $auditSummary->not_executed_count,
-            'status_class' => 'not-executed',
-          ]],
+        $summary['audit_contribution_status']['items'][] = [
+          'label' => ts('No Record on Agreed Debit Date'),
+          'value' => (int) $auditSummary->not_executed_count,
+          'status_class' => 'not-executed',
         ];
       }
     }
 
     return $summary;
+  }
+
+  /**
+   * Count the results which had a monthly debit scheduled in the audit range.
+   *
+   * This uses the same schedule rule as the "No Record on Agreed Debit Date"
+   * filter, but without looking at whether a contribution record exists.
+   *
+   * @return int
+   */
+  protected function getScheduledDebitCount() {
+    if (!$this->hasAuditDateRange()) {
+      return 0;
+    }
+
+    $queryParams = $this->_queryParams;
+    $this->_queryParams = [];
+    $scheduleClause = $this->getAuditScheduleClause();
+    $sql = "
+SELECT COUNT(*)
+FROM {$this->_tableName} AS result
+INNER JOIN civicrm_contribution_recur AS r ON r.id = result.id
+WHERE $scheduleClause
+";
+    $count = CRM_Core_DAO::singleValueQuery($sql, $this->_queryParams);
+    $this->_queryParams = $queryParams;
+
+    return (int) $count;
   }
 
   /**
@@ -942,7 +989,7 @@ $loggedAuditSummarySql");
         }
       }
       if (!empty($row['audit_not_executed'])) {
-        $auditStatuses[] = ts('Not Executed');
+        $auditStatuses[] = ts('No Record on Agreed Debit Date');
       }
       $row['audit_status_ids'] = CRM_Utils_Array::implode(', ', $auditStatuses);
       unset($row['frequency_unit'], $row['last_execute_date'], $row['audit_count'], $row['audit_not_executed']);
@@ -1177,7 +1224,7 @@ $loggedAuditSummarySql");
     $pageIds = (array) CRM_Utils_Array::value('contribution_page_id', $this->_formValues, []);
     foreach ($pageIds as $pageId) {
       if ($pageId) {
-        $pageLabels[] = isset($this->_cpage[$pageId]) ? $this->_cpage[$pageId] : $pageId;
+        $pageLabels[] = $this->_cpage[$pageId] ?? $pageId;
       }
     }
     if ($pageLabels) {
@@ -1237,7 +1284,7 @@ $loggedAuditSummarySql");
         'value' => CRM_Utils_Array::implode(', ', $selectedAuditStatusLabels),
       ],
       [
-        'label' => ts('Not Executed'),
+        'label' => ts('No Record on Agreed Debit Date'),
         'value' => !empty($this->_formValues['audit_not_executed'])
           ? ts('Included')
           : ts('Excluded'),
