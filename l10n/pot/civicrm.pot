@@ -51566,3 +51566,95 @@ msgstr ""
 #: packages/HTML/QuickForm/ckeditor.php:196
 msgid "You can also <a href=\"%1\" target=\"_blank\">go to Site Preferences</a> to change the default editor yourself."
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:149
+msgid "Agreed Amount"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:151
+msgid "Recurring Donation Day"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:167 CRM/Contact/Form/Search/Custom/RecurSearch.php:504 CRM/Contact/Form/Search/Custom/RecurSearch.php:1283
+msgid "Audit Period Debit Status"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:494 CRM/Contact/Form/Search/Custom/RecurSearch.php:1276
+msgid "Audit Date Range"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:508 CRM/Contact/Form/Search/Custom/RecurSearch.php:917 CRM/Contact/Form/Search/Custom/RecurSearch.php:992 CRM/Contact/Form/Search/Custom/RecurSearch.php:1287
+msgid "No Record on Agreed Debit Date"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:839
+msgid "Debits Due"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:840
+msgid "Counted by recurring status and agreed debit date, this is the number of monthly recurring orders due to be debited within the audit date range."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:890
+msgid "Latest Debit Status in the Audit Period"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:891
+msgid "The total here may differ from the debits due on the left, because the two are counted with different conditions. A manual debit, a recurring status change, or an agreed debit date outside the audit date range can all cause a difference."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:509
+msgid "The audit date range covers the agreed debit date, and there is no contribution or debit execution record in the month of that debit date"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:554
+msgid "Enter both dates for the audit date range."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:561
+msgid "The audit start date cannot be earlier than the first day of the previous month."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:564
+msgid "The audit end date must not be earlier than the start date."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:567
+msgid "The audit date range cannot be longer than one month, counting from the start date."
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:886
+msgid "Applied Recurring Debit Audit Criteria"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1277
+msgid "%1 to %2"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:44
+msgid "Monthly Recurring Debit Audit"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:54
+msgid "Audits can go back to the first day of the previous month. Select a future date to forecast scheduled debits."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:54
+msgid "Select the start date first. The end date can be at most one month after the start date."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:61
+msgid "Results are matched by the status of contribution records within the audit date range."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:61
+msgid "If a recurring contribution has multiple contribution records within the audit date range, it is included in the results whenever any of them matches a checked status."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:68
+msgid "For payment processors that trigger debits on their own schedule, a debit that has already been charged but whose result has not been returned will still be shown as having no record on the agreed debit date."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:108
+msgid "Recurring debit audit summary."
+msgstr ""

@@ -41,7 +41,7 @@
           <div class="crm-accordion-wrapper crm-recur-audit-accordion crm-accordion-{if $auditRangeComplete}open{else}closed{/if}">
             <div class="crm-accordion-header">
               <div class="zmdi crm-accordion-pointer"></div>
-              {ts}Recurring Debit Audit{/ts}
+              {ts}Monthly Recurring Debit Audit{/ts}
             </div>
             <div class="crm-accordion-body">
               <table class="form-layout-compressed">
@@ -51,20 +51,22 @@
                     {include file="CRM/common/jcalendar.tpl" elementName=audit_date_from}
                     <span>{$form.audit_date_to.label}</span>
                     {include file="CRM/common/jcalendar.tpl" elementName=audit_date_to}
-                    <div class="description">{ts}Enter both dates to enable the audit status filters.{/ts}</div>
-                    <div class="description">{ts}Audits can go back to the first day of the previous month. Select a future date to forecast scheduled debits.{/ts}</div>
+                    <div class="description">{ts}Audits can go back to the first day of the previous month. Select a future date to forecast scheduled debits.{/ts} {ts}Select the start date first. The end date can be at most one month after the start date.{/ts}</div>
                   </td>
                 </tr>
                 <tr class="crm-contact-custom-search-form-row-audit_status_id crm-audit-status-controls{if !$auditRangeComplete} hiddenElement{/if}">
                   <td class="label">{$form.audit_status_id.label}</td>
                   <td>
                     {$form.audit_status_id.html}
-                    <div class="description">{ts}Contribution records are matched by their creation date within the audit period.{/ts}</div>
+                    <div class="description">{ts}Results are matched by the status of contribution records within the audit date range.{/ts} {ts}If a recurring contribution has multiple contribution records within the audit date range, it is included in the results whenever any of them matches a checked status.{/ts}</div>
                   </td>
                 </tr>
                 <tr class="crm-contact-custom-search-form-row-audit_not_executed crm-audit-status-controls{if !$auditRangeComplete} hiddenElement{/if}">
                   <td class="label">{$form.audit_not_executed.label}</td>
-                  <td>{$form.audit_not_executed.html}</td>
+                  <td>
+                    {$form.audit_not_executed.html}
+                    <div class="description">{ts}For payment processors that trigger debits on their own schedule, a debit that has already been charged but whose result has not been returned will still be shown as having no record on the agreed debit date.{/ts}</div>
+                  </td>
                 </tr>
               </table>
             </div>
@@ -104,17 +106,15 @@
       </div>
     {/if}
     <div class="crm-recur-audit-summary" aria-label="{ts}Recurring debit audit summary.{/ts}">
-      {if isset($summary.audit_recurring_status)}
-        <section class="crm-recur-audit-summary-section" aria-labelledby="crm-recur-audit-summary-recurring-title">
-          <div class="crm-recur-audit-summary-title" id="crm-recur-audit-summary-recurring-title">{$summary.audit_recurring_status.label}</div>
+      {if isset($summary.audit_scheduled)}
+        <section class="crm-recur-audit-summary-section crm-recur-audit-summary-scheduled" aria-labelledby="crm-recur-audit-summary-scheduled-title">
+          <div class="crm-recur-audit-summary-title" id="crm-recur-audit-summary-scheduled-title">{$summary.audit_scheduled.label}</div>
           <div class="crm-recur-audit-summary-items">
-            {foreach from=$summary.audit_recurring_status.items item=item}
-              <div class="crm-recur-audit-summary-item">
-                <span>{$item.label}</span>
-                <strong class="crm-recur-audit-summary-value crm-recur-audit-summary-value--{$item.status_class}">{$item.value}</strong>
-              </div>
-            {/foreach}
+            <div class="crm-recur-audit-summary-item">
+              <strong class="crm-recur-audit-summary-value crm-recur-audit-summary-value--{$summary.audit_scheduled.status_class}">{$summary.audit_scheduled.value}</strong>
+            </div>
           </div>
+          <div class="crm-recur-audit-summary-note">{$summary.audit_scheduled.description}</div>
         </section>
       {/if}
       <section class="crm-recur-audit-summary-section crm-recur-audit-summary-contributions" aria-labelledby="crm-recur-audit-summary-contribution-title">
@@ -127,20 +127,8 @@
             </div>
           {/foreach}
         </div>
+        <div class="crm-recur-audit-summary-note">{$summary.audit_contribution_status.description}</div>
       </section>
-      {if isset($summary.audit_not_executed)}
-        <section class="crm-recur-audit-summary-section crm-recur-audit-summary-not-executed" aria-labelledby="crm-recur-audit-summary-not-executed-title">
-          <div class="crm-recur-audit-summary-title" id="crm-recur-audit-summary-not-executed-title">{$summary.audit_not_executed.label}</div>
-          <div class="crm-recur-audit-summary-items">
-            {foreach from=$summary.audit_not_executed.items item=item}
-              <div class="crm-recur-audit-summary-item">
-                <span>{$item.label}</span>
-                <strong class="crm-recur-audit-summary-value crm-recur-audit-summary-value--{$item.status_class}">{$item.value}</strong>
-              </div>
-            {/foreach}
-          </div>
-        </section>
-      {/if}
     </div>
   {/if}
   <div><label>{$summary.search_results.label}</label>: {$summary.search_results.value}</div>
@@ -249,6 +237,44 @@
         .attr('aria-disabled', rangeComplete ? 'false' : 'true');
     };
 
+    // The audit end date is selectable only after the start date is set, and it
+    // can be at most one month after the start date (8/5 => 9/4, 9/1 => 9/30).
+    var getAuditDateToMax = function(fromDate) {
+      var maxDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, fromDate.getDate());
+      if (maxDate.getDate() !== fromDate.getDate()) {
+        // The next month is shorter, use its last day.
+        maxDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 2, 0);
+      }
+      else {
+        maxDate.setDate(maxDate.getDate() - 1);
+      }
+      return maxDate;
+    };
+
+    var syncAuditDateToRange = function() {
+      var fromDate = $.trim($auditDateFrom.val()).length > 0 ? $auditDateFrom.datepicker('getDate') : null;
+
+      if (!fromDate) {
+        if ($.trim($auditDateTo.val()).length > 0) {
+          $auditDateTo.datepicker('setDate', null);
+        }
+        $auditDateTo.datepicker('option', {minDate: null, maxDate: null}).datepicker('disable');
+        return;
+      }
+
+      var maxDate = getAuditDateToMax(fromDate);
+      $auditDateTo.datepicker('enable')
+        .datepicker('option', {minDate: fromDate, maxDate: maxDate});
+
+      var toDate = $auditDateTo.datepicker('getDate');
+      if (toDate && toDate < fromDate) {
+        $auditDateTo.datepicker('setDate', fromDate);
+      }
+      else if (toDate && toDate > maxDate) {
+        $auditDateTo.datepicker('setDate', maxDate);
+      }
+    };
+
     var syncRecurringStartDateTo = function() {
       var rangeComplete = $.trim($auditDateFrom.val()).length > 0 &&
         $.trim($auditDateTo.val()).length > 0;
@@ -262,12 +288,17 @@
       }
     };
 
+    syncAuditDateToRange();
     syncAuditControls();
     syncRecurringStartDateTo();
+    $auditDateFrom.on('change', syncAuditDateToRange);
     $auditDateFields.on('change input', syncAuditControls);
     $auditDateFields.on('change', syncRecurringStartDateTo);
     $('.crm-contact-custom-search-form-row-audit_date .crm-clear-link a').on('click', function() {
-      window.setTimeout(syncAuditControls, 0);
+      window.setTimeout(function() {
+        syncAuditDateToRange();
+        syncAuditControls();
+      }, 0);
     });
   });
 })(cj);
