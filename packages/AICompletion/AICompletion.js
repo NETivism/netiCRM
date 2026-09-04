@@ -908,7 +908,8 @@
             sourceUrlQuery: window.location.search
           },
           isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
-          userMessage = isEmptyPrompt ? '(n/a)' : formData;
+          userMessage = isEmptyPrompt ? '(n/a)' : formData,
+          streamEnded = false;
 
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
@@ -965,6 +966,7 @@
               if (typeof eventData !== "undefined") {
                 if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
                   evtSource.close();
+                  streamEnded = true;
 
                   if ($submit.hasClass(ACTIVE_CLASS)) {
                     $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
@@ -1019,6 +1021,9 @@
 
                     if (eventData.hasOwnProperty('is_error')) {
                       let msgID = 'ai-msg-' + renderID();
+
+                      evtSource.close();
+                      streamEnded = true;
 
                       if (eventData.message.includes('timed out')) {
                         errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
@@ -1083,6 +1088,12 @@
           evtSource.onerror = function(event) {
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
+
+            // Connection dropped before the stream finished, avoid leaving the UI in loading state.
+            if (!streamEnded) {
+              streamEnded = true;
+              AICompletion.prototype.createMessage('ai-msg-' + renderID(), '', errorMessageDefault, 'ai', 'error');
+            }
           };
         })
         .catch(function(error) {

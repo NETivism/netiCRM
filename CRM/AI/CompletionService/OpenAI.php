@@ -123,7 +123,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     $config = CRM_Core_Config::singleton();
     // Check API key exist
     if (empty($config->openAIAPIKey)) {
-      throw new Exception("OpenAI API Key doesn't found");
+      // Use CRM_Core_Exception so the AJAX layer can catch it and reply properly.
+      throw new CRM_Core_Exception("OpenAI API Key doesn't found");
     }
 
     // Set the API endpoint based on the action
@@ -155,7 +156,14 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         'status_id' => 2, // 2: pending, 5: processing, 1: finished,
         'id' => $this->_id,
       ];
-      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData) {
+      // OpenAI replies a plain JSON body instead of SSE when the request fails,
+      // collect it here because the body may arrive in several chunks.
+      $errorBody = '';
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData, &$errorBody) {
+        if (curl_getinfo($ch, CURLINFO_RESPONSE_CODE) >= 400) {
+          $errorBody .= $data;
+          return strlen($data);
+        }
         $chunks = explode("\n", $data);
         if (is_array($chunks)) {
           $chunks = array_filter($chunks);
@@ -163,24 +171,18 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         foreach ($chunks as $resp) {
           $json = preg_replace('/^data:\s/', '', $resp);
           $decoded = json_decode($json, TRUE);
-          if ($decoded === FALSE) {
-
+          if (!is_array($decoded)) {
+            // Not a complete JSON line, such as "[DONE]" or a partial chunk.
+            continue;
           }
-          elseif ($decoded['error']['message'] != "") {
-            CRM_Core_Error::debug_log_message($decoded['error']['message']);
-            // error handler
-            // some error message for $decoded['error']['message'] example:
-            // "Rate limit reached"
-            // "Your access was terminated"
-            // "You didn't provide an API key"
-            // "You exceeded your current quota"
-            // "That model is currently overloaded"
-            echo 'data: '.json_encode(
-              [
-                'is_error' => 1,
-                'message' => $decoded['error']['message'],
-              ]
-            );
+          if (!empty($decoded['error']['message'])) {
+            // OpenAI may put an error frame inside a HTTP 200 stream, for example
+            // "Rate limit reached", "Your access was terminated",
+            // "You exceeded your current quota", "That model is currently overloaded".
+            // Mark the state here so the check after curl_exec does not run twice.
+            $responseData['is_finished'] = 1;
+            $responseData['is_error'] = 1;
+            $this->handleStreamError(0, $json);
           }
           else {
             if (trim($data) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
@@ -238,10 +240,17 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       curl_exec($ch);
       $curl_errno = curl_errno($ch);
       $curl_error = curl_error($ch);
+      $httpCode = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+      curl_close($ch);
+
       if ($curl_errno > 0) {
         throw new CRM_Core_Exception("Curl Error. Error Number: {$curl_errno}. Error message: {$curl_error}");
       }
-      curl_close($ch);
+      // HTTP error, or the stream ended without a finish reason (dropped mid-stream).
+      if ($httpCode >= 400 || empty($responseData['is_finished'])) {
+        $this->handleStreamError($httpCode, $errorBody);
+      }
+      return $responseData;
     }
     else {
       // this will break when openai took too long to response
@@ -257,6 +266,52 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       // Format the response and return it
       return $this->formatResponse($this->_responseData);
     }
+  }
+
+  /**
+   * Handle a failed request in stream mode.
+   *
+   * The response header is already sent as text/event-stream at this point,
+   * so the error has to be delivered as a SSE frame instead of a HTTP status.
+   *
+   * @param int $httpCode The HTTP status code, 0 when the error came inside a HTTP 200 stream.
+   * @param string $errorBody The raw error body replied by the service.
+   * @return void
+   */
+  private function handleStreamError($httpCode, $errorBody) {
+    $decoded = json_decode($errorBody, TRUE);
+    $error = isset($decoded['error']) && is_array($decoded['error']) ? $decoded['error'] : [];
+
+    // Only log the identifying fields. The message itself quotes the API key or
+    // the organization id and has no fixed shape, the raw body goes to return_data.
+    CRM_Core_Error::debug_log_message(sprintf(
+      'AICompletion: OpenAI request failed. HTTP %d, type=%s, code=%s',
+      $httpCode,
+      CRM_Utils_Array::value('type', $error, 'unknown'),
+      CRM_Utils_Array::value('code', $error, 'unknown')
+    ));
+
+    // Mark the record as failed, this mirrors the create() call on the success path.
+    if (!empty($this->_id)) {
+      $failedData = [
+        'id' => $this->_id,
+        'status_id' => CRM_AI_BAO_AICompletion::STATUS_FAILED,
+        'post_data' => $this->_postData,
+        'return_data' => $errorBody,
+      ];
+      CRM_AI_BAO_AICompletion::create($failedData);
+    }
+
+    // The front end only shows its own generic message, no detail is needed here.
+    echo 'data: '.json_encode([
+      'id' => $this->_id,
+      'status_id' => CRM_AI_BAO_AICompletion::STATUS_FAILED,
+      'is_error' => 1,
+      'is_finished' => 1,
+      'message' => 'AI service error',
+    ])."\n\n";
+    ob_flush();
+    flush();
   }
 
   /**
