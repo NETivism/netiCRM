@@ -40,7 +40,8 @@ class CRM_Utils_MCP {
       'fields' => [
         'id', 'contact_id', 'total_amount', 'amount_level', 'receive_date',
         'is_test', 'contribution_recur_id', 'contribution_status_id',
-        'contribution_page_id', 'contribution_type_id', 'cancel_date', 'receipt_date',
+        'contribution_page_id', 'contribution_type_id', 'payment_instrument_id',
+        'cancel_date', 'receipt_date',
       ],
     ],
     'v_civicrm_participant_payment' => [

@@ -178,10 +178,25 @@ class CRM_Core_ReadonlyDAO {
   // ---------------------------------------------------------------------------
 
   /**
+   * Create the view, or recreate it when the columns it exposes no longer match
+   * the definition.
+   *
+   * Definitions evolve between releases (e.g. a new column is added to an
+   * existing view). Because this method runs on every MCP request, comparing
+   * the live column list against the definition lets an already-provisioned
+   * site pick up definition changes on its next request, without a dedicated
+   * upgrade script.
+   *
    * @return string  Log message.
    */
   private function createViewIfNotExists($viewName, array $def) {
-    if ($this->viewExists($viewName)) {
+    $expected = $def['fields'];
+    $actual = $this->viewColumns($viewName);
+
+    // Compare case-insensitively: a case mismatch reported by the server would
+    // otherwise make this run a DDL statement on every single request.
+    if ($actual !== NULL
+      && array_map('strtolower', $actual) === array_map('strtolower', $expected)) {
       return "";
     }
 
@@ -190,11 +205,34 @@ class CRM_Core_ReadonlyDAO {
 
     // ALGORITHM=MERGE: MariaDB/MySQL will inline the view into the outer query,
     // meaning the optimizer sees the base table directly – no performance penalty.
-    $sql = "CREATE ALGORITHM=MERGE VIEW `{$viewName}` AS "
+    $sql = "CREATE OR REPLACE ALGORITHM=MERGE VIEW `{$viewName}` AS "
          . "SELECT {$fields} FROM `{$source}`";
 
     $this->pdo->exec($sql);
-    return "[CREATED] View `{$viewName}` on `{$source}`.";
+
+    if ($actual === NULL) {
+      return "[CREATED] View `{$viewName}` on `{$source}`.";
+    }
+    return "[UPDATED] View `{$viewName}` recreated; columns changed from ["
+      . implode(', ', $actual) . '] to [' . implode(', ', $expected) . '].';
+  }
+
+  /**
+   * Return the columns of an existing view, in ordinal position order.
+   *
+   * @param string $viewName
+   * @return array|null  Column names, or NULL when the view does not exist.
+   */
+  private function viewColumns($viewName) {
+    $stmt = $this->pdo->prepare(
+      "SELECT COLUMN_NAME FROM information_schema.COLUMNS
+       WHERE TABLE_SCHEMA = :db AND TABLE_NAME = :view
+       ORDER BY ORDINAL_POSITION"
+    );
+    $stmt->execute([':db' => $this->dbName, ':view' => $viewName]);
+    $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    return empty($columns) ? NULL : $columns;
   }
 
   /**
