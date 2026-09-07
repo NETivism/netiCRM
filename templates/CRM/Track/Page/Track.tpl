@@ -39,7 +39,7 @@ input[type="text"].form-text{
     {if !$filters.start}
     <div class="track-filter-item">
       <label>{ts}Start Date{/ts}</label>
-      <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin" value="{$defaultStartDate}">
+      <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin" value="{$defaultStartDate|escape}">
       {include file="CRM/common/jcalendar.tpl" elementId=start action=4}
     </div>
     {/if}
@@ -51,8 +51,8 @@ input[type="text"].form-text{
     </div>
     {/if}
     <div style="display:flex; gap:8px; align-self:center;">
-      <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
-      <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export to CSV{/ts}</a>
+      <a id="submit-filter" class="button" href="{$drill_down_base|escape}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
+      <a id="export-track" class="button" href="{$drill_down_base|escape}&output=csv">{ts}Export to CSV{/ts}</a>
     </div>
   </div>
 </div>
@@ -65,11 +65,11 @@ input[type="text"].form-text{
     <span class="filter-box">
       <i class="zmdi zmdi-filter-list"></i>
       {if $name == "start"}
-        {$filter.title} &gt;= {$filter.value_display}
+        {$filter.title|escape} &gt;= {$filter.value_display|escape}
       {elseif $name == "end"}
-        {$filter.title} &lt;= {$filter.value_display}
+        {$filter.title|escape} &lt;= {$filter.value_display|escape}
       {else}
-        {$filter.title}={$filter.value_display}
+        {$filter.title|escape}={$filter.value_display|escape}
       {/if}
       <a href="{crmURL q=$filter.url}" class="zmdi zmdi-close-circle"></a></span>
   {/foreach}
@@ -95,9 +95,9 @@ input[type="text"].form-text{
     {/literal}</style>
 		<div class="box-content track-outer">
 			{foreach from=$summary item=source}
-			<div class="track-inner type-{$source.name}">
-				<div><strong>{$source.label}</strong></div>
-				<div>{if $source.display}{$source.display}{else}{$source.percent}%{/if}</div>
+			<div class="track-inner type-{$source.name|escape}">
+				<div><strong>{$source.label|escape}</strong></div>
+				<div>{if $source.display}{$source.display}{else}{$source.percent|escape}%{/if}</div>
 			</div>
 			{/foreach}
 		</div>
@@ -134,6 +134,7 @@ input[type="text"].form-text{
   {foreach from=$rows item=row}
   <tr class="{cycle values="odd-row,even-row"}">
   {foreach from=$row item=value}
+    {* Selector web rows contain HTML with escaped values and validated links. *}
     <td>{$value}</td>
   {/foreach}
   </tr>
@@ -188,11 +189,11 @@ cj(function() {
     cj(this).dialog('widget').removeClass('ui-front');
     },
     buttons: {
-      '{/literal}{ts}Confirm Export{/ts}{literal}': function() {
+      '{/literal}{ts escape='js'}Confirm Export{/ts}{literal}': function() {
         cj(this).dialog('close');
         window.location.href = exportHref;
       },
-      '{/literal}{ts}Cancel{/ts}{literal}': function() {
+      '{/literal}{ts escape='js'}Cancel{/ts}{literal}': function() {
         cj(this).dialog('close');
       }
     }
@@ -236,7 +237,7 @@ cj(function() {
       {foreach from=$pager->_linkData item=val key=k }
       {if $k neq 'crmPID' && $k neq 'force' && $k neq 'q' }
       {literal}
-        urlParams += '{/literal}{$k}={$val}{literal}&';
+        urlParams += '{/literal}{$k|escape:'url'}={$val|escape:'url'}{literal}&';
       {/literal}
       {/if}
       {/foreach}
