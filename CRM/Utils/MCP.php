@@ -84,6 +84,96 @@ class CRM_Utils_MCP {
     ],
   ];
 
+  // CASE...WHEN...END is rejected by CRM_Utils_SqlParser everywhere; tell the AI to use IF()/COALESCE() instead.
+  const DOC_SQL_DIALECT = <<<'TXT'
+SQL DIALECT LIMITS — this endpoint validates your SQL against an allowlist before running it.
+
+CASE ... WHEN ... END IS NOT SUPPORTED anywhere in your query. The validator rejects it
+("Field 'CASE' is not in the allowlist"). Use IF() or COALESCE() instead:
+  NOT SUPPORTED:  SUM(CASE WHEN t.state >= 4 THEN 1 ELSE 0 END)
+  USE INSTEAD:    SUM(IF(t.state >= 4, 1, 0))
+  NOT SUPPORTED:  CASE WHEN a IS NULL THEN b ELSE a END
+  USE INSTEAD:    COALESCE(a, b)
+
+SELECT * is rejected — list columns explicitly.
+Only the views listed above are queryable; base tables (civicrm_contact, civicrm_email, ...)
+are not accessible and will be rejected.
+TXT;
+
+  // contribution_status_id means something different on v_civicrm_contribution (a single
+  // contribution) vs v_civicrm_contribution_recur (a recurring contribution) — conflating the two
+  // caused a prior misreporting incident.
+  const DOC_STATUS_CODES = <<<'TXT'
+STATUS CODES — these are fixed system-wide values and CANNOT be customised per site,
+so you may rely on them without further lookup:
+
+v_civicrm_contribution.contribution_status_id — status of a SINGLE contribution:
+  1=Completed  2=Pending  3=Cancelled  4=Failed  5=In Progress  6=Overdue  7=Suspended
+
+v_civicrm_contribution_recur.contribution_status_id — status of a RECURRING contribution.
+These are two different columns on two different tables. A recurring contribution being "In Progress" says
+nothing about whether any single contribution succeeded, and vice versa. Never substitute one
+for the other when answering questions about transaction outcomes.
+TXT;
+
+  // Standardizes date-range filtering: failed contributions often lack receive_date, so
+  // filtering on it alone previously caused date-range queries to under-report failures.
+  const DOC_EFFECTIVE_DATE = <<<'TXT'
+DATE-RANGE FILTERING — for any "between date X and date Y" question, determine each
+contribution's effective date using EXACTLY this expression (copy it verbatim, do not
+rewrite it as CASE — CASE is rejected by this endpoint, see SQL DIALECT LIMITS above):
+
+  IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date), c.receive_date)
+
+Rule it encodes:
+  - contribution_status_id = 4 (Failed): use cancel_date, falling back to receive_date
+  - all other statuses: use receive_date
+  - if every source column is NULL, the expression evaluates to NULL. Never substitute
+    created_date or any other column when this happens — an unknown date must stay unknown.
+
+HOW TO USE IT:
+  - Only switch to the raw columns (receive_date / cancel_date) when the user explicitly
+    asks about the date money was received, or the date a transaction was cancelled.
+
+MANDATORY COMPANION QUERY — whenever you run a date-range query, you MUST run a second query
+with the SAME non-date filters, replacing the date-range condition with
+"<the same IF(...) expression> IS NULL", and report its count.
+If that count > 0, tell the user that N rows have an unknown effective date and cannot be
+confirmed as inside or outside the requested period.
+Do NOT report such rows as zero for the period; a failed contribution that never recorded a
+cancel_date or receive_date will otherwise silently disappear from your answer.
+The two queries MUST use the identical IF(...) expression, character for character — a
+paraphrased rewrite in the second query can silently produce a different NULL count.
+
+WORKED EXAMPLE — user asks "how many contributions succeeded and how many failed between
+2026-08-01 and 2026-08-14?":
+  1) SELECT c.contribution_status_id, COUNT(*) FROM v_civicrm_contribution c
+     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date), c.receive_date)
+             BETWEEN '2026-08-01' AND '2026-08-14'
+       AND c.contribution_status_id IN (1, 4)
+     GROUP BY c.contribution_status_id;
+  2) SELECT COUNT(*) FROM v_civicrm_contribution c
+     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date), c.receive_date) IS NULL
+       AND c.contribution_status_id IN (1, 4);
+  Then report both numbers.
+TXT;
+
+  // contribution_type_id and payment_instrument_id are independently configured per site
+  // with no code-to-label mapping available; the AI must not guess one.
+  const DOC_CUSTOM_CODES = <<<'TXT'
+contribution_type_id (fee category) and payment_instrument_id (payment method) are
+TWO DIFFERENT columns and must never be used as substitutes for one another.
+
+The option values behind BOTH columns are configured independently by each site. This connector
+does NOT ship any code-to-label mapping for them, and no such mapping is available to you.
+
+When you encounter a code you cannot resolve, report it verbatim and tell the user that it is a
+site-specific custom value this tool has no lookup table for, and that they should check the
+option list in their site's back office.
+Do NOT guess a name, do NOT infer one from a similar-sounding site, and do NOT fall back to
+CiviCRM upstream defaults.
+TXT;
+
   /**
    * @var bool Whether to output streaming responses
    */
@@ -813,16 +903,19 @@ class CRM_Utils_MCP {
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.contribution_id = c.id '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.contribution_id = c.id '
           . 'WHERE pp.id IS NULL AND mp.id IS NULL.',
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_STATUS_CODES, self::DOC_EFFECTIVE_DATE, self::DOC_CUSTOM_CODES],
       ],
       'participant_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for event participant analysis.',
         'joinHint'    => 'Link participants to contributions via: '
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.participant_id = p.id.',
+        'docs'        => [self::DOC_SQL_DIALECT],
       ],
       'membership_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for membership analysis.',
         'joinHint'    => 'Link memberships to contributions via: '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.membership_id = m.id.',
+        'docs'        => [self::DOC_SQL_DIALECT],
       ],
     ];
 
@@ -841,7 +934,7 @@ class CRM_Utils_MCP {
       $queryDescription = 'AI generated query that matches MariaDB / MySQL syntax. '
         . 'Allowed views: [' . implode(', ', array_keys($viewDefs)) . ']. '
         . 'View details — ' . implode('; ', $viewDetails) . '. '
-        . $meta['joinHint'];
+        . $meta['joinHint'] . "\n\n" . implode("\n\n", $meta['docs']);
 
       $tools[] = [
         'name' => $toolName,
