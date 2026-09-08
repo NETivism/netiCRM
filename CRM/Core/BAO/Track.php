@@ -15,38 +15,40 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
    * Add or update a page visit track record.
    *
    * Handles session-based visit logic and triggers pre/post hooks.
+   * Validation and server-assigned fields do not change the caller's array.
    *
    * @param array &$params associative array of track data
    *
    * @return CRM_Core_DAO_Track|bool|null the track object, or FALSE on error
    */
   public static function add(&$params) {
-    if (empty($params['page_type']) || empty($params['page_id'])) {
+    $values = self::filterParams($params);
+    if (empty($values['page_type']) || empty($values['page_id'])) {
       return FALSE;
     }
 
     // refs #31611, #34038, skip internal page
-    if ($params['page_type'] == 'civicrm_contribution_page') {
+    if ($values['page_type'] == 'civicrm_contribution_page') {
       $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
       $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
       if ($exists) {
-        $isInternalPage = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $params['page_id'], 'is_internal');
+        $isInternalPage = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $values['page_id'], 'is_internal');
         if ($isInternalPage > 0) {
           return;
         }
       }
     }
 
-    if (empty($params['visit_date'])) {
-      $params['visit_date'] = date('Y-m-d H:i:s');
+    if (empty($values['visit_date'])) {
+      $values['visit_date'] = date('Y-m-d H:i:s');
     }
-    $params['session_key'] = CRM_Utils_System::getSessionID();
+    $values['session_key'] = CRM_Utils_System::getSessionID();
     $track = new CRM_Core_DAO_Track();
-    if (!empty($params['id']) && is_numeric($params['id'])) {
-      CRM_Utils_Hook::pre('edit', 'Track', $params['id'], $params);
-      $track->id = $params['id'];
+    if (!empty($values['id']) && is_numeric($values['id'])) {
+      CRM_Utils_Hook::pre('edit', 'Track', $values['id'], $values);
+      $track->id = $values['id'];
       $track->find(TRUE);
-      $track->copyValues($params);
+      $track->copyValues($values);
       $track->counter++;
       $track->update();
       CRM_Utils_Hook::post('edit', 'Track', $track->id, $track);
@@ -55,20 +57,20 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       // in thirty mins same session visit same page and not completed
       // we treat as same visit
       $sameSession = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_track WHERE session_key = %1 AND visit_date > %2 AND page_type = %3 AND page_id = %4 ORDER BY visit_date DESC LIMIT 1", [
-        1 => [$params['session_key'], 'String'],
+        1 => [$values['session_key'], 'String'],
         2 => [date('Y-m-d H:i:s', time() - self::SESSION_LIMIT), 'String'],
-        3 => [$params['page_type'], 'String'],
-        4 => [$params['page_id'], 'Integer']
+        3 => [$values['page_type'], 'String'],
+        4 => [$values['page_id'], 'Integer']
       ]);
 
       if ($sameSession->fetch()) {
-        CRM_Utils_Hook::pre('edit', 'Track', $sameSession->id, $params);
+        CRM_Utils_Hook::pre('edit', 'Track', $sameSession->id, $values);
         $track->id = $sameSession->id;
         $track->find(TRUE);
-        if ($params['state'] < $track->state) {
-          unset($params['state']);
+        if (isset($values['state']) && $values['state'] < $track->state) {
+          unset($values['state']);
         }
-        $track->copyValues($params);
+        $track->copyValues($values);
         if ($track->state <= self::FIRST_STATE) {
           $track->counter++;
         }
@@ -79,13 +81,165 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
         CRM_Utils_Hook::post('edit', 'Track', $track->id, $track);
       }
       else {
-        CRM_Utils_Hook::pre('create', 'Track', NULL, $params);
-        $track->copyValues($params);
+        CRM_Utils_Hook::pre('create', 'Track', NULL, $values);
+        $track->copyValues($values);
         $track->insert();
         CRM_Utils_Hook::post('create', 'Track', $track->id, $track);
       }
     }
     return $track;
+  }
+
+  /**
+   * Validate tracking fields before any lookup or write.
+   *
+   * Invalid optional fields are omitted. Required page fields are checked by
+   * add(). Store plain text, never HTML entities; output still needs escaping.
+   *
+   * @param array $params
+   * @return array
+   */
+  private static function filterParams($params) {
+    if (!is_array($params)) {
+      return [];
+    }
+    $allowed = [
+      'page_type' => ['civicrm_contribution_page', 'civicrm_event', 'civicrm_uf_group'],
+      'entity_table' => ['civicrm_contribution', 'civicrm_participant', 'civicrm_contact'],
+      'referrer_type' => array_keys(CRM_Core_PseudoConstant::referrerTypes()),
+      'state' => array_keys(CRM_Core_PseudoConstant::trackState()),
+    ];
+    $utmFields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    $filtered = [];
+    foreach (self::fields() as $name => $field) {
+      // The session is always assigned by the server.
+      if (!isset($params[$name]) || $name === 'session_key') {
+        continue;
+      }
+      $value = $params[$name];
+      if ($field['type'] === CRM_Utils_Type::T_INT) {
+        if ((!is_int($value) && !is_string($value))
+          || !preg_match('/^[0-9]+$/D', (string) $value)) {
+          continue;
+        }
+        $digits = ltrim((string) $value, '0');
+        if (strlen($digits) > 10 || (strlen($digits) === 10 && strcmp($digits, '4294967295') > 0)) {
+          continue;
+        }
+        $value = (int) $value;
+        if ($name !== 'state' && $value < 1) {
+          continue;
+        }
+      }
+      elseif ($field['type'] === CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME) {
+        if (!is_string($value)) {
+          continue;
+        }
+        $date = DateTime::createFromFormat('!Y-m-d H:i:s', $value);
+        if (!$date || $date->format('Y-m-d H:i:s') !== $value || (int) $date->format('Y') < 1000) {
+          continue;
+        }
+      }
+      elseif ($field['type'] === CRM_Utils_Type::T_STRING) {
+        if (!is_string($value) || !mb_check_encoding($value, 'UTF-8')) {
+          continue;
+        }
+        if ($name === 'referrer_url' || $name === 'landing') {
+          if (!self::isValidTrackingUrl($value, $name)) {
+            continue;
+          }
+          $value = self::removeClickIds($value);
+        }
+        else {
+          $value = preg_replace('/[\x00-\x1f\x7f]/', '', $value);
+          if ($name === 'referrer_network') {
+            $value = strip_tags($value);
+          }
+          // Reject the whole UTM field when it contains HTML markup. Do not
+          // strip text such as spring<2024, or clear an existing stored value.
+          // This is a data-quality rule; report output must still be escaped.
+          elseif (in_array($name, $utmFields, TRUE)
+            && preg_match('/<(?:\/?[a-z][a-z0-9:-]*(?=[\s\/>])[^>]*|!--.*?--)>/is', $value)) {
+            continue;
+          }
+        }
+        if (isset($field['maxlength']) && mb_strlen($value, 'UTF-8') > $field['maxlength']) {
+          $value = mb_substr($value, 0, $field['maxlength'], 'UTF-8');
+        }
+      }
+      else {
+        continue;
+      }
+      // Empty beacons must not clear attribution already saved in this session.
+      // Check after stripping tags too, and preserve numeric/string zero.
+      if ($value === '') {
+        continue;
+      }
+      if (isset($allowed[$name]) && !in_array($value, $allowed[$name], TRUE)) {
+        continue;
+      }
+      $filtered[$name] = $value;
+    }
+    return $filtered;
+  }
+
+  /**
+   * Remove ad click IDs before truncation, preserving other query bytes.
+   *
+   * Avoid parse_str()/http_build_query(): duplicate keys, encoding and query
+   * order must survive unchanged. A fragment is not part of the query.
+   */
+  private static function removeClickIds($value) {
+    $parts = explode('#', $value, 2);
+    $url = explode('?', $parts[0], 2);
+    if (count($url) < 2) {
+      return $value;
+    }
+    $query = explode('&', $url[1]);
+    $kept = [];
+    $removed = FALSE;
+    foreach ($query as $param) {
+      $name = explode('=', $param, 2)[0];
+      if (in_array(urldecode($name), ['fbclid', 'gclid'], TRUE)) {
+        $removed = TRUE;
+        continue;
+      }
+      $kept[] = $param;
+    }
+    if (!$removed) {
+      return $value;
+    }
+    $result = $url[0];
+    $query = implode('&', $kept);
+    if ($query !== '') {
+      $result .= '?'.$query;
+    }
+    if (isset($parts[1])) {
+      $result .= '#'.$parts[1];
+    }
+    return $result;
+  }
+
+  /**
+   * Accept HTTP(S) URLs and the relative formats emitted by insights.js.
+   */
+  private static function isValidTrackingUrl($value, $name) {
+    if ($value === '') {
+      return TRUE;
+    }
+    // Reject whitespace, raw HTML delimiters and browser URL-parser ambiguity.
+    if (preg_match('/[\x00-\x20\x7f<>"\\\\]/', $value)) {
+      return FALSE;
+    }
+    if ($name === 'landing' && substr($value, 0, 1) === '/' && substr($value, 0, 2) !== '//') {
+      return TRUE;
+    }
+    if ($name === 'referrer_url' && preg_match('/^external\/url\.php\?qid=[0-9]+&u=[0-9]+$/D', $value)) {
+      return TRUE;
+    }
+    $url = parse_url($value);
+    return $url && !empty($url['host']) && !empty($url['scheme'])
+      && in_array(strtolower($url['scheme']), ['http', 'https'], TRUE);
   }
 
   /**
@@ -98,52 +252,21 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();
     }
-    if (!empty($_POST['data'])) {
-      $post = $_POST['data'];
-    }
-    if (empty($post)) {
+    $post = $_POST['data'] ?? NULL;
+    if (!is_string($post) || $post === '') {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();
     }
     $json = json_decode($post);
-    if (empty($json) || empty($json->page_type) || empty($json->page_id)) {
+    if (!is_object($json) || json_last_error() !== JSON_ERROR_NONE) {
       CRM_Utils_System::civiExit();
     }
 
-    $track = new CRM_Core_BAO_Track();
-    $fields = $track->fields();
     $params = (array) $json;
-    $params = array_filter($params);
-    foreach ($params as $key => $value) {
-      if (isset($fields[$key])) {
-        $field = $fields[$key];
-        switch ($field['type']) {
-          case CRM_Utils_Type::T_INT:
-            if (!CRM_Utils_Type::validate($value, 'Integer', FALSE)) {
-              unset($params[$key]);
-            }
-            break;
-          case CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME:
-            if (!CRM_Utils_Type::validate($value, 'Date', FALSE)) {
-              unset($params[$key]);
-            }
-            break;
-          case CRM_Utils_Type::T_STRING:
-          default:
-            if (is_array($value)) {
-              $params[$key] = (string) reset($value);
-            }
-            if (!CRM_Utils_Type::validate($value, 'String', FALSE)) {
-              unset($params[$key]);
-            }
-            break;
-        }
-      }
-      else {
-        unset($params[$key]);
-      }
-    }
-    $track = CRM_Core_BAO_Track::add($params);
+    // Only trusted internal callers may set IDs, counters, state or visit date.
+    // Public tracking must locate records by the server session and page.
+    unset($params['id'], $params['counter'], $params['session_key'], $params['entity_table'], $params['entity_id'], $params['state'], $params['visit_date']);
+    CRM_Core_BAO_Track::add($params);
     CRM_Utils_System::civiExit();
   }
 
