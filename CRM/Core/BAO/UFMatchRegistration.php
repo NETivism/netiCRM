@@ -109,7 +109,7 @@ class CRM_Core_BAO_UFMatchRegistration {
       $_POST = $values;
       $_GET = ['q' => 'user/register'];
       $_REQUEST = $_POST + $_GET + ['ctype' => 'Individual'];
-      return CRM_Core_BAO_UFGroup::getEditHTML(NULL, '', NULL, TRUE, TRUE, NULL, FALSE, 'Individual');
+      return CRM_Core_BAO_UFGroup::getEditHTML(NULL, '', CRM_Core_Action::ADD, TRUE, TRUE, NULL, FALSE, 'Individual');
     }
     finally {
       list($_POST, $_GET, $_REQUEST) = $saved;
@@ -206,18 +206,15 @@ class CRM_Core_BAO_UFMatchRegistration {
     $paths = [];
     $saved = FALSE;
     try {
-      // Keep candidate evaluation and persistence in one transaction. The
-      // candidate query locks rows so profile edits cannot invalidate a match.
-      CRM_Core_DAO::executeQuery(
-        'SELECT id FROM civicrm_domain WHERE id = %1 FOR UPDATE',
-        [1 => [CRM_Core_Config::domainID(), 'Integer']]
-      );
+      // Serialize registration for this account only.
+      if (!$transaction->acquireLock('ufmatch.' . (int) $uid)) {
+        throw new CRM_Core_Exception(ts('Unable to link the account to a contact.'));
+      }
       if (CRM_Core_BAO_UFMatch::getPersistentUFMatch($uid)) {
         $transaction->commit();
         return ['ufMatch' => CRM_Core_BAO_UFMatch::getPersistentUFMatch($uid), 'created' => FALSE];
       }
       if (CRM_Core_BAO_UFMatch::hasUFMatchConflict($uid, $email)) {
-        $transaction->rollback();
         $transaction->commit();
         return $empty;
       }
@@ -246,7 +243,8 @@ class CRM_Core_BAO_UFMatchRegistration {
         }
         $path = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
         $paths[] = $path;
-        $files[$name] = ['name' => $path, 'type' => mime_content_type($path)];
+        $mimeType = function_exists('mime_content_type') ? mime_content_type($path) : FALSE;
+        $files[$name] = ['name' => $path, 'type' => $mimeType ?: 'application/octet-stream'];
       }
       if (isset($files['image_URL']) && !CRM_Contact_BAO_Contact::processImageParams($files)) {
         throw new CRM_Core_Exception(ts('Image could not be uploaded due to invalid type extension.'));
@@ -341,7 +339,8 @@ class CRM_Core_BAO_UFMatchRegistration {
       }
     }
     catch (Throwable $e) {
-      CRM_Core_Error::debug_log_message('UFMatch registration: profile subscription/notification failed');
+      CRM_Core_Error::debug_log_message('UFMatch registration: profile subscription/notification failed for contact '
+        . (int) $contactID . ': ' . get_class($e) . ': ' . $e->getMessage());
     }
   }
 
@@ -386,7 +385,7 @@ class CRM_Core_BAO_UFMatchRegistration {
       $found = CRM_Core_DAO::singleValueQuery(
         "SELECT c.id FROM civicrm_contact c
          WHERE c.id = %1 AND c.contact_type = 'Individual' AND c.is_deleted = 0
-         AND NOT EXISTS (SELECT 1 FROM civicrm_uf_match m WHERE m.contact_id = c.id AND m.domain_id = %2) FOR UPDATE",
+         AND NOT EXISTS (SELECT 1 FROM civicrm_uf_match m WHERE m.contact_id = c.id AND m.domain_id = %2)",
         [1 => [$id, 'Integer'], 2 => [CRM_Core_Config::domainID(), 'Integer']]
       );
       if ($found) {
@@ -396,8 +395,7 @@ class CRM_Core_BAO_UFMatchRegistration {
     if (count($eligible) !== 1) {
       return NULL;
     }
-    // Recheck after acquiring the contact lock: an editor may have changed a
-    // rule field between the initial Finder query and the locking read.
+    // Recheck candidates in case rule fields changed during eligibility checks.
     $verified = CRM_Dedupe_Finder::dupesByParams($params, 'Individual', 'Strict', [], $group->id);
     if (defined('CIVICRM_UNIQ_EMAIL_PER_SITE') && CIVICRM_UNIQ_EMAIL_PER_SITE) {
       $verified = array_intersect($verified, CRM_Core_BAO_Domain::getContactList());
@@ -419,9 +417,9 @@ class CRM_Core_BAO_UFMatchRegistration {
   }
 
   /**
-   * Called inside the mapping transaction after locking the contact.
+   * Called inside the registration transaction for the selected contact.
    *
-   * @param int|string $contactID Existing contact locked by the registration transaction.
+   * @param int|string $contactID Existing contact selected for registration.
    * @param array $values Validated profile values and prepared uploads; group subscriptions are excluded.
    * @param array $fields Enabled registration field definitions keyed by field name.
    * @return void
@@ -445,10 +443,14 @@ class CRM_Core_BAO_UFMatchRegistration {
     if (!$values) {
       return;
     }
+    CRM_Utils_Hook::pre('edit', 'Profile', $contactID, $values);
     list($data) = CRM_Contact_BAO_Contact::formatProfileContactParams($values, $fields, $contactID);
     $contact = new CRM_Contact_DAO_Contact();
     $contact->id = $contactID;
     $contact->find(TRUE);
+    $data['contact_id'] = $contactID;
+    $data['contact_type'] = $contact->contact_type;
+    CRM_Utils_Hook::pre('edit', $contact->contact_type, $contactID, $data);
     if (isset($data['preferred_communication_method']) && is_array($data['preferred_communication_method'])) {
       $selected = array_keys(array_filter($data['preferred_communication_method']));
       $data['preferred_communication_method'] = $selected
@@ -464,7 +466,12 @@ class CRM_Core_BAO_UFMatchRegistration {
     }
     // Bind location updates to a unique server-selected row. Strip generated
     // primary/billing flags; don't let a partial profile change those flags.
-    foreach (['address', 'email', 'phone', 'im', 'openid', 'website'] as $block) {
+    $classes = [
+      'address' => 'CRM_Core_DAO_Address', 'email' => 'CRM_Core_DAO_Email',
+      'phone' => 'CRM_Core_DAO_Phone', 'im' => 'CRM_Core_DAO_IM',
+      'openid' => 'CRM_Core_DAO_OpenID', 'website' => 'CRM_Core_DAO_Website',
+    ];
+    foreach ($classes as $block => $class) {
       if (empty($data[$block])) {
         continue;
       }
@@ -479,12 +486,12 @@ class CRM_Core_BAO_UFMatchRegistration {
             $params[$number] = [$record[$key], 'Integer'];
           }
         }
-        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM $table WHERE $where FOR UPDATE", $params);
-        unset($record['is_primary'], $record['is_billing']);
+        $dao = CRM_Core_DAO::executeQuery("SELECT * FROM $table WHERE $where", $params);
         if ($dao->N > 1) {
           unset($data[$block][$index]);
           continue;
         }
+        unset($record['is_primary'], $record['is_billing']);
         if ($dao->fetch()) {
           foreach ($record as $key => $value) {
             if (!self::isBlank($dao->$key ?? NULL)) {
@@ -511,7 +518,16 @@ class CRM_Core_BAO_UFMatchRegistration {
         $scalars[$name] = $value;
       }
     }
-    CRM_Utils_Hook::pre('edit', 'Profile', $contactID, $values);
+    $nameValues = array_intersect_key($scalars, array_flip(['first_name', 'middle_name', 'last_name', 'prefix_id', 'suffix_id']));
+    if ($nameValues && $contact->contact_type === 'Individual') {
+      // Names are derived values: regenerate them from the accepted name patch
+      // and existing name fields, rather than preserving an old email fallback.
+      $nameValues['contact_type'] = $contact->contact_type;
+      $formattedContact = clone $contact;
+      CRM_Contact_BAO_Individual::format($nameValues, $formattedContact);
+      $scalars['display_name'] = $formattedContact->display_name;
+      $scalars['sort_name'] = $formattedContact->sort_name;
+    }
     if ($scalars) {
       $patch = new CRM_Contact_DAO_Contact();
       $patch->copyValues($scalars);
@@ -519,11 +535,6 @@ class CRM_Core_BAO_UFMatchRegistration {
       $patch->modified_date = date('YmdHis');
       $patch->save();
     }
-    $classes = [
-      'address' => 'CRM_Core_DAO_Address', 'email' => 'CRM_Core_DAO_Email',
-      'phone' => 'CRM_Core_DAO_Phone', 'im' => 'CRM_Core_DAO_IM',
-      'openid' => 'CRM_Core_DAO_OpenID', 'website' => 'CRM_Core_DAO_Website',
-    ];
     foreach ($classes as $block => $class) {
       foreach ($data[$block] ?? [] as $record) {
         $patch = new $class();
@@ -537,7 +548,7 @@ class CRM_Core_BAO_UFMatchRegistration {
     if (!empty($values['note'])) {
       $note = [
         'entity_table' => 'civicrm_contact', 'entity_id' => $contactID,
-        'note' => $values['note'], 'contact_id' => CRM_Core_Session::singleton()->get('userID'),
+        'note' => $values['note'], 'contact_id' => $contactID,
       ];
       CRM_Core_BAO_Note::add($note, CRM_Core_DAO::$_nullArray);
     }
@@ -550,6 +561,16 @@ class CRM_Core_BAO_UFMatchRegistration {
         CRM_Core_BAO_EntityTag::addEntitiesToTag($contactIDs, $id);
       }
     }
+    // Refresh greeting caches from persisted values, preserving custom greetings.
+    $updatedContact = new CRM_Contact_DAO_Contact();
+    $updatedContact->id = $contactID;
+    $updatedContact->find(TRUE);
+    CRM_Contact_BAO_Contact::processGreetings($updatedContact);
+    // Give integrations the final contact, including the refreshed greetings.
+    $updatedContact = new CRM_Contact_DAO_Contact();
+    $updatedContact->id = $contactID;
+    $updatedContact->find(TRUE);
+    CRM_Utils_Hook::post('edit', $updatedContact->contact_type, $contactID, $updatedContact);
     CRM_Core_BAO_Log::register($contactID, 'civicrm_contact', $contactID, NULL, ts('Updated contact'));
     CRM_Utils_Hook::post('edit', 'Profile', $contactID, $values);
     CRM_ACL_BAO_Cache::resetCache();

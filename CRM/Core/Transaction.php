@@ -65,6 +65,9 @@ class CRM_Core_Transaction {
    */
   private static $_doCommit = TRUE;
 
+  /** @var CRM_Core_Lock[] Named locks retained until the outermost transaction ends. */
+  private static $_locks = [];
+
   /**
    * hold a dao singleton for query operations
    *
@@ -133,6 +136,29 @@ class CRM_Core_Transaction {
   }
 
   /**
+   * Acquire a named lock for the lifetime of the outermost transaction.
+   * Repeated acquisition in nested scopes reuses the same lock.
+   *
+   * @param string $name Lock name, scoped to the current database and domain.
+   * @param int $timeout Maximum seconds to wait for the lock.
+   * @return bool Whether the lock was acquired.
+   */
+  public function acquireLock($name, $timeout = 10) {
+    if ($this->_pseudoCommitted || !self::isActive()) {
+      throw new LogicException('Cannot acquire a lock on a completed transaction.');
+    }
+    $key = CRM_Core_Config::domainID() . ':' . $name;
+    if (!isset(self::$_locks[$key])) {
+      $lock = new CRM_Core_Lock($name, $timeout);
+      if (!$lock->isAcquired()) {
+        return FALSE;
+      }
+      self::$_locks[$key] = $lock;
+    }
+    return TRUE;
+  }
+
+  /**
    * Commit the transaction.
    *
    * @param bool|null $resetIsolation Whether to reset the isolation level.
@@ -154,6 +180,10 @@ class CRM_Core_Transaction {
           self::$_dao->query("SET SESSION TRANSACTION ISOLATION LEVEL {$this->_originalIsolationLevel}");
         }
         self::$_doCommit = TRUE;
+        foreach (self::$_locks as $lock) {
+          $lock->release();
+        }
+        self::$_locks = [];
       }
     }
   }
@@ -192,6 +222,10 @@ class CRM_Core_Transaction {
       self::$_dao->query('ROLLBACK');
       self::$_count = 0;
       self::$_doCommit = TRUE;
+      foreach (self::$_locks as $lock) {
+        $lock->release();
+      }
+      self::$_locks = [];
     }
   }
 

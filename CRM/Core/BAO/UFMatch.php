@@ -85,7 +85,10 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
       return;
     }
     if ($uid > 0) {
-      self::synchronizeUFMatch($user, $uid, $system->getBestUFUniqueIdentifier($user), $uf, NULL, $ctype, $isLogin);
+      $ufMatch = self::synchronizeUFMatch($user, $uid, $system->getBestUFUniqueIdentifier($user), $uf, NULL, $ctype, $isLogin);
+      if (!$ufMatch) {
+        CRM_Core_Error::debug_log_message('UFMatch synchronization: unable to link UID ' . $uid);
+      }
     }
     // Do not use a returned/transient DAO, even if the operation succeeded.
     $ufMatch = self::refreshSession();
@@ -168,8 +171,8 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
       TRUE,
       'CRM_Core_DAO_UFMatch'
     );
-    // Multiple UFMatch rows for a UID are corruption, not a choice of identity.
     if ((int) $dao->N !== 1 || !$dao->fetch() || !$dao->live_contact_id || (int) $dao->is_deleted !== 0) {
+      CRM_Core_Error::debug_log_message('UFMatch integrity: invalid association for UID ' . (int) $ufID . ' in domain ' . CRM_Core_Config::domainID());
       return NULL;
     }
     return $dao;
@@ -188,6 +191,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
       $ufMatch = self::getPersistentUFMatch($uid);
     }
     catch (Throwable $e) {
+      CRM_Core_Error::debug_log_message('UFMatch session lookup failed for UID ' . $uid . ': ' . get_class($e) . ': ' . $e->getMessage());
       $session->reset(0);
       throw $e;
     }
@@ -199,6 +203,11 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
       && (int) $sessionUID === $uid
       && (int) $sessionCID === (int) $ufMatch->contact_id;
     if (!$matches && ($uid > 0 || $sessionUID !== NULL || $sessionCID !== NULL)) {
+      if ($sessionUID !== NULL || $sessionCID !== NULL) {
+        CRM_Core_Error::debug_log_message('UFMatch session mismatch: UID ' . $uid
+          . ', domain ' . CRM_Core_Config::domainID() . ', session UID ' . (int) $sessionUID
+          . ', session contact ' . (int) $sessionCID . ', persisted contact ' . (int) ($ufMatch->contact_id ?? 0));
+      }
       $session->reset(0);
     }
     if (!$matches && CRM_Core_Transaction::isActive()) {
@@ -227,18 +236,18 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
     if ((int) $uid <= 0 || !CRM_Utils_Rule::email($email)) {
       return $empty;
     }
-    $domain = CRM_Core_Config::domainID();
     $transaction = new CRM_Core_Transaction();
     try {
-      // Serialize UFMatch creation: the legacy schema has no UID/domain index.
-      CRM_Core_DAO::executeQuery('SELECT id FROM civicrm_domain WHERE id = %1 FOR UPDATE', [1 => [$domain, 'Integer']]);
+      // Serialize this UID only; the lock survives any outer transaction.
+      if (!$transaction->acquireLock('ufmatch.' . (int) $uid)) {
+        throw new CRM_Core_Exception(ts('Unable to link the account to a contact.'));
+      }
       $existing = self::getPersistentUFMatch($uid);
       if ($existing) {
         $transaction->commit();
         return ['ufMatch' => self::getPersistentUFMatch($uid), 'created' => FALSE];
       }
       if (self::hasUFMatchConflict($uid, $email)) {
-        $transaction->rollback();
         $transaction->commit();
         return $empty;
       }
@@ -258,7 +267,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
   }
 
   /**
-   * Check under the caller's domain lock, before creating or updating a contact.
+   * Check under the caller's UID lock, before creating or updating a contact.
    *
    * @param int|string $uid CMS user ID to check.
    * @param string $email CMS account email to check for an existing uf_name.
@@ -283,6 +292,8 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
    */
   public static function createContactForUFMatch($email, array $values, array $fields, $ctype = 'Individual') {
     $config = CRM_Core_Config::singleton();
+    // createProfileContact() sets this flag TRUE, then FALSE (and may throw
+    // before restoring it). Preserve the caller's setting on every exit.
     $resetCache = $config->doNotResetCache;
     try {
       // Keep permitted secondary emails, but choose the primary identity
@@ -401,57 +412,42 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
   }
 
   /**
-   * Update the email address for both the contact and their user profile.
+   * Make the CMS account email primary without replacing existing email addresses.
+   * Reuse a matching email row, or create one, and synchronize the domain UFMatch.
    *
-   * @param int $contactId contact ID
-   * @param string $emailAddress new email address
-   *
+   * @param int $contactId Contact associated with the CMS account.
+   * @param string $emailAddress Email address obtained from the CMS account.
    * @return void
    */
   public static function updateContactEmail($contactId, $emailAddress) {
-    $emailAddress = mb_strtolower($emailAddress, 'UTF-8');
-
+    $emailAddress = mb_strtolower(trim($emailAddress), 'UTF-8');
     $ufmatch = new CRM_Core_DAO_UFMatch();
     $ufmatch->contact_id = $contactId;
     $ufmatch->domain_id = CRM_Core_Config::domainID();
     if ($ufmatch->find(TRUE)) {
-      // Save the email in UF Match table
       $ufmatch->uf_name = $emailAddress;
       $ufmatch->save();
 
-      //check if the primary email for the contact exists
-      //$contactDetails[1] - email
-      //$contactDetails[3] - email id
-
-      $contactDetails = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactId);
-
-      if (trim($contactDetails[1])) {
-        $emailID = $contactDetails[3];
-        //update if record is found
-        $query = "UPDATE  civicrm_email
-                     SET email = %1
-                     WHERE id =  %2";
-        $p = [1 => [$emailAddress, 'String'],
-          2 => [$emailID, 'Integer'],
-        ];
-        $dao = &CRM_Core_DAO::executeQuery($query, $p);
+      $emailValues = ['contact_id' => $contactId, 'email' => $emailAddress];
+      CRM_Core_BAO_Block::blockValueExists('email', $emailValues);
+      $emailID = $emailValues['id'] ?? NULL;
+      // The helper ignores punctuation. Recheck so distinct addresses such as
+      // name+tag and nametag are never treated as the same account email.
+      if ($emailID && strcasecmp(CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Email', $emailID, 'email', 'id', TRUE), $emailAddress) !== 0) {
+        $emailID = NULL;
       }
-      else {
-        //else insert a new email record
-
+      if (!$emailID) {
         $email = new CRM_Core_DAO_Email();
         $email->contact_id = $contactId;
-        $email->is_primary = 1;
         $email->email = $emailAddress;
         $email->save();
         $emailID = $email->id;
       }
-
-      CRM_Core_BAO_Log::register(
-        $contactId,
-        'civicrm_email',
-        $emailID
+      CRM_Core_DAO::executeQuery(
+        'UPDATE civicrm_email SET is_primary = CASE WHEN id = %1 THEN 1 ELSE 0 END WHERE contact_id = %2',
+        [1 => [$emailID, 'Integer'], 2 => [$contactId, 'Integer']]
       );
+      CRM_Core_BAO_Log::register($contactId, 'civicrm_email', $emailID);
     }
   }
 

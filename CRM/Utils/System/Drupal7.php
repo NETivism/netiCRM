@@ -273,8 +273,10 @@ class CRM_Utils_System_Drupal7 {
     if ($uid) {
       if ($this->loadUserByName($name)) {
         $this->synchronizeUser();
-        $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
-        return [$contact_id, $uid, mt_rand()];
+        $ufMatch = CRM_Core_BAO_UFMatch::refreshSession();
+        if ($ufMatch) {
+          return [$ufMatch->contact_id, $uid, mt_rand()];
+        }
       }
     }
 
