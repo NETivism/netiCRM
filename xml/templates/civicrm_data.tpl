@@ -1131,10 +1131,10 @@ INSERT INTO civicrm_uf_group
     (6,  'new_household',      'Household,Contact',   '{ts escape="sql"}New Household{/ts}'     , 0,           1,           NULL),
     (7,  'summary_overlay',    'Contact',   		  '{ts escape="sql"}Summary Overlay{/ts}'   , 0,           1,           NULL),
     (8,  'shared_address',     'Contact',   		  '{ts escape="sql"}Shared Address{/ts}'    , 0,           1,           NULL),
-    (9,  'participants_information_proflie',     'Participant,Contact',   		  '{ts escape="sql"}Participants Information Proflie{/ts}'    , 0,           1,           NULL),
-    (10,  'volunteer_information_proflie',     'Participant,Contact',   		  '{ts escape="sql"}Volunteer Information Proflie{/ts}'    , 0,           1,           NULL),
-    (11,  'website_registered_member_information_proflie',     'Individual,Contact',   		  '{ts escape="sql"}Website Registered Member Information Proflie{/ts}'    , 0,           1,           NULL),
-    (12,  'subscribe_information_proflie',     'Contact',   		  '{ts escape="sql"}Subscribe Information Proflie{/ts}'    , 0,           1,           NULL);
+    (9,  'participants_information_profile',     'Participant,Contact',   		  '{ts escape="sql"}Participants Information Profile{/ts}'    , 0,           1,           NULL),
+    (10,  'volunteer_information_profile',     'Participant,Contact',   		  '{ts escape="sql"}Volunteer Information Profile{/ts}'    , 0,           1,           NULL),
+    (11,  'website_registered_member_information_profile',     'Individual,Contact',   		  '{ts escape="sql"}Website Registered Member Information Profile{/ts}'    , 0,           1,           NULL),
+    (12,  'subscribe_information_profile',     'Contact',   		  '{ts escape="sql"}Subscribe Information Profile{/ts}'    , 0,           1,           NULL);
 
 INSERT INTO civicrm_uf_join
    (is_active,module,entity_table,entity_id,weight,uf_group_id)

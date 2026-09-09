@@ -51658,3 +51658,19 @@ msgstr ""
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:108
 msgid "Recurring debit audit summary."
 msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Participants Information Profile"
+msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Volunteer Information Profile"
+msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Website Registered Member Information Profile"
+msgstr ""
+
+#: xml/templates/civicrm_data.tpl
+msgid "Subscribe Information Profile"
+msgstr ""

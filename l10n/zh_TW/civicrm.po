@@ -52501,3 +52501,19 @@ msgstr "由金流商端排程發動扣款的金流，若已扣款但回傳資料
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:108
 msgid "Recurring debit audit summary."
 msgstr "定捐扣款查核摘要。"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Participants Information Profile"
+msgstr "參加者報名表單"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Volunteer Information Profile"
+msgstr "志工基本資料表單"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Website Registered Member Information Profile"
+msgstr "網站註冊會員表單"
+
+#: xml/templates/civicrm_data.tpl
+msgid "Subscribe Information Profile"
+msgstr "電子報訂閱表單"
