@@ -177,6 +177,7 @@ class CRM_AI_Page_AJAX {
           if (strpos($message, "Curl Error") !== FALSE) {
             self::responseSseError([
               'is_error' => 1,
+              'is_finished' => 1,
               'message' => 'OpenAI Connect Error'
             ]);
           }
@@ -187,11 +188,9 @@ class CRM_AI_Page_AJAX {
             ]);
           }
         }
-        self::responseSucess([
-          'status' => 1,
-          'message' => 'Stream chat successfully.',
-          'data' => $result,
-        ]);
+        // SSE stream already delivered the whole response, appending a JSON payload
+        // here would break the event stream and trigger a headers already sent error.
+        CRM_Utils_System::civiExit();
       }
     }
     if (!$result) {

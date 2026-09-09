@@ -21,6 +21,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Status:
     STATUS_PENDING = 2,
     STATUS_SUCCESS = 1,
+    STATUS_FAILED = 4,
 
     // Fallback Component
     COMPONENT = 'Activity';
@@ -132,8 +133,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Send request to OpenAI API
     $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData);
 
-    // Save response data to db record
-    if (isset($requestData['id'])) {
+    // Save response data to db record.
+    // Stream mode already saved the record while receiving the response, saving it
+    // again here would overwrite the failed status with the pending one.
+    if (isset($requestData['id']) && is_array($responseData) && empty($params['stream'])) {
       $data = array_merge($requestData, $responseData);
       $data['id'] = $requestData['id'];
       $data['output_text'] = $responseData['message'];
