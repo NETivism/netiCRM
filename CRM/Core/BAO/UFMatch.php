@@ -58,82 +58,49 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
   }
 
   /**
-   * Synchronize a UF user object with its corresponding CiviCRM contact.
+   * Ensure the account has a contact association and synchronize CRM Session identity.
    *
-   * Ensures that a contact exists for the user and updates the CRM database if necessary.
+   * Use this entry point when handling login or synchronizing an account in a
+   * session context. synchronizeUFMatch() handles the database association only;
+   * this method also manages Session ufID/userID and recent-contact items.
+   * Validate the current user's persisted UFMatch before any early return,
+   * ensure the supplied account has an association when needed, then read the
+   * current user's UFMatch again before setting Session identity. Synchronizing
+   * another account never switches the logged-in user's Session identity.
    *
-   * @param object &$user the CMS user object
-   * @param bool $update whether the user object has been edited
-   * @param string $uf the name of the user framework
-   * @param string $ctype contact type
-   * @param bool $isLogin whether this is a login operation
+   * @param object $user CMS account whose contact association should exist.
+   * @param bool $update Whether to bypass the already-synchronized early return; this does not apply profile edits.
+   * @param string $uf CMS framework name forwarded to synchronizeUFMatch().
+   * @param string|null $ctype Contact type to use if a new contact is needed.
+   * @param bool $isLogin Legacy login-context argument; it does not enable registration dedupe.
    *
    * @return void
    */
   public static function synchronize(&$user, $update, $uf, $ctype, $isLogin = FALSE) {
-    $userSystem = CRM_Core_Config::singleton()->userSystem;
-    $session = CRM_Core_Session::singleton();
-    if (!is_object($session)) {
-      CRM_Core_Error::fatal('wow, session is not an object?');
+    $system = CRM_Core_Config::singleton()->userSystem;
+    $uid = (int) $system->getBestUFID($user);
+    $currentUID = (int) CRM_Utils_System::getLoggedInUfID();
+    $ufMatch = self::refreshSession();
+    if (!$update && $uid === $currentUID && $ufMatch) {
       return;
     }
-
-    $userSystemID = $userSystem->getBestUFID($user);
-    $uniqId = $userSystem->getBestUFUniqueIdentifier($user);
-
-    // if the id of the object is zero (true for anon users in drupal)
-    // have we already processed this user, if so early
-    // return.
-    $userID = $session->get('userID');
-    $ufID = $session->get('ufID');
-
-    if (!$update && $ufID == $userSystemID) {
-      return;
+    if ($uid > 0) {
+      self::synchronizeUFMatch($user, $uid, $system->getBestUFUniqueIdentifier($user), $uf, NULL, $ctype, $isLogin);
     }
-
-    //check do we have logged in user.
-    $isUserLoggedIn = CRM_Utils_System::isUserLoggedIn();
-
-    // reset the session if we are a different user
-    if ($ufID != $userSystemID) {
-      $session->reset(0);
-
-      //get logged in user ids, and set to session.
-      if ($isUserLoggedIn) {
-        $userIds = self::getUFValues();
-        $session->set('ufID', CRM_Utils_Array::value('uf_id', $userIds, ''));
-        $session->set('userID', CRM_Utils_Array::value('contact_id', $userIds, ''));
-      }
+    // Do not use a returned/transient DAO, even if the operation succeeded.
+    $ufMatch = self::refreshSession();
+    if ($ufMatch) {
+      self::addUFMatchToRecent($ufMatch);
     }
+  }
 
-    // return early
-    if ($userSystemID == 0) {
-      return;
-    }
-
-    $ufmatch = self::synchronizeUFMatch($user, $userSystemID, $uniqId, $uf, NULL, $ctype, $isLogin);
-    if (!$ufmatch) {
-      return;
-    }
-
-    //make sure we have session w/ consistent ids.
-    $ufID = $ufmatch->uf_id;
-    $userID = $ufmatch->contact_id;
-    if ($isUserLoggedIn) {
-      $loggedInUserUfID = CRM_Utils_System::getLoggedInUfID();
-      //are we processing logged in user.
-      if ($loggedInUserUfID && $loggedInUserUfID != $ufID) {
-        $userIds = self::getUFValues($loggedInUserUfID);
-        $ufID = CRM_Utils_Array::value('uf_id', $userIds, '');
-        $userID = CRM_Utils_Array::value('contact_id', $userIds, '');
-      }
-    }
-
-    //set user ids to session.
-    $session->set('ufID', $ufID);
-    $session->set('userID', $userID);
-
-    // add current contact to recentlty viewed
+  /**
+   * Add the synchronized contact to recent items after identity validation.
+   *
+   * @param CRM_Core_DAO_UFMatch $ufmatch Verified account/contact association.
+   * @return void
+   */
+  private static function addUFMatchToRecent($ufmatch) {
     if ($ufmatch->contact_id) {
 
       list($displayName, $contactImage, $contactType, $contactSubtype, $contactImageUrl) = CRM_Contact_BAO_Contact::getDisplayAndImage($ufmatch->contact_id, TRUE, TRUE);
@@ -156,145 +123,221 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
   }
 
   /**
-   * Lower-level logic to synchronize a UF user with a CiviCRM contact.
+   * Get or create the database association between a CMS account and a contact.
    *
-   * @param object &$user the CMS user object
-   * @param string $userKey the unique ID from the user framework
-   * @param string $uniqId the unique identifier (email or OpenID)
-   * @param string $uf the name of the user framework
-   * @param bool|null $status whether to return only the creation status
-   * @param string|null $ctype contact type
-   * @param bool $isLogin whether this is a login operation
+   * Use this entry point when the caller needs a UFMatch result without assigning
+   * Session ufID/userID. synchronize() wraps this operation with Session handling.
+   * An existing association is reused; otherwise a new contact and UFMatch are
+   * created, regardless of framework. This method never matches an existing
+   * contact by email. Registration dedupe is available only through
+   * UFMatchRegistration::register().
    *
-   * @return CRM_Core_DAO_UFMatch|bool|null matching object, creation status, or NULL
+   * @param object $user CMS account object, retained for caller compatibility; not read here.
+   * @param int|string $userKey CMS user ID to associate in the current domain.
+   * @param string $uniqId CMS account email stored as uf_name; must pass email validation.
+   * @param string $uf CMS framework name, retained for caller compatibility; does not change behavior.
+   * @param bool|null $status TRUE returns whether a new UFMatch was created, rather than the object.
+   * @param string|null $ctype Contact type for creation; defaults to Individual.
+   * @param bool $isLogin Retained for caller compatibility; currently does not change this method's behavior.
+   *
+   * @return CRM_Core_DAO_UFMatch|bool|null UFMatch object, creation status when requested, or FALSE/NULL on failure.
    */
   public static function &synchronizeUFMatch(&$user, $userKey, $uniqId, $uf, $status = NULL, $ctype = NULL, $isLogin = FALSE) {
-    if (!CRM_Utils_Rule::email($uniqId)) {
-      return $status ? NULL : FALSE;
+    $result = self::createUFMatch($userKey, $uniqId, $ctype ?: 'Individual');
+    $value = $status ? ($result['created'] && !empty($result['ufMatch'])) : $result['ufMatch'];
+    return $value;
+  }
+
+  /**
+   * Read an unambiguous, live UFMatch without the getUFValues() static cache.
+   *
+   * @param int|string $ufID CMS user ID to look up in the current domain.
+   * @return CRM_Core_DAO_UFMatch|null Unique live association, or NULL if invalid.
+   */
+  public static function getPersistentUFMatch($ufID) {
+    if (!ctype_digit((string) $ufID) || (int) $ufID <= 0) {
+      return NULL;
     }
-
-    $newContact = FALSE;
-
-    // make sure that a contact id exists for this user id
-    $ufmatch = new CRM_Core_DAO_UFMatch();
-    if (CRM_Core_DAO::checkFieldExists('civicrm_uf_match', 'domain_id')) {
-      $ufmatch->domain_id = CRM_Core_Config::domainID();
+    $dao = CRM_Core_DAO::executeQuery(
+      "SELECT m.id, m.uf_id, m.uf_name, m.contact_id, m.domain_id,
+              c.id AS live_contact_id, c.is_deleted
+       FROM civicrm_uf_match m
+       LEFT JOIN civicrm_contact c ON c.id = m.contact_id
+       WHERE m.uf_id = %1 AND m.domain_id = %2",
+      [1 => [(int) $ufID, 'Integer'], 2 => [CRM_Core_Config::domainID(), 'Integer']],
+      TRUE,
+      'CRM_Core_DAO_UFMatch'
+    );
+    // Multiple UFMatch rows for a UID are corruption, not a choice of identity.
+    if ((int) $dao->N !== 1 || !$dao->fetch() || !$dao->live_contact_id || (int) $dao->is_deleted !== 0) {
+      return NULL;
     }
-    $ufmatch->uf_id = $userKey;
-    if (!$ufmatch->find(TRUE)) {
-      // very dirty way use POST as verify parameter
-      if (!empty($_POST) && !$isLogin && isset($_POST['_qf_default'])) {
-        $params = $_POST;
-        $params['email'] = $uniqId;
+    return $dao;
+  }
 
-        $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
-        $dedupeParams['check_permission'] = FALSE;
-        $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
+  /**
+   * Validate the current framework identity before using any CiviCRM session data.
+   * This method never creates contacts and never accepts a caller's user object.
+   *
+   * @return CRM_Core_DAO_UFMatch|null Verified association, or NULL when no identity can be established.
+   */
+  public static function refreshSession() {
+    $uid = (int) CRM_Utils_System::getLoggedInUfID();
+    $session = CRM_Core_Session::singleton();
+    try {
+      $ufMatch = self::getPersistentUFMatch($uid);
+    }
+    catch (Throwable $e) {
+      $session->reset(0);
+      throw $e;
+    }
+    $sessionUID = $session->get('ufID');
+    $sessionCID = $session->get('userID');
+    $matches = $ufMatch && $uid > 0
+      && (int) $ufMatch->uf_id === $uid
+      && (int) $ufMatch->domain_id === (int) CRM_Core_Config::domainID()
+      && (int) $sessionUID === $uid
+      && (int) $sessionCID === (int) $ufMatch->contact_id;
+    if (!$matches && ($uid > 0 || $sessionUID !== NULL || $sessionCID !== NULL)) {
+      $session->reset(0);
+    }
+    if (!$matches && CRM_Core_Transaction::isActive()) {
+      // A row visible on this connection may still roll back. Do not establish
+      // a new session identity until the outermost CRM transaction commits.
+      return NULL;
+    }
+    if ($ufMatch) {
+      $session->set('ufID', (int) $ufMatch->uf_id);
+      $session->set('userID', (int) $ufMatch->contact_id);
+    }
+    return $ufMatch;
+  }
 
-        if (!empty($ids) && defined('CIVICRM_UNIQ_EMAIL_PER_SITE') && CIVICRM_UNIQ_EMAIL_PER_SITE) {
-          // restrict dupeIds to ones that belong to current domain/site.
-          $siteContacts = CRM_Core_BAO_Domain::getContactList();
-          foreach ($ids as $index => $dupeId) {
-            if (!in_array($dupeId, $siteContacts)) {
-              unset($ids[$index]);
-            }
-          }
-          // re-index the array
-          $ids = array_values($ids);
-        }
-        if (!empty($ids)) {
-          $dao = new CRM_Core_DAO();
-          $dao->contact_id = $ids[0];
-        }
-        else {
-          // not only verify by dedupe rule
-          // also fallback to email only check, refs #26873
-          if (isset($_POST['_qf_default']) && empty($_POST['last_name'])) {
-            $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
-          }
-        }
-      }
-      else {
-        $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($uniqId, $ctype);
-      }
-
-      // refs #22380, we don't need transaction when dedupe
-      $transaction = new CRM_Core_Transaction();
-      if (!empty($dao)) {
-        $ufmatch->contact_id = $dao->contact_id;
-        $ufmatch->uf_name = $uniqId;
-      }
-      else {
-        $params = ['email-Primary' => $uniqId];
-
-        if ($ctype == 'Organization') {
-          $params['organization_name'] = $uniqId;
-        }
-        elseif ($ctype == 'Household') {
-          $params['household_name'] = $uniqId;
-        }
-        if (!$ctype) {
-          $ctype = "Individual";
-        }
-        $params['contact_type'] = $ctype;
-
-        // extract first / middle / last name
-        // for joomla
-        if ($uf == 'Joomla' && $user->name) {
-          CRM_Utils_String::extractName($user->name, $params);
-        }
-
-        $contactId = CRM_Contact_BAO_Contact::createProfileContact($params, CRM_Core_DAO::$_nullArray);
-        $ufmatch->contact_id = $contactId;
-        $ufmatch->uf_name = $uniqId;
-      }
-
-      // check that there are not two CMS IDs matching the same CiviCRM contact - this happens when a civicrm
-      // user has two e-mails and there is a cms match for each of them
-      // the gets rid of the nasty fata error but still reports the error
-      $sql = "
-SELECT uf_id
-FROM   civicrm_uf_match
-WHERE  ( contact_id = %1
-OR     uf_name      = %2
-OR     uf_id        = %3 )
-AND    domain_id    = %4
-";
-      $params = [1 => [$ufmatch->contact_id, 'Integer'],
-        2 => [$ufmatch->uf_name, 'String'],
-        3 => [$ufmatch->uf_id, 'Integer'],
-        4 => [$ufmatch->domain_id, 'Integer'],
-      ];
-
-      $conflict = CRM_Core_DAO::singleValueQuery($sql, $params);
-
-      if (!$conflict) {
-        $ufmatch->save();
-        $ufmatch->free();
-        $newContact = TRUE;
-
+  /**
+   * Ordinary login/programmatic creation: reuse a UFMatch or create a contact.
+   * Registration owns its separate transaction and is the only dedupe caller.
+   *
+   * @param int|string $uid CMS user ID.
+   * @param string $email Email address obtained from the CMS account.
+   * @param string $ctype Contact type to use when creating a contact.
+   * @return array Keys: ufMatch (DAO or NULL), created (whether a contact was created).
+   */
+  public static function createUFMatch($uid, $email, $ctype = 'Individual') {
+    $empty = ['ufMatch' => NULL, 'created' => FALSE];
+    if ((int) $uid <= 0 || !CRM_Utils_Rule::email($email)) {
+      return $empty;
+    }
+    $domain = CRM_Core_Config::domainID();
+    $transaction = new CRM_Core_Transaction();
+    try {
+      // Serialize UFMatch creation: the legacy schema has no UID/domain index.
+      CRM_Core_DAO::executeQuery('SELECT id FROM civicrm_domain WHERE id = %1 FOR UPDATE', [1 => [$domain, 'Integer']]);
+      $existing = self::getPersistentUFMatch($uid);
+      if ($existing) {
         $transaction->commit();
+        return ['ufMatch' => self::getPersistentUFMatch($uid), 'created' => FALSE];
       }
-      else {
-        $msg = ts(
-          "Contact ID %1 is a match for %2 user %3 but has already been matched to %4",
-          [1 => $ufmatch->contact_id,
-            2 => $uf,
-            3 => $ufmatch->uf_id,
-            4 => $conflict,
-          ]
-        );
-        CRM_Core_Error::debug_var('ufmatch_error', $msg);
-        unset($conflict);
-        // we don't need rollback transaction because we still need to create contact.
+      if (self::hasUFMatchConflict($uid, $email)) {
+        $transaction->rollback();
+        $transaction->commit();
+        return $empty;
       }
+      $contactID = self::createContactForUFMatch($email, [], [], $ctype);
+      self::saveUFMatch($uid, $email, $contactID);
+      $transaction->commit();
+      if (!CRM_Core_Transaction::isActive()) {
+        CRM_Core_Error::debug_log_message('UFMatch synchronization: created');
+      }
+      return ['ufMatch' => self::getPersistentUFMatch($uid), 'created' => TRUE];
     }
+    catch (Throwable $e) {
+      $transaction->rollback();
+      $transaction->commit();
+      throw $e;
+    }
+  }
 
-    if ($status) {
-      return $newContact;
+  /**
+   * Check under the caller's domain lock, before creating or updating a contact.
+   *
+   * @param int|string $uid CMS user ID to check.
+   * @param string $email CMS account email to check for an existing uf_name.
+   * @return bool Whether the current domain contains a conflicting UID or email.
+   */
+  public static function hasUFMatchConflict($uid, $email) {
+    return (bool) CRM_Core_DAO::singleValueQuery(
+      'SELECT id FROM civicrm_uf_match WHERE domain_id = %1 AND (uf_id = %2 OR uf_name = %3)',
+      [1 => [CRM_Core_Config::domainID(), 'Integer'], 2 => [$uid, 'Integer'], 3 => [$email, 'String']]
+    );
+  }
+
+  /**
+   * Create a contact with the account email as primary. Caller owns transaction.
+   * Values/fields must come from the validated registration profile, or be empty.
+   *
+   * @param string $email CMS account email, used as the new contact's primary email.
+   * @param array $values Validated registration values, or an empty array for ordinary synchronization.
+   * @param array $fields Enabled registration field definitions keyed by field name.
+   * @param string $ctype Contact type to create.
+   * @return int|string ID of the newly created contact.
+   */
+  public static function createContactForUFMatch($email, array $values, array $fields, $ctype = 'Individual') {
+    $config = CRM_Core_Config::singleton();
+    $resetCache = $config->doNotResetCache;
+    try {
+      // Keep permitted secondary emails, but choose the primary identity
+      // from the account even if the profile submits another primary value.
+      unset($values['email'], $values['email-Primary']);
+      $values = ['email-Primary' => $email] + $values;
+      $values['contact_type'] = $ctype;
+      if ($ctype === 'Organization' && empty($values['organization_name'])) {
+        $values['organization_name'] = $email;
+      }
+      elseif ($ctype === 'Household' && empty($values['household_name'])) {
+        $values['household_name'] = $email;
+      }
+      $contactID = CRM_Contact_BAO_Contact::createProfileContact($values, $fields, NULL, NULL, NULL, $ctype);
+      $emailID = CRM_Core_DAO::singleValueQuery(
+        'SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 ORDER BY is_primary DESC, id LIMIT 1',
+        [1 => [$contactID, 'Integer'], 2 => [$email, 'String']]
+      );
+      if (!$emailID) {
+        $location = CRM_Core_BAO_LocationType::getDefault();
+        $primary = ['contact_id' => $contactID, 'email' => $email, 'location_type_id' => $location->id];
+        $emailDAO = CRM_Core_BAO_Email::add($primary);
+        $emailID = $emailDAO->id;
+      }
+      // Only the newly-created contact is affected; existing contacts retain
+      // every primary flag through the fill-only branch.
+      CRM_Core_DAO::executeQuery(
+        'UPDATE civicrm_email SET is_primary = CASE WHEN id = %1 THEN 1 ELSE 0 END WHERE contact_id = %2',
+        [1 => [$emailID, 'Integer'], 2 => [$contactID, 'Integer']]
+      );
+      return $contactID;
     }
-    else {
-      return $ufmatch;
+    finally {
+      $config->doNotResetCache = $resetCache;
+    }
+  }
+
+  /**
+   * Write only the UFMatch row. Caller owns the transaction, lock and contact choice.
+   * Session callers must query the persisted UFMatch again after commit.
+   *
+   * @param int|string $uid CMS user ID.
+   * @param string $email CMS account email to store as uf_name.
+   * @param int|string $contactID Contact selected or created by the caller.
+   * @return void
+   */
+  public static function saveUFMatch($uid, $email, $contactID) {
+    $match = new CRM_Core_DAO_UFMatch();
+    $match->uf_id = $uid;
+    $match->uf_name = $email;
+    $match->domain_id = CRM_Core_Config::domainID();
+    $match->contact_id = $contactID;
+    $match->save();
+    if (!CRM_Core_Transaction::willCommit()) {
+      throw new CRM_Core_Exception(ts('Unable to link the account to a contact.'));
     }
   }
 

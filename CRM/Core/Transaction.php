@@ -196,6 +196,15 @@ class CRM_Core_Transaction {
   }
 
   /**
+   * Whether transactional callers must avoid implicitly committing DDL.
+   *
+   * @return bool Whether at least one CRM transaction remains open.
+   */
+  public static function isActive() {
+    return self::$_count > 0;
+  }
+
+  /**
    * Check if the transaction will be committed.
    *
    * @return bool

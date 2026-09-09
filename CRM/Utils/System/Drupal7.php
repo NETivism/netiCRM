@@ -285,6 +285,7 @@ class CRM_Utils_System_Drupal7 {
    * @inheritDoc
    */
   public function loadUserByName($username) {
+    $account = NULL;
     if (!empty($username)) {
       $account = user_load_by_name($username);
     }
@@ -292,12 +293,8 @@ class CRM_Utils_System_Drupal7 {
       global $user;
       $user = $account;
       $uid = $account->uid;
-      $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
-
-      // Store the contact id and user id in the session
-      $session = CRM_Core_Session::singleton();
-      $session->set('ufID', $uid);
-      $session->set('userID', $contact_id);
+      // Resolve identity from the current user's persisted domain mapping.
+      CRM_Core_BAO_UFMatch::refreshSession();
       return TRUE;
     }
     return FALSE;
@@ -307,18 +304,15 @@ class CRM_Utils_System_Drupal7 {
    * @inheritDoc
    */
   public function loadUserById($uid) {
+    $account = NULL;
     if (!empty($uid) && CRM_Utils_Rule::positiveInteger($uid)) {
       $account = user_load($uid);
     }
     if ($account && $account->uid == $uid) {
       global $user;
       $user = $account;
-      $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
-
-      // Store the contact id and user id in the session
-      $session = CRM_Core_Session::singleton();
-      $session->set('ufID', $uid);
-      $session->set('userID', $contact_id);
+      // Resolve identity from the current user's persisted domain mapping.
+      CRM_Core_BAO_UFMatch::refreshSession();
       return TRUE;
     }
     return FALSE;
@@ -345,8 +339,8 @@ class CRM_Utils_System_Drupal7 {
    */
   public function synchronizeUser() {
     global $user;
-    $uid = $user->uid;
-    $email = $user->email;
+    $uid = $user->uid ?? NULL;
+    $email = $user->mail ?? NULL;
     if (!empty($user) && !empty($uid) && !empty($email)) {
       return CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $uid, $email, 'Drupal');
     }
