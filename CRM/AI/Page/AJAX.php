@@ -191,6 +191,7 @@ class CRM_AI_Page_AJAX {
           if (strpos($message, "Curl Error") !== FALSE) {
             self::responseSseError([
               'is_error' => 1,
+              'is_finished' => 1,
               'message' => 'OpenAI Connect Error'
             ]);
           }
@@ -201,8 +202,8 @@ class CRM_AI_Page_AJAX {
             ]);
           }
         }
-        // The stream already wrote the whole reply and the record, an SSE
-        // response must not be followed by a JSON body.
+        // SSE stream already delivered the whole response, appending a JSON payload
+        // here would break the event stream and trigger a headers already sent error.
         CRM_Utils_System::civiExit();
       }
     }

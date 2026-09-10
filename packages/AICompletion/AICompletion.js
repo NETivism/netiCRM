@@ -1302,7 +1302,8 @@
             sourceUrlQuery: window.location.search
           },
           isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
-          userMessage = isEmptyPrompt ? '(n/a)' : formData;
+          userMessage = isEmptyPrompt ? '(n/a)' : formData,
+          streamEnded = false;
 
       // Follow up turn. A missing key is what tells the backend to start a new
       // conversation, so the key is only added once we really have an id.
@@ -1403,6 +1404,7 @@
                 if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
                   evtSource.close();
                   chatData.stream = null;
+                  streamEnded = true;
 
                   // AC-7: the button goes back to plain submit, ready for the
                   // next follow up.
@@ -1455,6 +1457,9 @@
 
                     if (eventData.hasOwnProperty('is_error')) {
                       let msgID = 'ai-msg-' + renderID();
+
+                      evtSource.close();
+                      streamEnded = true;
 
                       if (eventData.message.includes('timed out')) {
                         errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
@@ -1520,6 +1525,13 @@
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
             chatData.stream = null;
+
+            // Connection dropped before the stream finished, avoid leaving the UI in loading state.
+            if (!streamEnded) {
+              streamEnded = true;
+              $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+              AICompletion.prototype.createMessage('ai-msg-' + renderID(), '', errorMessageDefault, 'ai', 'error');
+            }
           };
         })
         .catch(function(error) {

@@ -26,6 +26,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Status:
     STATUS_PENDING = 2,
     STATUS_SUCCESS = 1,
+    STATUS_FAILED = 4,
 
     // Fallback Component
     COMPONENT = 'Activity';
@@ -164,9 +165,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Send request to OpenAI API
     $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData);
 
-    // Streaming wrote the record from inside the curl write callback and has
-    // already flushed the whole reply, so there is nothing left to merge or
-    // save. request() returns nothing in that branch.
+    // Streaming already wrote the record from inside the curl write callback,
+    // including the failed status set by handleStreamError(). Saving again here
+    // would overwrite it with the pending one, and the reply was already flushed.
     if (!empty($requestData['stream'])) {
       return $responseData;
     }
