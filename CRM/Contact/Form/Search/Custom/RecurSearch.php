@@ -138,6 +138,8 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       $this->_queryColumns += [
         'r.frequency_unit' => 'frequency_unit',
         'r.last_execute_date' => 'last_execute_date',
+        // Selected for the audit schedule clause, HAVING can only resolve
+        'payment_processor.payment_processor_type' => 'payment_processor_type',
         'audit.audit_status_ids' => 'audit_status_ids',
         'audit.audit_latest_status_id' => 'audit_latest_status_id',
         'audit.audit_count' => 'audit_count',
@@ -996,6 +998,7 @@ WHERE $scheduleClause
       unset(
         $row['frequency_unit'],
         $row['last_execute_date'],
+        $row['payment_processor_type'],
         $row['audit_latest_status_id'],
         $row['audit_count'],
         $row['audit_not_executed']
@@ -1317,6 +1320,9 @@ WHERE $scheduleClause
    * Cycle days beyond the end of a month are treated as the final day of that
    * month, matching recurring payment execution behavior.
    *
+   * Only recurring contributions which the payment processor would execute are
+   * counted, the same rule the scheduled debit job uses.
+   *
    * @return string
    */
   protected function getAuditScheduleClause() {
@@ -1325,6 +1331,7 @@ WHERE $scheduleClause
       return '0';
     }
 
+    $statusClause = $this->getAuditExecutableStatusClause();
     $dateFrom = $this->addQueryParam($auditDateRange['from'], 'Timestamp');
     $dateTo = $this->addQueryParam($auditDateRange['to'], 'Timestamp');
     $dayAfterLastExecute = "COALESCE(DATE_ADD(DATE(r.last_execute_date), INTERVAL 1 DAY), '1000-01-01')";
@@ -1336,7 +1343,8 @@ WHERE $scheduleClause
     $scheduledInNextMonth = "DATE_ADD($nextMonth, INTERVAL (LEAST(r.cycle_day, DAY(LAST_DAY($nextMonth))) - 1) DAY)";
 
     return "(
-      r.frequency_unit = 'month'
+      $statusClause
+      AND r.frequency_unit = 'month'
       AND r.cycle_day BETWEEN 1 AND 31
       AND $effectiveStart <= $effectiveEnd
       AND (
@@ -1344,6 +1352,38 @@ WHERE $scheduleClause
         OR $scheduledInNextMonth BETWEEN $effectiveStart AND $effectiveEnd
       )
     )";
+  }
+
+  /**
+   * Build the SQL condition for a recurring contribution which is executable.
+   *
+   * Only "In Progress" orders are debited by the scheduled job. TapPay also
+   * debits "Overdue" orders and LinePay "Suspended" ones, the same rule
+   * CRM_Contribute_BAO_AuditContributionRecur uses to find its candidates.
+   *
+   * The processor type is read from the payment_processor_type column, which
+   * both the search query and the temporary table provide.
+   *
+   * @return string
+   */
+  protected function getAuditExecutableStatusClause() {
+    $inProgress = $this->addQueryParam(5, 'Integer');
+    $clauses = ["r.contribution_status_id = $inProgress"];
+
+    // Recurring status which is executable by one payment processor type only.
+    $processorStatuses = [
+      // Overdue.
+      6 => 'TapPay',
+      // Suspended, LinePay.
+      7 => 'Mobile',
+    ];
+    foreach ($processorStatuses as $statusId => $processorType) {
+      $status = $this->addQueryParam($statusId, 'Integer');
+      $type = $this->addQueryParam($processorType, 'String');
+      $clauses[] = "(r.contribution_status_id = $status AND payment_processor_type = $type)";
+    }
+
+    return '(' . CRM_Utils_Array::implode(' OR ', $clauses) . ')';
   }
 
   /**
@@ -1362,6 +1402,9 @@ WHERE $scheduleClause
 
   /**
    * Check whether a result row had a monthly debit scheduled in the audit range.
+   *
+   * The recurring status is not checked here, rows which are not executable
+   * are already dropped by the schedule clause of the search query.
    *
    * @param object $row
    *
