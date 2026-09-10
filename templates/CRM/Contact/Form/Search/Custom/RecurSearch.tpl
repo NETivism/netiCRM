@@ -41,7 +41,7 @@
           <div class="crm-accordion-wrapper crm-recur-audit-accordion crm-accordion-{if $auditRangeComplete}open{else}closed{/if}">
             <div class="crm-accordion-header">
               <div class="zmdi crm-accordion-pointer"></div>
-              {ts}Monthly Recurring Debit Audit{/ts}
+              {ts}Monthly Recurring Debit Audit{/ts}<span class="crm-beta"></span>
             </div>
             <div class="crm-accordion-body">
               <table class="form-layout-compressed">
@@ -51,21 +51,21 @@
                     {include file="CRM/common/jcalendar.tpl" elementName=audit_date_from}
                     <span>{$form.audit_date_to.label}</span>
                     {include file="CRM/common/jcalendar.tpl" elementName=audit_date_to}
-                    <div class="description">{ts}Audits can go back to the first day of the previous month. Select a future date to forecast scheduled debits.{/ts} {ts}Select the start date first. The end date can be at most one month after the start date.{/ts}</div>
+                    <div class="description">{ts}Audits can go back to the first day of the previous month. Select a future date to forecast scheduled debits. The audit date range can be at most one month.{/ts}</div>
                   </td>
                 </tr>
                 <tr class="crm-contact-custom-search-form-row-audit_status_id crm-audit-status-controls{if !$auditRangeComplete} hiddenElement{/if}">
                   <td class="label">{$form.audit_status_id.label}</td>
                   <td>
                     {$form.audit_status_id.html}
-                    <div class="description">{ts}Results are matched by the status of contribution records within the audit date range.{/ts} {ts}If a recurring contribution has multiple contribution records within the audit date range, it is included in the results whenever any of them matches a checked status.{/ts}</div>
+                    <div class="description">{ts}The status is read from the most recent contribution record within the audit date range. When a recurring contribution has multiple contribution records in the range, only the status of the most recent record is used for filtering.{/ts}</div>
                   </td>
                 </tr>
                 <tr class="crm-contact-custom-search-form-row-audit_not_executed crm-audit-status-controls{if !$auditRangeComplete} hiddenElement{/if}">
                   <td class="label">{$form.audit_not_executed.label}</td>
                   <td>
                     {$form.audit_not_executed.html}
-                    <div class="description">{ts}For payment processors that trigger debits on their own schedule, a debit that has already been charged but whose result has not been returned will still be shown as having no record on the agreed debit date.{/ts}</div>
+                    <div class="description">{ts}"No Record" is checked by default and cannot be cleared, it is always included in the audit.{/ts} {ts}For payment processors that trigger debits on their own schedule, a debit that has already been charged but whose result has not been returned will still be shown as having no record.{/ts}</div>
                   </td>
                 </tr>
               </table>
@@ -216,23 +216,16 @@
     var $startDateTo = $('#start_date_to');
     var $auditControls = $('.crm-audit-status-controls');
     var $auditNotExecuted = $('#audit_not_executed');
-    var $auditNotExecutedInitialized = $('#audit_not_executed_initialized');
 
     var syncAuditControls = function() {
       var rangeComplete = $.trim($auditDateFrom.val()).length > 0 &&
         $.trim($auditDateTo.val()).length > 0;
 
-      if (!rangeComplete) {
-        $auditNotExecuted.prop('checked', false);
-        $auditNotExecutedInitialized.val('0');
-      }
-      else if ($auditNotExecutedInitialized.val() !== '1') {
-        $auditNotExecuted.prop('checked', true);
-        $auditNotExecutedInitialized.val('1');
-      }
+      // "No record" is always part of the audit, keep it checked and locked.
+      $auditNotExecuted.prop({checked: true, disabled: true});
 
       $auditControls.toggleClass('hiddenElement', !rangeComplete);
-      $auditControls.find(':input')
+      $auditControls.find(':input').not($auditNotExecuted)
         .prop('disabled', !rangeComplete)
         .attr('aria-disabled', rangeComplete ? 'false' : 'true');
     };

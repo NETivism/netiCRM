@@ -52351,123 +52351,119 @@ msgid ""
 "change the default editor yourself."
 msgstr "您也可以前往<a href=\"%1\" target=\"_blank\">網站偏好設定</a>自行修改預設的編輯工具。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:149
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:151
 msgid "Agreed Amount"
 msgstr "約定金額"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:151
-msgid "Recurring Donation Day"
-msgstr "定期定額扣款日"
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:153
+msgid "Agreed Debit Date"
+msgstr "約定扣款日"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:167
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:504
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1283
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:169
 msgid "Audit Period Debit Status"
 msgstr "查核區間扣款狀態"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:494
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1276
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:521
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1284
 msgid "Audit Date Range"
 msgstr "查核日期區間"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:508
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:917
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:992
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1287
-msgid "No Record on Agreed Debit Date"
-msgstr "約定日無紀錄"
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:531
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:894
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1291
+msgid "Latest Debit Status in the Audit Period"
+msgstr "查核區間最近一筆扣款狀態"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:839
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:537
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:920
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:994
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1295
+msgid "No Record"
+msgstr "無紀錄"
+
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:867
 msgid "Debits Due"
 msgstr "應執行訂單數"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:840
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:868
 msgid ""
 "Counted by recurring status and agreed debit date, this is the number of "
 "monthly recurring orders due to be debited within the audit date range."
 msgstr "依訂單狀態與約定扣款日，計算查核日期區間內應執行的月繳定期定額訂單。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:890
-msgid "Latest Debit Status in the Audit Period"
-msgstr "查核區間最近一筆扣款狀態"
-
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:891
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:895
 msgid ""
-"The total here may differ from the debits due on the left, because the two "
-"are counted with different conditions. A manual debit, a recurring status "
-"change, or an agreed debit date outside the audit date range can all cause a"
-" difference."
+"The total here may differ from the debits due on the left, because the two"
+" are counted with different conditions. A manual debit, a recurring status"
+" change, or an agreed debit date outside the audit date range can all "
+"cause a difference."
 msgstr "本區總筆數可能與左方「應執行訂單數」不同：兩區採用不同條件統計；人工扣款、訂單狀態變更，或約定扣款日不在查核區間內，都可能造成數字不同。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:509
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:538
 msgid ""
 "The audit date range covers the agreed debit date, and there is no "
 "contribution or debit execution record in the month of that debit date"
 msgstr "查核日期區間包含約定扣款日，且該扣款日所在月份沒有捐款或扣款執行紀錄"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:554
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:574
 msgid "Enter both dates for the audit date range."
 msgstr "請輸入查核日期區間的起日與迄日。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:561
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:581
 msgid ""
 "The audit start date cannot be earlier than the first day of the previous "
 "month."
 msgstr "查核起日不可早於上個月 1 日。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:564
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:584
 msgid "The audit end date must not be earlier than the start date."
 msgstr "查核迄日不可早於起日。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:567
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:587
 msgid ""
 "The audit date range cannot be longer than one month, counting from the "
 "start date."
 msgstr "查核日期區間自起日起算不可超過一個月。"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:886
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:890
 msgid "Applied Recurring Debit Audit Criteria"
 msgstr "已套用的定捐扣款查核條件"
 
-#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1277
+#: CRM/Contact/Form/Search/Custom/RecurSearch.php:1285
 msgid "%1 to %2"
 msgstr "%1 至 %2"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:44
 msgid "Monthly Recurring Debit Audit"
-msgstr "月繳定捐扣款查核"
+msgstr "月繳定捐款查核"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:54
 msgid ""
-"Audits can go back to the first day of the previous month. Select a future "
-"date to forecast scheduled debits."
-msgstr "可回查至上月 1 日；指定未來日期可預估扣款。"
-
-#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:54
-msgid ""
-"Select the start date first. The end date can be at most one month after the"
-" start date."
-msgstr "請先選擇起日；迄日自起日起算最多一個月。"
+"Audits can go back to the first day of the previous month. Select a future"
+" date to forecast scheduled debits. The audit date range can be at most "
+"one month."
+msgstr "可回查至上月 1 日；指定未來日期可預估扣款；查核日期區間最長為一個月。"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:61
 msgid ""
-"Results are matched by the status of contribution records within the audit "
-"date range."
-msgstr "以查核日期區間內的「捐款」資料狀態判讀。"
+"The status is read from the most recent contribution record within the "
+"audit date range. When a recurring contribution has multiple contribution "
+"records in the range, only the status of the most recent record is used "
+"for filtering."
+msgstr "以查核日期區間內最近一筆「捐款」資料的狀態判讀。同一定期定額在區間內有多筆捐款紀錄時，只依最近一筆紀錄的狀態篩選。"
 
-#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:61
+#: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:68
 msgid ""
-"If a recurring contribution has multiple contribution records within the "
-"audit date range, it is included in the results whenever any of them matches"
-" a checked status."
-msgstr "同一定期定額在區間內有多筆捐款紀錄時，只要任一筆符合勾選狀態即納入結果。"
+"\"No Record\" is checked by default and cannot be cleared, it is always "
+"included in the audit."
+msgstr "「無紀錄」預設勾選且不可取消，固定納入查核。"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:68
 msgid ""
 "For payment processors that trigger debits on their own schedule, a debit "
 "that has already been charged but whose result has not been returned will "
-"still be shown as having no record on the agreed debit date."
-msgstr "由金流商端排程發動扣款的金流，若已扣款但回傳資料未送達，仍會顯示為「約定日無紀錄」。"
+"still be shown as having no record."
+msgstr "由金流商端排程發動扣款的金流，若已扣款但回傳資料未送達，仍會顯示為「無紀錄」。"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:108
 msgid "Recurring debit audit summary."
