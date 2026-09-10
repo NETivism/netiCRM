@@ -289,10 +289,11 @@ class CRM_Core_Smarty extends Smarty {
     // runtime plugin loader means stale compiled code could still call it.
     // Tags and stream wrappers rejected by the prefilter also need to abort;
     // reporting alone would leave their plugin calls in the compiled output.
-    // {fetch} is the exception because blockedFetch() safely replaces it.
+    // {include} is skipped before parsing its arguments; {fetch} is replaced
+    // by blockedFetch(). Both can safely continue rendering.
     $executionViolations = [
       '~\(secure mode\) modifier .*\(core\.load_plugins\.php, line \d+\)~i',
-      "~\\(secure mode\\) '(?:include|include_php|html_image)' is not permitted~i",
+      "~\\(secure mode\\) '(?:include_php|html_image)' is not permitted~i",
       '~\(secure mode\) \'(?:crmapi|crmdbtpl|crmkey|help|eval|debug|assign_debug_info|config_load|insert)\' is not permitted in a database stored template~i',
       '~\(secure mode\) \'[^\']+:\' stream wrapper not permitted in a template tag~i',
     ];
@@ -538,7 +539,7 @@ class CRM_Core_Smarty extends Smarty {
     // Do not reuse compiled file templates or output cache entries created by
     // the unrestricted singleton. Include the fixed allowlist so any change
     // to it also gets a fresh namespace.
-    $copy->compile_id = 'untrusted-v3-' . sha1(
+    $copy->compile_id = 'untrusted-v4-' . sha1(
       (string) $copy->compile_id . "\0" . implode("\0", $copy->security_settings['MODIFIER_FUNCS'])
     );
 
@@ -605,17 +606,41 @@ class CRM_Core_Smarty extends Smarty {
    * @param string $source template source
    * @param Smarty_Compiler &$compiler the compiler running this filter
    *
-   * @return string the source, unchanged
+   * @return string the source with delimiter-escaped PHP removed
    */
   public static function untrustedPrefilter($source, &$compiler) {
     $ldq = preg_quote($compiler->left_delimiter, '~');
     $rdq = preg_quote($compiler->right_delimiter, '~');
 
+    $literal = "{$ldq}\*.*?\*{$rdq}|{$ldq}\s*literal\s*{$rdq}.*?{$ldq}\s*/literal\s*{$rdq}";
+
+    if ($compiler->left_delimiter === '{' && $compiler->right_delimiter === '}') {
+      // Match escaped braces, including nested ldelim/rdelim, without decoding
+      // ordinary text into executable Smarty syntax. Keep literal examples.
+      $source = self::untrustedRegexResult(preg_replace_callback(
+        '~(?(DEFINE)
+            (?<left>\{(?:\s*ldelim\s*(?&right))*)
+            (?<right>\}|\{(?:\s*ldelim\s*(?&right))*\s*rdelim\s*(?&right))
+          )
+          (?:' . $literal . ')(*SKIP)(*F)
+          |(?&left)\s*php\s*(?&right).*?(?&left)\s*/php\s*(?&right)
+          |(?&left)\s*/?\s*php\s*(?&right)~six',
+        function ($match) use ($compiler) {
+          if (!self::untrustedRegexResult(preg_match('/\{\s*(?:ldelim|rdelim)\s*\}/i', $match[0]))) {
+            return $match[0];
+          }
+          // An inert comment prevents adjacent source from forming a new tag.
+          return $compiler->left_delimiter . '*' . str_repeat("\n", substr_count($match[0], "\n")) . '*' . $compiler->right_delimiter;
+        },
+        $source
+      ));
+    }
+
     // Blank out comments and {literal} blocks the way _compile_file() does,
     // keeping the newlines so reported line numbers still line up. Without
     // this, css braces inside a {literal} would look like template tags.
     $scanned = self::untrustedRegexResult(preg_replace_callback(
-      "~{$ldq}\*.*?\*{$rdq}|{$ldq}\s*literal\s*{$rdq}.*?{$ldq}\s*/literal\s*{$rdq}~s",
+      "~{$literal}~s",
       function ($match) {
         return str_repeat("\n", substr_count($match[0], "\n"));
       },
@@ -633,6 +658,11 @@ class CRM_Core_Smarty extends Smarty {
         // _current_line_no is still 1 here, prefilters run before the tag loop
         // advances it, so point at the offending tag ourselves.
         $line = substr_count(substr($scanned, 0, $match[1]), "\n") + 1;
+        // Match the complete command, not a registered object's name prefix.
+        // The compiler discards includes before evaluating any attributes.
+        if (self::untrustedRegexResult(preg_match('~^include(?:\s|\||$)~', $match[0]))) {
+          continue;
+        }
 
         if (self::untrustedRegexResult(preg_match($wrapperRegex, $match[0], $found))) {
           $compiler->_current_line_no = $line;
