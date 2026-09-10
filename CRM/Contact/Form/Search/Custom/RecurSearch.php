@@ -139,16 +139,18 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
         'r.frequency_unit' => 'frequency_unit',
         'r.last_execute_date' => 'last_execute_date',
         'audit.audit_status_ids' => 'audit_status_ids',
+        'audit.audit_latest_status_id' => 'audit_latest_status_id',
         'audit.audit_count' => 'audit_count',
         '0' => 'audit_not_executed',
       ];
     }
+    $beta = self::betaMarker();
     $this->_columns = [
       ts('ID') => 'id',
       ts('Name') => 'sort_name',
       ts('Agreed Amount') => 'amount',
-      ts('Payment Processor') => 'payment_processor',
-      ts('Recurring Donation Day') => 'cycle_day',
+      ts('Payment Processor').$beta => 'payment_processor',
+      ts('Agreed Debit Date').$beta => 'cycle_day',
       ts('Remain Installments') => 'remain_installments',
       ts('Processed Installments').' /<br>'.ts('Total Installments') => 'installments',
       ts('Start Date') => 'start_date',
@@ -164,8 +166,30 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       1 => 'total_count',
     ];
     if ($this->hasAuditDateRange()) {
-      $this->_columns[ts('Audit Period Debit Status')] = 'audit_status_ids';
+      $this->_columns[ts('Audit Period Debit Status').$beta] = 'audit_status_ids';
     }
+  }
+
+  /**
+   * Get the markup which flags a column or a section as a beta feature.
+   *
+   * @return string
+   */
+  public static function betaMarker() {
+    return '<span class="crm-beta"></span>';
+  }
+
+  /**
+   * Get the contribution date expression used by the audit.
+   *
+   * The debit date is the date the money was received. Contributions which
+   * have no receive date yet, e.g. a debit which is still pending, fall back
+   * to the date the record was created.
+   *
+   * @return string
+   */
+  public static function auditDateColumn() {
+    return 'COALESCE(receive_date, created_date)';
   }
 
   /**
@@ -244,8 +268,8 @@ WHERE  $where
 GROUP BY r.id
 $having
 ";
-    $loggedSql = CRM_Core_DAO::composeQuery($sql, $this->_queryParams, TRUE);
-    CRM_Core_Error::debug_log_message("[RecurSearch] Search query:\n$loggedSql");
+    // $loggedSql = CRM_Core_DAO::composeQuery($sql, $this->_queryParams, TRUE);
+    // CRM_Core_Error::debug_log_message("[RecurSearch] Search query:\n$loggedSql");
     $dao = CRM_Core_DAO::executeQuery($sql, $this->_queryParams);
 
     while ($dao->fetch()) {
@@ -288,14 +312,16 @@ $having
     if ($auditDateRange) {
       $dateFrom = $this->addQueryParam($auditDateRange['from'], 'Timestamp');
       $dateTo = $this->addQueryParam($auditDateRange['to'], 'Timestamp');
+      $auditDate = self::auditDateColumn();
       $from .= "
     LEFT JOIN (
       SELECT
         contribution_recur_id AS rid,
         GROUP_CONCAT(DISTINCT contribution_status_id ORDER BY contribution_status_id SEPARATOR ',') AS audit_status_ids,
+        SUBSTRING_INDEX(GROUP_CONCAT(contribution_status_id ORDER BY $auditDate DESC, id DESC SEPARATOR ','), ',', 1) AS audit_latest_status_id,
         COUNT(id) AS audit_count
       FROM civicrm_contribution
-      WHERE created_date >= $dateFrom AND created_date <= $dateTo
+      WHERE $auditDate >= $dateFrom AND $auditDate <= $dateTo
       GROUP BY contribution_recur_id
     ) audit ON audit.rid = r.id";
     }
@@ -396,16 +422,17 @@ $having
       $auditClauses = [];
       $selectedAuditStatuses = $this->getSelectedAuditStatuses();
       if ($selectedAuditStatuses) {
+        $statusParams = [];
         foreach ($selectedAuditStatuses as $statusId) {
-          $auditClauses[] = "FIND_IN_SET($statusId, audit.audit_status_ids)";
+          $statusParams[] = $this->addQueryParam($statusId, 'Integer');
         }
+        $auditClauses[] = 'audit.audit_latest_status_id IN (' . CRM_Utils_Array::implode(', ', $statusParams) . ')';
       }
       else {
         $auditClauses[] = 'COALESCE(audit.audit_count, 0) > 0';
       }
-      if (!empty($this->_formValues['audit_not_executed'])) {
-        $auditClauses[] = '(COALESCE(audit.audit_count, 0) = 0 AND ' . $this->getAuditScheduleClause() . ')';
-      }
+      // "No record" is always part of the audit and cannot be turned off.
+      $auditClauses[] = '(COALESCE(audit.audit_count, 0) = 0 AND ' . $this->getAuditScheduleClause() . ')';
       $clauses[] = '(' . CRM_Utils_Array::implode(' OR ', $auditClauses) . ')';
     }
     if (count($clauses)) {
@@ -501,24 +528,17 @@ $having
           $this->_contributionStatuses[$statusId]
         );
       }
-      $form->addGroup($auditStatuses, 'audit_status_id', ts('Audit Period Debit Status'));
-      $form->addElement(
+      $form->addGroup($auditStatuses, 'audit_status_id', ts('Latest Debit Status in the Audit Period'));
+      // "No record" is always included in the audit, the checkbox only tells
+      // the user which records are covered.
+      $notExecuted = $form->addElement(
         'checkbox',
         'audit_not_executed',
-        ts('No Record on Agreed Debit Date'),
-        ts('The audit date range covers the agreed debit date, and there is no contribution or debit execution record in the month of that debit date')
+        ts('No Record'),
+        ts('The audit date range covers the agreed debit date, and there is no contribution or debit execution record in the month of that debit date'),
+        ['disabled' => 'disabled']
       );
-      $notExecutedInitialized = CRM_Utils_Array::value(
-        'audit_not_executed_initialized',
-        $this->_formValues,
-        0
-      );
-      $form->addElement(
-        'hidden',
-        'audit_not_executed_initialized',
-        $notExecutedInitialized ? 1 : 0,
-        ['id' => 'audit_not_executed_initialized']
-      );
+      $notExecuted->setChecked(TRUE);
       $form->addFormRule(['CRM_Contact_Form_Search_Custom_RecurSearch', 'formRule']);
       $form->assign('recurAuditEnabled', TRUE);
       $form->assign('auditRangeComplete', $this->hasAuditDateRange());
@@ -542,7 +562,7 @@ $having
     $errors = [];
     $dateFrom = CRM_Utils_Array::value('audit_date_from', $fields);
     $dateTo = CRM_Utils_Array::value('audit_date_to', $fields);
-    $hasAuditFilter = !empty($fields['audit_not_executed']);
+    $hasAuditFilter = FALSE;
     foreach (CRM_Utils_Array::value('audit_status_id', $fields, []) as $selected) {
       if ($selected) {
         $hasAuditFilter = TRUE;
@@ -798,6 +818,14 @@ $having
    * @return array
    */
   public function &columns() {
+    if (!empty($this->_isExport)) {
+      // Column labels carry markup for the result table, strip it for export.
+      $columns = [];
+      foreach ($this->_columns as $label => $field) {
+        $columns[trim(strip_tags(str_replace('<br>', ' ', $label)))] = $field;
+      }
+      $this->_columns = $columns;
+    }
     return $this->_columns;
   }
 
@@ -842,44 +870,19 @@ $having
         'status_class' => 'scheduled',
       ];
 
-      $auditDateRange = $this->getAuditDateRange();
-      $auditSummaryParams = [
-        1 => [$auditDateRange['from'], 'Timestamp'],
-        2 => [$auditDateRange['to'], 'Timestamp'],
-      ];
-      $auditStatusParams = [];
-      foreach ($this->getSelectedAuditStatuses() as $statusId) {
-        $paramIndex = count($auditSummaryParams) + 1;
-        $auditSummaryParams[$paramIndex] = [$statusId, 'Integer'];
-        $auditStatusParams[] = '%' . $paramIndex;
-      }
-      $auditStatusClause = '';
-      if ($auditStatusParams) {
-        $auditStatusClause = "
-  AND c.contribution_status_id IN (" . CRM_Utils_Array::implode(', ', $auditStatusParams) . ')';
-      }
+      // One order is counted once only, by the status of its most recent
+      // contribution within the audit date range.
       $auditSummarySql = "
 SELECT
-  COUNT(IF(c.contribution_status_id = 1, c.id, NULL)) AS completed_count,
-  COUNT(IF(c.contribution_status_id = 2, c.id, NULL)) AS pending_count,
-  COUNT(IF(c.contribution_status_id = 3, c.id, NULL)) AS cancelled_count,
-  COUNT(IF(c.contribution_status_id = 4, c.id, NULL)) AS failed_count,
-  COUNT(DISTINCT IF(result.audit_not_executed = 1, result.id, NULL)) AS not_executed_count
+  COUNT(IF(result.audit_latest_status_id = 1, result.id, NULL)) AS completed_count,
+  COUNT(IF(result.audit_latest_status_id = 2, result.id, NULL)) AS pending_count,
+  COUNT(IF(result.audit_latest_status_id = 3, result.id, NULL)) AS cancelled_count,
+  COUNT(IF(result.audit_latest_status_id = 4, result.id, NULL)) AS failed_count,
+  COUNT(IF(result.audit_not_executed = 1, result.id, NULL)) AS not_executed_count
 FROM {$this->_tableName} AS result
-LEFT JOIN civicrm_contribution AS c
-  ON c.contribution_recur_id = result.id
-  AND c.created_date >= %1
-  AND c.created_date <= %2
-$auditStatusClause
 ";
-      $loggedAuditSummarySql = CRM_Core_DAO::composeQuery(
-        $auditSummarySql,
-        $auditSummaryParams,
-        TRUE
-      );
-      CRM_Core_Error::debug_log_message("[RecurSearch] Audit summary query:
-$loggedAuditSummarySql");
-      $auditSummary = CRM_Core_DAO::executeQuery($auditSummarySql, $auditSummaryParams);
+      //CRM_Core_Error::debug_log_message("[RecurSearch] Audit summary query: $auditSummarySql");
+      $auditSummary = CRM_Core_DAO::executeQuery($auditSummarySql);
       $auditSummary->fetch();
 
       $summary['audit_criteria'] = [
@@ -912,13 +915,11 @@ $loggedAuditSummarySql");
           ],
         ],
       ];
-      if (!empty($this->_formValues['audit_not_executed'])) {
-        $summary['audit_contribution_status']['items'][] = [
-          'label' => ts('No Record on Agreed Debit Date'),
-          'value' => (int) $auditSummary->not_executed_count,
-          'status_class' => 'not-executed',
-        ];
-      }
+      $summary['audit_contribution_status']['items'][] = [
+        'label' => ts('No Record'),
+        'value' => (int) $auditSummary->not_executed_count,
+        'status_class' => 'not-executed',
+      ];
     }
 
     return $summary;
@@ -927,7 +928,7 @@ $loggedAuditSummarySql");
   /**
    * Count the results which had a monthly debit scheduled in the audit range.
    *
-   * This uses the same schedule rule as the "No Record on Agreed Debit Date"
+   * This uses the same schedule rule as the "No Record"
    * filter, but without looking at whether a contribution record exists.
    *
    * @return int
@@ -989,10 +990,16 @@ WHERE $scheduleClause
         }
       }
       if (!empty($row['audit_not_executed'])) {
-        $auditStatuses[] = ts('No Record on Agreed Debit Date');
+        $auditStatuses[] = ts('No Record');
       }
       $row['audit_status_ids'] = CRM_Utils_Array::implode(', ', $auditStatuses);
-      unset($row['frequency_unit'], $row['last_execute_date'], $row['audit_count'], $row['audit_not_executed']);
+      unset(
+        $row['frequency_unit'],
+        $row['last_execute_date'],
+        $row['audit_latest_status_id'],
+        $row['audit_count'],
+        $row['audit_not_executed']
+      );
     }
 
     if (!empty($row['payment_processor']) && empty($this->_isExport)) {
@@ -1280,14 +1287,12 @@ WHERE $scheduleClause
         ]),
       ],
       [
-        'label' => ts('Audit Period Debit Status'),
+        'label' => ts('Latest Debit Status in the Audit Period'),
         'value' => CRM_Utils_Array::implode(', ', $selectedAuditStatusLabels),
       ],
       [
-        'label' => ts('No Record on Agreed Debit Date'),
-        'value' => !empty($this->_formValues['audit_not_executed'])
-          ? ts('Included')
-          : ts('Excluded'),
+        'label' => ts('No Record'),
+        'value' => ts('Included'),
       ],
     ];
   }
