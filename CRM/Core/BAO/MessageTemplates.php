@@ -34,6 +34,21 @@
 class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
   public $N;
+
+  /**
+   * Keep existing sites compatible until their stored templates pass the scan.
+   * New installations enable this flag in civicrm.settings.php.
+   */
+  public static function renderTemplate($resourceName, $smarty = NULL) {
+    if (defined('CIVICRM_SECURE_MESSAGE_TEMPLATES') && CIVICRM_SECURE_MESSAGE_TEMPLATES) {
+      return CRM_Core_Smarty::fetchUntrusted($resourceName, $smarty);
+    }
+    if ($smarty === NULL) {
+      $smarty = CRM_Core_Smarty::singleton();
+    }
+    return $smarty->fetch($resourceName);
+  }
+
   /**
    * Retrieve a message template record based on the provided parameters.
    *
@@ -249,7 +264,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       civicrm_smarty_register_string_resource();
       $smarty = &CRM_Core_Smarty::singleton();
       foreach (['subject', 'text', 'html'] as $elem) {
-        $$elem = $smarty->fetch("string:{*msg_tpl-$messageTemplateID-$elem*}{$$elem}");
+        $$elem = self::renderTemplate("string:{*msg_tpl-$messageTemplateID-$elem*}{$$elem}", $smarty);
       }
 
       $sent = FALSE;
@@ -437,10 +452,9 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
         $smarty->assign($name, $value);
       }
     }
-    // refs #47609, the body comes from the database, compile it in secure
-    // mode instead of on the caller's instance
+    // refs #47609, use secure rendering once this site's templates pass the scan.
     foreach (['subject', 'text', 'html'] as $elem) {
-      $$elem = $smarty->fetch("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}");
+      $$elem = self::renderTemplate("string:{*".$params['groupName']."-".$params['valueName'].'-'.$elem."*}{$$elem}", $smarty);
     }
 
     // send the template, honouring the target user’s preferences (if any)

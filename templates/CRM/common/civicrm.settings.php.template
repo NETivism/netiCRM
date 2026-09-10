@@ -147,6 +147,9 @@ global $civicrm_root;
 $civicrm_root = '%%crmRoot%%';
 define( 'CIVICRM_TEMPLATE_COMPILEDIR', '%%templateCompileDir%%' );
 
+// New sites use secure message templates; existing sites enable this after scanning.
+define('CIVICRM_SECURE_MESSAGE_TEMPLATES', TRUE);
+
 /**
  * Site URLs:
  *

@@ -56,6 +56,17 @@ class CRM_Core_Smarty extends Smarty {
   private static $_singleton = NULL;
 
   /**
+   * Modifier plugins explicitly registered by trusted PHP code.
+   *
+   * Smarty also puts bare PHP-function fallbacks in its plugin registry while
+   * compiling. Keep those separate so an untrusted clone does not inherit a
+   * function merely because the singleton rendered another template first.
+   *
+   * @var array
+   */
+  private $_registeredModifierPlugins = [];
+
+  /**
    * Class constructor.
    */
   public function __construct() {
@@ -174,6 +185,22 @@ class CRM_Core_Smarty extends Smarty {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function register_modifier($modifier, $modifier_impl) {
+    $this->_registeredModifierPlugins[$modifier] = $modifier_impl;
+    return parent::register_modifier($modifier, $modifier_impl);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unregister_modifier($modifier) {
+    unset($this->_registeredModifierPlugins[$modifier]);
+    return parent::unregister_modifier($modifier);
+  }
+
+  /**
    * Static instance provider.
    *
    * @return CRM_Core_Smarty
@@ -242,14 +269,9 @@ class CRM_Core_Smarty extends Smarty {
    * the rejected call still reaches the compiled output. Those sites, listed
    * in $executionViolations, abort the render. Every other refusal is logged
    * and rendering continues, because the compiler has already made it
-   * harmless: {php} and {include_php} emit nothing, a php call in {if} becomes
-   * array(), {include} outside template_dir renders nothing at run time, and
-   * {fetch} is blockedFetch().
-   *
-   * Scope is code execution, not confidentiality. {$smarty.const.X},
-   * superglobals and private members are reported but still emitted, so they
-   * do work; the $config whitelist in untrustedCopy() is what keeps the
-   * database credentials out of a message.
+   * harmless: {php} emits nothing, a refused PHP call in {if} becomes array(),
+   * and {fetch} is blockedFetch(). All includes are forbidden. Assigned data
+   * still needs its own filtering; the $config whitelist removes credentials.
    *
    * refs #32614, disable smarty evaluation functions
    *
@@ -262,14 +284,17 @@ class CRM_Core_Smarty extends Smarty {
     $copy = self::untrustedCopy($smarty);
 
     // Refusals where php would otherwise run, matched on the message because
-    // that is all an error handler is given. Smarty_Compiler:1988 emits the
-    // modifier call after reporting it, :1051 {include_php} runs a php file,
-    // and untrustedPrefilter() only reports, so {crmAPI}, {insert} and {eval}
-    // still reach php. The other tags it refuses cannot execute anything.
+    // that is all an error handler is given. Smarty_Compiler skips a refused
+    // modifier and preserves its input value. A modifier refusal raised by the
+    // runtime plugin loader means stale compiled code could still call it.
+    // Tags and stream wrappers rejected by the prefilter also need to abort;
+    // reporting alone would leave their plugin calls in the compiled output.
+    // {fetch} is the exception because blockedFetch() safely replaces it.
     $executionViolations = [
-      '~\(secure mode\) modifier ~',
-      '~\(secure mode\) include_php not permitted~',
-      '~\(secure mode\) \'(?:crmapi|insert|eval)\' is not permitted in a database stored template~i',
+      '~\(secure mode\) modifier .*\(core\.load_plugins\.php, line \d+\)~i',
+      "~\\(secure mode\\) '(?:include|include_php|html_image)' is not permitted~i",
+      '~\(secure mode\) \'(?:crmapi|crmdbtpl|crmkey|help|eval|debug|assign_debug_info|config_load|insert)\' is not permitted in a database stored template~i',
+      '~\(secure mode\) \'[^\']+:\' stream wrapper not permitted in a template tag~i',
     ];
 
     $handler = function ($errno, $errstr) use ($executionViolations) {
@@ -277,7 +302,7 @@ class CRM_Core_Smarty extends Smarty {
         // trigger_error() html encodes the message, quotes included on php 8.1+
         $message = html_entity_decode($errstr, ENT_QUOTES, 'UTF-8');
         foreach ($executionViolations as $pattern) {
-          if (preg_match($pattern, $message)) {
+          if (preg_match($pattern, $message) !== 0) {
             // Plain Exception: CRM_Core_Exception needs PEAR_Exception, and a
             // class failing to load inside an error handler would be the worst
             // possible way for this check to break.
@@ -325,10 +350,10 @@ class CRM_Core_Smarty extends Smarty {
    *
    * Meant for validating admin input before it is stored, so the author gets
    * told at once instead of finding out when a receipt goes out empty. This
-   * compiles the source with the very same secure instance rather than
-   * matching a separate list of bad patterns, so the two can never drift
-   * apart. Compiling does not run the template, the compiled output is
-   * discarded.
+   * compiles the source with the very same secure instance. Additionally,
+   * delimiter-escaped forbidden tags are refused as an input policy even
+   * though a single compile would only output them as text. Compiling does
+   * not run the template, the compiled output is discarded.
    *
    * Only security violations are reported. Ordinary compile noise is ignored,
    * because stored templates still hold their CiviCRM tokens at this point and
@@ -336,23 +361,51 @@ class CRM_Core_Smarty extends Smarty {
    *
    * refs #32614, disable smarty evaluation functions
    *
+   * Strict mode is for deployment scans: it also reports ordinary compiler
+   * errors without rendering the template.
+   *
    * @param string $source template source as the author typed it
+   * @param bool $strict also check ordinary compiler errors
    *
    * @return array human readable problems, empty when the source is fine
    */
-  public static function validateUntrusted($source) {
+  public static function validateUntrusted($source, $strict = FALSE) {
     if (!is_string($source) || $source === '') {
       return [];
+    }
+
+    try {
+      return self::validateUntrustedSource($source, $strict);
+    }
+    catch (Exception $e) {
+      if (strpos($e->getMessage(), self::UNTRUSTED_VIOLATION) !== 0) {
+        throw $e;
+      }
+      return [ts('Template validation failed: regular expression error')];
+    }
+  }
+
+  /**
+   * Compile source under the same policy used when rendering.
+   */
+  private static function validateUntrustedSource($source, $strict) {
+    $decodedTags = self::untrustedDecodedTags($source);
+    if ($decodedTags) {
+      return [ts('Delimiter-escaped template tags are not allowed: %1', [
+        1 => implode(', ', $decodedTags),
+      ])];
     }
 
     // Tokens are substituted long before the template reaches Smarty, so mask
     // them out. The replacement keeps the source on the same lines, which lets
     // us report a line number the author can act on.
-    $masked = preg_replace('/(?<!\{|\\\\)\{\w+\.\w+\}(?!\})/', 'token', $source);
+    $masked = self::untrustedRegexResult(preg_replace('/(?<!\{|\\\\)\{\w+\.\w+\}(?!\})/', 'token', $source));
 
     $problems = [];
-    $collect = function ($errno, $errstr) use (&$problems) {
-      if (strpos($errstr, '(secure mode)') !== FALSE) {
+    $collect = function ($errno, $errstr) use (&$problems, $strict) {
+      if (strpos($errstr, '(secure mode)') !== FALSE ||
+        ($strict && in_array($errno, [E_USER_ERROR, E_USER_WARNING], TRUE))
+      ) {
         $message = html_entity_decode($errstr, ENT_QUOTES, 'UTF-8');
         $line = preg_match('/\[in \S+ line (\d+)\]/', $message, $match) ? $match[1] : NULL;
         // Drop the "(Smarty_Compiler.class.php, line 1417)" tail; it points at
@@ -366,31 +419,65 @@ class CRM_Core_Smarty extends Smarty {
       return TRUE;
     };
 
-    $copy = self::untrustedCopy();
     set_error_handler($collect);
     try {
+      $copy = self::untrustedCopy();
       $compiled = '';
-      $copy->_compile_source('validation', $masked, $compiled);
+      $success = $copy->_compile_source('validation', $masked, $compiled);
+      if ($strict && !$success && !$problems) {
+        $problems[] = ts('Template compilation failed');
+      }
     }
     finally {
       restore_error_handler();
     }
 
-    // Smarty resolves {include} paths while rendering, not while compiling, so
-    // the compile pass above cannot see them. Sending already refuses anything
-    // outside the template directory; spotting the literal ones here just
-    // moves the complaint to where the author can act on it. Missing a
-    // computed path costs nothing, the send path still stops it.
-    if (preg_match_all('/\{\s*include(?:_php)?\s[^}]*file\s*=\s*(["\']?)([^"\'\s}]+)\1/i', $masked, $matches, PREG_SET_ORDER)) {
-      foreach ($matches as $match) {
-        $path = $match[2];
-        if (substr($path, 0, 1) === '/' || strpos($path, '..') !== FALSE || strpos($path, '://') !== FALSE) {
-          $problems[] = ts('including "%1" is not allowed, only files under the template directory can be included', [1 => $path]);
+    return array_values(array_unique($problems));
+  }
+
+  /**
+   * A failed regex is a failed policy check, never a successful empty scan.
+   */
+  private static function untrustedRegexResult($result) {
+    if ($result === FALSE || $result === NULL) {
+      throw new Exception(self::UNTRUSTED_VIOLATION . 'regular expression failed');
+    }
+    return $result;
+  }
+
+  /**
+   * Find forbidden tags hidden by delimiter escaping, without rendering.
+   *
+   * This input policy also applies to examples in comments/literal blocks.
+   * Ordinary escaped braces remain valid. Each replacement shortens the
+   * source, so repeated decoding terminates even with nested escaping.
+   *
+   * @return array unique forbidden tag names
+   */
+  private static function untrustedDecodedTags($source) {
+    $decoded = $source;
+    do {
+      $decoded = self::untrustedRegexResult(preg_replace_callback('/\{\s*(ldelim|rdelim)\s*\}/i', function ($match) {
+        return strtolower($match[1]) === 'ldelim' ? '{' : '}';
+      }, $decoded, -1, $count));
+    }
+    while ($count > 0);
+
+    if ($decoded === $source) {
+      return [];
+    }
+
+    $blocked = array_merge(self::$_untrustedBlockedTags, ['php', 'include', 'include_php', 'html_image']);
+    $found = [];
+    if (self::untrustedRegexResult(preg_match_all('~\{\s*/?\s*([a-z_][a-z0-9_]*)\b[^{}]*\}~i', $decoded, $matches))) {
+      foreach ($matches[1] as $tag) {
+        $tag = strtolower($tag);
+        if (in_array($tag, $blocked, TRUE)) {
+          $found[] = $tag;
         }
       }
     }
-
-    return array_values(array_unique($problems));
+    return array_values(array_unique($found));
   }
 
   /**
@@ -418,6 +505,20 @@ class CRM_Core_Smarty extends Smarty {
     $copy->security_settings['ALLOW_CONSTANTS'] = FALSE;
     $copy->security_settings['ALLOW_SUPER_GLOBALS'] = FALSE;
 
+    // A normal Smarty compile automatically registers bare PHP modifiers on
+    // the singleton. They have not been approved for database templates. Keep
+    // only plugins deliberately registered by trusted PHP; file-based plugins
+    // are rediscovered from plugins_dir when the secure copy compiles.
+    $inheritedModifiers = $copy->_plugins['modifier'] ?? [];
+    $copy->_plugins['modifier'] = [];
+    if ($copy instanceof self) {
+      foreach ($copy->_registeredModifierPlugins as $name => $callback) {
+        if (isset($inheritedModifiers[$name][0]) && $inheritedModifiers[$name][0] === $callback) {
+          $copy->_plugins['modifier'][$name] = $inheritedModifiers[$name];
+        }
+      }
+    }
+
     // IF_FUNCS stays on the Smarty default; {if} only ever calls in_array,
     // which that list already allows.
 
@@ -426,16 +527,20 @@ class CRM_Core_Smarty extends Smarty {
     // resolves as a plugin and never reaches this check, but templates written
     // in the admin UI reach for plain php functions, and _parse_modifiers()
     // refuses any that is not listed here (Smarty_Compiler.class.php:1988).
-    // The Smarty default is count alone, so |number_format:0 in a receipt
-    // aborts the whole render. These are formatting only: no file, network,
-    // process or eval reachable through any of them.
+    // Smarty allows only count by default, so a receipt using
+    // |number_format:0 would be rejected. These are formatting only: no file,
+    // network, process or eval reachable through any of them.
     $copy->security_settings['MODIFIER_FUNCS'] = [
       'count', 'number_format', 'sprintf', 'trim',
       'strtolower', 'strtoupper', 'ucfirst', 'ucwords', 'strlen',
     ];
 
-    // INCLUDE_ANY is off, but {include file="CRM/..."} still resolves because
-    // smarty_core_is_secure() treats template_dir as a trusted base path.
+    // Do not reuse compiled file templates or output cache entries created by
+    // the unrestricted singleton. Include the fixed allowlist so any change
+    // to it also gets a fresh namespace.
+    $copy->compile_id = 'untrusted-v3-' . sha1(
+      (string) $copy->compile_id . "\0" . implode("\0", $copy->security_settings['MODIFIER_FUNCS'])
+    );
 
     // Secure mode still lets {fetch} read http:// and ftp://, which would turn
     // a message template into an SSRF primitive. Nothing uses it.
@@ -509,13 +614,13 @@ class CRM_Core_Smarty extends Smarty {
     // Blank out comments and {literal} blocks the way _compile_file() does,
     // keeping the newlines so reported line numbers still line up. Without
     // this, css braces inside a {literal} would look like template tags.
-    $scanned = preg_replace_callback(
+    $scanned = self::untrustedRegexResult(preg_replace_callback(
       "~{$ldq}\*.*?\*{$rdq}|{$ldq}\s*literal\s*{$rdq}.*?{$ldq}\s*/literal\s*{$rdq}~s",
       function ($match) {
         return str_repeat("\n", substr_count($match[0], "\n"));
       },
       $source
-    );
+    ));
 
     $wrappers = [];
     foreach (self::$_untrustedWrappers as $wrapper) {
@@ -523,13 +628,13 @@ class CRM_Core_Smarty extends Smarty {
     }
     $wrapperRegex = '~(?<![a-z0-9.+-])(' . CRM_Utils_Array::implode('|', $wrappers) . ')\s*:~i';
 
-    if (preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $scanned, $matches, PREG_OFFSET_CAPTURE)) {
+    if (self::untrustedRegexResult(preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $scanned, $matches, PREG_OFFSET_CAPTURE))) {
       foreach ($matches[1] as $match) {
         // _current_line_no is still 1 here, prefilters run before the tag loop
         // advances it, so point at the offending tag ourselves.
         $line = substr_count(substr($scanned, 0, $match[1]), "\n") + 1;
 
-        if (preg_match($wrapperRegex, $match[0], $found)) {
+        if (self::untrustedRegexResult(preg_match($wrapperRegex, $match[0], $found))) {
           $compiler->_current_line_no = $line;
           $compiler->_syntax_error(
             "(secure mode) '{$found[1]}:' stream wrapper not permitted in a template tag",
@@ -544,7 +649,7 @@ class CRM_Core_Smarty extends Smarty {
         // consulting $security, and {crmAPI} feeds its entity attribute
         // straight into require_once "api/v2/{$fnGroup}.php". Checking here
         // rather than at run time means the save time rule sees it too.
-        if (preg_match('~^(\w+)~', $match[0], $command)
+        if (self::untrustedRegexResult(preg_match('~^(\w+)~', $match[0], $command))
           && in_array(strtolower($command[1]), self::$_untrustedBlockedTags, TRUE)
         ) {
           $compiler->_current_line_no = $line;
