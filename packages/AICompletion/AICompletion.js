@@ -1526,10 +1526,11 @@
             evtSource.close();
             chatData.stream = null;
 
-            // Connection dropped before the stream finished, avoid leaving the UI in loading state.
+            // Connection dropped before the stream finished, avoid leaving the UI
+            // in loading state. createMessage() in error mode puts the submit
+            // button back on its own, so it is not reset again here.
             if (!streamEnded) {
               streamEnded = true;
-              $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
               AICompletion.prototype.createMessage('ai-msg-' + renderID(), '', errorMessageDefault, 'ai', 'error');
             }
           };
