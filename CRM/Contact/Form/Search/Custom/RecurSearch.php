@@ -302,8 +302,12 @@ $having
    * @return string
    */
   public function tempFrom() {
+    // Contributions are joined with LEFT JOIN so that a recurring order which
+    // has no contribution at all is still listed, that is exactly the case the
+    // audit has to report as "No Record". The query groups by r.id, so the join
+    // cannot produce duplicate rows.
     $from = "civicrm_contribution_recur AS r
-    INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
+    LEFT JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
     LEFT JOIN civicrm_payment_processor AS payment_processor ON payment_processor.id = r.processor_id
     LEFT JOIN (SELECT contact_id, email, is_primary FROM civicrm_email WHERE is_primary = 1 GROUP BY contact_id ) AS contact_email ON contact_email.contact_id = r.contact_id
@@ -399,7 +403,46 @@ $having
       $clauses[] = '(r.processor_id IN (' . CRM_Utils_Array::implode(', ', $processorParams) . '))';
     }
 
+    $auditClause = $this->getAuditFilterClause();
+    if ($auditClause) {
+      $clauses[] = $auditClause;
+    }
+
     return CRM_Utils_Array::implode(' AND ', $clauses);
+  }
+
+  /**
+   * Get the audit filter for the temporary table query.
+   *
+   * This belongs to the WHERE clause, not to HAVING. It reads columns of
+   * civicrm_contribution_recur and of the audit join, and MySQL resolves the
+   * names of a HAVING clause against the select list, where those columns only
+   * exist under their aliases. The audit join has at most one row per recurring
+   * contribution, so filtering before the grouping gives the same result.
+   *
+   * @return string
+   */
+  public function getAuditFilterClause() {
+    if (!$this->hasAuditDateRange()) {
+      return '';
+    }
+
+    $auditClauses = [];
+    $selectedAuditStatuses = $this->getSelectedAuditStatuses();
+    if ($selectedAuditStatuses) {
+      $statusParams = [];
+      foreach ($selectedAuditStatuses as $statusId) {
+        $statusParams[] = $this->addQueryParam($statusId, 'Integer');
+      }
+      $auditClauses[] = 'audit.audit_latest_status_id IN (' . CRM_Utils_Array::implode(', ', $statusParams) . ')';
+    }
+    else {
+      $auditClauses[] = 'COALESCE(audit.audit_count, 0) > 0';
+    }
+    // "No record" is always part of the audit and cannot be turned off.
+    $auditClauses[] = '(COALESCE(audit.audit_count, 0) = 0 AND ' . $this->getAuditScheduleClause() . ')';
+
+    return '(' . CRM_Utils_Array::implode(' OR ', $auditClauses) . ')';
   }
 
   /**
@@ -419,23 +462,6 @@ $having
         $clauses[] = "(remain_installments = $installments)";
       }
 
-    }
-    if ($this->hasAuditDateRange()) {
-      $auditClauses = [];
-      $selectedAuditStatuses = $this->getSelectedAuditStatuses();
-      if ($selectedAuditStatuses) {
-        $statusParams = [];
-        foreach ($selectedAuditStatuses as $statusId) {
-          $statusParams[] = $this->addQueryParam($statusId, 'Integer');
-        }
-        $auditClauses[] = 'audit.audit_latest_status_id IN (' . CRM_Utils_Array::implode(', ', $statusParams) . ')';
-      }
-      else {
-        $auditClauses[] = 'COALESCE(audit.audit_count, 0) > 0';
-      }
-      // "No record" is always part of the audit and cannot be turned off.
-      $auditClauses[] = '(COALESCE(audit.audit_count, 0) = 0 AND ' . $this->getAuditScheduleClause() . ')';
-      $clauses[] = '(' . CRM_Utils_Array::implode(' OR ', $auditClauses) . ')';
     }
     if (count($clauses)) {
       return CRM_Utils_Array::implode(' AND ', $clauses);
