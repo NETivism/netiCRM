@@ -901,10 +901,13 @@ class CRM_Core_Payment_BaseIPN {
       }
       // Non-deductible amount is copied by default, which is correct for
       // non-deductible contribution types. Site admins can opt out via the
-      // "Exclude to sync" setting, then the DB default (0) applies.
+      // "Exclude to sync" setting, then the new installment gets NULL.
+      // This column has a DB default of 0, so unset() would leave it out of
+      // the INSERT and store 0. Assign the 'null' string instead, the
+      // DataObject way of forcing a NULL, as done for receive_date above.
       $exclude = !empty($config->recurringSyncExclude) ? $config->recurringSyncExclude : [];
       if (in_array('non_deductible_amount', $exclude, TRUE)) {
-        unset($c->non_deductible_amount);
+        $c->non_deductible_amount = 'null';
       }
       $transaction = new CRM_Core_Transaction();
       $c->save();
