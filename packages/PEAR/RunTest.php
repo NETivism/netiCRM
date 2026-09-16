@@ -92,7 +92,13 @@ class PEAR_RunTest
         if (!defined('E_STRICT')) {
             define('E_STRICT', 0);
         }
-        $this->ini_overwrites[] = 'error_reporting=' . (E_ALL & ~(E_DEPRECATED | E_STRICT));
+        if (PHP_VERSION_ID >= 80500) {
+            $reportMemleaks = array_search('report_memleaks=0', $this->ini_overwrites, true);
+            if ($reportMemleaks !== false) {
+                array_splice($this->ini_overwrites, $reportMemleaks, 1);
+            }
+        }
+        $this->ini_overwrites[] = 'error_reporting=' . (E_ALL & ~(E_DEPRECATED | 2048));
         if (is_null($logger)) {
             require_once 'PEAR/Common.php';
             $logger = new PEAR_Common;
@@ -244,7 +250,7 @@ class PEAR_RunTest
 
         $savedir = getcwd(); // in case the test moves us around
         chdir(dirname($file));
-        echo `$cmd`;
+        echo shell_exec($cmd);
         chdir($savedir);
         return 'PASSED'; // we have no way of knowing this information so assume passing
     }

@@ -57,23 +57,25 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     parent::preProcess();
 
     $this->_params = $this->get('params');
+    $paymentResultStatus = NULL;
     $this->_lineItem = $this->get('lineItem');
     $this->_paymentInstrument = $this->get('paymentInstrument');
     $is_deductible = $this->get('is_deductible');
     $this->assign('is_deductible', $is_deductible);
-    $this->assign('thankyou_title', $this->_values['thankyou_title']);
+    $this->assign('thankyou_title', CRM_Utils_Array::value('thankyou_title', $this->_values));
     $this->assign('thankyou_text', CRM_Utils_Array::value('thankyou_text', $this->_values));
     $this->assign('thankyou_footer', CRM_Utils_Array::value('thankyou_footer', $this->_values));
     $this->assign('max_reminders', CRM_Utils_Array::value('max_reminders', $this->_values));
     $this->assign('initial_reminder_day', CRM_Utils_Array::value('initial_reminder_day', $this->_values));
-    $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+    $this->assign('contribution_type_id', CRM_Utils_Array::value('contribution_type_id', $this->_values));
     $this->assign_by_ref('contributionPage', $this->_values);
 
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
-    if ($this->_params['payment_instrument_id']) {
-      $this->assign('payment_instrument', $instruments[$this->_params['payment_instrument_id']]);
+    $paymentInstrumentId = CRM_Utils_Array::value('payment_instrument_id', $this->_params);
+    if ($paymentInstrumentId) {
+      $this->assign('payment_instrument', CRM_Utils_Array::value($paymentInstrumentId, $instruments));
     }
-    CRM_Utils_System::setTitle($this->_values['thankyou_title']);
+    CRM_Utils_System::setTitle(CRM_Utils_Array::value('thankyou_title', $this->_values));
     if ($this->_contributionID) {
       $this->assign('contribution_id', $this->_contributionID);
       $params['id'] = $this->_contributionID;
@@ -118,7 +120,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
         $transactionId = 'test-'.$transactionId;
       }
       $this->assign('transaction_id', $transactionId);
-      $this->assign('product_id', ts('Contribution Page').'-'.$this->_values['id']);
+      $this->assign('product_id', ts('Contribution Page').'-'.CRM_Utils_Array::value('id', $this->_values));
 
       if (!empty($this->_params['currencyID'])) {
         $this->assign('currency_id', $this->_params['currencyID']);
@@ -128,8 +130,8 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
         $currencyID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $this->_contributionID, 'currency');
         $this->assign('currency_id', $currencyID);
       }
-      $this->assign('product_name', $this->_values['title']);
-      if ($this->_params['is_recur']) {
+      $this->assign('product_name', CRM_Utils_Array::value('title', $this->_values));
+      if (!empty($this->_params['is_recur'])) {
         $this->assign('product_category', ts('Recurring Contribution'));
       }
       else {
@@ -138,12 +140,12 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $this->assign('product_quantity', 1);
       $membershipAmount = $this->get('membership_amount');
       if ($membershipAmount) {
-        $this->assign('product_amount', $this->_params['amount'] + $membershipAmount);
-        $this->assign('total_amount', $this->_params['amount'] + $membershipAmount);
+        $this->assign('product_amount', CRM_Utils_Array::value('amount', $this->_params) + $membershipAmount);
+        $this->assign('total_amount', CRM_Utils_Array::value('amount', $this->_params) + $membershipAmount);
       }
       else {
-        $this->assign('product_amount', $this->_params['amount']);
-        $this->assign('total_amount', $this->_params['amount']);
+        $this->assign('product_amount', CRM_Utils_Array::value('amount', $this->_params));
+        $this->assign('total_amount', CRM_Utils_Array::value('amount', $this->_params));
       }
       $this->assign('dataLayerType', 'purchase');
       $smarty = CRM_Core_Smarty::singleton();
@@ -227,8 +229,10 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
       $prefix = CRM_Core_PseudoConstant::individualPrefix();
       $honor = CRM_Core_PseudoConstant::honor();
-      $this->assign('honor_type', $honor[$params["honor_type_id"]]);
-      $this->assign('honor_prefix', ($params["honor_prefix_id"]) ? $prefix[$params["honor_prefix_id"]] : ' ');
+      $honorTypeId = CRM_Utils_Array::value('honor_type_id', $params);
+      $this->assign('honor_type', CRM_Utils_Array::value($honorTypeId, $honor));
+      $honorPrefixId = CRM_Utils_Array::value('honor_prefix_id', $params);
+      $this->assign('honor_prefix', $honorPrefixId ? CRM_Utils_Array::value($honorPrefixId, $prefix) : ' ');
       $this->assign('honor_first_name', $params["honor_first_name"]);
       $this->assign('honor_last_name', $params["honor_last_name"]);
       $this->assign('honor_email', $params["honor_email"]);
@@ -284,7 +288,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     foreach ($fields as $name => $dontCare) {
       if (isset($contact[$name])) {
-        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && $this->_fields[$name]['html_type'] === 'Text' && $this->get('csContactID')) {
+        if (!strstr($name, 'country') && !strstr($name, 'city') && !strstr($name, 'state_province') && ($this->_fields[$name]['html_type'] ?? NULL) === 'Text' && $this->get('csContactID')) {
           $defaults[$name] = CRM_Utils_String::mask($contact[$name]);
         }
         else {

@@ -317,6 +317,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
   --netiaic-form-height: calc(1em * 1.5 * 5 + 10px + 300px);
 }
 .netiaic-form-container .crm-form-elem {
+  position: relative;
   max-width: 100%;
   width: 100%;
 }
@@ -753,9 +754,9 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-command {
   display: none;
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  margin: 0 0 70px 10px;
+  margin: 40px 0 0 10px;
   max-width: 90%;
   border: 1px solid #ddd;
   background: #fff;
@@ -768,6 +769,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-command .netiaic-command-list {
   margin: 0;
   list-style: none;
+  padding: 0;
 }
 .netiaic-command-list li {
   padding: 5px;
@@ -782,7 +784,7 @@ html[lang="en"] .netiaic-chat .msg.msg.is-finished .msg-tip {
 .netiaic-command-item-desc {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   font-size: .875rem;
   color: #999;

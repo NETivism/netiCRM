@@ -282,7 +282,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $this->assign('usedOptionsDiscount', $this->_usedOptionsDiscount);
       }
       $this->assign('totalDiscount', $this->_totalDiscount);
-      $this->assign('couponDescription', $this->_coupon['description']);
+      $this->assign('couponDescription', CRM_Utils_Array::value('description', $this->_coupon));
 
       // count coupon discount
       $this->assign('part', $this->_part);
@@ -351,7 +351,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     }
 
     if (!$this->_isEventFull || $this->_allowWaitlist) {
-      if ($this->_paymentProcessor['payment_processor_type'] == 'Google_Checkout' &&
+      if (CRM_Utils_Array::value('payment_processor_type', $this->_paymentProcessor) == 'Google_Checkout' &&
         !CRM_Utils_Array::value('is_pay_later', $this->_params[0]) && !($this->_params[0]['amount'] == 0) &&
         !$this->_allowWaitlist && !$this->_requireApproval
       ) {
@@ -359,7 +359,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $this->add(
           'image',
           $this->_checkoutButtonName,
-          $this->_paymentProcessor['url_button'],
+          CRM_Utils_Array::value('url_button', $this->_paymentProcessor),
           ['class' => 'form-submit']
         );
 
@@ -550,7 +550,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $this->set('lineItem', $this->_lineItem);
     }
     $this->set('totalDiscount', $this->_totalDiscount);
-    $this->set('couponDescription', $this->_coupon['description']);
+    $this->set('couponDescription', CRM_Utils_Array::value('description', $this->_coupon));
 
     // if a discount has been applied, lets now deduct it from the amount
     // and fix the fee level
@@ -1130,7 +1130,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       'fee_amount' => CRM_Utils_Array::value('fee_amount', $result),
       'net_amount' => CRM_Utils_Array::value('net_amount', $result, $params['amount']),
       'currency' => $params['currencyID'],
-      'payment_processor' => $form->_paymentProcessor['payment_processor_type'],
+      'payment_processor' => CRM_Utils_Array::value('payment_processor_type', $form->_paymentProcessor),
       'trxn_id' => $result['trxn_id'],
     ];
 

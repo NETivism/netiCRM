@@ -26,6 +26,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Status:
     STATUS_PENDING = 2,
     STATUS_SUCCESS = 1,
+    STATUS_FAILED = 4,
 
     // Fallback Component
     COMPONENT = 'Activity';
@@ -164,9 +165,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // Send request to OpenAI API
     $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData);
 
-    // Streaming wrote the record from inside the curl write callback and has
-    // already flushed the whole reply, so there is nothing left to merge or
-    // save. request() returns nothing in that branch.
+    // Streaming already wrote the record from inside the curl write callback,
+    // including the failed status set by handleStreamError(). Saving again here
+    // would overwrite it with the pending one, and the reply was already flushed.
     if (!empty($requestData['stream'])) {
       return $responseData;
     }
@@ -212,7 +213,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       if (isset($params['token'])) {
         $key = $params['token'];
         $getKey = CRM_Core_Key::validate($key, 'aicompletion_'.$acID);
-        $isKeyPass = ($getKey == $key);
+        // validate() returns NULL on failure, and NULL == '' is TRUE in PHP, so
+        // a loose comparison let an empty token through and gave any logged in
+        // user access to any record by id. Reject empty tokens outright and
+        // compare strictly.
+        $isKeyPass = !empty($key) && $getKey === $key;
         if ($isKeyPass) {
           $isPass = TRUE;
           $aiCompletionArray = self::retrieveAICompletionDataArray($acID);
@@ -339,7 +344,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       "SELECT contact_id FROM civicrm_aicompletion WHERE conversation_id = %1 ORDER BY id LIMIT 1",
       [1 => [$conversationId, 'Integer']]
     );
-    return !empty($ownerId) && $ownerId == $contactId;
+    return !empty($ownerId) && (int) $ownerId === (int) $contactId;
   }
 
   /**

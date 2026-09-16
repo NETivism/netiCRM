@@ -196,7 +196,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     $params = [];
     $params['title'] = $formValues['title'];
     $params['description'] = $formValues['description'];
-    if (is_array($formValues['group_type'])) {
+    if (is_array(CRM_Utils_Array::value('group_type', $formValues))) {
       $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
         CRM_Core_DAO::VALUE_SEPARATOR,
         array_keys($formValues['group_type'])

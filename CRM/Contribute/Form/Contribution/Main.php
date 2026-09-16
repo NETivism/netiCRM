@@ -124,7 +124,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           $this->set('userID', $csContactID);     // used by contributionBase
           $this->_userID = $csContactID;          // used by current follow up
           $this->assign('contact_id', $this->_userID);
-          if ($this->_values['is_internal'] > 0) {
+          if (CRM_Utils_Array::value('is_internal', $this->_values) > 0) {
             $this->assign('isInternal', TRUE);
           }
 
@@ -134,14 +134,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
       else {
         // refs #31611, internal contribution page restriction
-        if ($this->_values['is_internal'] > 0) {
+        if (CRM_Utils_Array::value('is_internal', $this->_values) > 0) {
           return CRM_Core_Error::statusBounce(ts('You need to specify contact checksum and contact id on url when using internal page.'), CRM_Utils_System::url('civicrm/contribute/internal', 'reset=1&page_id='.$this->_id));
         }
       }
     }
     else {
       // refs #31611, internal contribution page restriction
-      if ($this->_values['is_internal'] > 0 && !$this->get('csContactID')) {
+      if (CRM_Utils_Array::value('is_internal', $this->_values) > 0 && !$this->get('csContactID')) {
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/internal', 'reset=1&page_id='.$this->_id));
       }
     }
@@ -199,7 +199,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Core_Payment_ProcessorForm::preProcess($this);
       CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
-    $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+    $this->assign('contribution_type_id', CRM_Utils_Array::value('contribution_type_id', $this->_values));
 
     // Prepare params used for meta.
     $params = [];
@@ -207,24 +207,41 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $params['site'] = $siteName;
     $params['title'] = $this->_values['title'] . ' - ' . $siteName;
 
-    $description = $this->_values['intro_text'];
+    $introText = CRM_Utils_Array::value('intro_text', $this->_values);
+    if ($introText === NULL) {
+      $introText = '';
+    }
+    $description = $introText;
     $description = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $description);
     $description = strip_tags($description);
     $description = preg_replace("/(?:(?:&nbsp;)|\n|\r)/", '', $description);
     $description = trim(mb_substr($description, 0, 150));
     $params['description'] = $description;
 
-    if (is_array($this->_values['custom_data_view'])) {
+    $image = NULL;
+    $customDataView = CRM_Utils_Array::value('custom_data_view', $this->_values);
+    if (is_array($customDataView)) {
       $config = CRM_Core_Config::singleton();
-      foreach ($this->_values['custom_data_view'] as $ufg) {
+      foreach ($customDataView as $ufg) {
+        if (!is_array($ufg) && !is_object($ufg)) {
+          continue;
+        }
         foreach ($ufg as $ufg_inner) {
-          if (is_array($ufg_inner['fields'])) {
-            foreach ($ufg_inner['fields'] as $uffield) {
+          $ufgFields = $ufg_inner['fields'] ?? NULL;
+          if (is_array($ufgFields)) {
+            foreach ($ufgFields as $uffield) {
               if (is_array($uffield)) {
-                if ($uffield['field_type'] == 'File') {
-                  if (!empty($uffield['field_value']['fileURL']) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['field_value']['data'])) {
-                    $image = $config->customFileUploadURL . $uffield['field_value']['data'];
-                    break 3;
+                $fieldValue = CRM_Utils_Array::value('field_value', $uffield);
+                if (CRM_Utils_Array::value('field_type', $uffield) == 'File') {
+                  if (!empty($fieldValue['fileURL'])) {
+                    $fileData = $fieldValue['data'] ?? NULL;
+                    if ($fileData === NULL) {
+                      $fileData = '';
+                    }
+                    if (preg_match('/\.(jpg|png|jpeg)$/', $fileData)) {
+                      $image = $config->customFileUploadURL . $fileData;
+                      break 3;
+                    }
                   }
                 }
               }
@@ -235,7 +252,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     if (empty($image)) {
-      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $this->_values['intro_text'], $matches);
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $introText, $matches);
       if (count($matches) >= 2) {
         $image = $matches[1];
       }
@@ -713,7 +730,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         foreach ($this->_paymentProcessors as $value) {
           // refs #45587, LINE Pay (Mobile) preapproved recurring is enabled via subject = '1'.
           $linepayRecur = CRM_Utils_Array::value('payment_processor_type', $value) === 'Mobile' && !empty($value['subject']) && !empty($value['url_site']);
-          if ($value['is_recur'] || $linepayRecur) {
+          if (!empty($value['is_recur']) || $linepayRecur) {
             $this->buildRecur();
             break;
           }
@@ -725,7 +742,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->buildPayLater();
     }
 
-    if ($this->_values['is_for_organization']) {
+    if (!empty($this->_values['is_for_organization'])) {
       $this->buildOnBehalfOrganization();
     }
 
@@ -735,7 +752,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Contribute_BAO_Premium::buildPremiumBlock($this, $this->_id, TRUE);
     }
 
-    if ($this->_values['honor_block_is_active']) {
+    if (!empty($this->_values['honor_block_is_active'])) {
       $this->buildHonorBlock();
     }
 
@@ -754,9 +771,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->buildCustom($this->_values['custom_post_id'], 'customPost');
 
     // doing this later since the express button type depends if there is an upload or not
-    if ($this->_values['is_monetary']) {
+    if (!empty($this->_values['is_monetary'])) {
 
-      if ($this->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT) {
+      $paymentType = CRM_Utils_Array::value('payment_type', $this->_paymentProcessor);
+      if ($paymentType & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT) {
         CRM_Core_Payment_Form::buildDirectDebit($this);
       }
       else {
@@ -888,14 +906,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('achievement', $achievement);
 
     $progress = [
-      'type' => $achievement['type'],
-      'label' => $achievement['label'],
-      'goal' => $achievement['goal'],
-      'current' => $achievement['current'],
-      'achieved_percent' => $achievement['percent'],
-      'achieved_status' => $achievement['achieved'],
+      'type' => CRM_Utils_Array::value('type', $achievement),
+      'label' => CRM_Utils_Array::value('label', $achievement),
+      'goal' => CRM_Utils_Array::value('goal', $achievement),
+      'current' => CRM_Utils_Array::value('current', $achievement),
+      'achieved_percent' => CRM_Utils_Array::value('percent', $achievement),
+      'achieved_status' => CRM_Utils_Array::value('achieved', $achievement),
       'fullwidth' => FALSE,
-      'display' => $achievement['goal'] ? TRUE : FALSE,
+      'display' => CRM_Utils_Array::value('goal', $achievement) ? TRUE : FALSE,
       'link_display' => FALSE
     ];
     $this->assign('progress', $progress);
@@ -1088,14 +1106,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Core_BAO_Location::getValues($entityBlock, $this->_defaults);
     }
 
-    if ($this->_values['is_for_organization'] != 2) {
+    if (CRM_Utils_Array::value('is_for_organization', $this->_values) != 2) {
       $attributes = ['onclick' =>
         "return showHideByValue('is_for_organization','true','for_organization','block','radio',false);",
       ];
       $this->addElement(
         'checkbox',
         'is_for_organization',
-        $this->_values['for_organization'],
+        CRM_Utils_Array::value('for_organization', $this->_values),
         NULL,
         $attributes
       );
@@ -1124,8 +1142,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     $attributes = NULL;
     $this->assign('hidePaymentInformation', FALSE);
+    $billingMode = CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor);
 
-    if (!in_array($this->_paymentProcessor['billing_mode'], [2, 4]) &&
+    if (!in_array($billingMode, [2, 4]) &&
       $this->_values['is_monetary'] && is_array($this->_paymentProcessor)
     ) {
       $attributes = ['onclick' => "return showHideByValue('is_pay_later','','payment_information',
@@ -1134,7 +1153,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $this->assign('hidePaymentInformation', TRUE);
     }
     //hide the paypal exress button and show continue button
-    if ($this->_paymentProcessor['payment_processor_type'] == 'PayPal_Express') {
+    if (CRM_Utils_Array::value('payment_processor_type', $this->_paymentProcessor) == 'PayPal_Express') {
       $attributes = ['onclick' => "showHidePayPalExpressOption();"];
     }
 
@@ -1444,7 +1463,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       if (!CRM_Utils_Array::value('org_option', $fields) && !$fields['organization_name']) {
         $errors['organization_name'] = ts('Please enter the organization name.');
       }
-      if (!$fields['email'][1]['email']) {
+      if (empty($fields['email'][1]['email'])) {
         $errors["email[1][email]"] = ts('Organization email is required.');
       }
     }
@@ -1454,7 +1473,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
 
       $memTypeDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($fields['selectMembership']);
-      if ($self->_values['amount_block_is_active'] &&
+      if (CRM_Utils_Array::value('amount_block_is_active', $self->_values) &&
         !CRM_Utils_Array::value('is_separate_payment', $self->_membershipBlock)
       ) {
 
@@ -1471,7 +1490,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       }
     }
 
-    if ($self->_values['is_monetary']) {
+    if (!empty($self->_values['is_monetary'])) {
       //validate other amount.
       $checkOtherAmount = FALSE;
       if (CRM_Utils_Array::value('amount', $fields) == 'amount_other_radio' || CRM_Utils_Array::value('amount_other', $fields)) {
@@ -1512,7 +1531,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
     // return if this is express mode
     $config = CRM_Core_Config::singleton();
-    if ($self->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+    $billingMode = CRM_Utils_Array::value('billing_mode', $self->_paymentProcessor);
+    if ($billingMode & CRM_Core_Payment::BILLING_MODE_BUTTON) {
       if (CRM_Utils_Array::value($self->_expressButtonName . '_x', $fields) ||
         CRM_Utils_Array::value($self->_expressButtonName . '_y', $fields) ||
         CRM_Utils_Array::value($self->_expressButtonName, $fields)
@@ -1719,7 +1739,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
 
     $this->set('amount', $params['amount']);
-    $this->set('amount_level', $params['amount_level']);
+    $this->set('amount_level', CRM_Utils_Array::value('amount_level', $params));
 
     // generate and set an invoiceID for this transaction
     $invoiceID = md5(uniqid((string)rand(), TRUE));

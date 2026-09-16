@@ -519,7 +519,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
           self::checkKeyIV($v);
           break;
         default:
-          $v = $args[$k];
+          $v = CRM_Utils_Array::value($k, $args, '');
           break;
       }
       $a[] = $k.'='.$v;

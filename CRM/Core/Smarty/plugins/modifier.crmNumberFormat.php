@@ -44,6 +44,8 @@
  * @return string formatted string or empty
  */
 function smarty_modifier_crmNumberFormat($number, $decimals = NULL, $dec_point = NULL, $thousands_sep = NULL) {
+  // Older PHP versions coerced a missing precision to zero.
+  $decimals = $decimals === NULL ? 0 : $decimals;
   // If $decimals is negative, treat it as 0 to mimic PHP 8.2 behavior
   if ($decimals < 0) {
     $decimals = 0;

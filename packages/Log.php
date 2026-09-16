@@ -37,6 +37,29 @@ define('PEAR_LOG_TYPE_FILE',    3); /* Append to a file */
 class Log
 {
     /**
+     * Format timestamps without requiring the application bootstrap.
+     * Keep error logging available if the optional formatter is missing.
+     */
+    protected static function _formatTime($format, $timestamp = null)
+    {
+        $timestamp = $timestamp === null ? time() : $timestamp;
+        try {
+            if (!class_exists('CiviDateFormatter', false)) {
+                $file = __DIR__ . '/CiviDateFormatter.php';
+                if (is_file($file)) {
+                    require_once $file;
+                }
+            }
+            if (class_exists('CiviDateFormatter', false)) {
+                return CiviDateFormatter::strftime($format, $timestamp);
+            }
+        } catch (Throwable $exception) {
+            // A logger must still work when locale support is unavailable.
+        }
+        return date('Y-m-d\\TH:i:sO', $timestamp);
+    }
+
+    /**
      * Indicates whether or not the log can been opened / connected.
      *
      * @var boolean

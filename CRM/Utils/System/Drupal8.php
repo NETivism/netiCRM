@@ -30,7 +30,7 @@ class CRM_Utils_System_Drupal8 {
   /**
    * @inheritDoc
    */
-  public function createUser(&$params, $mail) {
+  public function createUser($params, $mail) {
     $user = \Drupal::currentUser();
     $user_register_conf = \Drupal::config('user.settings')->get('register');
     $verify_mail_conf = \Drupal::config('user.settings')->get('verify_mail');
@@ -145,7 +145,7 @@ class CRM_Utils_System_Drupal8 {
    * @return array $errors
    *   Errors array with any validation messages.
    */
-  public static function checkUserNameEmailExists(&$params, $emailName = 'email') {
+  public static function checkUserNameEmailExists($params, $emailName = 'email') {
     $errors = [];
 
     // Check username using Drupal's native validation.
@@ -374,13 +374,8 @@ class CRM_Utils_System_Drupal8 {
     // Set Drupal's current user to the loaded user.
     \Drupal::currentUser()->setAccount($user);
 
-    $uid = $user->id();
-    $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
-
-    // Store the contact id and user id in the session
-    $session = CRM_Core_Session::singleton();
-    $session->set('ufID', $uid);
-    $session->set('userID', $contact_id);
+    // Resolve the new current user's identity from the persisted domain UFMatch.
+    CRM_Core_BAO_UFMatch::refreshSession();
     return TRUE;
   }
 
@@ -388,6 +383,7 @@ class CRM_Utils_System_Drupal8 {
    * @inheritDoc
    */
   public function loadUserById($uid) {
+    $user = NULL;
     if (!empty($uid) && CRM_Utils_Rule::positiveInteger($uid)) {
       $user = \Drupal\user\Entity\User::load($uid);
     }
@@ -398,13 +394,8 @@ class CRM_Utils_System_Drupal8 {
     // Set Drupal's current user to the loaded user.
     \Drupal::currentUser()->setAccount($user);
 
-    $uid = $user->id();
-    $contact_id = CRM_Core_BAO_UFMatch::getContactId($uid);
-
-    // Store the contact id and user id in the session
-    $session = CRM_Core_Session::singleton();
-    $session->set('ufID', $uid);
-    $session->set('userID', $contact_id);
+    // Resolve the new current user's identity from the persisted domain UFMatch.
+    CRM_Core_BAO_UFMatch::refreshSession();
     return TRUE;
   }
 

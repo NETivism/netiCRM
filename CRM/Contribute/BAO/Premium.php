@@ -270,6 +270,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             }
             CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
           }
+          else {
+            continue;
+          }
         }
         else {
           CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);

@@ -254,10 +254,10 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
   /**
    * Reject template syntax that CRM_Core_Smarty::fetchUntrusted() would refuse.
    *
-   * Templates are compiled with smarty security on when they are sent, so
+   * Once a site passes its deployment scan, messages compile with security on:
    * {php}, PHP calls inside {if}, PHP functions used as modifiers and reading
-   * files outside the template directory all fail there. Catching it here
-   * gives the author a usable error instead of a silently empty message.
+   * files outside the template directory are refused there. Catching it here
+   * gives the author a usable error instead of a rejected or altered message.
    *
    * This is the friendlier of the two checks, not the enforcing one: the API,
    * imports and direct database writes all bypass it, which is why the send

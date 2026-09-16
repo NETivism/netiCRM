@@ -13,6 +13,10 @@ define('CIVICRM_DSN' , $dsn."?new_link=true");
 define('CIVICRM_LOGGING_DSN', CIVICRM_DSN);
 
 define('CIVICRM_TEMPLATE_COMPILEDIR', dirname ( __FILE__ ).'/files/civicrm/templates_c/');
+
+// New sites use secure message templates; existing sites enable this after scanning.
+define('CIVICRM_SECURE_MESSAGE_TEMPLATES', TRUE);
+
 define('CIVICRM_SITE_KEY', '%%siteKey%%');
 define('CIVICRM_IDS_ENABLE', 1);
 define('CIVICRM_DOMAIN_ID', 1 );

@@ -20,7 +20,7 @@
         historyItem: '.history-item',
         promptTextarea: '.prompt-textarea',
         styleOptions: '.style-option',
-        dropdownItems: '.dropdown-item',
+        dropdownItems: '.ratio-dropdown-item',
         floatingMessage: '.floating-message',
         floatingMessageIcon: '.floating-message-icon',
         floatingMessageText: '.floating-message-text'
@@ -139,12 +139,14 @@
       });
 
       // Prevent dropdown close when clicking inside
-      $(document).on('click', '.dropdown-menu, .style-dropdown-menu', function(e) {
+      // Scoped to the container so we do not swallow clicks of theme dropdowns
+      $(document).on('click', `${self.config.container} .ratio-dropdown-menu, ${self.config.container} .style-dropdown-menu`, function(e) {
         e.stopPropagation();
       });
 
       // Keyboard navigation support
-      $(document).on('keydown', '.dropdown-toggle', function(e) {
+      // Scoped to the container so we do not hijack Enter/Space of theme dropdowns
+      $(document).on('keydown', `${self.config.container} .dropdown-toggle`, function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           $(this).click();

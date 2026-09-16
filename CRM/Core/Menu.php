@@ -673,7 +673,10 @@ UNION (
       CRM_Core_DAO::storeValues($menu, self::$_menuCache[$menu->path]);
 
       foreach (self::$_serializedElements as $element) {
-        self::$_menuCache[$menu->path][$element] = unserialize($menu->$element);
+        $serializedValue = $menu->$element;
+        self::$_menuCache[$menu->path][$element] = $serializedValue === NULL
+          ? FALSE
+          : unserialize($serializedValue);
 
         if (strpos($path, $menu->path) !== FALSE) {
           $menuPath = &self::$_menuCache[$menu->path];

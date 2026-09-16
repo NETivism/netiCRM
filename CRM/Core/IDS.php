@@ -243,7 +243,7 @@ class CRM_Core_IDS {
     }
 
     // add json as whole body when request content-type is application/json
-    if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
+    if (($_SERVER['CONTENT_TYPE'] ?? NULL) == 'application/json') {
       $request['IDS_php_input'] = file_get_contents('php://input');
       $init->config['General']['json'][] = 'IDS_php_input';
     }
@@ -397,7 +397,7 @@ class CRM_Core_IDS {
       'contact' => $contact ? $contact : 0,
       'url' => $_SERVER['REQUEST_URI'],
       'method' => $_SERVER['REQUEST_METHOD'],
-      'content_type' => $_SERVER["CONTENT_TYPE"],
+      'content_type' => $_SERVER['CONTENT_TYPE'] ?? NULL,
     ];
     foreach ($result as $event) {
       $filters = $event->getFilters();
@@ -434,13 +434,18 @@ class CRM_Core_IDS {
   public function parseDefinitions($definition) {
     if (is_array($definition)) {
       foreach ($definition as $def) {
-        list($field, $type, $condition) = explode(':', $def, 3);
+        $parts = explode(':', $def, 3);
+        $field = $parts[0] ?? NULL;
+        $type = $parts[1] ?? NULL;
+        $condition = $parts[2] ?? NULL;
         if (empty($type)) {
           $type = 'exceptions';
         }
         if ($condition) {
-          list($cond, $value) = explode('=', $condition, 2);
-          if ($_REQUEST[$cond] == $value) {
+          $conditionParts = explode('=', $condition, 2);
+          $cond = $conditionParts[0] ?? NULL;
+          $value = $conditionParts[1] ?? NULL;
+          if (($_REQUEST[$cond] ?? NULL) == $value) {
             self::$exceptions[$type][] = $field;
           }
         }

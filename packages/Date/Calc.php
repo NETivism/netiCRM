@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 1) . '/CiviDateFormatter.php';
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
 
 // {{{ Header
@@ -472,7 +473,7 @@ class Date_Calc
      */
     static function dateNow($format = DATE_CALC_FORMAT)
     {
-        return strftime($format, time());
+        return CiviDateFormatter::strftime($format, time());
     }
 
     // }}}
@@ -716,7 +717,7 @@ class Date_Calc
     {
         $months = array();
         for ($i = 1; $i < 13; $i++) {
-            $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, 2001));
+            $months[$i] = CiviDateFormatter::strftime('%B', mktime(0, 0, 0, $i, 1, 2001));
         }
         return $months;
     }
@@ -742,7 +743,7 @@ class Date_Calc
     {
         $weekdays = array();
         for ($i = 0; $i < 7; $i++) {
-            $weekdays[$i] = strftime('%A', mktime(0, 0, 0, 1, $i, 2001));
+            $weekdays[$i] = CiviDateFormatter::strftime('%A', mktime(0, 0, 0, 1, $i, 2001));
         }
         return $weekdays;
     }

@@ -245,9 +245,10 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
   public function postProcess() {
     $params = $this->exportValues();
     $deleteOldBlock = FALSE;
+    $locationOption = CRM_Utils_Array::value('location_option', $params);
 
     // if 'use existing location' option is selected -
-    if (($params['location_option'] == 2) &&
+    if (($locationOption == 2) &&
       CRM_Utils_Array::value('loc_event_id', $params) &&
       ($params['loc_event_id'] != $this->_oldLocBlockId)
     ) {
@@ -264,7 +265,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
 
     // if 'create new loc' option is selected, set the loc_block_id for this event to null
     // so that an update would result in creating a new loc.
-    if ($this->_oldLocBlockId && ($params['location_option'] == 1)) {
+    if ($this->_oldLocBlockId && ($locationOption == 1)) {
       $deleteOldBlock = TRUE;
       CRM_Core_DAO::setFieldValue(
         'CRM_Event_DAO_Event',
@@ -301,7 +302,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     // create/update event location
 
     $location = CRM_Core_BAO_Location::create($params, TRUE, 'event');
-    $params['loc_block_id'] = $location['id'];
+    $params['loc_block_id'] = CRM_Utils_Array::value('id', $location);
 
     // finally update event params
     $params['id'] = $this->_id;

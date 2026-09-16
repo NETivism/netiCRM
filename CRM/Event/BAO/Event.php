@@ -2149,7 +2149,7 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
     else {
       $event['event_end_date'] = strtotime($event['event_end_date']);
     }
-    $gcal['dates'] = gmstrftime('%Y%m%dT%H%M%SZ', $event['event_start_date']).'/'.gmstrftime('%Y%m%dT%H%M%SZ', $event['event_end_date']);
+    $gcal['dates'] = CRM_Utils_Date::gmstrftime('%Y%m%dT%H%M%SZ', $event['event_start_date']).'/'.CRM_Utils_Date::gmstrftime('%Y%m%dT%H%M%SZ', $event['event_end_date']);
 
     if ($event['address']) {
       $gcal['location'] = $event['address'];

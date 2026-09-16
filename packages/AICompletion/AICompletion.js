@@ -55,6 +55,10 @@
       // The stream in flight, so a new conversation can cut it off instead of
       // letting the previous reply land in the fresh thread.
       stream: null,
+      // Bumped by resetConversation(). A request that started under an older
+      // value belongs to a conversation the user has already left, so its
+      // callbacks drop whatever comes back. refs #46672
+      generation: 0,
       // Role and tone as they went out with the last turn, so the pills can say
       // "carried over" while they have not been touched since.
       lastFilters: {
@@ -858,12 +862,19 @@
           $promptContent = $container.find('.netiaic-prompt-content-textarea'),
           $submit = $container.find('.netiaic-form-submit');
 
-      // A reply still streaming belongs to the conversation being left behind.
+      // Everything in flight belongs to the conversation being left behind. A
+      // reply already streaming is cut off here, a request whose response has
+      // not arrived yet is dropped by the counter, checked in formSubmit().
+      chatData.generation++;
+
       if (chatData.stream) {
         chatData.stream.close();
         chatData.stream = null;
-        $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
       }
+
+      // Outside the block above on purpose: a dropped response never reaches
+      // the code that would put the button back, so it is reset either way.
+      $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
 
       // Keep the greeting, drop every exchange so no old context is carried over.
       $container.find('.netiaic-chat > .inner .msg').not('#ai-msg-welcome').remove();
@@ -1302,7 +1313,12 @@
             sourceUrlQuery: window.location.search
           },
           isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
-          userMessage = isEmptyPrompt ? '(n/a)' : formData;
+          userMessage = isEmptyPrompt ? '(n/a)' : formData,
+          streamEnded = false,
+          // The conversation this turn was sent from. resetConversation() bumps
+          // the counter, so a mismatch below means the user opened a new
+          // conversation while this request was still on its way. refs #46672
+          generation = chatData.generation;
 
       // Follow up turn. A missing key is what tells the backend to start a new
       // conversation, so the key is only added once we really have an id.
@@ -1340,6 +1356,11 @@
 
         Promise.race([fetchPromise, timeoutPromise])
         .then(function(response) {
+          // The conversation this belongs to is gone, leave the fresh one alone.
+          if (generation !== chatData.generation) {
+            return null;
+          }
+
           if (response.ok) {
             // Determine the data type based on the Content-Type of the response
             if (response.headers.get('Content-Type').includes('application/json')) {
@@ -1362,8 +1383,10 @@
           }
         })
         .then(function(result) {
-          if (result === null) {
-            // Already reported by handleChatError().
+          // Null means handleChatError() already reported it, or the callback
+          // above dropped it. The counter is checked once more because parsing
+          // the body is another await, and a reset can land in that gap too.
+          if (result === null || generation !== chatData.generation) {
             return;
           }
 
@@ -1403,6 +1426,7 @@
                 if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
                   evtSource.close();
                   chatData.stream = null;
+                  streamEnded = true;
 
                   // AC-7: the button goes back to plain submit, ready for the
                   // next follow up.
@@ -1455,6 +1479,9 @@
 
                     if (eventData.hasOwnProperty('is_error')) {
                       let msgID = 'ai-msg-' + renderID();
+
+                      evtSource.close();
+                      streamEnded = true;
 
                       if (eventData.message.includes('timed out')) {
                         errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
@@ -1520,10 +1547,24 @@
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
             chatData.stream = null;
+
+            // Connection dropped before the stream finished, avoid leaving the UI
+            // in loading state. createMessage() in error mode puts the submit
+            // button back on its own, so it is not reset again here.
+            if (!streamEnded) {
+              streamEnded = true;
+              AICompletion.prototype.createMessage('ai-msg-' + renderID(), '', errorMessageDefault, 'ai', 'error');
+            }
           };
         })
         .catch(function(error) {
           console.error("Encountered an error: ", error);
+
+          // Same as above: no error bubble from an abandoned conversation.
+          if (generation !== chatData.generation) {
+            return;
+          }
+
           if (error.message.includes('timed out')) {
             errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
           }

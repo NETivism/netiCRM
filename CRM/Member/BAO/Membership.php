@@ -1065,10 +1065,10 @@ AND civicrm_membership.is_test = %2";
     }
 
     $memBlockDetails = CRM_Member_BAO_Membership::getMembershipBlock($form->_id);
-    if ($memBlockDetails['is_separate_payment'] && !$paymentDone) {
+    if (CRM_Utils_Array::value('is_separate_payment', $memBlockDetails) && !$paymentDone) {
 
       $contributionType = new CRM_Contribute_DAO_ContributionType();
-      $contributionType->id = $membershipDetails['contribution_type_id'];
+      $contributionType->id = CRM_Utils_Array::value('contribution_type_id', $membershipDetails);
       if (!$contributionType->find(TRUE)) {
         CRM_Core_Error::fatal("Could not find a system table");
       }
@@ -1082,7 +1082,7 @@ AND civicrm_membership.is_test = %2";
       }
 
       $result = NULL;
-      if ($form->_values['is_monetary'] && !$form->_params['is_pay_later']) {
+      if (!empty($form->_values['is_monetary']) && empty($form->_params['is_pay_later'])) {
 
         $payment = &CRM_Core_Payment::singleton($form->_mode, $form->_paymentProcessor, $form);
 
@@ -1302,10 +1302,10 @@ AND civicrm_membership.is_test = %2";
         $currentMembership['reminder_date'] = CRM_Utils_Array::value('reminder_date', $dates);
         $currentMembership['is_test'] = $is_test;
 
-        if ($form->_params['membership_source']) {
+        if (CRM_Utils_Array::value('membership_source', $form->_params)) {
           $currentMembership['source'] = $form->_params['membership_source'];
         }
-        elseif ($form->_values['title']) {
+        elseif (CRM_Utils_Array::value('title', $form->_values)) {
           $currentMembership['source'] = ts('Online Contribution:') . ' ' . $form->_values['title'];
         }
         else {

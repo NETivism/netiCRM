@@ -478,7 +478,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
           $relatedMapperFields[$key][$key1] = $mapperFields[$key][$key1] = $customGroupName . ': ' . $value1['title'];
         }
         else {
-          $relatedMapperFields[$key][$key1] = $mapperFields[$key][$key1] = $value1['title'];
+          $relatedMapperFields[$key][$key1] = $mapperFields[$key][$key1] = CRM_Utils_Array::value('title', $value1);
         }
         if (isset($value1['hasLocationType'])) {
           $hasLocationTypes[$key][$key1] = $value1['hasLocationType'];
@@ -644,7 +644,7 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         }
       }
     }
-    elseif (is_array($form->_mappingObject) && !empty($form->_mappingObject)) {
+    elseif (is_array($form->_mappingObject ?? NULL) && !empty($form->_mappingObject)) {
       extract($form->_mappingObject);
     }
 
@@ -800,7 +800,8 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         //Fix for Search Builder
         if ($mappingType == 'Export') {
           if (!isset($mappingId) || $i >= count(reset($mappingName))) {
-            if (CRM_Utils_Array::arrayKeyExists($formValues['mapper'][$x][$i][1], $relationshipTypes)) {
+            $relationshipType = $formValues['mapper'][$x][$i][1] ?? NULL;
+            if (CRM_Utils_Array::arrayKeyExists($relationshipType, $relationshipTypes)) {
               $sel->setOptions([$sel1, $sel2, $sel5, $sel6, $sel7, $sel3, $sel4]);
             }
             else {

@@ -173,10 +173,10 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     if ($contact->contact_type == 'Individual' &&
       (CRM_Utils_Array::arrayKeyExists('current_employer', $params) || CRM_Utils_Array::arrayKeyExists('employer_id', $params))) {
       // create current employer
-      if ($params['employer_id']) {
+      if (CRM_Utils_Array::value('employer_id', $params)) {
         CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id, $params['employer_id']);
       }
-      elseif ($params['current_employer']) {
+      elseif (CRM_Utils_Array::value('current_employer', $params)) {
         CRM_Contact_BAO_Contact_Utils::createCurrentEmployerRelationship($contact->id, $params['current_employer']);
       }
       else {
@@ -1613,7 +1613,7 @@ ORDER BY civicrm_email.is_primary DESC";
 
     // reset the group contact cache for this group
 
-    if (!$config->doNotResetGroupContactCache) {
+    if (empty($config->doNotResetGroupContactCache)) {
       CRM_Contact_BAO_GroupContactCache::remove();
     }
 
@@ -1919,7 +1919,7 @@ ORDER BY civicrm_email.is_primary DESC";
     if (!isset($data['contact_type'])) {
       $data['contact_type'] = 'Individual';
     }
-    if (is_array($data['image_URL']) && !empty($data['image_URL']['name'])) {
+    if (!empty($data['image_URL']) && is_array($data['image_URL']) && !empty($data['image_URL']['name'])) {
       self::processImageParams($data);
     }
 
@@ -2187,11 +2187,21 @@ UNION
 
       // communication Prefferance
       $preffComm = $comm = [];
-      $comm = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $contact->preferred_communication_method);
+      $preferredCommunicationMethod = isset($contact->preferred_communication_method)
+        ? $contact->preferred_communication_method
+        : NULL;
+      $comm = explode(
+        CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $preferredCommunicationMethod === NULL ? '' : $preferredCommunicationMethod
+      );
       foreach ($comm as $value) {
         $preffComm[$value] = 1;
       }
-      $temp = ['preferred_communication_method' => $contact->preferred_communication_method];
+      $temp = [
+        'preferred_communication_method' => isset($contact->preferred_communication_method)
+          ? $contact->preferred_communication_method
+          : NULL,
+      ];
 
       $names = ['preferred_communication_method' => ['newName' => 'preferred_communication_method_display',
           'groupName' => 'preferred_communication_method',

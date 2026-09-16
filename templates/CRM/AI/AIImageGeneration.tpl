@@ -279,12 +279,12 @@ window.AIImageGeneration = {
                   <span id="ratioText">4:3</span>
                   <i class="zmdi zmdi-chevron-down"></i>
                 </button>
-                <div class="dropdown-menu">
-                  <div class="dropdown-item selected" data-ratio="4:3">4:3</div>
-                  <div class="dropdown-item" data-ratio="3:4">3:4</div>
-                  <div class="dropdown-item" data-ratio="1:1">1:1</div>
-                  <div class="dropdown-item" data-ratio="16:9">16:9</div>
-                  <div class="dropdown-item" data-ratio="9:16">9:16</div>
+                <div class="ratio-dropdown-menu">
+                  <div class="ratio-dropdown-item selected" data-ratio="4:3">4:3</div>
+                  <div class="ratio-dropdown-item" data-ratio="3:4">3:4</div>
+                  <div class="ratio-dropdown-item" data-ratio="1:1">1:1</div>
+                  <div class="ratio-dropdown-item" data-ratio="16:9">16:9</div>
+                  <div class="ratio-dropdown-item" data-ratio="9:16">9:16</div>
                 </div>
               </div>
             </div>

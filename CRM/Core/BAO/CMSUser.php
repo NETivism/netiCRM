@@ -38,68 +38,17 @@
 class CRM_Core_BAO_CMSUser {
 
   /**
-   * Synchronize all users from the CMS user table to CiviCRM contacts.
+   * Reject legacy bulk synchronization until it has an explicit linking policy.
    *
+   * Login synchronization creates a contact for every account without UFMatch;
+   * applying it to all CMS users can duplicate existing contacts in bulk.
+   * Keep this guard for direct callers and previously loaded confirmation forms.
+   *
+   * @throws CRM_Core_Exception Always: bulk synchronization is disabled.
    * @return void
    */
   public static function synchronize() {
-    //start of schronization code
-    $config = CRM_Core_Config::singleton();
-
-    CRM_Core_Error::ignoreException();
-    $db_uf = &self::dbHandle($config);
-
-    if ($config->userFramework == 'Drupal') {
-      $id = 'uid';
-      $mail = 'mail';
-      $name = 'name';
-    }
-    elseif ($config->userFramework == 'Joomla') {
-      $id = 'id';
-      $mail = 'email';
-      $name = 'name';
-    }
-    else {
-      CRM_Core_Error::fatal("CMS user creation not supported for this framework");
-    }
-
-    set_time_limit(300);
-
-    $sql = "SELECT $id, $mail, $name FROM {$config->userFrameworkUsersTableName} where $mail != ''";
-    $query = $db_uf->query($sql);
-
-    $user = new stdClass();
-    $uf = $config->userFramework;
-    $contactCount = 0;
-    $contactCreated = 0;
-    $contactMatching = 0;
-    while ($row = $query->fetchRow(DB_FETCHMODE_ASSOC)) {
-      $user->$id = $row[$id];
-      $user->$mail = $row[$mail];
-      $user->$name = $row[$name];
-      $contactCount++;
-      if ($match = CRM_Core_BAO_UFMatch::synchronizeUFMatch($user, $row[$id], $row[$mail], $uf, 1, NULL, TRUE)) {
-        $contactCreated++;
-      }
-      else {
-        $contactMatching++;
-      }
-      if (is_object($match)) {
-        $match->free();
-      }
-    }
-
-    $db_uf->disconnect();
-
-    //end of schronization code
-    $status = ts('Synchronize Users to Contacts completed.');
-    $status .= ' ' . ts('Checked one user record.', ['count' => $contactCount, 'plural' => 'Checked %count user records.']);
-    if ($contactMatching) {
-      $status .= ' ' . ts('Found one matching contact record.', ['count' => $contactMatching, 'plural' => 'Found %count matching contact records.']);
-    }
-    $status .= ' ' . ts('Created one new contact record.', ['count' => $contactCreated, 'plural' => 'Created %count new contact records.']);
-    CRM_Core_Session::setStatus($status, TRUE);
-    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
+    throw new CRM_Core_Exception(ts('Bulk user synchronization is disabled to prevent duplicate contacts.'));
   }
 
   /**

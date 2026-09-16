@@ -27,6 +27,7 @@
  */
 function smarty_modifier_nl2br($string)
 {
+    $string = $string === null ? '' : $string;
     return nl2br($string);
 }
 

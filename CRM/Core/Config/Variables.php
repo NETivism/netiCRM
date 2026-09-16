@@ -34,6 +34,9 @@
  *
  */
 
+// Config keys are extended by components and persisted site settings, so this
+// class intentionally acts as an open property bag.
+#[AllowDynamicProperties]
 class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
 
   /**

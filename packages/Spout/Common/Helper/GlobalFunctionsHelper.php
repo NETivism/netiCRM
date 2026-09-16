@@ -88,7 +88,7 @@ class GlobalFunctionsHelper
      */
     public function fgetcsv($handle, $length = null, $delimiter = null, $enclosure = null)
     {
-        return fgetcsv($handle, $length, $delimiter, $enclosure);
+        return fgetcsv($handle, $length, $delimiter, $enclosure, '\\');
     }
 
     /**
@@ -103,7 +103,7 @@ class GlobalFunctionsHelper
      */
     public function fputcsv($handle, array $fields, $delimiter = null, $enclosure = null)
     {
-        return fputcsv($handle, $fields, $delimiter, $enclosure);
+        return fputcsv($handle, $fields, $delimiter, $enclosure, '\\');
     }
 
     /**

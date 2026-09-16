@@ -226,7 +226,7 @@ class Net_Socket extends PEAR {
             return $this->raiseError('not connected');
         }
 
-        return socket_set_timeout($this->fp, $seconds, $microseconds);
+        return stream_set_timeout($this->fp, $seconds, $microseconds);
     }
 
     /**

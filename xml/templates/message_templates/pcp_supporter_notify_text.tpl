@@ -9,7 +9,7 @@
 {elseif $pcpStatus EQ 'Waiting Review'}
 
 {ts}Before you start sharing the Personal Campaign Page and commence fundraising, it needs to obtain approval from the administrator.{/ts}
-{ts}Currently, this page is undergoing the approval process.{/t} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}
+{ts}Currently, this page is undergoing the approval process.{/ts} {ts 1=$pcpNotifyEmailAddress}Once the review is complete, you will soon receive an approval confirmation email from %1.{/ts} {ts}Upon receiving an approval email, you can begin sharing the page and start fundraising!{/ts}
 
 {ts}If you wish to preview the edited fundraising page before administrator approval, please follow these steps:{/ts}
 
@@ -21,4 +21,5 @@
 
 {if $pcpNotifyEmailAddress}
 {ts}Questions? Send email to{/ts}: {$pcpNotifyEmailAddress}
+{/if}
 {/if}

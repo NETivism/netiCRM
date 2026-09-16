@@ -87,7 +87,7 @@ class Structures_Graph {
     * @access	public
     */
     function isDirected() {
-        return (boolean) $this->_directed;
+        return (bool) $this->_directed;
     }
     /* }}} */
 

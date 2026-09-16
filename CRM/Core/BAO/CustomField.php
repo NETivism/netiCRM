@@ -579,7 +579,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
 
       $key = "custom_$id";
 
-      $regexp = preg_replace('/[.,;:!?]/', '', CRM_Utils_Array::value(0, $values));
+      $regexpSubject = CRM_Utils_Array::value(0, $values);
+      $regexp = preg_replace('/[.,;:!?]/', '', $regexpSubject === NULL ? '' : $regexpSubject);
       $importableFields[$key] = [
         'name' => $key,
         'title' => CRM_Utils_Array::value('label', $values),
@@ -1333,7 +1334,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     }
 
     //set defaults if mode is registration
-    if (!trim($value) &&
+    if (($value === NULL || !trim($value)) &&
       ($value !== 0) &&
       (!in_array($mode, [CRM_Profile_Form::MODE_EDIT, CRM_Profile_Form::MODE_SEARCH]))
     ) {

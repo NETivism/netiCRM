@@ -202,6 +202,7 @@ class Event implements \Countable, \IteratorAggregate
      *
      * @return integer
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->getFilters());
@@ -212,8 +213,9 @@ class Event implements \Countable, \IteratorAggregate
      *
      * Returns an iterator to iterate over the appended filters.
      *
-     * @return \Iterator the filter collection
+     * @return \Traversable the filter collection
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->getFilters());

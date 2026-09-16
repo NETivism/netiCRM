@@ -136,7 +136,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $params['site'] = $siteName;
     $params['title'] = $this->_values['event']['title'] . ' - ' . $siteName;
 
-    $description = $this->_values['event']['description'];
+    $eventDescription = CRM_Utils_Array::value('description', $this->_values['event']);
+    if ($eventDescription === NULL) {
+      $eventDescription = '';
+    }
+    $description = $eventDescription;
     $description = preg_replace("/ *<(?<tag>(style|script))( [^=]+=['\"][^'\"]*['\"])*>(.*?(\n))+.*?<\/\k<tag>>/", "", $description);
     $description = strip_tags($description);
     $description = preg_replace("/(?:(?:&nbsp;)|\n|\r)+/", ' ', $description);
@@ -148,16 +152,24 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $values = $this->_values;
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("Event", $event, $event->_id, 0, $values['event']['event_type_id']);
     $config = CRM_Core_Config::singleton();
+    $image = NULL;
     foreach ($groupTree as $ufg_inner) {
-      if (is_array($ufg_inner['fields'])) {
-        foreach ($ufg_inner['fields'] as $uffield) {
+      $ufgFields = $ufg_inner['fields'] ?? NULL;
+      if (is_array($ufgFields)) {
+        foreach ($ufgFields as $uffield) {
           if (is_array($uffield)) {
-            if ($uffield['data_type'] == 'File') {
-              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['customValue'][1]['data'])) {
-                $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
-                break;
-                break;
-                break;
+            if (CRM_Utils_Array::value('data_type', $uffield) == 'File') {
+              if (!empty($uffield['customValue'][1])) {
+                $customFileData = $uffield['customValue'][1]['data'] ?? NULL;
+                if ($customFileData === NULL) {
+                  $customFileData = '';
+                }
+                if (preg_match('/\.(jpg|png|jpeg)$/', $customFileData)) {
+                  $image = $config->customFileUploadURL . $customFileData;
+                  break;
+                  break;
+                  break;
+                }
               }
             }
           }
@@ -165,7 +177,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
     }
     if (empty($image)) {
-      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $values['event']['description'], $matches);
+      preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $eventDescription, $matches);
       if (count($matches) >= 2) {
         $image = $matches[1];
       }
@@ -490,12 +502,13 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $freezePayLater = TRUE;
       if (is_array($this->_paymentProcessor)) {
         $freezePayLater = FALSE;
-        if (!in_array($this->_paymentProcessor['billing_mode'], [2, 4])) {
+        $billingMode = CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor);
+        if (!in_array($billingMode, [2, 4])) {
           $showHidePayfieldName = 'payment_information';
           $attributes = ['onclick' => "showHidePaymentInfo( );"];
         }
 
-        if ($this->_paymentProcessor['payment_processor_type'] == 'PayPal_Express') {
+        if (CRM_Utils_Array::value('payment_processor_type', $this->_paymentProcessor) == 'PayPal_Express') {
           $showHidePayfieldName = 'PayPalExpress';
           $attributes = ['onclick' => "showHidePayPalExpressOption();"];
         }
@@ -1065,7 +1078,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
       // return if this is express mode
       $config = CRM_Core_Config::singleton();
-      if ($self->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+      if (CRM_Utils_Array::value('billing_mode', $self->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         if (CRM_Utils_Array::value($self->_expressButtonName . '_x', $fields) ||
           CRM_Utils_Array::value($self->_expressButtonName . '_y', $fields) ||
           CRM_Utils_Array::value($self->_expressButtonName, $fields)
@@ -1156,12 +1169,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
+    $contactID = NULL;
 
     //set as Primary participant
     $params['is_primary'] = 1;
     if (!$this->_allowConfirmation) {
       // check if the participant is already registered
-      $params['contact_id'] = self::getRegistrationContactID($params, $this, FALSE);
+      $contactID = self::getRegistrationContactID($params, $this, FALSE);
+      $params['contact_id'] = $contactID;
     }
 
     if (CRM_Utils_Array::value('image_URL', $params)) {
@@ -1285,9 +1300,9 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
         $this->set('usedOptionsDiscount', $this->_usedOptionsDiscount);
       }
       $this->set('totalDiscount', $this->_totalDiscount);
-      $this->set('couponDescription', $this->_coupon['description']);
+      $this->set('couponDescription', CRM_Utils_Array::value('description', $this->_coupon));
 
-      if ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+      if (CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         //get the button name
         $buttonName = $this->controller->getButtonName();
         if (in_array(
@@ -1341,10 +1356,10 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           CRM_Utils_System::redirect($paymentURL);
         }
       }
-      elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_NOTIFY) {
+      elseif (CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_NOTIFY) {
         $this->set('contributeMode', 'notify');
       }
-      elseif ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_IFRAME) {
+      elseif (CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_IFRAME) {
         $this->set('contributeMode', 'iframe');
       }
     }

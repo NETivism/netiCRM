@@ -867,6 +867,7 @@ class DB_Table_QuickForm {
     static function addRules(&$form, $cols, $arrayName = null,
         $clientValidate = null)
     {
+        $message = $format = null;
         foreach ($cols as $name => $col) {
             
             if ($arrayName) {
@@ -944,7 +945,7 @@ class DB_Table_QuickForm {
                     // by Alex Hoebart: this should allow any registered rule.
                     if (!in_array($type, $form->getRegisteredRules())) {
                         // rule is not registered ==> do not add a rule
-                        continue;
+                        break;
                     }
                     if (is_array($opts)) {
                         // $opts[0] is the message
