@@ -242,10 +242,18 @@ RESULT TRANSPARENCY — whenever you present these query results to the user, yo
   (a) which filter conditions your query used, in plain language (the WHERE clause you wrote).
       If you wrote no WHERE clause at all, say so explicitly — do not silently omit this.
   (b) how many rows your query returned.
+  (c) if your own query included a LIMIT clause, whether it may have excluded matching rows.
 
 This endpoint does not apply any filters automatically — the only conditions in effect are
 the ones in your own query. Do not imply that test transactions, non-completed records, or
 any other category was excluded unless your own WHERE clause actually excludes it.
+
+TRUNCATION HONESTY — this endpoint never caps your results on its own; if a LIMIT is present,
+it is only there because you wrote it. If you added a LIMIT and there could be more matching
+rows beyond it (you don't know the true total unless you also ran a COUNT(*) without the
+LIMIT), you MUST tell the user explicitly, e.g. "results capped at N rows by this query's own
+LIMIT — there may be more matching records." Never present a LIMIT-ed result as if it were the
+complete answer.
 
 CONDITION DISCLOSURE FORMAT — for requirement (a), do not just name a raw column. Label every
 condition as "<field label>(<column_name>) = <value>", where <field label> is a plain-language
