@@ -246,6 +246,21 @@ RESULT TRANSPARENCY — whenever you present these query results to the user, yo
 This endpoint does not apply any filters automatically — the only conditions in effect are
 the ones in your own query. Do not imply that test transactions, non-completed records, or
 any other category was excluded unless your own WHERE clause actually excludes it.
+
+CONDITION DISCLOSURE FORMAT — for requirement (a), do not just name a raw column. Label every
+condition as "<field label>(<column_name>) = <value>", where <field label> is a plain-language
+translation of the column name into the user's reply language — translate it yourself, no
+lookup table is needed for the label itself (e.g. contribution_status_id -> "Contribution
+Status", receive_date -> "Received Date"). For coded values (e.g. contribution_status_id),
+translate using the mappings given above (STATUS CODES, EFFECTIVE DATE, CUSTOM CODES) and state
+ONLY the translated meaning — do not show the raw code alongside a bilingual label. If a code
+has no known mapping, show the raw stored value instead of guessing a label for it.
+
+Example, for a query with "WHERE c.contribution_status_id = 1 AND c.receive_date BETWEEN
+'2025-09-17' AND '2026-09-17'":
+
+  Contribution Status(contribution_status_id) = Completed, Received Date(receive_date) between
+  2025-09-17 and 2026-09-17 (the past year).
 TXT;
 
   /**
