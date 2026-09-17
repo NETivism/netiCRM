@@ -82,6 +82,18 @@ class CRM_Utils_MCP {
       'alias' => 'm',
       'fields' => ['id', 'contact_id', 'membership_type_id', 'join_date', 'start_date', 'end_date', 'status_id', 'is_test'],
     ],
+    'v_civicrm_track' => [
+      'source' => 'civicrm_track',
+      'alias'  => 't',
+      'where'  => 'entity_id IS NOT NULL',
+      'fields' => [
+        'id', 'counter', 'visit_date', 'page_type', 'page_id', 'state',
+        'referrer_type',
+        'referrer_network', 'referrer_url', 'landing',
+        'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+        'entity_table', 'entity_id',
+      ],
+    ],
   ];
 
   // CASE...WHEN...END is rejected by CRM_Utils_SqlParser everywhere; tell the AI to use IF()/COALESCE() instead.
@@ -172,6 +184,68 @@ site-specific custom value this tool has no lookup table for, and that they shou
 option list in their site's back office.
 Do NOT guess a name, do NOT infer one from a similar-sounding site, and do NOT fall back to
 CiviCRM upstream defaults.
+TXT;
+
+  // v_civicrm_track records front-end page visits; referrer_type's NULL/empty-string
+  // handling and the 8-way classification rules are not derivable from the column list alone.
+  const DOC_TRAFFIC_SOURCE = <<<'TXT'
+TRAFFIC SOURCE ANALYSIS — v_civicrm_track records front-end page visits that are linked to
+a contribution, participant, or membership record (entity_id IS NOT NULL). Visits that never
+reached that point — a pure page load with no linked record — are not in this view at all.
+
+referrer_type has exactly EIGHT values and no others:
+  social   search   email   ad   link   direct   internal   unknown
+referrer_type may be NULL or an empty string when no type was recorded; the view does NOT
+normalise this for you. When grouping or reporting by referrer_type, always wrap it:
+
+  COALESCE(NULLIF(t.referrer_type, ''), 'unknown')
+
+Example:
+  SELECT COALESCE(NULLIF(t.referrer_type, ''), 'unknown') AS rtype, COUNT(*) AS visits
+  FROM v_civicrm_track t
+  GROUP BY rtype;
+
+Do not GROUP BY t.referrer_type directly — NULL and empty-string rows would form separate,
+incorrect groups instead of being merged into 'unknown'.
+
+state = how far the visitor got (visit depth):
+  0 Information Screen  1 Form Screen  2 Confirmation Screen
+  3 Payment Screen (payment NOT completed)  4 Thank You Screen (completed)
+A "completion" is state >= 4. Within this view, "conversion rate" = completions / visits in
+the same group — but since only entity-linked visits are in this view to begin with, this is
+a rate among visits that already created a record, NOT a rate against all raw page traffic.
+state = 3 means the visitor reached the payment gateway but did not finish — count it as
+incomplete, never as a conversion.
+
+SESSION RULE — visits to the same page from the same session within 30 minutes are merged into
+ONE row (counter is incremented). This is also why the 'internal' category exists: navigation
+originating from within the site itself. Do not treat 'internal' as an external acquisition
+channel when reporting acquisition performance.
+
+UTM: only utm_medium = 'email' or 'cpc' participates in the eight-way classification (mapping to
+email / ad). All other UTM columns are drill-down dimensions under Custom Campaign and never form
+a category of their own. Drill-down order is: referrer_type -> referrer_network -> Custom Campaign
+(utm_source / utm_campaign / utm_term / utm_content).
+
+OFFLINE DATA — contributions and registrations entered by staff, imported in batch, or created by
+back-end recurring billing have NO track row at all. Always LEFT JOIN and report those separately;
+never fold them into 'unknown' or 'direct':
+  LEFT JOIN v_civicrm_track t
+         ON t.entity_table = 'civicrm_contribution' AND t.entity_id = c.id
+  ... t.id IS NULL  =>  no visit record (offline / back-office entry)
+TXT;
+
+  // results carry no structured metadata, so the AI must state, in its own reply,
+  // which conditions it used and how many rows came back — nothing does this for it.
+  const DOC_RESULT_TRANSPARENCY = <<<'TXT'
+RESULT TRANSPARENCY — whenever you present these query results to the user, you MUST state:
+  (a) which filter conditions your query used, in plain language (the WHERE clause you wrote).
+      If you wrote no WHERE clause at all, say so explicitly — do not silently omit this.
+  (b) how many rows your query returned.
+
+This endpoint does not apply any filters automatically — the only conditions in effect are
+the ones in your own query. Do not imply that test transactions, non-completed records, or
+any other category was excluded unless your own WHERE clause actually excludes it.
 TXT;
 
   /**
@@ -595,6 +669,7 @@ TXT;
           'v_civicrm_contribution_page',
           'v_civicrm_participant_payment',
           'v_civicrm_membership_payment',
+          'v_civicrm_track',
         ];
         if ($hasCiviEvent) {
           $views[] = 'v_civicrm_participant';
@@ -612,6 +687,7 @@ TXT;
           'v_civicrm_participant',
           'v_civicrm_event',
           'v_civicrm_participant_payment',
+          'v_civicrm_track',
         ];
         if ($hasCiviContribute) {
           $views[] = 'v_civicrm_contribution';
@@ -903,19 +979,19 @@ TXT;
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.contribution_id = c.id '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.contribution_id = c.id '
           . 'WHERE pp.id IS NULL AND mp.id IS NULL.',
-        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_STATUS_CODES, self::DOC_EFFECTIVE_DATE, self::DOC_CUSTOM_CODES],
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_STATUS_CODES, self::DOC_EFFECTIVE_DATE, self::DOC_CUSTOM_CODES, self::DOC_TRAFFIC_SOURCE, self::DOC_RESULT_TRANSPARENCY],
       ],
       'participant_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for event participant analysis.',
         'joinHint'    => 'Link participants to contributions via: '
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.participant_id = p.id.',
-        'docs'        => [self::DOC_SQL_DIALECT],
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_TRAFFIC_SOURCE, self::DOC_RESULT_TRANSPARENCY],
       ],
       'membership_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for membership analysis.',
         'joinHint'    => 'Link memberships to contributions via: '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.membership_id = m.id.',
-        'docs'        => [self::DOC_SQL_DIALECT],
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_RESULT_TRANSPARENCY],
       ],
     ];
 
