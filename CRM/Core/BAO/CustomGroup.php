@@ -284,6 +284,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     // create a new tree
     $groupTree = [];
     $strWhere = $orderBy = '';
+    $subNameParam = NULL;
 
     // using tableData to build the queryString
     $tableData = [
@@ -342,13 +343,13 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
     if ($entityType == "Individual" || $entityType == 'Organization' || $entityType == 'Household') {
       $in = "'$entityType', 'Contact'";
     }
-    elseif (strpos($entityType, "'") !== FALSE) {
+    elseif (preg_match("/^'\w+'(\s*,\s*'\w+')*$/", $entityType)) {
       // this allows the calling function to send in multiple entity types
       $in = $entityType;
     }
     else {
       // quote it
-      $in = "'$entityType'";
+      $in = "'" . CRM_Utils_Type::escape($entityType, 'String') . "'";
     }
 
     if (!empty($subTypes)) {
@@ -371,7 +372,8 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
      AND $subTypeClause
    ";
         if ($subName) {
-          $strWhere .= " AND civicrm_custom_group.extends_entity_column_id = {$subName} ";
+          $strWhere .= " AND civicrm_custom_group.extends_entity_column_id = %2 ";
+          $subNameParam = [$subName, 'Integer'];
         }
       }
     }
@@ -387,6 +389,9 @@ WHERE civicrm_custom_group.is_active = 1
     }
 
     $params = [];
+    if (!empty($subNameParam)) {
+      $params[2] = $subNameParam;
+    }
     if ($groupID > 0) {
       // since we want a specific group id we add it to the where clause
       $strWhere .= " AND civicrm_custom_group.id = %1";
