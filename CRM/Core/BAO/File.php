@@ -161,6 +161,14 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
 
     $config = &CRM_Core_Config::singleton();
 
+    // Security: validate file path is within CiviCRM upload directory (security/core#173)
+    $realData = realpath($data);
+    $uploadDir = realpath($config->uploadDir);
+    if (!$realData || !$uploadDir || strpos($realData, $uploadDir . DIRECTORY_SEPARATOR) !== 0) {
+      CRM_Core_Error::fatal(ts('Security: File path is not within the allowed upload directory'));
+      return;
+    }
+
     $path = explode('/', $data);
     $filename = $path[count($path) - 1];
 

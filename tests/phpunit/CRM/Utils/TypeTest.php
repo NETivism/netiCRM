@@ -88,6 +88,20 @@ class CRM_Utils_TypeTest extends CiviUnitTestCase {
       ['', 'Timestamp', ''],
       ['', 'ContactReference', ''],
       ['3', 'ContactReference', 3],
+
+      # MysqlOrderBy / MysqlOrderByDirection
+      ['asc', 'MysqlOrderByDirection', 'asc'],
+      ['DESC', 'MysqlOrderByDirection', 'DESC'],
+      ['DESCc', 'MysqlOrderByDirection', NULL],
+      ['weight', 'MysqlOrderBy', '`weight`'],
+      ['table.civicrm_column_name desc', 'MysqlOrderBy', '`table`.`civicrm_column_name` desc'],
+      ['field(contribution_status_id,4,5,6) asc', 'MysqlOrderBy', 'field(`contribution_status_id`,4,5,6) asc'],
+      ['field(contribution_status_id,4,5,6) asc, contact_id asc', 'MysqlOrderBy', 'field(`contribution_status_id`,4,5,6) asc, `contact_id` asc'],
+      ['table.civicrm_column_name desc,other_column,another_column desc', 'MysqlOrderBy', '`table`.`civicrm_column_name` desc, `other_column`, `another_column` desc'],
+      // SA-2026-33: subquery / function-call / stacked-query payloads must be rejected, not passed through.
+      ['(SELECT sleep(5))', 'MysqlOrderBy', NULL],
+      ['weight, (SELECT sleep(5))', 'MysqlOrderBy', NULL],
+      ['weight; DROP TABLE civicrm_contact;', 'MysqlOrderBy', NULL],
       ['-3', 'ContactReference', NULL],
       // Escape function is meant for sql, not xss
       ['<p onclick="alert(\'xss\');">Hello</p>', 'Memo', '<p onclick=\\"alert(\\\'xss\\\');\\">Hello</p>'],
