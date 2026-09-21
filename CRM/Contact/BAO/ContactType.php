@@ -192,8 +192,14 @@ WHERE  parent_id IS NULL
         $_cache[$argString] = [];
 
         $ctWHERE = '';
+        $ctParams = [];
         if (!empty($contactType)) {
-          $ctWHERE = " AND parent.name IN ('" . CRM_Utils_Array::implode("','", $contactType) . "')";
+          $placeholders = [];
+          foreach (array_values($contactType) as $idx => $name) {
+            $placeholders[] = '%' . ($idx + 1);
+            $ctParams[$idx + 1] = [$name, 'String'];
+          }
+          $ctWHERE = " AND parent.name IN (" . CRM_Utils_Array::implode(',', $placeholders) . ")";
         }
 
         $sql = "
@@ -207,7 +213,7 @@ WHERE  subtype.name IS NOT NULL AND subtype.parent_id IS NOT NULL {$ctWHERE}
         }
         $dao = CRM_Core_DAO::executeQuery(
           $sql,
-          [],
+          $ctParams,
           FALSE,
           'CRM_Contact_DAO_ContactType'
         );
@@ -487,17 +493,27 @@ AND   ( p.is_active = 1 OR p.id IS NULL )
       $subType = [$subType];
       $isArray = FALSE;
     }
+    if (empty($subType)) {
+      return [];
+    }
     $argString = CRM_Utils_Array::implode("_", $subType);
 
     if (!CRM_Utils_Array::arrayKeyExists($argString, $_cache)) {
       $_cache[$argString] = [];
 
+      $placeholders = [];
+      $params = [];
+      foreach (array_values($subType) as $idx => $name) {
+        $placeholders[] = '%' . ($idx + 1);
+        $params[$idx + 1] = [$name, 'String'];
+      }
+
       $sql = "
-SELECT subtype.name as contact_subtype, type.name as contact_type 
+SELECT subtype.name as contact_subtype, type.name as contact_type
 FROM   civicrm_contact_type subtype
 INNER JOIN civicrm_contact_type type ON ( subtype.parent_id = type.id )
-WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
-      $dao = CRM_Core_DAO::executeQuery($sql);
+WHERE  subtype.name IN (" . CRM_Utils_Array::implode(',', $placeholders) . " )";
+      $dao = CRM_Core_DAO::executeQuery($sql, $params);
       while ($dao->fetch()) {
         if (!$isArray) {
           $_cache[$argString] = $dao->contact_type;

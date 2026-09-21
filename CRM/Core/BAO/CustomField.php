@@ -464,7 +464,7 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           }
         }
         elseif (!empty($customDataType)) {
-          $extends = "AND   $cgTable.extends IN ('{$customDataType}') ";
+          $extends = "AND   $cgTable.extends IN ('" . CRM_Utils_Type::escape($customDataType, 'String') . "') ";
         }
 
         if ($onlyParent) {
