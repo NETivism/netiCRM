@@ -271,6 +271,18 @@ Example, for a query with "WHERE c.contribution_status_id = 1 AND c.receive_date
   2025-09-17 and 2026-09-17 (the past year).
 TXT;
 
+  // no default filters are injected server-side (deferred), so the AI must add
+  // is_test = 0 itself — nothing currently stops test records from being counted.
+  const DOC_TEST_DATA_EXCLUSION = <<<'TXT'
+TEST DATA — unless the user explicitly asks to include test records, always add is_test = 0
+to your WHERE clause. This endpoint does not exclude test records automatically. Test records
+are submitted through the site's test/sandbox payment mode and are not real transactions;
+including them by default would overstate real activity.
+
+If the user does ask to include, or specifically asks to analyse, test records, honor that
+and state clearly in your reply that test records are included in the results.
+TXT;
+
   /**
    * @var bool Whether to output streaming responses
    */
@@ -1002,19 +1014,19 @@ TXT;
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.contribution_id = c.id '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.contribution_id = c.id '
           . 'WHERE pp.id IS NULL AND mp.id IS NULL.',
-        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_STATUS_CODES, self::DOC_EFFECTIVE_DATE, self::DOC_CUSTOM_CODES, self::DOC_TRAFFIC_SOURCE, self::DOC_RESULT_TRANSPARENCY],
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_STATUS_CODES, self::DOC_EFFECTIVE_DATE, self::DOC_CUSTOM_CODES, self::DOC_TRAFFIC_SOURCE, self::DOC_TEST_DATA_EXCLUSION, self::DOC_RESULT_TRANSPARENCY],
       ],
       'participant_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for event participant analysis.',
         'joinHint'    => 'Link participants to contributions via: '
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.participant_id = p.id.',
-        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_TRAFFIC_SOURCE, self::DOC_RESULT_TRANSPARENCY],
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_TRAFFIC_SOURCE, self::DOC_TEST_DATA_EXCLUSION, self::DOC_RESULT_TRANSPARENCY],
       ],
       'membership_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for membership analysis.',
         'joinHint'    => 'Link memberships to contributions via: '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.membership_id = m.id.',
-        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_RESULT_TRANSPARENCY],
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_TEST_DATA_EXCLUSION, self::DOC_RESULT_TRANSPARENCY],
       ],
     ];
 
