@@ -218,9 +218,11 @@ state = 3 means the visitor reached the payment gateway but did not finish — c
 incomplete, never as a conversion.
 
 SESSION RULE — visits to the same page from the same session within 30 minutes are merged into
-ONE row (counter is incremented). This is also why the 'internal' category exists: navigation
-originating from within the site itself. Do not treat 'internal' as an external acquisition
-channel when reporting acquisition performance.
+ONE row (counter is incremented). The same 30-minute window governs 'internal': a visitor's
+original referrer (e.g. search or social) is kept for 30 minutes of continuous browsing, but
+once that window lapses, the next page view is re-attributed to wherever the browser actually
+came from — usually a page on the same site, hence 'internal'. Do not treat 'internal' as an
+external acquisition channel when reporting acquisition performance.
 
 UTM: only utm_medium = 'email' or 'cpc' participates in the eight-way classification (mapping to
 email / ad). All other UTM columns are drill-down dimensions under Custom Campaign and never form
