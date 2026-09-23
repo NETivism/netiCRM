@@ -41,7 +41,7 @@ class CRM_Utils_MCP {
         'id', 'contact_id', 'total_amount', 'amount_level', 'receive_date',
         'is_test', 'contribution_recur_id', 'contribution_status_id',
         'contribution_page_id', 'contribution_type_id', 'payment_instrument_id',
-        'cancel_date', 'receipt_date',
+        'cancel_date', 'receipt_date', 'created_date',
       ],
     ],
     'v_civicrm_participant_payment' => [
@@ -135,13 +135,13 @@ DATE-RANGE FILTERING — for any "between date X and date Y" question, determine
 contribution's effective date using EXACTLY this expression (copy it verbatim, do not
 rewrite it as CASE — CASE is rejected by this endpoint, see SQL DIALECT LIMITS above):
 
-  IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date), c.receive_date)
+  IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date, c.created_date), COALESCE(c.receive_date, c.created_date))
 
 Rule it encodes:
-  - contribution_status_id = 4 (Failed): use cancel_date, falling back to receive_date
-  - all other statuses: use receive_date
-  - if every source column is NULL, the expression evaluates to NULL. Never substitute
-    created_date or any other column when this happens — an unknown date must stay unknown.
+  - contribution_status_id = 4 (Failed): use cancel_date; if empty, fall back to receive_date;
+    if both are empty, fall back to created_date.
+  - all other statuses: use receive_date; if empty, fall back to created_date.
+  - if every applicable source column is NULL, the expression evaluates to NULL.
 
 HOW TO USE IT:
   - Only switch to the raw columns (receive_date / cancel_date) when the user explicitly
@@ -152,20 +152,20 @@ with the SAME non-date filters, replacing the date-range condition with
 "<the same IF(...) expression> IS NULL", and report its count.
 If that count > 0, tell the user that N rows have an unknown effective date and cannot be
 confirmed as inside or outside the requested period.
-Do NOT report such rows as zero for the period; a failed contribution that never recorded a
-cancel_date or receive_date will otherwise silently disappear from your answer.
+Do NOT report such rows as zero for the period; a contribution whose effective date cannot be
+determined will otherwise silently disappear from your answer.
 The two queries MUST use the identical IF(...) expression, character for character — a
 paraphrased rewrite in the second query can silently produce a different NULL count.
 
 WORKED EXAMPLE — user asks "how many contributions succeeded and how many failed between
 2026-08-01 and 2026-08-14?":
   1) SELECT c.contribution_status_id, COUNT(*) FROM v_civicrm_contribution c
-     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date), c.receive_date)
+     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date, c.created_date), COALESCE(c.receive_date, c.created_date))
              BETWEEN '2026-08-01' AND '2026-08-14'
        AND c.contribution_status_id IN (1, 4)
      GROUP BY c.contribution_status_id;
   2) SELECT COUNT(*) FROM v_civicrm_contribution c
-     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date), c.receive_date) IS NULL
+     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date, c.created_date), COALESCE(c.receive_date, c.created_date)) IS NULL
        AND c.contribution_status_id IN (1, 4);
   Then report both numbers.
 TXT;
