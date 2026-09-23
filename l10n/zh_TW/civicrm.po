@@ -52430,9 +52430,9 @@ msgstr "本區總筆數可能與左方「應執行訂單數」不同：兩區採
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php:538
 msgid ""
-"The audit date range covers the agreed debit date, and there is no "
-"contribution or debit execution record in the month of that debit date"
-msgstr "查核日期區間包含約定扣款日，且該扣款日所在月份沒有捐款或扣款執行紀錄"
+"Eligible for debit, the audit date range covers the agreed debit date, and "
+"there is no contribution record in the range"
+msgstr "符合扣款資格、查核日期區間包含約定扣款日，且區間內沒有捐款紀錄"
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php:574
 msgid "Enter both dates for the audit date range."

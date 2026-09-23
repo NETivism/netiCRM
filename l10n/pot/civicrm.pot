@@ -51604,7 +51604,7 @@ msgid "The total here may differ from the debits due on the left, because the tw
 msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php:538
-msgid "The audit date range covers the agreed debit date, and there is no contribution or debit execution record in the month of that debit date"
+msgid "Eligible for debit, the audit date range covers the agreed debit date, and there is no contribution record in the range"
 msgstr ""
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php:574

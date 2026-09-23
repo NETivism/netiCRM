@@ -65,7 +65,7 @@
                   <td class="label">{$form.audit_not_executed.label}</td>
                   <td>
                     {$form.audit_not_executed.html}
-                    <div class="description">{ts}"No Record" is checked by default and cannot be cleared, it is always included in the audit.{/ts} {ts}For payment processors that trigger debits on their own schedule, a debit that has already been charged but whose result has not been returned will still be shown as having no record.{/ts}</div>
+                    <div class="description">{ts}For payment processors that trigger debits on their own schedule, a debit that has already been charged but whose result has not been returned will still be shown as having no record.{/ts}</div>
                   </td>
                 </tr>
               </table>
@@ -106,17 +106,6 @@
       </div>
     {/if}
     <div class="crm-recur-audit-summary" aria-label="{ts}Recurring debit audit summary.{/ts}">
-      {if isset($summary.audit_scheduled)}
-        <section class="crm-recur-audit-summary-section crm-recur-audit-summary-scheduled" aria-labelledby="crm-recur-audit-summary-scheduled-title">
-          <div class="crm-recur-audit-summary-title" id="crm-recur-audit-summary-scheduled-title">{$summary.audit_scheduled.label}</div>
-          <div class="crm-recur-audit-summary-items">
-            <div class="crm-recur-audit-summary-item">
-              <strong class="crm-recur-audit-summary-value crm-recur-audit-summary-value--{$summary.audit_scheduled.status_class}">{$summary.audit_scheduled.value}</strong>
-            </div>
-          </div>
-          <div class="crm-recur-audit-summary-note">{$summary.audit_scheduled.description}</div>
-        </section>
-      {/if}
       <section class="crm-recur-audit-summary-section crm-recur-audit-summary-contributions" aria-labelledby="crm-recur-audit-summary-contribution-title">
         <div class="crm-recur-audit-summary-title" id="crm-recur-audit-summary-contribution-title">{$summary.audit_contribution_status.label}</div>
         <div class="crm-recur-audit-summary-items">
@@ -127,8 +116,17 @@
             </div>
           {/foreach}
         </div>
-        <div class="crm-recur-audit-summary-note">{$summary.audit_contribution_status.description}</div>
       </section>
+      {if isset($summary.audit_not_executed)}
+        <section class="crm-recur-audit-summary-section" aria-labelledby="crm-recur-audit-summary-not-executed-title">
+          <div class="crm-recur-audit-summary-title" id="crm-recur-audit-summary-not-executed-title">{$summary.audit_not_executed.label}</div>
+          <div class="crm-recur-audit-summary-items">
+            <div class="crm-recur-audit-summary-item">
+              <strong class="crm-recur-audit-summary-value crm-recur-audit-summary-value--{$summary.audit_not_executed.status_class}">{$summary.audit_not_executed.value}</strong>
+            </div>
+          </div>
+        </section>
+      {/if}
     </div>
   {/if}
   <div><label>{$summary.search_results.label}</label>: {$summary.search_results.value}</div>
@@ -215,17 +213,13 @@
     var $auditDateFields = $auditDateFrom.add($auditDateTo);
     var $startDateTo = $('#start_date_to');
     var $auditControls = $('.crm-audit-status-controls');
-    var $auditNotExecuted = $('#audit_not_executed');
 
     var syncAuditControls = function() {
       var rangeComplete = $.trim($auditDateFrom.val()).length > 0 &&
         $.trim($auditDateTo.val()).length > 0;
 
-      // "No record" is always part of the audit, keep it checked and locked.
-      $auditNotExecuted.prop({checked: true, disabled: true});
-
       $auditControls.toggleClass('hiddenElement', !rangeComplete);
-      $auditControls.find(':input').not($auditNotExecuted)
+      $auditControls.find(':input')
         .prop('disabled', !rangeComplete)
         .attr('aria-disabled', rangeComplete ? 'false' : 'true');
     };
