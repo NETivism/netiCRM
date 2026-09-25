@@ -223,6 +223,7 @@ class CRM_AI_Page_AJAX {
    */
   public static function getTemplateList() {
     $data = [];
+    $isShared = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, TRUE);
@@ -303,6 +304,7 @@ class CRM_AI_Page_AJAX {
    * @throws CRM_Core_Exception
    */
   public static function getTemplate() {
+    $acId = NULL;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, TRUE);
@@ -316,6 +318,8 @@ class CRM_AI_Page_AJAX {
         $acId = $jsondata['id'];
       }
       if ($acId) {
+        // getTemplate() only matches rows with is_template = 1, so a private
+        // conversation reads back as a missing template.
         $getTemplateResult = CRM_AI_BAO_AICompletion::getTemplate($acId);
         if (is_array($getTemplateResult) && !empty($getTemplateResult)) {
           self::responseSucess([
@@ -324,14 +328,12 @@ class CRM_AI_Page_AJAX {
             'data' => $getTemplateResult,
           ]);
         }
-        else {
-          self::responseError([
-            'status' => 0,
-            'message' => "Failed to retrieve template.",
-          ]);
-        }
       }
     }
+    self::responseError([
+      'status' => 0,
+      'message' => "Failed to retrieve template.",
+    ]);
   }
 
   /**
@@ -364,6 +366,16 @@ class CRM_AI_Page_AJAX {
       }
       $acId = $jsondata['id'];
       $data['id'] = $acId;
+
+      // The endpoint only requires 'access CiviCRM', so without this any logged
+      // in user could publish someone else's conversation as a template.
+      $session = CRM_Core_Session::singleton();
+      if (!CRM_AI_BAO_AICompletion::isRecordOwner($acId, $session->get('userID'))) {
+        self::responseError([
+          'status' => 0,
+          'message' => "The record was not found.",
+        ], self::HTTP_FORBIDDEN);
+      }
 
       $acIsTemplate = $jsondata['is_template'];
       $data['is_template'] = $acIsTemplate;
@@ -436,6 +448,16 @@ class CRM_AI_Page_AJAX {
         $acIsShare = $jsondata['is_share_with_others'];
       }
       if (isset($acId) && isset($acIsShare)) {
+        // Same exposure as setTemplate(): sharing someone else's conversation
+        // sends their content to the netiCRM team for publication.
+        $session = CRM_Core_Session::singleton();
+        if (!CRM_AI_BAO_AICompletion::isRecordOwner($acId, $session->get('userID'))) {
+          self::responseError([
+            'status' => 0,
+            'message' => "The record was not found.",
+          ], self::HTTP_FORBIDDEN);
+        }
+
         $setShareResult = CRM_AI_BAO_AICompletion::setShare($acId);
         $result = [];
         if ($setShareResult) {

@@ -348,6 +348,29 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   }
 
   /**
+   * Check that a record exists and belongs to the given contact.
+   *
+   * Same reasoning as isConversationOwner(), for endpoints that act on a single
+   * row. A record that does not exist fails the same way, so the caller cannot
+   * use it to probe for ids.
+   *
+   * Callers are the ajax endpoints only. The admin template form edits other
+   * people's records on purpose, so this must not move into setTemplate().
+   *
+   * @param int $acId The AICompletion record to check.
+   * @param int $contactId The contact the request claims to act as.
+   *
+   * @return bool TRUE when the contact owns the record.
+   */
+  public static function isRecordOwner($acId, $contactId) {
+    if (empty($acId) || empty($contactId)) {
+      return FALSE;
+    }
+    $ownerId = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'contact_id');
+    return !empty($ownerId) && (int) $ownerId === (int) $contactId;
+  }
+
+  /**
    * Count the turns already stored in a conversation.
    *
    * Counts every row, matching how quota() counts usage: one submission is one
@@ -445,19 +468,20 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * Retrieve AI Completion data array by ID.
    *
    * @param int $aiCompletionID The ID of the AI Completion.
+   * @param array $extraParams Additional field values to narrow the lookup with.
    *
    * @return array The retrieved AI Completion data array.
    *
    * @throws CRM_Core_Exception
    */
-  private static function retrieveAICompletionDataArray($aiCompletionID) {
+  private static function retrieveAICompletionDataArray($aiCompletionID, $extraParams = []) {
     if (empty($aiCompletionID)) {
       throw new CRM_Core_Exception("\$aiCompletionID has no value.");
     }
     elseif (!is_numeric($aiCompletionID)) {
       throw new CRM_Core_Exception("\$aiCompletionID is not number.");
     }
-    $params = [
+    $params = $extraParams + [
       'id' => $aiCompletionID,
     ];
     $returnArray = [];
@@ -535,14 +559,17 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Retrieve AICompletion Template object(array) by AICompletion ID.
    *
+   * is_template is part of the lookup, not a check on the result: without it
+   * this returns any row by id, which exposes other people's conversations.
+   *
    * @param int $acID The AICompletion ID in DB row.
    *
-   * @return array AICompletion data row.
+   * @return array AICompletion data row, empty when the id is not a template.
    *
    * @throws CRM_Core_Exception
    */
   public static function getTemplate($acID) {
-    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($acID);
+    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($acID, ['is_template' => 1]);
     return $retrieveAICompletionArray;
   }
 
