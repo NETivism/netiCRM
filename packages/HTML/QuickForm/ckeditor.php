@@ -187,7 +187,7 @@ cj( function( ) {
               // active editor, so editor-switcher.js toggles it on switch.
               $cke4Notice = '<div class="editor-switcher-cke4-notice">';
               $cke4Notice .= ts('Your editor will automatically switch to the new version (CKEditor 5) on <strong>%1</strong>. You can try out the new editor before then.', [1 => self::CKE5_AUTO_SWITCH_DATE]);
-              $docUrl = CRM_Utils_System::docURL2('WYSIWYG Editor', TRUE);
+              $docUrl = CRM_Utils_System::docURL2('CKEditor 4 vs CKEditor 5 Differences', TRUE);
               if (!empty($docUrl)) {
                 $cke4Notice .= ' ' . ts('See our <a href="%1" target="_blank">documentation</a> for details.', [1 => $docUrl]);
               }
