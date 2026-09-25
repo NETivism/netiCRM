@@ -61,8 +61,8 @@
             <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$row.contact_id`"}" title="{ts}View contact record{/ts}">{$row.sort_name}</a>
         </td> 
     {/if}
-    <td class="crm-membership-type crm-membership-type_{$row.membership_type}">
-        {$row.membership_type}
+    <td class="crm-membership-type crm-membership-type_{$row.membership_type|escape}">
+        {$row.membership_type|escape}
         {if $row.owner_membership_id}<br />({ts}by relationship{/ts}){/if}
     </td>
     <td class="crm-membership-join_date">{$row.join_date|truncate:10:''|crmDate}</td>
