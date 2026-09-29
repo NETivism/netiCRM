@@ -1061,7 +1061,7 @@ FROM {$this->_tableName} AS result
    * @return bool
    */
   protected function supportsContributionAudit() {
-    return get_class($this) === __CLASS__;
+    return get_class($this) === __CLASS__ && $this->_mode !== 'booster';
   }
 
   /**
