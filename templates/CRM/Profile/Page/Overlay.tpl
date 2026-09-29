@@ -42,7 +42,7 @@
         {$field.label}
     </div>
      <div class="content">
-        {$field.value}
+        {$field.value|escape}
      </div>
      <div class="clear"></div>
   </div>

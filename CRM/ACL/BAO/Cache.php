@@ -165,6 +165,7 @@ WHERE  modified_date IS NULL OR (TIMESTAMPDIFF(MINUTE, modified_date, NOW()) >= 
 ";
     CRM_Core_DAO::singleValueQuery($query);
 
-    CRM_Core_DAO::singleValueQuery("TRUNCATE TABLE civicrm_acl_contact_cache");
+    $clear = CRM_Core_Transaction::isActive() ? 'DELETE FROM' : 'TRUNCATE TABLE';
+    CRM_Core_DAO::singleValueQuery("$clear civicrm_acl_contact_cache");
   }
 }

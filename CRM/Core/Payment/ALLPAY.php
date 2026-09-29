@@ -24,10 +24,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   /**
    * mode of operation: live or test
    *
-   * @var object
-   * @static
+   * @var string|null
    */
-  protected static $_mode = NULL;
+  protected $_mode = NULL;
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 
@@ -65,7 +64,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
-    if (self::$_singleton[$processorName] === NULL) {
+    if (self::$_singleton === NULL || !array_key_exists($processorName, self::$_singleton) || self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ALLPAY($mode, $paymentProcessor);
     }
     return self::$_singleton[$processorName];
@@ -240,7 +239,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       $is_pay_later = TRUE;
 
       // Set participant status to 'Pending from pay later', Accupied the seat.
-      if ($params['participantID']) {
+      if (!empty($params['participantID'])) {
         $pstatus = CRM_Event_PseudoConstant::participantStatus();
         if ($new_pstatus = array_search('Pending from pay later', $pstatus)) {
           CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $new_pstatus, 'id');
@@ -402,7 +401,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       case 'WebATM':
         break;
       case 'Credit':
-        if ($vars['is_recur']) {
+        if (!empty($vars['is_recur'])) {
           $args['PeriodAmount'] = $amount;
           $period = strtoupper($vars['frequency_unit'][0]);
           $args['PeriodType'] = $vars['frequency_unit'] == 'week' ? 'D' : $period;

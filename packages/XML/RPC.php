@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 1) . '/CiviDateFormatter.php';
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
@@ -961,11 +962,8 @@ class XML_RPC_Client extends XML_RPC_Base {
         }
 
         if ($timeout) {
-            /*
-             * Using socket_set_timeout() because stream_set_timeout()
-             * was introduced in 4.3.0, but we need to support 4.2.0.
-             */
-            socket_set_timeout($fp, $timeout);
+            // stream_set_timeout() is supported by the minimum PHP version.
+            stream_set_timeout($fp, $timeout);
         }
 
         if (!fputs($fp, $op, strlen($op))) {
@@ -1920,14 +1918,14 @@ class XML_RPC_Value extends XML_RPC_Base
 function XML_RPC_iso8601_encode($timet, $utc = 0)
 {
     if (!$utc) {
-        $t = strftime('%Y%m%dT%H:%M:%S', $timet);
+        $t = CiviDateFormatter::strftime('%Y%m%dT%H:%M:%S', $timet);
     } else {
         if (function_exists('gmstrftime')) {
             // gmstrftime doesn't exist in some versions
             // of PHP
-            $t = gmstrftime('%Y%m%dT%H:%M:%S', $timet);
+            $t = CiviDateFormatter::strftime('%Y%m%dT%H:%M:%S', $timet, TRUE);
         } else {
-            $t = strftime('%Y%m%dT%H:%M:%S', $timet - date('Z'));
+            $t = CiviDateFormatter::strftime('%Y%m%dT%H:%M:%S', $timet - date('Z'));
         }
     }
     return $t;

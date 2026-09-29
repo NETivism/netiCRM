@@ -203,7 +203,7 @@ class CRM_Core_Payment_Form {
    */
   public static function buildCreditCard(&$form, $useRequired = FALSE) {
 
-    if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
+    if (CRM_Utils_Array::value('billing_mode', $form->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_FORM) {
       self::setCreditCardFields($form);
       foreach ($form->_fields as $name => $field) {
         if (isset($field['cc_field']) &&
@@ -240,13 +240,13 @@ class CRM_Core_Payment_Form {
       CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
     }
 
-    if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+    if (CRM_Utils_Array::value('billing_mode', $form->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_BUTTON) {
       $form->_expressButtonName = $form->getButtonName('upload', 'express');
       $form->assign('expressButtonName', $form->_expressButtonName);
       $form->add(
         'image',
         $form->_expressButtonName,
-        $form->_paymentProcessor['url_button'],
+        CRM_Utils_Array::value('url_button', $form->_paymentProcessor),
         ['class' => 'form-submit']
       );
     }
@@ -260,7 +260,7 @@ class CRM_Core_Payment_Form {
    */
   public static function buildDirectDebit(&$form, $useRequired = FALSE) {
 
-    if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
+    if (CRM_Utils_Array::value('billing_mode', $form->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_FORM) {
       self::setDirectDebitFields($form);
       foreach ($form->_fields as $name => $field) {
         if (isset($field['cc_field']) &&
@@ -289,12 +289,12 @@ class CRM_Core_Payment_Form {
       );
     }
 
-    if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
+    if (CRM_Utils_Array::value('billing_mode', $form->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_BUTTON) {
       $form->_expressButtonName = $form->getButtonName($form->buttonType(), 'express');
       $form->add(
         'image',
         $form->_expressButtonName,
-        $form->_paymentProcessor['url_button'],
+        CRM_Utils_Array::value('url_button', $form->_paymentProcessor),
         ['class' => 'form-submit']
       );
     }

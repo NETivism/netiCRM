@@ -68,7 +68,7 @@ class SocketPost implements RequestMethod
      *
      * @param \ReCaptcha\RequestMethod\Socket $socket optional socket, injectable for testing
      */
-    public function __construct(Socket $socket = null)
+    public function __construct(?Socket $socket = null)
     {
         if (!is_null($socket)) {
             $this->socket = $socket;

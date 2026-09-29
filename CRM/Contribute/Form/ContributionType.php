@@ -52,6 +52,7 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
+    $this->addFormRule([get_class($this), 'formRule']);
 
     $nameAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'name') ?: [];
     $accountingCodeAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code') ?: [];
@@ -101,6 +102,28 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
         }
       }
     }
+  }
+
+  /**
+   * Global form rule.
+   *
+   * The accounting code may be substituted into the receipt prefix through the
+   * '!acc' token, and the receipt id generator appends its own '-' separator
+   * afterwards. A hyphen inside the accounting code therefore blurs the
+   * prefix/serial boundary that lastReceiptID() relies on. Refs #46448, #44975.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return bool|array
+   */
+  public static function formRule($fields, $files, $self) {
+    $errors = [];
+    if (!empty($fields['accounting_code']) && strpos($fields['accounting_code'], '-') !== FALSE) {
+      $errors['accounting_code'] = ts('Accounting Code cannot contain hyphen (-). Please remove it before saving.');
+    }
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**

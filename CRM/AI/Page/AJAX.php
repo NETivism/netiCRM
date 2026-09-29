@@ -20,6 +20,9 @@ class CRM_AI_Page_AJAX {
   public const HTTP_SERVICE_UNAVAILABLE = 503;
   public const HTTP_GATEWAY_TIMEOUT = 504;
 
+  // Locales that ship sample prompts data
+  public const SAMPLE_LOCALES = ['en_US', 'zh_TW'];
+
   /**
    * Handle chat request.
    *
@@ -46,8 +49,13 @@ class CRM_AI_Page_AJAX {
         'sourceUrlPath' => 'string',
         'sourceUrl' => 'string',
         'sourceUrlQuery' => 'string',
+        'conversation_id' => 'integer',
       ];
-      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      // conversation_id is the only optional one: a brand new conversation and
+      // any client from before multi turn simply do not send it. Without this
+      // list validateJsonData() treats every allowed field as required.
+      $requiredInput = ['tone', 'role', 'content', 'sourceUrlPath', 'sourceUrl', 'sourceUrlQuery'];
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput, $requiredInput);
       if (!$checkFormatResult) {
         self::responseError([
           'status' => 0,
@@ -71,6 +79,29 @@ class CRM_AI_Page_AJAX {
         ]);
       }
       $data['context'] = $context;
+
+      // Follow up turn. Check ownership before anything else touches the
+      // conversation, then make sure the thread has room for one more turn.
+      if (isset($jsondata['conversation_id'])) {
+        $conversationId = (int) $jsondata['conversation_id'];
+        $session = CRM_Core_Session::singleton();
+        $currentContactId = $session->get('userID');
+        if (!CRM_AI_BAO_AICompletion::isConversationOwner($conversationId, $currentContactId)) {
+          self::responseError([
+            'status' => 0,
+            'message' => "The conversation was not found.",
+          ], self::HTTP_FORBIDDEN);
+        }
+        $turns = CRM_AI_BAO_AICompletion::getConversationTurns($conversationId);
+        if ($turns >= CRM_AI_BAO_AICompletion::CONVERSATION_MAX_TURNS) {
+          self::responseError([
+            'status' => 0,
+            'message' => "This conversation has reached the maximum number of turns.",
+            'error_code' => 'CONVERSATION_TURN_LIMIT',
+          ], self::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        $data['conversation_id'] = $conversationId;
+      }
 
       // get url and check component
       $mailTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name');
@@ -106,32 +137,12 @@ class CRM_AI_Page_AJAX {
       }
 
       if ($context && $data['component']) {
-        $countryId = CRM_Core_Config::singleton()->defaultContactCountry;
-        $languages = CRM_Core_PseudoConstant::languages();
-        $countries = CRM_Core_PseudoConstant::country();
-        global $tsLocale;
-        $country = $countries[$countryId];
-        $language = $languages[$tsLocale];
-        if ($toneStyle && $aiRole) {
-          $system_prompt = ts(
-            "Please use %4 language of %3 to play the role of %1 and help generate a %2.",
-            [1 => $aiRole, 2 => $toneStyle, 3 => $country, 4 => ts($language)]
-          );
-          $data['prompt'] = [
-            [
-              'role' => 'user',
-              'content' => $system_prompt."\n".$context,
-            ],
-          ];
-        }
-        else {
-          $data['prompt'] = [
-            [
-              'role' => 'user',
-              'content' => ts('Please using %1 language to generate content.', [2 => ts($language)])."\n".$context,
-            ],
-          ];
-        }
+        $data['prompt'] = [
+          [
+            'role' => 'user',
+            'content' => CRM_AI_BAO_AICompletion::buildSystemPrompt($aiRole, $toneStyle)."\n".$context,
+          ],
+        ];
         try {
           $token = CRM_AI_BAO_AICompletion::prepareChat($data);
         }
@@ -151,6 +162,9 @@ class CRM_AI_Page_AJAX {
             'data' => [
               'id' => $token['id'],
               'token' => $token['token'],
+              // The client sends this back on the next turn. Purely additive,
+              // a client that does not know about it just ignores the key.
+              'conversation_id' => $token['conversation_id'],
             ]
           ]);
         }
@@ -168,7 +182,7 @@ class CRM_AI_Page_AJAX {
           'temperature' => CRM_AI_BAO_AICompletion::TEMPERATURE_DEFAULT,
         ];
         try {
-          $result = CRM_AI_BAO_AICompletion::chat($params);
+          CRM_AI_BAO_AICompletion::chat($params);
         }
         catch (CRM_Core_Exception $e) {
           $message = $e->getMessage();
@@ -209,6 +223,7 @@ class CRM_AI_Page_AJAX {
    */
   public static function getTemplateList() {
     $data = [];
+    $isShared = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, TRUE);
@@ -289,6 +304,7 @@ class CRM_AI_Page_AJAX {
    * @throws CRM_Core_Exception
    */
   public static function getTemplate() {
+    $acId = NULL;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
       $jsondata = json_decode($jsonString, TRUE);
@@ -302,6 +318,8 @@ class CRM_AI_Page_AJAX {
         $acId = $jsondata['id'];
       }
       if ($acId) {
+        // getTemplate() only matches rows with is_template = 1, so a private
+        // conversation reads back as a missing template.
         $getTemplateResult = CRM_AI_BAO_AICompletion::getTemplate($acId);
         if (is_array($getTemplateResult) && !empty($getTemplateResult)) {
           self::responseSucess([
@@ -310,14 +328,12 @@ class CRM_AI_Page_AJAX {
             'data' => $getTemplateResult,
           ]);
         }
-        else {
-          self::responseError([
-            'status' => 0,
-            'message' => "Failed to retrieve template.",
-          ]);
-        }
       }
     }
+    self::responseError([
+      'status' => 0,
+      'message' => "Failed to retrieve template.",
+    ]);
   }
 
   /**
@@ -350,6 +366,16 @@ class CRM_AI_Page_AJAX {
       }
       $acId = $jsondata['id'];
       $data['id'] = $acId;
+
+      // The endpoint only requires 'access CiviCRM', so without this any logged
+      // in user could publish someone else's conversation as a template.
+      $session = CRM_Core_Session::singleton();
+      if (!CRM_AI_BAO_AICompletion::isRecordOwner($acId, $session->get('userID'))) {
+        self::responseError([
+          'status' => 0,
+          'message' => "The record was not found.",
+        ], self::HTTP_FORBIDDEN);
+      }
 
       $acIsTemplate = $jsondata['is_template'];
       $data['is_template'] = $acIsTemplate;
@@ -422,6 +448,16 @@ class CRM_AI_Page_AJAX {
         $acIsShare = $jsondata['is_share_with_others'];
       }
       if (isset($acId) && isset($acIsShare)) {
+        // Same exposure as setTemplate(): sharing someone else's conversation
+        // sends their content to the netiCRM team for publication.
+        $session = CRM_Core_Session::singleton();
+        if (!CRM_AI_BAO_AICompletion::isRecordOwner($acId, $session->get('userID'))) {
+          self::responseError([
+            'status' => 0,
+            'message' => "The record was not found.",
+          ], self::HTTP_FORBIDDEN);
+        }
+
         $setShareResult = CRM_AI_BAO_AICompletion::setShare($acId);
         $result = [];
         if ($setShareResult) {
@@ -646,29 +682,17 @@ class CRM_AI_Page_AJAX {
       $locale = $jsondata['locale'];
 
       // Validate locale format
-      if (!in_array($locale, ['en_US', 'zh_TW'])) {
+      if (!in_array($locale, self::SAMPLE_LOCALES)) {
         self::responseError([
           'status' => 0,
           'message' => 'Invalid locale format.',
         ]);
       }
 
-      // Load sample prompts data using CiviCRM root path
-      global $civicrm_root;
-      $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
-      $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+      // Load sample prompts data for the requested locale
+      $prompts = self::loadSamplePrompts($locale);
 
-      if (!file_exists($dataPath)) {
-        self::responseError([
-          'status' => 0,
-          'message' => 'Sample prompts data not found for the specified locale.',
-        ]);
-      }
-
-      $jsonContent = file_get_contents($dataPath);
-      $promptsData = json_decode($jsonContent, TRUE);
-
-      if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
+      if ($prompts === NULL) {
         self::responseError([
           'status' => 0,
           'message' => 'Invalid or empty sample prompts data.',
@@ -676,7 +700,6 @@ class CRM_AI_Page_AJAX {
       }
 
       // Filter prompts based on optional parameters
-      $prompts = $promptsData['prompts'];
       $filteredPrompts = self::filterPrompts($prompts, $jsondata);
 
       if (empty($filteredPrompts)) {
@@ -693,12 +716,6 @@ class CRM_AI_Page_AJAX {
       $randomIndex = array_rand($filteredPrompts);
       $randomPrompt = $filteredPrompts[$randomIndex];
 
-      // Create image URL
-      $config = CRM_Core_Config::singleton();
-      $baseUrl = $config->userFrameworkResourceURL;
-      $imagePath = "packages/AIImageGeneration/images/samples/{$randomPrompt['filename']}";
-      $imageUrl = $baseUrl . $imagePath;
-
       self::responseSucess([
         'status' => 1,
         'message' => 'Sample image retrieved successfully.',
@@ -707,8 +724,8 @@ class CRM_AI_Page_AJAX {
           'style' => $randomPrompt['style'],
           'ratio' => $randomPrompt['ratio'],
           'filename' => $randomPrompt['filename'],
-          'image_url' => $imageUrl,
-          'image_path' => $imagePath,
+          'image_url' => $randomPrompt['image_url'],
+          'image_path' => $randomPrompt['image_path'],
         ],
       ]);
     }
@@ -718,6 +735,89 @@ class CRM_AI_Page_AJAX {
       'status' => 0,
       'message' => 'Invalid request method or missing data.',
     ]);
+  }
+
+  /**
+   * Get the complete sample image list for the current UI locale.
+   *
+   * Unlike getSampleImage(), this returns every sample at once so the client
+   * can render a gallery and filter it locally.
+   *
+   * @return void
+   */
+  public static function getSampleImageList() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      // Resolve locale on server side, client does not need to send anything
+      $config = CRM_Core_Config::singleton();
+      $locale = $config->lcMessages;
+
+      if (!in_array($locale, self::SAMPLE_LOCALES)) {
+        $locale = 'en_US';
+      }
+
+      $prompts = self::loadSamplePrompts($locale);
+
+      if ($prompts === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Invalid or empty sample prompts data.',
+        ]);
+      }
+
+      self::responseSucess([
+        'status' => 1,
+        'message' => 'Sample image list retrieved successfully.',
+        'data' => [
+          'images' => $prompts,
+          'total' => count($prompts),
+        ],
+      ]);
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
+  /**
+   * Load sample prompts data for a locale and attach image url/path to each item.
+   *
+   * @param string $locale Locale directory name, eg. zh_TW
+   * @return array|null Prompt items, or NULL when data is missing or invalid
+   */
+  private static function loadSamplePrompts($locale) {
+    global $civicrm_root;
+    $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
+    $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+
+    if (!file_exists($dataPath)) {
+      return NULL;
+    }
+
+    $jsonContent = file_get_contents($dataPath);
+    $promptsData = json_decode($jsonContent, TRUE);
+
+    if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
+      return NULL;
+    }
+
+    $config = CRM_Core_Config::singleton();
+    $baseUrl = $config->userFrameworkResourceURL;
+    $prompts = [];
+
+    foreach ($promptsData['prompts'] as $prompt) {
+      if (empty($prompt['filename'])) {
+        continue;
+      }
+      $imagePath = "packages/AIImageGeneration/images/samples/{$prompt['filename']}";
+      $prompt['image_path'] = $imagePath;
+      $prompt['image_url'] = $baseUrl . $imagePath;
+      $prompts[] = $prompt;
+    }
+
+    return empty($prompts) ? NULL : $prompts;
   }
 
   /**

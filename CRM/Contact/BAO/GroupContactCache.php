@@ -215,9 +215,8 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
       $smartGroupCacheTimeout = self::smartGroupCacheTimeout();
 
       if ($smartGroupCacheTimeout == 0) {
-        $query = "
-TRUNCATE civicrm_group_contact_cache
-";
+        $clear = CRM_Core_Transaction::isActive() ? 'DELETE FROM' : 'TRUNCATE';
+        $query = "$clear civicrm_group_contact_cache";
         $update = "
 UPDATE civicrm_group g
 SET    cache_date = null

@@ -118,14 +118,19 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     if ($this->_paymentProcessor['user_name'] !== 'none' && empty($this->_paymentProcessor['password'])) {
       $error[] = ts('Merchant is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
-    // LinePay: if either channelId or channelSecret is set, both are required
+    // refs #46493, LinePay needs channelId and channelSecret as a complete pair.
+    // Only fail the whole processor when no merchant is linked ('none'), because
+    // LINE Pay is then the only instrument it can serve. With a merchant linked
+    // Apple Pay / Google Pay still work, so an incomplete pair just hides the
+    // LINE Pay instrument (see civicrm_instrument).
     $hasChannelId = !empty($this->_paymentProcessor['url_site']);
     $hasChannelSecret = !empty($this->_paymentProcessor['url_api']);
-    if ($hasChannelId xor $hasChannelSecret) {
+    $isLinePayOnly = $this->_paymentProcessor['user_name'] === 'none';
+    if ($isLinePayOnly && !($hasChannelId && $hasChannelSecret)) {
       if (!$hasChannelId) {
         $error[] = ts('LINE Pay Channel ID is not set in the Administer CiviCRM &raquo; Payment Processor.');
       }
-      else {
+      if (!$hasChannelSecret) {
         $error[] = ts('LINE Pay Channel Secret is not set in the Administer CiviCRM &raquo; Payment Processor.');
       }
     }

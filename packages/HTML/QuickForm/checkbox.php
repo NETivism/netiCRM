@@ -136,7 +136,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
         $attributes = $this->getAttributes();
         $output = '';
 
-        if (0 == strlen($this->_text)) {
+        if (0 == strlen($this->_text === null ? '' : $this->_text)) {
             $label = '';
             $output = HTML_QuickForm_input::toHtml();
         }

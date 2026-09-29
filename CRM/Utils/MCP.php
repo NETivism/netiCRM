@@ -40,7 +40,8 @@ class CRM_Utils_MCP {
       'fields' => [
         'id', 'contact_id', 'total_amount', 'amount_level', 'receive_date',
         'is_test', 'contribution_recur_id', 'contribution_status_id',
-        'contribution_page_id', 'contribution_type_id', 'cancel_date', 'receipt_date',
+        'contribution_page_id', 'contribution_type_id', 'payment_instrument_id',
+        'cancel_date', 'receipt_date', 'created_date',
       ],
     ],
     'v_civicrm_participant_payment' => [
@@ -81,7 +82,208 @@ class CRM_Utils_MCP {
       'alias' => 'm',
       'fields' => ['id', 'contact_id', 'membership_type_id', 'join_date', 'start_date', 'end_date', 'status_id', 'is_test'],
     ],
+    'v_civicrm_track' => [
+      'source' => 'civicrm_track',
+      'alias'  => 't',
+      'where'  => 'entity_id IS NOT NULL',
+      'fields' => [
+        'id', 'counter', 'visit_date', 'page_type', 'page_id', 'state',
+        'referrer_type',
+        'referrer_network', 'referrer_url', 'landing',
+        'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+        'entity_table', 'entity_id',
+      ],
+    ],
   ];
+
+  // CASE...WHEN...END is rejected by CRM_Utils_SqlParser everywhere; tell the AI to use IF()/COALESCE() instead.
+  const DOC_SQL_DIALECT = <<<'TXT'
+SQL DIALECT LIMITS — this endpoint validates your SQL against an allowlist before running it.
+
+CASE ... WHEN ... END IS NOT SUPPORTED anywhere in your query. The validator rejects it
+("Field 'CASE' is not in the allowlist"). Use IF() or COALESCE() instead:
+  NOT SUPPORTED:  SUM(CASE WHEN t.state >= 4 THEN 1 ELSE 0 END)
+  USE INSTEAD:    SUM(IF(t.state >= 4, 1, 0))
+  NOT SUPPORTED:  CASE WHEN a IS NULL THEN b ELSE a END
+  USE INSTEAD:    COALESCE(a, b)
+
+SELECT * is rejected — list columns explicitly.
+Only the views listed above are queryable; base tables (civicrm_contact, civicrm_email, ...)
+are not accessible and will be rejected.
+TXT;
+
+  // contribution_status_id means something different on v_civicrm_contribution (a single
+  // contribution) vs v_civicrm_contribution_recur (a recurring contribution) — conflating the two
+  // caused a prior misreporting incident.
+  const DOC_STATUS_CODES = <<<'TXT'
+STATUS CODES — these are fixed system-wide values and CANNOT be customised per site,
+so you may rely on them without further lookup:
+
+v_civicrm_contribution.contribution_status_id — status of a SINGLE contribution:
+  1=Completed  2=Pending  3=Cancelled  4=Failed  5=In Progress  6=Overdue  7=Suspended
+
+v_civicrm_contribution_recur.contribution_status_id — status of a RECURRING contribution.
+These are two different columns on two different tables. A recurring contribution being "In Progress" says
+nothing about whether any single contribution succeeded, and vice versa. Never substitute one
+for the other when answering questions about transaction outcomes.
+TXT;
+
+  // Standardizes date-range filtering: failed contributions often lack receive_date, so
+  // filtering on it alone previously caused date-range queries to under-report failures.
+  const DOC_EFFECTIVE_DATE = <<<'TXT'
+DATE-RANGE FILTERING — for any "between date X and date Y" question, determine each
+contribution's effective date using EXACTLY this expression (copy it verbatim, do not
+rewrite it as CASE — CASE is rejected by this endpoint, see SQL DIALECT LIMITS above):
+
+  IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date, c.created_date), COALESCE(c.receive_date, c.created_date))
+
+Rule it encodes:
+  - contribution_status_id = 4 (Failed): use cancel_date; if empty, fall back to receive_date;
+    if both are empty, fall back to created_date.
+  - all other statuses: use receive_date; if empty, fall back to created_date.
+  - if every applicable source column is NULL, the expression evaluates to NULL.
+
+HOW TO USE IT:
+  - Only switch to the raw columns (receive_date / cancel_date) when the user explicitly
+    asks about the date money was received, or the date a transaction was cancelled.
+
+MANDATORY COMPANION QUERY — whenever you run a date-range query, you MUST run a second query
+with the SAME non-date filters, replacing the date-range condition with
+"<the same IF(...) expression> IS NULL", and report its count.
+If that count > 0, tell the user that N rows have an unknown effective date and cannot be
+confirmed as inside or outside the requested period.
+Do NOT report such rows as zero for the period; a contribution whose effective date cannot be
+determined will otherwise silently disappear from your answer.
+The two queries MUST use the identical IF(...) expression, character for character — a
+paraphrased rewrite in the second query can silently produce a different NULL count.
+
+WORKED EXAMPLE — user asks "how many contributions succeeded and how many failed between
+2026-08-01 and 2026-08-14?":
+  1) SELECT c.contribution_status_id, COUNT(*) FROM v_civicrm_contribution c
+     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date, c.created_date), COALESCE(c.receive_date, c.created_date))
+             BETWEEN '2026-08-01' AND '2026-08-14'
+       AND c.contribution_status_id IN (1, 4)
+     GROUP BY c.contribution_status_id;
+  2) SELECT COUNT(*) FROM v_civicrm_contribution c
+     WHERE IF(c.contribution_status_id = 4, COALESCE(c.cancel_date, c.receive_date, c.created_date), COALESCE(c.receive_date, c.created_date)) IS NULL
+       AND c.contribution_status_id IN (1, 4);
+  Then report both numbers.
+TXT;
+
+  // contribution_type_id and payment_instrument_id are independently configured per site
+  // with no code-to-label mapping available; the AI must not guess one.
+  const DOC_CUSTOM_CODES = <<<'TXT'
+contribution_type_id (fee category) and payment_instrument_id (payment method) are
+TWO DIFFERENT columns and must never be used as substitutes for one another.
+
+The option values behind BOTH columns are configured independently by each site. This connector
+does NOT ship any code-to-label mapping for them, and no such mapping is available to you.
+
+When you encounter a code you cannot resolve, report it verbatim and tell the user that it is a
+site-specific custom value this tool has no lookup table for, and that they should check the
+option list in their site's back office.
+Do NOT guess a name, do NOT infer one from a similar-sounding site, and do NOT fall back to
+CiviCRM upstream defaults.
+TXT;
+
+  // v_civicrm_track records front-end page visits; referrer_type's NULL/empty-string
+  // handling and the 8-way classification rules are not derivable from the column list alone.
+  const DOC_TRAFFIC_SOURCE = <<<'TXT'
+TRAFFIC SOURCE ANALYSIS — v_civicrm_track records front-end page visits that are linked to
+a contribution, participant, or membership record (entity_id IS NOT NULL). Visits that never
+reached that point — a pure page load with no linked record — are not in this view at all.
+
+referrer_type has exactly EIGHT values and no others:
+  social   search   email   ad   link   direct   internal   unknown
+referrer_type may be NULL or an empty string when no type was recorded; the view does NOT
+normalise this for you. When grouping or reporting by referrer_type, always wrap it:
+
+  COALESCE(NULLIF(t.referrer_type, ''), 'unknown')
+
+Example:
+  SELECT COALESCE(NULLIF(t.referrer_type, ''), 'unknown') AS rtype, COUNT(*) AS visits
+  FROM v_civicrm_track t
+  GROUP BY rtype;
+
+Do not GROUP BY t.referrer_type directly — NULL and empty-string rows would form separate,
+incorrect groups instead of being merged into 'unknown'.
+
+state = how far the visitor got (visit depth):
+  0 Information Screen  1 Form Screen  2 Confirmation Screen
+  3 Payment Screen (payment NOT completed)  4 Thank You Screen (completed)
+A "completion" is state >= 4. Within this view, "conversion rate" = completions / visits in
+the same group — but since only entity-linked visits are in this view to begin with, this is
+a rate among visits that already created a record, NOT a rate against all raw page traffic.
+state = 3 means the visitor reached the payment gateway but did not finish — count it as
+incomplete, never as a conversion.
+
+SESSION RULE — visits to the same page from the same session within 30 minutes are merged into
+ONE row (counter is incremented). The same 30-minute window governs 'internal': a visitor's
+original referrer (e.g. search or social) is kept for 30 minutes of continuous browsing, but
+once that window lapses, the next page view is re-attributed to wherever the browser actually
+came from — usually a page on the same site, hence 'internal'. Do not treat 'internal' as an
+external acquisition channel when reporting acquisition performance.
+
+UTM: only utm_medium = 'email' or 'cpc' participates in the eight-way classification (mapping to
+email / ad). All other UTM columns are drill-down dimensions under Custom Campaign and never form
+a category of their own. Drill-down order is: referrer_type -> referrer_network -> Custom Campaign
+(utm_source / utm_campaign / utm_term / utm_content).
+
+OFFLINE DATA — contributions and registrations entered by staff, imported in batch, or created by
+back-end recurring billing have NO track row at all. Always LEFT JOIN and report those separately;
+never fold them into 'unknown' or 'direct':
+  LEFT JOIN v_civicrm_track t
+         ON t.entity_table = 'civicrm_contribution' AND t.entity_id = c.id
+  ... t.id IS NULL  =>  no visit record (offline / back-office entry)
+TXT;
+
+  // results carry no structured metadata, so the AI must state, in its own reply,
+  // which conditions it used and how many rows came back — nothing does this for it.
+  const DOC_RESULT_TRANSPARENCY = <<<'TXT'
+RESULT TRANSPARENCY — whenever you present these query results to the user, you MUST state:
+  (a) which filter conditions your query used, in plain language (the WHERE clause you wrote).
+      If you wrote no WHERE clause at all, say so explicitly — do not silently omit this.
+  (b) how many rows your query returned.
+  (c) if your own query included a LIMIT clause, whether it may have excluded matching rows.
+
+This endpoint does not apply any filters automatically — the only conditions in effect are
+the ones in your own query. Do not imply that test transactions, non-completed records, or
+any other category was excluded unless your own WHERE clause actually excludes it.
+
+TRUNCATION HONESTY — this endpoint never caps your results on its own; if a LIMIT is present,
+it is only there because you wrote it. If you added a LIMIT and there could be more matching
+rows beyond it (you don't know the true total unless you also ran a COUNT(*) without the
+LIMIT), you MUST tell the user explicitly, e.g. "results capped at N rows by this query's own
+LIMIT — there may be more matching records." Never present a LIMIT-ed result as if it were the
+complete answer.
+
+CONDITION DISCLOSURE FORMAT — for requirement (a), do not just name a raw column. Label every
+condition as "<field label>(<column_name>) = <value>", where <field label> is a plain-language
+translation of the column name into the user's reply language — translate it yourself, no
+lookup table is needed for the label itself (e.g. contribution_status_id -> "Contribution
+Status", receive_date -> "Received Date"). For coded values (e.g. contribution_status_id),
+translate using the mappings given above (STATUS CODES, EFFECTIVE DATE, CUSTOM CODES) and state
+ONLY the translated meaning — do not show the raw code alongside a bilingual label. If a code
+has no known mapping, show the raw stored value instead of guessing a label for it.
+
+Example, for a query with "WHERE c.contribution_status_id = 1 AND c.receive_date BETWEEN
+'2025-09-17' AND '2026-09-17'":
+
+  Contribution Status(contribution_status_id) = Completed, Received Date(receive_date) between
+  2025-09-17 and 2026-09-17 (the past year).
+TXT;
+
+  // no default filters are injected server-side (deferred), so the AI must add
+  // is_test = 0 itself — nothing currently stops test records from being counted.
+  const DOC_TEST_DATA_EXCLUSION = <<<'TXT'
+TEST DATA — unless the user explicitly asks to include test records, always add is_test = 0
+to your WHERE clause. This endpoint does not exclude test records automatically. Test records
+are submitted through the site's test/sandbox payment mode and are not real transactions;
+including them by default would overstate real activity.
+
+If the user does ask to include, or specifically asks to analyse, test records, honor that
+and state clearly in your reply that test records are included in the results.
+TXT;
 
   /**
    * @var bool Whether to output streaming responses
@@ -504,6 +706,7 @@ class CRM_Utils_MCP {
           'v_civicrm_contribution_page',
           'v_civicrm_participant_payment',
           'v_civicrm_membership_payment',
+          'v_civicrm_track',
         ];
         if ($hasCiviEvent) {
           $views[] = 'v_civicrm_participant';
@@ -521,6 +724,7 @@ class CRM_Utils_MCP {
           'v_civicrm_participant',
           'v_civicrm_event',
           'v_civicrm_participant_payment',
+          'v_civicrm_track',
         ];
         if ($hasCiviContribute) {
           $views[] = 'v_civicrm_contribution';
@@ -812,16 +1016,19 @@ class CRM_Utils_MCP {
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.contribution_id = c.id '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.contribution_id = c.id '
           . 'WHERE pp.id IS NULL AND mp.id IS NULL.',
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_STATUS_CODES, self::DOC_EFFECTIVE_DATE, self::DOC_CUSTOM_CODES, self::DOC_TRAFFIC_SOURCE, self::DOC_TEST_DATA_EXCLUSION, self::DOC_RESULT_TRANSPARENCY],
       ],
       'participant_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for event participant analysis.',
         'joinHint'    => 'Link participants to contributions via: '
           . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.participant_id = p.id.',
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_TRAFFIC_SOURCE, self::DOC_TEST_DATA_EXCLUSION, self::DOC_RESULT_TRANSPARENCY],
       ],
       'membership_query' => [
         'description' => 'Generate a MariaDB SELECT query against read-only views for membership analysis.',
         'joinHint'    => 'Link memberships to contributions via: '
           . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.membership_id = m.id.',
+        'docs'        => [self::DOC_SQL_DIALECT, self::DOC_TEST_DATA_EXCLUSION, self::DOC_RESULT_TRANSPARENCY],
       ],
     ];
 
@@ -840,7 +1047,7 @@ class CRM_Utils_MCP {
       $queryDescription = 'AI generated query that matches MariaDB / MySQL syntax. '
         . 'Allowed views: [' . implode(', ', array_keys($viewDefs)) . ']. '
         . 'View details — ' . implode('; ', $viewDetails) . '. '
-        . $meta['joinHint'];
+        . $meta['joinHint'] . "\n\n" . implode("\n\n", $meta['docs']);
 
       $tools[] = [
         'name' => $toolName,

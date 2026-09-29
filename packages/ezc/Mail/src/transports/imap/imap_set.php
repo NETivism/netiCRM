@@ -346,7 +346,14 @@ class ezcMailImapSet implements ezcMailParserSet
         }
         if ( $tagNumber == 10000 )
         {
-            $tagLetter++;
+            if ( PHP_VERSION_ID >= 80300 )
+            {
+                $tagLetter = str_increment( $tagLetter );
+            }
+            else
+            {
+                $tagLetter++;
+            }
             $tagNumber = 0;
         }
         $this->currentTag = $tagLetter . sprintf( "%04s", $tagNumber );

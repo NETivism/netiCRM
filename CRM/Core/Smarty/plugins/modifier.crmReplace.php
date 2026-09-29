@@ -43,6 +43,12 @@
 function smarty_modifier_crmReplace($string, $attribute, $value) {
   static $endOfElement = '/>';
 
+  // PHP 8.1 deprecates passing NULL to preg_replace(). Historically these
+  // values were coerced to empty strings by the modifier boundary.
+  $string = $string === NULL ? '' : $string;
+  $attribute = $attribute === NULL ? '' : $attribute;
+  $value = $value === NULL ? '' : $value;
+
   // if we know what attribute we need to replace
   // we need to search and replace the string: $attribute=XXX or $attribute="XXX"
   // with $attribute=\"$value\"

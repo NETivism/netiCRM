@@ -795,14 +795,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     if ($this->_action == CRM_Core_Action::UPDATE) {
-      $deleteExtra = ts('Are you sure you want to delete contact image.');
       $deleteURL = [CRM_Core_Action::DELETE =>
         [
           'name' => ts('Delete Contact Image'),
           'url' => 'civicrm/contact/image',
           'qs' => 'reset=1&cid=%%id%%&action=delete',
-          'extra' =>
-          'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
         ],
       ];
       $deleteURL = CRM_Core_Action::formLink(
@@ -912,6 +909,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     //get the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
+    $uploadFailMsg = NULL;
 
     if (CRM_Utils_Array::value('image_URL', $params)) {
       CRM_Contact_BAO_Contact::processImageParams($params);
@@ -951,9 +949,9 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     // process membership status for deceased contact
-    $deceasedParams = ['contact_id' => $params['contact_id'],
-      'is_deceased' => $params['is_deceased'],
-      'deceased_date' => $params['deceased_date'],
+    $deceasedParams = ['contact_id' => CRM_Utils_Array::value('contact_id', $params),
+      'is_deceased' => CRM_Utils_Array::value('is_deceased', $params),
+      'deceased_date' => CRM_Utils_Array::value('deceased_date', $params),
     ];
     $updateMembershipMsg = $this->updateMembershipStatus($deceasedParams);
 

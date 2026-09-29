@@ -192,7 +192,7 @@ class PEAR_Start extends PEAR
         if (isset($_ENV['USER'])) {
             return $_ENV['USER'];
         } else {
-            return trim(`whoami`);
+            return trim(shell_exec('whoami'));
         }
     }
 

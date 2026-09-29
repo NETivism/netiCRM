@@ -257,7 +257,7 @@ abstract class CRM_Activity_Import_Parser {
     while (!feof($fd)) {
       $this->_lineCount++;
 
-      $values = fgetcsv($fd, 8192, $seperator);
+      $values = fgetcsv($fd, 8192, $seperator, '"', '\\');
       if (!$values) {
         continue;
       }

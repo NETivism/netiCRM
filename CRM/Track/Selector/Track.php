@@ -186,6 +186,15 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    */
   private $_entityId;
 
+  /** @var string */
+  private $_referrerUrl;
+
+  /** @var string */
+  private $_landing;
+
+  /** @var string */
+  private $_pageTitle;
+
   /**
    * We use desc to remind us what that column is, name is used in the tpl.
    *
@@ -213,7 +222,12 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($scope) {
       $this->_scope = $scope;
       $get = $_GET;
-      $this->_base = "civicrm/track/report?reset=1&ptype={$get['ptype']}&pid={$get['pid']}&pageKey={$this->_scope}";
+      $this->_base = 'civicrm/track/report?' . http_build_query([
+        'reset' => 1,
+        'ptype' => $get['ptype'] ?? '',
+        'pid' => $get['pid'] ?? '',
+        'pageKey' => $this->_scope,
+      ], '', '&');
       $this->_allowedGet = [
         'rtype' => ts('Referrer Type'),
         'rnetwork' => ts('Referrer Network'),
@@ -232,8 +246,8 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       ];
       $this->_drillDown = $this->_base;
       foreach ($get as $filter => $value) {
-        if ($this->_allowedGet [$filter]) {
-          $this->_drillDown .= '&'.$filter."=".$value;
+        if (isset($this->_allowedGet[$filter]) && is_scalar($value)) {
+          $this->_drillDown .= '&'.$filter.'='.rawurlencode((string) $value);
         }
       }
     }
@@ -407,33 +421,22 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     if ($output == CRM_Core_Selector_Controller::EXPORT) {
-      return $this->buildExportRows($offset, $rowCount, $sort);
+      $rows = $this->buildExportRows($offset, $rowCount, $sort);
+      return $rows;
     }
     $dao = $this->getQuery('*', NULL, $offset, $rowCount, $sort);
 
-    $result = [];
+    $results = [];
     $recordTables = [];
     $pageTables = [];
     while ($dao->fetch()) {
-      $id = $dao->id.'-'.$dao->tid;
-      $referrerUrl = $landing = '';
-      if ($dao->referrer_url) {
-        if (strstr($dao->referrer_url, 'http')) {
-          $url = parse_url($dao->referrer_url);
-          $referrerUrl = $url['host'].'... <a href="'.$dao->referrer_url.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
-        }
-        else {
-          $referrerUrl = substr($dao->referrer_url, 0, 15).'...';
-        }
-      }
-      if ($dao->landing) {
-        $url = parse_url($dao->landing);
-        $landing = $url['path'].' <a href="'.$dao->landing.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
-      }
+      $id = $dao->id;
+      $referrerUrl = $this->externalLink($dao->referrer_url, 'host');
+      $landing = $this->externalLink($dao->landing, 'path');
       $utmInfo = [];
       foreach ($this->_utm as $k => $v) {
         if (!empty($dao->$k)) {
-          $utmInfo[$k] = $v.":".'<a href="'.CRM_Utils_System::url($this->_drillDown."&{$k}={$dao->$k}").'">'.$dao->$k.'</a>';
+          $utmInfo[$k] = self::escapeHtml($v).':'.$this->filterLink($k, $dao->$k, $dao->$k);
         }
       }
       if (!empty($utmInfo)) {
@@ -446,20 +449,20 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         $dao->referrer_type = 'unknown';
       }
       $results[$id] = [];
-      $results[$id]['page_type'] = $this->_pageTypes[$dao->page_type];
-      $results[$id]['page_id'] = $dao->page_id;
+      $results[$id]['page_type'] = self::escapeHtml($this->_pageTypes[$dao->page_type] ?? '');
+      $results[$id]['page_id'] = self::escapeHtml($dao->page_id);
       $results[$id] += [
-        'visit_date' => CRM_Utils_Date::customFormat($dao->visit_date),
-        'state' => empty($this->_state) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&state=$dao->state").'">'.$this->_trackState[$dao->state].'</a>' : $this->_trackState[$dao->state],
-        'referrer_type' => empty($this->_referrerType) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&rtype=$dao->referrer_type").'">'.$this->_referrerTypes[$dao->referrer_type].'</a>' : $this->_referrerTypes[$dao->referrer_type],
-        'referrer_network' => empty($this->_referrerNetwork) ? '<a href="'.CRM_Utils_System::url($this->_drillDown."&rnetwork=$dao->referrer_network").'">'.$dao->referrer_network.'</a>' : $dao->referrer_network,
+        'visit_date' => self::escapeHtml(CRM_Utils_Date::customFormat($dao->visit_date)),
+        'state' => empty($this->_state) ? $this->filterLink('state', $dao->state, $this->_trackState[$dao->state] ?? '') : self::escapeHtml($this->_trackState[$dao->state] ?? ''),
+        'referrer_type' => empty($this->_referrerType) ? $this->filterLink('rtype', $dao->referrer_type, $this->_referrerTypes[$dao->referrer_type] ?? '') : self::escapeHtml($this->_referrerTypes[$dao->referrer_type] ?? ''),
+        'referrer_network' => empty($this->_referrerNetwork) ? $this->filterLink('rnetwork', $dao->referrer_network, $dao->referrer_network) : self::escapeHtml($dao->referrer_network),
         'utm' => $utmInfo,
         'referrer_url' => $referrerUrl,
         'landing' => $landing,
-        'entity_id' => $dao->entity_id,
+        'entity_id' => self::escapeHtml($dao->entity_id),
       ];
       $pageTables[$dao->page_type][$dao->page_id][$id] = $id;
-      if ($dao->entity_table) {
+      if (!empty($dao->entity_table) && !empty($dao->entity_id)) {
         $recordTables[$dao->entity_table][$dao->entity_id][$id] = $id;
       }
     }
@@ -472,7 +475,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       while ($pageDAO->fetch()) {
         foreach ($pages[$pageDAO->id] as $resultId) {
           $url = str_replace('%%id%%', $pageDAO->id, $this->_pageUrl[$table]);
-          $results[$resultId]['page_id'] = $pageDAO->title.'<a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
+          $results[$resultId]['page_id'] = self::escapeHtml($pageDAO->title).'<a href="'.self::escapeHtml(CRM_Utils_System::url($url)).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
         }
       }
     }
@@ -490,11 +493,49 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       while ($recordDAO->fetch()) {
         foreach ($records[$recordDAO->id] as $resultId) {
           $url = str_replace(['%%cid%%', '%%id%%'], [$recordDAO->cid, $recordDAO->id], $this->_referencedRecordUrl[$table]);
-          $results[$resultId]['entity_id'] = $this->_referencedRecordType[$table].': '.'<a href="'.CRM_Utils_System::url($this->_drillDown.'&entity_id=%').'">'.$recordDAO->sort_name.'</a><a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
+          $results[$resultId]['entity_id'] = self::escapeHtml($this->_referencedRecordType[$table]).': '.$this->filterLink('entity_id', '%', $recordDAO->sort_name).'<a href="'.self::escapeHtml(CRM_Utils_System::url($url)).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
         }
       }
     }
     return $results;
+  }
+
+  /**
+   * Escape text and quoted HTML attributes in web rows, leaving exports raw.
+   */
+  private static function escapeHtml($value) {
+    return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+  }
+
+  /**
+   * Build a drill-down link with a single encoded filter value.
+   */
+  private function filterLink($name, $value, $label) {
+    $url = CRM_Utils_System::url($this->_drillDown.'&'.$name.'='.rawurlencode((string) $value));
+    return '<a href="'.self::escapeHtml($url).'">'.self::escapeHtml($label).'</a>';
+  }
+
+  /**
+   * Allow absolute HTTP(S) URLs and root-relative landing links.
+   */
+  private function externalLink($value, $part) {
+    if (empty($value)) {
+      return '';
+    }
+    $url = parse_url($value);
+    $relativeLanding = $part === 'path' && substr($value, 0, 1) === '/'
+      && substr($value, 0, 2) !== '//';
+    $absoluteHttp = $url && !empty($url['host']) && !empty($url['scheme'])
+      && in_array(strtolower($url['scheme']), ['http', 'https'], TRUE);
+    // Backslashes and controls can turn a local path into an external URL.
+    if (!$url || (!$relativeLanding && !$absoluteHttp)
+      || strpos($value, '\\') !== FALSE
+      || preg_match('/[\x00-\x20\x7f]/', $value)) {
+      return self::escapeHtml(mb_substr($value, 0, 15, 'UTF-8')).'...';
+    }
+    $label = $url[$part] ?? '';
+    return self::escapeHtml($label).($part === 'host' ? '... ' : ' ')
+      .'<a href="'.self::escapeHtml($value).'" target="_blank" rel="noopener noreferrer"><i class="zmdi zmdi-arrow-right-top"></i></a>';
   }
 
   /**
@@ -810,7 +851,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     // generate breadcrumbs
     $get = $_GET;
     foreach ($get as $name => $value) {
-      if (!$this->_allowedGet[$name]) {
+      if (!isset($this->_allowedGet[$name]) || !is_scalar($value)) {
         unset($get[$name]);
       }
     }
@@ -826,13 +867,13 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           ];
           switch ($name) {
             case 'rtype':
-              $filters[$name]['value_display'] = $this->_referrerTypes[$value];
+              $filters[$name]['value_display'] = $this->_referrerTypes[$value] ?? '';
               break;
             case 'rnetwork':
               $filters[$name]['value_display'] = $value;
               break;
             case 'state':
-              $filters[$name]['value_display'] = $this->_trackState[$value];
+              $filters[$name]['value_display'] = $this->_trackState[$value] ?? '';
               break;
             case 'entity_id':
               if ($value == '%') {

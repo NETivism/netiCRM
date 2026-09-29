@@ -1524,7 +1524,7 @@ class DB_DataObject_Generator extends DB_DataObject
                     break;
                     
                 case ($type & DB_DATAOBJECT_BOOL): 
-                    $defaults[$ar['Field']] = (int)(boolean) $ar['Default'];
+                    $defaults[$ar['Field']] = (int)(bool) $ar['Default'];
                     break;
                     
                 
@@ -1535,7 +1535,7 @@ class DB_DataObject_Generator extends DB_DataObject
                  
                 default:    // hopefully eveything else...  - numbers etc.
                     if (!strlen($ar['Default'])) {
-                        continue;
+                        break;
                     }
                     if (is_numeric($ar['Default'])) {
                         $defaults[$ar['Field']] =   $ar['Default'];

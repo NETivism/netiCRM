@@ -44,10 +44,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
    *
-   * @var object
+   * @var array<string, CRM_Core_Payment_TapPay>
    * @static
    */
-  private static $_singleton = NULL;
+  private static $_singleton = [];
 
   /**
    * Class constructor.
@@ -55,7 +55,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    * @param array &$paymentProcessor payment processor parameters
    * @param CRM_Core_Form &$paymentForm payment form object
-   * @param string $apiType API type
+   * @param string|null $apiType API type
    */
   public function __construct($mode, &$paymentProcessor, &$paymentForm, $apiType) {
     $this->_mode = $mode;
@@ -69,16 +69,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @param string $mode the mode of operation: live or test
    * @param array &$paymentProcessor payment processor parameters
    * @param CRM_Core_Form|null &$paymentForm payment form object
+   * @param string|null $apiType API type
    *
    * @return CRM_Core_Payment_TapPay
    */
-  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
-    $args = func_get_args();
-    if (isset($args[3])) {
-      $apiType = $args[3];
-    }
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL, $apiType = NULL) {
     $processorName = $paymentProcessor['name'];
-    if (self::$_singleton[$processorName] === NULL) {
+    if (!isset(self::$_singleton[$processorName])) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_TapPay($mode, $paymentProcessor, $paymentForm, $apiType);
     }
     return self::$_singleton[$processorName];
@@ -956,9 +953,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $seq->timestamp = microtime(TRUE);
     $seq->insert();
 
+    $shouldAudit = CRM_Contribute_BAO_AuditContributionRecur::isCurrentExecutionTime($time);
     if (empty($time)) {
       $time = time();
     }
+    if ($shouldAudit) {
+      CRM_Contribute_BAO_AuditContributionRecur::recordEstimate('tappay', $time);
+    }
+
     $thisMonth = date('m', $time);
     $theMonthNextDay = date('m', $time + 86400);
     $today = date('j', $time);
@@ -1006,6 +1008,7 @@ ORDER BY r.id
 LIMIT 0, 100
 ";
     $dao = CRM_Core_DAO::executeQuery($sql);
+    $dispatchedRecurIds = [];
     while ($dao->fetch()) {
       // Check payment processor
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
@@ -1024,8 +1027,12 @@ LIMIT 0, 100
 
       $command = 'drush neticrm-process-recurring --payment-processor=tappay --time='.$time.' --contribution-recur-id='.$dao->recur_id.'&';
       popen($command, 'w');
+      $dispatchedRecurIds[] = (int) $dao->recur_id;
       // wait for 1 second.
       usleep(1000000);
+    }
+    if ($shouldAudit) {
+      CRM_Contribute_BAO_AuditContributionRecur::recordDispatch('tappay', $dispatchedRecurIds, $time);
     }
 
     // Delete the sequence data of this process.

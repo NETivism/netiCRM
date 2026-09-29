@@ -24,9 +24,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   /**
    * mode of operation: live or test
    *
-   * @var object
+   * @var string|null
    */
-  protected static $_mode = NULL;
+  protected $_mode = NULL;
 
   public static $_hideFields = ['invoice_id'];
 
@@ -259,7 +259,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
-    if (self::$_singleton[$processorName] === NULL) {
+    if (self::$_singleton === NULL || !array_key_exists($processorName, self::$_singleton) || self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
     }
     return self::$_singleton[$processorName];
@@ -414,7 +414,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $isPayLater = TRUE;
 
       // Set participant status to 'Pending from pay later', Accupied the seat.
-      if ($params['participantID']) {
+      if (!empty($params['participantID'])) {
         $participantStatus = CRM_Event_PseudoConstant::participantStatus();
         if ($newStatus = array_search('Pending from pay later', $participantStatus)) {
           CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $newStatus, 'id');
@@ -450,7 +450,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $params['trxn_id'] = $contribution->trxn_id;
 
     $arguments = $this->prepareOrderParams($contribution, $params, $instrumentCode, $formKey);
-    if (!$contrib_values['is_recur']) {
+    if (empty($contrib_values['is_recur'])) {
       CRM_Core_Payment_SPGATEWAYAPI::checkMacValue($arguments, $this->_paymentProcessor);
     }
     CRM_Core_Error::debug_var('spgateway_post_data_', $arguments);
@@ -574,7 +574,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
       }
     }
-    elseif (!$vars['is_recur']) {
+    elseif (empty($vars['is_recur'])) {
       $tradeInfo = [
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,
@@ -1922,9 +1922,14 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $seq->timestamp = microtime(TRUE);
     $seq->insert();
 
+    $shouldAudit = CRM_Contribute_BAO_AuditContributionRecur::isCurrentExecutionTime($time);
     if (empty($time)) {
       $time = time();
     }
+    if ($shouldAudit) {
+      CRM_Contribute_BAO_AuditContributionRecur::recordEstimate('spgateway', $time);
+    }
+
     $thisMonth = date('m', $time);
     $theMonthNextDay = date('m', $time + 86400);
     $today = date('j', $time);
@@ -1939,6 +1944,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
 
     $currentDate = date('Y-m-01 00:00:00', $time);
+    $currentDay = date('Y-m-d', $time);
 
     // only trigger when current month doesn't have any contribution yet
     $sql = <<<EOT
@@ -1970,11 +1976,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     AND p.payment_processor_type = 'SPGATEWAY'
     AND COALESCE(p.url_api, '') != ''
     AND s.token_value IS NOT NULL
+    AND (r.last_execute_date IS NULL OR r.last_execute_date < '$currentDay')
     GROUP BY r.id
     ORDER BY r.id
     LIMIT 0, 100
     EOT;
     $dao = CRM_Core_DAO::executeQuery($sql);
+    $dispatchedRecurIds = [];
     CRM_Core_Error::debug_log_message('SPGATEWAY Agreement: Found '.$dao->N.' record(s) for agreement payment.');
     while ($dao->fetch()) {
       // Check last execute date.
@@ -1987,8 +1995,12 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
       $command = 'drush neticrm-process-recurring --payment-processor=spgateway --time='.$time.' --contribution-recur-id='.$dao->recur_id.'&';
       popen($command, 'w');
+      $dispatchedRecurIds[] = (int) $dao->recur_id;
       // wait for 1 second.
       usleep(1000000);
+    }
+    if ($shouldAudit) {
+      CRM_Contribute_BAO_AuditContributionRecur::recordDispatch('spgateway', $dispatchedRecurIds, $time);
     }
 
     // Delete the sequence data of this process.

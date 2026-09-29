@@ -46,10 +46,13 @@ class CRM_Admin_Form_CMSUser extends CRM_Core_Form {
 
     $this->addButtons(
       [
+        //
+        /*
         ['type' => 'next',
           'name' => ts('OK'),
           'isDefault' => TRUE,
         ],
+        */
         ['type' => 'cancel',
           'name' => ts('Cancel'),
         ],

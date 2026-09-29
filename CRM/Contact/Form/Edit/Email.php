@@ -58,6 +58,7 @@ class CRM_Contact_Form_Edit_Email {
     $form->applyFilter('__ALL__', 'trim');
 
     //Email box
+    $isSpamReport = FALSE;
     $contactDefaults = $form->get('values');
     if (isset($contactDefaults['email'][$blockId]) && !empty($contactDefaults['email'][$blockId]['on_hold'])) {
       // check on_hold reason bounce type

@@ -9,7 +9,16 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   public const MODEL_LIST = [
     'gpt-3.5-turbo',
     'gpt-4o',
+    'gpt-5.6-terra',
   ];
+
+  /**
+   * Default reasoning effort for GPT-5 series models.
+   *
+   * Reasoning tokens are billed as output tokens and are never shown to the
+   * user. Copywriting does not need reasoning, so keep it off by default.
+   */
+  public const REASONING_EFFORT_DEFAULT = 'none';
 
   /**
    * OpenAI API Key
@@ -112,6 +121,40 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   }
 
   /**
+   * Check if the given model belongs to the GPT-5 reasoning series
+   *
+   * These models take reasoning_effort, use max_completion_tokens instead of
+   * max_tokens, and may reject the sampling parameters that gpt-3.5-turbo and
+   * gpt-4o accept. Unknown model names fall back to the legacy behaviour.
+   *
+   * @param string $model The model name.
+   * @return bool True when the model is a GPT-5 series model.
+   */
+  public static function isReasoningModel($model) {
+    return (bool) preg_match('/^gpt-5/i', (string) $model);
+  }
+
+  /**
+   * Split raw stream bytes into complete lines
+   *
+   * cURL hands the write callback raw socket buffers, so a single SSE line
+   * can be cut in half between two callbacks. Both halves would then fail to
+   * decode and that piece of the reply would be lost. The unfinished tail is
+   * kept in $buffer until the rest of the line arrives.
+   *
+   * @param string $data The bytes just received.
+   * @param string $buffer The carry over buffer (reference).
+   * @return array The complete lines, blank ones removed.
+   */
+  public static function extractStreamLines($data, &$buffer) {
+    $buffer .= $data;
+    $lines = explode("\n", $buffer);
+    // The last piece has no line break yet, hold it for the next callback
+    $buffer = array_pop($lines);
+    return array_filter($lines);
+  }
+
+  /**
    * Sending request using service API
    *
    * Error handling should using try - catch when doing request
@@ -156,26 +199,29 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
         'status_id' => 2, // 2: pending, 5: processing, 1: finished,
         'id' => $this->_id,
       ];
+      // Carries the unfinished tail of a line between write callbacks
+      $streamBuffer = '';
       // OpenAI replies a plain JSON body instead of SSE when the request fails,
       // collect it here because the body may arrive in several chunks.
       $errorBody = '';
-      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData, &$errorBody) {
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData, &$streamBuffer, &$errorBody) {
         if (curl_getinfo($ch, CURLINFO_RESPONSE_CODE) >= 400) {
           $errorBody .= $data;
           return strlen($data);
         }
-        $chunks = explode("\n", $data);
-        if (is_array($chunks)) {
-          $chunks = array_filter($chunks);
-        }
+        $chunks = self::extractStreamLines($data, $streamBuffer);
         foreach ($chunks as $resp) {
           $json = preg_replace('/^data:\s/', '', $resp);
           $decoded = json_decode($json, TRUE);
-          if (!is_array($decoded)) {
-            // Not a complete JSON line, such as "[DONE]" or a partial chunk.
-            continue;
+          if ($decoded === NULL) {
+            // A line we cannot parse means output text is silently lost,
+            // so make it visible in the log instead of dropping it quietly.
+            // "data: [DONE]" is not JSON and is the expected end of stream.
+            if (trim($resp) !== '' && trim($resp) !== 'data: [DONE]') {
+              CRM_Core_Error::debug_log_message('AICompletion: unparsable stream line: '.$resp);
+            }
           }
-          if (!empty($decoded['error']['message'])) {
+          elseif (!empty($decoded['error']['message'])) {
             // OpenAI may put an error frame inside a HTTP 200 stream, for example
             // "Rate limit reached", "Your access was terminated",
             // "You exceeded your current quota", "That model is currently overloaded".
@@ -185,7 +231,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
             $this->handleStreamError(0, $json);
           }
           else {
-            if (trim($data) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
+            if (trim($resp) != "data: [DONE]" && isset($decoded["choices"][0]["delta"]["content"])) {
               // log response to variable
               $responseData['message'] .= $decoded["choices"][0]["delta"]["content"];
               // output data
@@ -326,7 +372,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     switch ($apiType) {
       case 'CHAT_COMPLETION':
         // Refs: https://platform.openai.com/docs/api-reference/chat/create
-        $fields = explode(',', 'model*,messages*,temperature,top_p,n,stream,stop,max_tokens,presence_penalty,frequency_penalty,logit_bias,user');
+        $fields = explode(',', 'model*,messages*,temperature,top_p,n,stream,stop,max_tokens,max_completion_tokens,reasoning_effort,presence_penalty,frequency_penalty,logit_bias,user');
         break;
     }
     foreach ($fields as $key => &$value) {
@@ -370,6 +416,27 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       }
       if (isset($params['temperature'])) {
         $this->_temperature = $params['temperature'] = (float)$params['temperature'];
+      }
+      if (self::isReasoningModel($params['model'])) {
+        // Reasoning tokens are billed as output tokens, keep them off
+        if (!isset($params['reasoning_effort'])) {
+          $params['reasoning_effort'] = self::REASONING_EFFORT_DEFAULT;
+        }
+        // GPT-5 series only accepts temperature while reasoning is off.
+        // $this->_temperature keeps the value for the database record,
+        // we only stop sending it to the API.
+        if ($params['reasoning_effort'] !== 'none') {
+          unset($params['temperature']);
+        }
+        // max_tokens was renamed on GPT-5 series
+        if (isset($params['max_tokens'])) {
+          $params['max_completion_tokens'] = $params['max_tokens'];
+          unset($params['max_tokens']);
+        }
+      }
+      else {
+        // These two parameters only exist on GPT-5 series
+        unset($params['reasoning_effort'], $params['max_completion_tokens']);
       }
     }
     $fields = self::fields('CHAT_COMPLETION');

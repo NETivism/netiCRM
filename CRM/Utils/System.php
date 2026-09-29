@@ -228,11 +228,11 @@ class CRM_Utils_System {
   /**
    * Display a permission denied page via the CMS.
    *
-   * @return mixed
-   *   CMS-specific return value for permission denied handling.
+   * This method is always terminal - it will never return normally.
    */
   public static function permissionDenied() {
-    return CRM_Core_Config::$_userSystem->permissionDenied();
+    CRM_Core_Config::$_userSystem->permissionDenied();
+    return CRM_Utils_System::civiExit();
   }
 
   /**
@@ -480,6 +480,20 @@ class CRM_Utils_System {
    */
   public static function addJs($params, $text) {
     return CRM_Core_Config::$_userSystem->addJs($params, $text);
+  }
+
+  /**
+   * Append a CSS file or inline style.
+   *
+   * @param array $params
+   *   Template call's parameters.
+   * @param string $text
+   *   The {css} block contents from the Smarty template.
+   *
+   * @return void
+   */
+  public static function addCss($params, $text) {
+    return CRM_Core_Config::$_userSystem->addCss($params, $text);
   }
 
   /**
@@ -1151,7 +1165,8 @@ class CRM_Utils_System {
    * @access public
    */
   public static function getDocBaseURL() {
-    return CRM_Core_Config::singleton()->docURLBase;
+    $config = CRM_Core_Config::singleton();
+    return $config->docURLBase ?? NULL;
   }
 
   /**
@@ -1859,7 +1874,7 @@ class CRM_Utils_System {
     }
     else {
       // all except deprecated, strict, warning
-      error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING & ~E_NOTICE);
+      error_reporting(E_ALL & ~E_DEPRECATED & ~2048 & ~E_WARNING & ~E_NOTICE);
     }
   }
 

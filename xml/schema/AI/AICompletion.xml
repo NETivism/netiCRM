@@ -34,6 +34,18 @@
   </foreignKey>
 
   <field>
+    <name>conversation_id</name>
+    <type>int unsigned</type>
+    <comment>Groups rows of the same conversation. Points to the id of the first row in the thread.</comment>
+    <add>4.0</add>
+  </field>
+  <index>
+    <name>index_conversation_id</name>
+    <fieldName>conversation_id</fieldName>
+    <add>4.0</add>
+  </index>
+
+  <field>
     <name>is_template</name>
     <type>boolean</type>
     <default>0</default>

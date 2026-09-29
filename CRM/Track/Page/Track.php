@@ -304,7 +304,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       $config = CRM_Core_Config::singleton();
       $handle = fopen($exportFile, 'a');
       foreach ($rowValues as $row) {
-        fputcsv($handle, $row, $config->fieldSeparator);
+        fputcsv($handle, $row, $config->fieldSeparator, '"', '\\');
       }
       fclose($handle);
     }

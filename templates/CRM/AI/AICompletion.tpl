@@ -1,26 +1,13 @@
 {* Magnific Popup *}
-<link rel="stylesheet" href="{$config->resourceBase}packages/Magnific-Popup/dist/magnific-popup.css?v{$config->ver}">
-{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-mailingeditor}{/js}
+{css src=packages/Magnific-Popup/dist/magnific-popup.css group=999 weight=997 library=civicrm/civicrm-css-aicompletion}{/css}
+{js src=packages/Magnific-Popup/dist/jquery.magnific-popup.min.js group=999 weight=997 library=civicrm/civicrm-js-magnific-popup}{/js}
 
 {* AICompletion files start *}
 {* TODO: File used temporarily during development, to be removed later *}
-<link rel="stylesheet" href="{$config->resourceBase}packages/mailingEditor/mailingEditor.css?v{$config->ver}">
+{css src=packages/mailingEditor/mailingEditor.css group=999 weight=998 library=civicrm/civicrm-css-aicompletion}{/css}
 {* style files *}
-{*
-  The `<link rel="stylesheet">` tag placed inside the `<body>` is valid according to the specifications. For more information:
-
-  - [HTML Standard 4.2.4 The link element](https://html.spec.whatwg.org/multipage/semantics.html#the-link-element) and search for "body-ok"
-  - [Keywords that are body-ok affect whether link elements are allowed in the body](https://html.spec.whatwg.org/multipage/links.html#body-ok)
-
-  Keywords that are "body-ok" determine whether link elements are allowed in the body. The "body-ok" keywords include dns-prefetch, modulepreload, pingback, preconnect, prefetch, preload, and stylesheet.
-
-  However, both the `<link rel="stylesheet">` tag and `@import url` inside the `<body>` are not considered best practices. This is because if CSS is imported within the <body> tag, it may cause flickering or changes in styles during page rendering, which goes against the principle of separating concerns.
-
-  Consider creating a smarty `{css}` similar to the way JavaScript is loaded, allowing CSS to be placed in the `<head>` section. This can help improve the overall performance and adhere to the best practices.
-
-  refs #37730 46f
-*}
-<link rel="stylesheet" href="{$config->resourceBase}packages/AICompletion/AICompletion.css?v{$config->ver}">
+{* Load css via {css} block so stylesheets go into <head> instead of <body>, avoiding FOUC. refs #37730 #45479 *}
+{css src=packages/AICompletion/AICompletion.css group=999 weight=999 library=civicrm/civicrm-css-aicompletion}{/css}
 
 {* script files *}
 {js src=packages/AICompletion/AICompletion.js group=999 weight=998 library=civicrm/civicrm-js-aicompletion}{/js}
@@ -78,6 +65,15 @@ window.AICompletion = {
     "We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.": "{/literal}{ts}We're sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.{/ts}{literal}",
     "Our service is currently busy, please try again later. If needed, please contact our customer service team.": "{/literal}{ts}Our service is currently busy, please try again later. If needed, please contact our customer service team.{/ts}{literal}",
     "Please enter the %1 copy you would like AI to generate.": "{/literal}{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}{literal}",
+    "New conversation": "{/literal}{ts}New conversation{/ts}{literal}",
+    "Confirm": "{/literal}{ts}Confirm{/ts}{literal}",
+    "Cancel": "{/literal}{ts}Cancel{/ts}{literal}",
+    "After opening a new conversation, you will no longer see the current one. Continue?": "{/literal}{ts}After opening a new conversation, you will no longer see the current one. Continue?{/ts}{literal}",
+    "Enter a follow-up request, for example: make it shorter, or use a livelier tone.": "{/literal}{ts}Enter a follow-up request, for example: make it shorter, or use a livelier tone.{/ts}{literal}",
+    "This conversation has reached its length limit. Please start a new conversation.": "{/literal}{ts}This conversation has reached its length limit. Please start a new conversation.{/ts}{literal}",
+    "This conversation is not available. Please start a new conversation.": "{/literal}{ts}This conversation is not available. Please start a new conversation.{/ts}{literal}",
+    "Custom...": "{/literal}{ts}Custom...{/ts}{literal}",
+    "Not specified": "{/literal}{ts}Not specified{/ts}{literal}",
   }
 };
 {/literal}window.AICompletion.default = {$ai_completion_default};{literal}
@@ -89,6 +85,14 @@ window.AICompletion = {
   <div class="netiaic-inner">
     <div class="netiaic-content">
       <div class="inner">
+        {* Only shown once a conversation is running, hidden by CSS in initial state. refs #46672 *}
+        <div class="netiaic-header">
+          <button type="button" class="netiaic-new-conversation" title="{ts}New conversation{/ts}">
+            <i class="zmdi zmdi-plus"></i>
+            <span class="text">{ts}New conversation{/ts}</span>
+          </button>
+          <div class="netiaic-conversation-title"></div>
+        </div>
         <div class="netiaic-chat">
           <div class="inner">
             <div id="ai-msg-welcome" class="ai-msg msg is-finished">
@@ -120,9 +124,23 @@ window.AICompletion = {
                   </div>
                 </div>
               </div>
+              {* Pill buttons for role and tone, filled in by the JS from the two
+                 selects above. The selects stay as the only data source. refs #46672 *}
+              <div class="netiaic-prompt-filters">
+                <div class="netiaic-filter-dropdown" data-filter="role"></div>
+                <div class="netiaic-filter-dropdown" data-filter="tone"></div>
+                <span class="netiaic-filter-inherited">{ts}Carried over{/ts}</span>
+              </div>
               <div class="netiaic-prompt-content-section crm-section crm-textarea-section form-item">
                 <div class="crm-form-elem crm-form-textarea">
-                  <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                  <div class="netiaic-input-row">
+                    <textarea name="netiaic-prompt-content" placeholder="{ts 1=$component_locale}Please enter the %1 copy you would like AI to generate.{/ts}" class="netiaic-prompt-content-textarea form-textarea"></textarea>
+                    <button type="button" class="shine-btn netiaic-form-submit">
+                      <i class="zmdi zmdi-mail-send"></i>
+                      <span class="text">{ts}Submit{/ts}</span>
+                      <span class="loader"></span>
+                    </button>
+                  </div>
                   <div class="description">{ts}Maximum character limit for this field is <span class="limit-max">1500</span> characters, and the current character count is <span class="current">0</span>.{/ts}</div>
                   <div class="netiaic-prompt-content-command netiaic-command">
                     <div class="inner">
@@ -145,11 +163,6 @@ window.AICompletion = {
                 <a href="{crmURL p='civicrm/admin/aicompletion' q='reset=1'}" target="_blank">
                 {ts 1=$usage.max 2=$usage.used}Your usage limit is <span class="usage-max">%1</span> times, currently used <span class="usage-used">%2</span> times.{/ts}</a>
               </div>
-              <button type="button" class="shine-btn netiaic-form-submit">
-                <i class="zmdi zmdi-mail-send"></i>
-                <span class="text">{ts}Submit{/ts}</span>
-                <span class="loader"></span>
-              </button>
             </div>
           </div>
         </div>

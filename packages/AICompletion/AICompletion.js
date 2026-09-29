@@ -10,7 +10,6 @@
   const INIT_CLASS = 'is-initialized',
         ACTIVE_CLASS = 'is-active',
         ERROR_CLASS = 'is-error',
-        SENT_CLASS = 'is-sent',
         PROCESS_CLASS = 'is-processing',
         FINISH_CLASS = 'is-finished',
         EXPAND_CLASS = 'is-expanded',
@@ -18,6 +17,19 @@
         SHOW_CLASS = 'is-show',
         HIDE_CLASS = 'is-hide',
         MFP_ACTIVE_CLASS = 'mfp-is-active',
+        STATE_INITIAL_CLASS = 'is-state-initial',
+        STATE_ACTIVE_CLASS = 'is-state-active',
+        OPEN_CLASS = 'is-open',
+        SELECTED_CLASS = 'is-selected',
+        EMPTY_CLASS = 'is-empty',
+        FILTER_PILLS_CLASS = 'has-filter-pills',
+        FILTER_EVENT_NS = '.netiaic-filter',
+        DROPPED_CLASS = 'is-dropped',
+        TURN_LIMIT_CODE = 'CONVERSATION_TURN_LIMIT',
+        MENU_MIN_HEIGHT = 120,
+        MENU_MAX_HEIGHT = 280,
+        TITLE_MAX_LENGTH = 20,
+        HTTP_FORBIDDEN = 403,
         TIMEOUT = 30000;
 
   /**
@@ -34,13 +46,32 @@
     ts = {},
     endpoint = {},
     chatData = {
-      messages: []
+      messages: [],
+      // Multi turn conversation, refs #46672. Stays null for a brand new
+      // conversation and is never sent as a key while it is null: the backend
+      // reads a missing key as "start a new conversation", null fails validation.
+      conversationId: null,
+      state: 'initial',
+      // The stream in flight, so a new conversation can cut it off instead of
+      // letting the previous reply land in the fresh thread.
+      stream: null,
+      // Bumped by resetConversation(). A request that started under an older
+      // value belongs to a conversation the user has already left, so its
+      // callbacks drop whatever comes back. refs #46672
+      generation: 0,
+      // Role and tone as they went out with the last turn, so the pills can say
+      // "carried over" while they have not been touched since.
+      lastFilters: {
+        role: null,
+        tone: null
+      }
     },
     colon = ':',
     debug = false,
     component,
     errorMessage,
-    errorMessageDefault;
+    errorMessageDefault,
+    promptPlaceholderDefault = '';
 
   // Default configuration options
   var defaultOptions = {
@@ -65,6 +96,17 @@
 
   var isEmpty = function(value) {
     return value === undefined || value === null || String(value).trim() === "";
+  }
+
+  // Role and tone can hold anything the user typed, and they end up inside both
+  // text and attribute positions of the pill menu markup. refs #46672
+  var escapeHtml = function(value) {
+    return String(value === undefined || value === null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   var getFirstCharacter = function(input) {
@@ -275,7 +317,9 @@
       if ($elem.length) {
         let textLength = countCharacters($elem.val()),
             $section = $elem.closest('.crm-section'),
-            $desc = $elem.next('.description'),
+            // Not next(): the textarea shares a row with the submit button since
+            // the input area was rebuilt. refs #46672
+            $desc = $elem.closest('.crm-form-elem').find('.description'),
             $current = $desc.find('.current'),
             limitMax = 1500;
 
@@ -324,12 +368,20 @@
                   tone = tplData.tone_style ? tplData.tone_style : tplData.tone,
                   context = tplData.context ? tplData.context : tplData.content;
 
+              // Templates are visible to everyone, so whatever one user typed
+              // ends up rendered in another user's panel. The browser decodes
+              // the data-* attributes again, so applying a template is
+              // unaffected. refs #46672
+              let escapedRole = escapeHtml(role),
+                  escapedTone = escapeHtml(tone),
+                  escapedContext = escapeHtml(context);
+
               let templateItemHtml = `
-                <div class="template-item" data-ai-role="${role}" data-tone-style="${tone}" data-context="${context}">
+                <div class="template-item" data-ai-role="${escapedRole}" data-tone-style="${escapedTone}" data-context="${escapedContext}">
                   <div class="inner">
-                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${role}</div>
-                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tone}</div>
-                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${context}</div>
+                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${escapedRole}</div>
+                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${escapedTone}</div>
+                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${escapedContext}</div>
                     <div class="actions">
                       <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
                     </div>
@@ -337,7 +389,7 @@
                 </div>`;
 
               if (key === 'communityRecommendations') {
-                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div><div class="actions">`);
+                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${escapeHtml(tplData.org)}</div><div class="actions">`);
               }
 
               output += templateItemHtml;
@@ -444,11 +496,12 @@
       $container.on('click', '.msg-tools .save-btn:not([disabled])', function(event) {
         event.preventDefault();
 
+        // The button now lives in the AI reply, whose data-ref-id points back at
+        // the request it answered. refs #46672
         let $saveBtn = $(this),
-            $userMsg = $saveBtn.closest('.msg'),
-            userMsgID = $userMsg.attr('id'),
-            aiMsgID = $userMsg.attr('data-ref-id'),
-            $aiMsg = $userMsg.next('.msg'),
+            $aiMsg = $saveBtn.closest('.msg'),
+            aiMsgID = $aiMsg.attr('id'),
+            userMsgID = $aiMsg.attr('data-ref-id'),
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Save prompt as shared template'],
             modalCallbacks = {},
@@ -509,11 +562,11 @@
     },
 
     formIsEmpty: function() {
+      // The selects are read directly now that the pill menu replaced select2,
+      // refs #46672.
       let $container = AICompletion.prototype.container,
-          roleSelectData = $container.find('.netiaic-prompt-role-select').select2('data'),
-          toneSelectData = $container.find('.netiaic-prompt-tone-select').select2('data'),
-          hasRoleSelected = roleSelectData.length > 0 && roleSelectData[0].id !== "",
-          hasToneSelected = toneSelectData.length > 0 && toneSelectData[0].id !== "",
+          hasRoleSelected = !isEmpty($container.find('.netiaic-prompt-role-select').val()),
+          hasToneSelected = !isEmpty($container.find('.netiaic-prompt-tone-select').val()),
           hasContent = $container.find('.netiaic-prompt-content-textarea').val().trim() !== '';
 
       if (hasRoleSelected || hasToneSelected || hasContent) {
@@ -540,7 +593,8 @@
         $selectElement.val(value).trigger('change');
       }
       else {
-        // [Create option if not exists](https://select2.org/programmatic-control/add-select-clear-items#create-if-not-exists)
+        // Create the option if it does not exist yet, which is how a value from
+        // a template outside the configured list gets in.
         let optionData = {
           id: value,
           text: value
@@ -632,20 +686,28 @@
               msg = '(n/a)';
             }
             else {
-              if (data.role) {
-                msg += `${ts['Copywriting Role']}: ${data.role}\n`;
-              }
+              // AC-4 layout: role/tone get their own styled group and only show
+              // up again once they differ from the previous turn - a turn that
+              // just carries them over stays quiet. No "Content" label, the
+              // text speaks for itself. refs #46672
+              if ((data.role || data.tone) && !AICompletion.prototype.isFiltersCarriedOver(data.role, data.tone)) {
+                msg += '<div class="msg-filters">';
 
-              if (data.tone) {
-                msg += `${ts['Tone Style']}: ${data.tone}\n\n`;
+                if (data.role) {
+                  msg += `<span class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${escapeHtml(data.role)}</span>`;
+                }
+
+                if (data.tone) {
+                  msg += `<span class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${escapeHtml(data.tone)}</span>`;
+                }
+
+                msg += '</div>';
               }
 
               if (data.content) {
-                msg += `${ts['Content']}: ${data.content}\n`;
+                msg += `<div class="msg-text">${escapeHtml(data.content).replace(/\n/g, '<br>')}</div>`;
               }
             }
-
-            msg = msg.replace(/\n/g, '<br>');
           }
           else {
             msg = data;
@@ -654,20 +716,20 @@
           output = `<div id="${id}" data-ref-id="${refID}" class="user-msg msg is-finished">
             <div class="msg-avatar">${firstCharacter}</div>
             <div class="msg-content">${msg}</div>
-            <ul class='msg-tools'>
-              <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
-              <li><button type="button" title="${ts['Recommend']}" class="recommend-btn handle-btn"><i class="zmdi zmdi-accounts-alt"></i> ${ts['Recommend']}</button></li>
-            </ul>
             </div>`;
         }
 
         if (type == 'ai') {
           msg = data;
+          // AC-7: saving and recommending belong under the reply they produced,
+          // not under the request. refs #46672
           output = `<div id="${id}" data-ref-id="${refID}" class="ai-msg msg">
             <div class="msg-avatar"><i class="zmdi zmdi-mood"></i></div>
             <div class="msg-content">${msg}</div>
             <ul class='msg-tools'>
               <li><button type="button" title="${ts['Copy']}" class="copy-btn handle-btn"><i class="zmdi zmdi-copy"></i> ${ts['Copy']}</button></li>
+              <li><button type="button" title="${ts['Save As New Template']}" class="save-btn handle-btn"><i class="zmdi zmdi-file-plus"></i> ${ts['Save As New Template']}</button></li>
+              <li><button type="button" title="${ts['Recommend']}" class="recommend-btn handle-btn"><i class="zmdi zmdi-accounts-alt"></i> ${ts['Recommend']}</button></li>
             </ul>
             <div class="msg-tip"><i class="zmdi zmdi-info-outline"></i>${ts['Remember to verify AI-generated text before using it.']}</div>
             </div>`;
@@ -680,12 +742,10 @@
           if (mode == 'error') {
             $container.find('.msg[id="' + id + '"]').addClass('error-msg');
 
+            // AC-7: no "try again" button, a new attempt is a normal submit or
+            // a follow up message.
             if ($submit.hasClass(ACTIVE_CLASS)) {
               $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-            }
-
-            if (!$submit.hasClass(SENT_CLASS)) {
-              $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
             }
           }
         }
@@ -705,11 +765,11 @@
       $container.on('click', '.msg-tools .recommend-btn:not([disabled])', function(event) {
         event.preventDefault();
 
+        // Same move as setTemplate(): the button sits in the AI reply now.
         let $shareBtn = $(this),
-            $userMsg = $shareBtn.closest('.msg'),
-            userMsgID = $userMsg.attr('id'),
-            aiMsgID = $userMsg.attr('data-ref-id'),
-            $aiMsg = $userMsg.next('.msg'),
+            $aiMsg = $shareBtn.closest('.msg'),
+            aiMsgID = $aiMsg.attr('id'),
+            userMsgID = $aiMsg.attr('data-ref-id'),
             aicompletionID = $aiMsg.data('aicompletion-id'),
             modalTitle = ts['Recommend a Template to Other Organizations'],
             modalCallbacks = {},
@@ -775,6 +835,355 @@
       }
     },
 
+    setChatState: function(state) {
+      let $container = AICompletion.prototype.container,
+          $promptContent = $container.find('.netiaic-prompt-content-textarea'),
+          isActive = state === 'active';
+
+      chatData.state = isActive ? 'active' : 'initial';
+      $container.toggleClass(STATE_ACTIVE_CLASS, isActive).toggleClass(STATE_INITIAL_CLASS, !isActive);
+
+      // Follow up mode hints at what can be typed, the template links are hidden
+      // by CSS through the state class above (AC-7).
+      $promptContent.attr('placeholder', isActive
+        ? ts['Enter a follow-up request, for example: make it shorter, or use a livelier tone.']
+        : promptPlaceholderDefault);
+
+      AICompletion.prototype.updateInheritedLabel();
+    },
+
+    setConversationTitle: function(text) {
+      let $title = AICompletion.prototype.container.find('.netiaic-conversation-title'),
+          title = isEmpty(text) ? '' : String(text).trim();
+
+      // The title lives on the client for now. Phase 4 stores it server side and
+      // only the body of this function changes, callers stay as they are.
+      if (countCharacters(title) > TITLE_MAX_LENGTH) {
+        title = Array.from(title).slice(0, TITLE_MAX_LENGTH).join('') + '…';
+      }
+
+      $title.text(title === '' ? ts['New conversation'] : title);
+    },
+
+    resetConversation: function() {
+      let $container = AICompletion.prototype.container,
+          $promptContent = $container.find('.netiaic-prompt-content-textarea'),
+          $submit = $container.find('.netiaic-form-submit');
+
+      // Everything in flight belongs to the conversation being left behind. A
+      // reply already streaming is cut off here, a request whose response has
+      // not arrived yet is dropped by the counter, checked in formSubmit().
+      chatData.generation++;
+
+      if (chatData.stream) {
+        chatData.stream.close();
+        chatData.stream = null;
+      }
+
+      // Outside the block above on purpose: a dropped response never reaches
+      // the code that would put the button back, so it is reset either way.
+      $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
+
+      // Keep the greeting, drop every exchange so no old context is carried over.
+      $container.find('.netiaic-chat > .inner .msg').not('#ai-msg-welcome').remove();
+      chatData.conversationId = null;
+      chatData.messages = [];
+
+      // Role and tone are settings rather than context, they stay as they are,
+      // but they are no longer carried over from a turn of the old conversation.
+      chatData.lastFilters = { role: null, tone: null };
+      AICompletion.prototype.closeFilterMenus();
+
+      $promptContent.val('');
+      AICompletion.prototype.promptContentCounterUpdate($promptContent);
+      AICompletion.prototype.setConversationTitle('');
+      AICompletion.prototype.setChatState('initial');
+    },
+
+    confirmNewConversation: function() {
+      let modal = AICompletion.prototype.modal,
+          modalTitle = ts['New conversation'],
+          modalCallbacks = {},
+          modalClasses = 'mfp-netiaic-modal mfp-netiaic-modal-mini mfp-netiaic-new-conversation',
+          modalContent = `<div class="new-conversation-form">
+            <div class="desc"><p>${ts['After opening a new conversation, you will no longer see the current one. Continue?']}</p></div>
+            <div class="form-actions">
+              <button type="button" class="new-conversation-cancel form-submit">${ts['Cancel']}</button>
+              <button type="button" class="new-conversation-confirm form-submit form-submit-primary">${ts['Confirm']}</button>
+            </div>
+          </div>`;
+
+      modalCallbacks.open = function() {
+        $('.new-conversation-form').on('click', '.new-conversation-confirm', function(event) {
+          event.preventDefault();
+          AICompletion.prototype.resetConversation();
+          modal.close();
+        });
+
+        $('.new-conversation-form').on('click', '.new-conversation-cancel', function(event) {
+          event.preventDefault();
+          modal.close();
+        });
+      }
+
+      modal.open(modalContent, modalTitle, modalCallbacks, modalClasses);
+    },
+
+    handleChatError: function(status, body, aiMsgID, userMsgID) {
+      let message = errorMessageDefault;
+
+      // The turn limit and the ownership check both need their own wording, a
+      // generic failure message would leave the user with no way forward.
+      if (isObject(body) && body.error_code === TURN_LIMIT_CODE) {
+        message = ts['This conversation has reached its length limit. Please start a new conversation.'];
+      }
+      else if (status === HTTP_FORBIDDEN) {
+        message = ts['This conversation is not available. Please start a new conversation.'];
+      }
+
+      AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'error');
+    },
+
+    getFilterSelect: function(type) {
+      return AICompletion.prototype.container.find(`.netiaic-prompt-${type}-select`);
+    },
+
+    // Description and icon for one option, keyed by its value in
+    // templates/CRM/AI/defaults/filters*.tpl. A site with its own copy of that
+    // file has no such table, and then the option is drawn with its text alone.
+    getFilterMeta: function(type, value) {
+      let options = defaultData.filter_options;
+
+      if (isObject(options) && isObject(options[type]) && isObject(options[type][value])) {
+        return options[type][value];
+      }
+
+      return null;
+    },
+
+    // AC-4: role and tone are pills with a popup menu. The select stays the only
+    // data source, this only draws it, so applying a template or any other
+    // caller of setSelectOption() lands here through the change event.
+    renderFilterDropdown: function($dropdown) {
+      let type = $dropdown.attr('data-filter'),
+          $select = AICompletion.prototype.getFilterSelect(type),
+          selected = $select.val(),
+          hasSelected = !isEmpty(selected),
+          label = type === 'role' ? ts['Copywriting Role'] : ts['Tone Style'],
+          pillIcon = type === 'role' ? 'zmdi-account' : 'zmdi-palette',
+          placeholder = $select.attr('data-placeholder'),
+          optionsHtml = '';
+
+      $select.find('option').each(function() {
+        let value = $(this).attr('value');
+
+        if (isEmpty(value)) {
+          // The empty option is offered as "not specified" further down.
+          return;
+        }
+
+        let meta = AICompletion.prototype.getFilterMeta(type, value),
+            icon = meta && meta.icon ? meta.icon : 'zmdi-label',
+            desc = meta && meta.desc ? `<span class="desc">${escapeHtml(meta.desc)}</span>` : '',
+            isCurrent = hasSelected && value === selected;
+
+        optionsHtml += `<li><button type="button" class="netiaic-filter-option${isCurrent ? ' ' + SELECTED_CLASS : ''}" data-value="${escapeHtml(value)}">
+          <span class="option-icon"><i class="zmdi ${escapeHtml(icon)}"></i></span>
+          <span class="option-body"><span class="title">${escapeHtml(value)}</span>${desc}</span>
+          <i class="zmdi zmdi-check"></i>
+          </button></li>`;
+      });
+
+      $dropdown.html(`<button type="button" class="netiaic-filter-pill">
+        <i class="zmdi ${pillIcon}"></i>
+        <span class="text">${escapeHtml(hasSelected ? selected : label)}</span>
+        <i class="zmdi zmdi-chevron-down"></i>
+        </button>
+        <div class="netiaic-filter-menu">
+        <div class="netiaic-filter-menu-title">${label}</div>
+        <ul class="netiaic-filter-option-list">${optionsHtml}</ul>
+        <ul class="netiaic-filter-option-list netiaic-filter-extra">
+        <li><button type="button" class="netiaic-filter-option${hasSelected ? '' : ' ' + SELECTED_CLASS}" data-value="">
+          <span class="option-icon"><i class="zmdi zmdi-minus-circle-outline"></i></span>
+          <span class="option-body"><span class="title">${ts['Not specified']}</span></span>
+          <i class="zmdi zmdi-check"></i>
+          </button></li>
+        <li class="netiaic-filter-custom">
+          <button type="button" class="netiaic-filter-custom-toggle">
+            <span class="option-icon"><i class="zmdi zmdi-plus"></i></span>
+            <span class="option-body"><span class="title">${ts['Custom...']}</span></span>
+          </button>
+          <div class="netiaic-filter-custom-form">
+            <input type="text" class="netiaic-filter-custom-input form-text" placeholder="${escapeHtml(placeholder)}">
+            <button type="button" class="netiaic-filter-custom-submit form-submit form-submit-primary">${ts['Save']}</button>
+          </div>
+        </li>
+        </ul>
+        </div>`);
+
+      $dropdown.toggleClass(EMPTY_CLASS, !hasSelected);
+    },
+
+    // The menu opens upwards, since the input area sits at the bottom of the
+    // panel. In a short panel, or on a phone with the keyboard up, there may not
+    // be room: then it is capped to what is available, or dropped below the pill
+    // when that side has more space.
+    positionFilterMenu: function($dropdown) {
+      let $menu = $dropdown.find('.netiaic-filter-menu'),
+          row = $dropdown.closest('.netiaic-prompt-filters').get(0);
+
+      if (!$menu.length || !row || !row.getBoundingClientRect) {
+        return;
+      }
+
+      let rect = row.getBoundingClientRect(),
+          spaceAbove = rect.top - 8,
+          spaceBelow = (window.innerHeight || document.documentElement.clientHeight) - rect.bottom - 8,
+          openUp = spaceAbove >= MENU_MIN_HEIGHT || spaceAbove >= spaceBelow,
+          space = openUp ? spaceAbove : spaceBelow;
+
+      $dropdown.toggleClass(DROPPED_CLASS, !openUp);
+      $menu.css('max-height', Math.max(MENU_MIN_HEIGHT, Math.min(MENU_MAX_HEIGHT, space)) + 'px');
+    },
+
+    toggleFilterMenu: function($dropdown) {
+      let wasOpen = $dropdown.hasClass(OPEN_CLASS);
+
+      AICompletion.prototype.closeFilterMenus();
+
+      if (!wasOpen) {
+        $dropdown.addClass(OPEN_CLASS);
+        AICompletion.prototype.positionFilterMenu($dropdown);
+
+        let menu = $dropdown.find('.netiaic-filter-menu').get(0);
+        if (menu && menu.scrollIntoView) {
+          menu.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    },
+
+    closeFilterMenus: function() {
+      let $container = AICompletion.prototype.container;
+
+      if (!$container || !$container.length) {
+        return;
+      }
+
+      $container.find('.netiaic-filter-dropdown').removeClass(`${OPEN_CLASS} ${DROPPED_CLASS}`);
+      $container.find('.netiaic-filter-custom').removeClass(ACTIVE_CLASS);
+    },
+
+    applyCustomFilter: function($dropdown) {
+      let value = $dropdown.find('.netiaic-filter-custom-input').val();
+
+      if (isEmpty(value)) {
+        return;
+      }
+
+      // Same path a value coming from a template takes, so a typed value and an
+      // applied one end up in exactly the same state.
+      AICompletion.prototype.setSelectOption(
+        AICompletion.prototype.getFilterSelect($dropdown.attr('data-filter')),
+        value.trim()
+      );
+      AICompletion.prototype.closeFilterMenus();
+    },
+
+    // True while role/tone are still the ones the last turn went out with, i.e.
+    // nothing has been changed since. Shared by the "carried over" pill label
+    // and the user message bubble (createMessage()), so both agree on the same
+    // turn. refs #46672
+    isFiltersCarriedOver: function(role, tone) {
+      return chatData.state === 'active'
+        && role === chatData.lastFilters.role
+        && tone === chatData.lastFilters.tone;
+    },
+
+    // Shown while the settings are still the ones the last turn went out with.
+    updateInheritedLabel: function() {
+      let $container = AICompletion.prototype.container,
+          isUnchanged = AICompletion.prototype.isFiltersCarriedOver(
+            $container.find('.netiaic-prompt-role-select').val(),
+            $container.find('.netiaic-prompt-tone-select').val()
+          );
+
+      $container.find('.netiaic-filter-inherited').toggleClass(ACTIVE_CLASS, isUnchanged);
+    },
+
+    filterUiOperation: function() {
+      let $container = AICompletion.prototype.container;
+
+      $container.find('.netiaic-filter-dropdown').each(function() {
+        let $dropdown = $(this);
+
+        AICompletion.prototype.renderFilterDropdown($dropdown);
+
+        AICompletion.prototype.getFilterSelect($dropdown.attr('data-filter')).on('change', function() {
+          AICompletion.prototype.renderFilterDropdown($dropdown);
+          AICompletion.prototype.updateInheritedLabel();
+        });
+      });
+
+      // Same shape as the image generator dropdowns (AIImageGeneration.js): the
+      // toggle and the menu stop the event, a click anywhere else closes.
+      $container.on('click', '.netiaic-filter-pill', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        AICompletion.prototype.toggleFilterMenu($(this).closest('.netiaic-filter-dropdown'));
+      });
+
+      $container.on('click', '.netiaic-filter-menu', function(event) {
+        event.stopPropagation();
+      });
+
+      // iOS does not bubble click from elements that are not interactive, so the
+      // document handler below would never run on a phone. Stopping touchstart
+      // here keeps a tap on the pill from closing the menu it just opened.
+      $container.on('touchstart', '.netiaic-filter-pill, .netiaic-filter-menu', function(event) {
+        event.stopPropagation();
+      });
+
+      $(document).off(FILTER_EVENT_NS).on(`click${FILTER_EVENT_NS} touchstart${FILTER_EVENT_NS}`, function() {
+        AICompletion.prototype.closeFilterMenus();
+      });
+
+      $container.on('click', '.netiaic-filter-option', function(event) {
+        event.preventDefault();
+        let $option = $(this),
+            $dropdown = $option.closest('.netiaic-filter-dropdown');
+
+        AICompletion.prototype.getFilterSelect($dropdown.attr('data-filter'))
+          .val($option.attr('data-value'))
+          .trigger('change');
+        AICompletion.prototype.closeFilterMenus();
+      });
+
+      $container.on('click', '.netiaic-filter-custom-toggle', function(event) {
+        event.preventDefault();
+        let $custom = $(this).closest('.netiaic-filter-custom');
+
+        $custom.addClass(ACTIVE_CLASS);
+        $custom.find('.netiaic-filter-custom-input').focus();
+      });
+
+      $container.on('click', '.netiaic-filter-custom-submit', function(event) {
+        event.preventDefault();
+        AICompletion.prototype.applyCustomFilter($(this).closest('.netiaic-filter-dropdown'));
+      });
+
+      $container.on('keydown', '.netiaic-filter-custom-input', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          AICompletion.prototype.applyCustomFilter($(this).closest('.netiaic-filter-dropdown'));
+        }
+      });
+
+      // Only now are the pills usable, so only now are the selects hidden: a
+      // browser still running the cached previous script never gets this class
+      // and keeps the select boxes it knows how to drive. refs #46672
+      $container.addClass(FILTER_PILLS_CLASS);
+    },
+
     formUiOperation: function() {
       let $container = AICompletion.prototype.container,
           $promptContent = $container.find('.netiaic-prompt-content-textarea'),
@@ -790,15 +1199,13 @@
         }
       }
 
-      // Initialize the select dropdowns with Select2 plugin
-      $container.find('.form-select').select2({
-        allowClear: true,
-        dropdownAutoWidth: true,
-        width: '100%',
-        tags: true // Select2 can dynamically create new options from text input by the user in the search box
-      });
+      // The pill menu replaced select2 on these two selects, refs #46672. Free
+      // text is still accepted, through the "custom" row of the menu.
+      AICompletion.prototype.filterUiOperation();
 
       // Enhance select2 search field focus styling
+      // Kept as is: this is a document level handler that also reaches the
+      // select2 widgets of other components on the same page.
       $(document).on('select2:open', function(e) {
         let selectId = e.target.id,
             $select2Element = $(e.target),
@@ -890,6 +1297,12 @@
           AICompletion.prototype.formSubmit();
         }
       });
+
+      // AC-5: the confirmation is a modal, not window.confirm.
+      $container.on('click', '.netiaic-new-conversation', function(event) {
+        event.preventDefault();
+        AICompletion.prototype.confirmNewConversation();
+      });
     },
 
     formSubmit: function() {
@@ -909,8 +1322,17 @@
           },
           isEmptyPrompt = isEmpty(formData.role) && isEmpty(formData.tone) && isEmpty(formData.content) ? true : false,
           userMessage = isEmptyPrompt ? '(n/a)' : formData,
-          streamEnded = false;
+          streamEnded = false,
+          // The conversation this turn was sent from. resetConversation() bumps
+          // the counter, so a mismatch below means the user opened a new
+          // conversation while this request was still on its way. refs #46672
+          generation = chatData.generation;
 
+      // Follow up turn. A missing key is what tells the backend to start a new
+      // conversation, so the key is only added once we really have an id.
+      if (chatData.conversationId) {
+        formData.conversation_id = chatData.conversationId;
+      }
 
       if (!$submit.hasClass(ACTIVE_CLASS)) {
         $submit.addClass(ACTIVE_CLASS).prop('disabled', true);
@@ -942,6 +1364,11 @@
 
         Promise.race([fetchPromise, timeoutPromise])
         .then(function(response) {
+          // The conversation this belongs to is gone, leave the fresh one alone.
+          if (generation !== chatData.generation) {
+            return null;
+          }
+
           if (response.ok) {
             // Determine the data type based on the Content-Type of the response
             if (response.headers.get('Content-Type').includes('application/json')) {
@@ -952,13 +1379,53 @@
               throw new Error('Unknown response data type');
             }
           } else {
-            throw new Error('Network request error');
+            // The turn limit (422) and the ownership check (403) answer with a
+            // body that tells them apart from a generic failure, so read it
+            // before deciding what to show. refs #46672
+            return response.json().catch(function() {
+              return {};
+            }).then(function(body) {
+              AICompletion.prototype.handleChatError(response.status, body, aiMsgID, userMsgID);
+              return null;
+            });
           }
         })
         .then(function(result) {
+          // Null means handleChatError() already reported it, or the callback
+          // above dropped it. The counter is checked once more because parsing
+          // the body is another await, and a reset can land in that gap too.
+          if (result === null || generation !== chatData.generation) {
+            return;
+          }
+
+          // Purely additive: a backend without multi turn support does not send
+          // this key, and then nothing is ever sent back either.
+          if (result.data && result.data.conversation_id) {
+            chatData.conversationId = result.data.conversation_id;
+          }
+
+          // What this turn went out with, so the pills can say "carried over"
+          // until one of them is touched again.
+          chatData.lastFilters = { role: formData.role, tone: formData.tone };
+
+          if (chatData.state !== 'active') {
+            AICompletion.prototype.setConversationTitle(formData.content);
+            AICompletion.prototype.setChatState('active');
+          }
+          else {
+            AICompletion.prototype.updateInheritedLabel();
+          }
+
+          // Clear the box so a follow up starts empty, role and tone carry over.
+          let $promptContent = $container.find('.netiaic-prompt-content-textarea');
+          $promptContent.val('');
+          AICompletion.prototype.promptContentCounterUpdate($promptContent);
+
           var evtSource = new EventSource(endpoint.chat + '?token=' + result.data.token + '&id=' + result.data.id, {
             withCredentials: false,
           });
+
+          chatData.stream = evtSource;
 
           evtSource.onmessage = (event) => {
             try {
@@ -966,14 +1433,13 @@
               if (typeof eventData !== "undefined") {
                 if (($aiMsg && $aiMsg.length) && (eventData.hasOwnProperty('is_finished') || eventData.hasOwnProperty('is_error'))) {
                   evtSource.close();
+                  chatData.stream = null;
                   streamEnded = true;
 
+                  // AC-7: the button goes back to plain submit, ready for the
+                  // next follow up.
                   if ($submit.hasClass(ACTIVE_CLASS)) {
                     $submit.removeClass(ACTIVE_CLASS).prop('disabled', false);
-                  }
-
-                  if (!$submit.hasClass(SENT_CLASS)) {
-                    $submit.addClass(SENT_CLASS).find('.text').text(ts['Try Again']);
                   }
 
                   if (eventData.is_finished) {
@@ -997,7 +1463,10 @@
                         copyText = '';
 
                     if ($msgContent.length) {
-                      copyText = $msgContent.html().replace(/<br>/g, '\n');
+                      // Turn the line breaks back into newlines, then read it
+                      // as text so the escaped entities come back decoded.
+                      copyText = $msgContent.html().replace(/<br\s*\/?>/gi, '\n');
+                      copyText = $('<div>').html(copyText).text();
                     }
 
                     copyText = copyText.trim();
@@ -1017,7 +1486,9 @@
                 }
                 else {
                   if (eventData.hasOwnProperty('message')) {
-                    let message = eventData.message.replace(/\n/g, '<br>');
+                    // The reply echoes whatever the user asked for, so it goes
+                    // through the same escaping as the request. refs #46672
+                    let message = escapeHtml(eventData.message).replace(/\n/g, '<br>');
 
                     if (eventData.hasOwnProperty('is_error')) {
                       let msgID = 'ai-msg-' + renderID();
@@ -1033,7 +1504,8 @@
                         AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
                       }
 
-                      console.error(message);
+                      // Log the raw text, escaping is only for the DOM.
+                      console.error(eventData.message);
                     }
                     else {
                       AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');
@@ -1088,8 +1560,11 @@
           evtSource.onerror = function(event) {
             console.error("EventSource encountered an error: ", event);
             evtSource.close();
+            chatData.stream = null;
 
-            // Connection dropped before the stream finished, avoid leaving the UI in loading state.
+            // Connection dropped before the stream finished, avoid leaving the UI
+            // in loading state. createMessage() in error mode puts the submit
+            // button back on its own, so it is not reset again here.
             if (!streamEnded) {
               streamEnded = true;
               AICompletion.prototype.createMessage('ai-msg-' + renderID(), '', errorMessageDefault, 'ai', 'error');
@@ -1098,6 +1573,12 @@
         })
         .catch(function(error) {
           console.error("Encountered an error: ", error);
+
+          // Same as above: no error bubble from an abandoned conversation.
+          if (generation !== chatData.generation) {
+            return;
+          }
+
           if (error.message.includes('timed out')) {
             errorMessage = ts['Our service is currently busy, please try again later. If needed, please contact our customer service team.'];
           }
@@ -1127,6 +1608,10 @@
       errorMessageDefault = ts['We\'re sorry, our service is currently experiencing some issues. Please try again later. If the problem persists, please contact our customer service team.'];
       errorMessage = errorMessageDefault;
 
+      // Follow up mode swaps the placeholder, so keep the original around to be
+      // able to restore exactly this text when a new conversation starts.
+      promptPlaceholderDefault = $container.find('.netiaic-prompt-content-textarea').attr('placeholder') || '';
+
       // TODO: For development and testing only, need to be removed afterwards
       this.devTestUse();
 
@@ -1136,6 +1621,9 @@
       this.useTemplates();
       this.setTemplate();
       this.setShare();
+
+      // No conversation yet: template links visible, no header. refs #46672
+      this.setChatState('initial');
 
       // Finally, add class to mark the initialization
       $container.addClass(INIT_CLASS);

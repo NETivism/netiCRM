@@ -181,7 +181,7 @@ class Log_sqlite extends Log
         $q = sprintf('INSERT INTO [%s] (logtime, ident, priority, message) ' .
                      "VALUES ('%s', '%s', %d, '%s')",
                      $this->_table,
-                     strftime('%Y-%m-%d %H:%M:%S', time()),
+                     self::_formatTime('%Y-%m-%d %H:%M:%S', time()),
                      sqlite_escape_string($this->_ident),
                      $priority,
                      sqlite_escape_string($message));

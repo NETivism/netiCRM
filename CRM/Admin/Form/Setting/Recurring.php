@@ -13,6 +13,8 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings') . ' - '. ts('Recurring Contribution'));
 
+    // Core field that can be excluded from copying, listed before custom fields.
+    $option = ['non_deductible_amount' => ts('Non-deductible Amount')];
     $fields = CRM_Core_BAO_CustomField::getFields('Contribution');
     foreach ($fields as $custom_id => $f) {
       $option[$custom_id] = $f['label'];

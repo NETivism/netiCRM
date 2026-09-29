@@ -32,6 +32,18 @@
   --rfm-field-gap: 1.5rem;
   --cke-max-width: 880px;
   --cke-height: 400px;
+  --color-recur-audit-summary-background: #fff;
+  --color-recur-audit-summary-border: #ccc;
+  --color-recur-audit-summary-title-background: #e9e9e9;
+  --color-recur-audit-summary-neutral: #666;
+  --color-recur-audit-summary-recurring: #052a97;
+  --color-recur-audit-summary-completed: #16a34a;
+  --color-recur-audit-summary-failed: #dc2626;
+  --color-recur-audit-summary-not-executed: #d97706;
+  --recur-audit-summary-item-min-width: 6rem;
+  --recur-audit-summary-section-min-width: 14rem;
+  --recur-audit-summary-spacing: clamp(.75rem, 2vw, 1.25rem);
+  --recur-audit-summary-value-font-size: 1.5rem;
 }
 
 /* Visually hidden helper (bootstrap 5) */
@@ -6257,6 +6269,117 @@ tbody.scrollContent tr.alternateRow {
   margin: 0;
   color: #555;
   font-size: .85em;
+}
+
+/* Beta feature marker */
+.crm-container .crm-beta:after {
+  content: "beta";
+  margin-left: 4px;
+  vertical-align: top;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: normal;
+  color: #f44336;
+}
+
+/* Search custom search - Recur Search */
+.crm-container .crm-recur-audit-summary {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: var(--recur-audit-summary-spacing);
+  margin-bottom: var(--recur-audit-summary-spacing);
+}
+
+.crm-container .crm-recur-audit-summary-section {
+  display: flex;
+  flex: 1 1 var(--recur-audit-summary-section-min-width);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-recur-audit-summary-border);
+  background-color: var(--color-recur-audit-summary-background);
+}
+
+.crm-container .crm-recur-audit-summary-contributions {
+  flex-grow: 4;
+}
+
+.crm-container .crm-recur-audit-summary-title {
+  padding: var(--recur-audit-summary-spacing);
+  border-bottom: 1px solid var(--color-recur-audit-summary-border);
+  background-color: var(--color-recur-audit-summary-title-background);
+  font-weight: 600;
+}
+
+.crm-container .crm-recur-audit-summary-items {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.crm-container .crm-recur-audit-summary-item {
+  flex: 1 1 var(--recur-audit-summary-item-min-width);
+  padding: var(--recur-audit-summary-spacing);
+  text-align: center;
+}
+
+.crm-container .crm-recur-audit-summary-item + .crm-recur-audit-summary-item {
+  border-left: 1px solid var(--color-recur-audit-summary-border);
+}
+
+.crm-container .crm-recur-audit-summary-note {
+  padding: var(--recur-audit-summary-spacing);
+  border-top: 1px solid var(--color-recur-audit-summary-border);
+  color: var(--color-recur-audit-summary-neutral);
+  font-size: .85em;
+  line-height: 1.6;
+}
+
+.crm-container .crm-recur-audit-summary-value {
+  display: block;
+  color: var(--color-recur-audit-summary-neutral);
+  font-size: var(--recur-audit-summary-value-font-size);
+}
+
+.crm-container .crm-recur-audit-summary-value--recurring,
+.crm-container .crm-recur-audit-summary-value--scheduled {
+  color: var(--color-recur-audit-summary-recurring);
+}
+
+.crm-container .crm-recur-audit-summary-value--completed {
+  color: var(--color-recur-audit-summary-completed);
+}
+
+.crm-container .crm-recur-audit-summary-value--failed {
+  color: var(--color-recur-audit-summary-failed);
+}
+
+.crm-container .crm-recur-audit-summary-value--not-executed {
+  color: var(--color-recur-audit-summary-not-executed);
+}
+
+/* Audit debit status badges in the search results, colored as the summary. */
+.crm-container .crm-recur-audit-status {
+  --recur-audit-status-color: var(--color-recur-audit-summary-neutral);
+  display: inline-block;
+  margin: 1px 0;
+  padding: 0 .5em;
+  border-radius: 3px;
+  background-color: color-mix(in srgb, var(--recur-audit-status-color) 15%, transparent);
+  color: var(--recur-audit-status-color);
+  white-space: nowrap;
+}
+
+.crm-container .crm-recur-audit-status--completed {
+  --recur-audit-status-color: var(--color-recur-audit-summary-completed);
+}
+
+.crm-container .crm-recur-audit-status--failed {
+  --recur-audit-status-color: var(--color-recur-audit-summary-failed);
+}
+
+.crm-container .crm-recur-audit-status--not-executed {
+  --recur-audit-status-color: var(--color-recur-audit-summary-not-executed);
 }
 
 /* material design form style */

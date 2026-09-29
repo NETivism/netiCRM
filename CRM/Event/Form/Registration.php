@@ -498,8 +498,9 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       }
       $this->set('bltID', $this->_bltID);
 
+      $billingMode = CRM_Utils_Array::value('billing_mode', $this->_paymentProcessor);
       if ($this->_values['event']['is_monetary'] &&
-        ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM)
+        ($billingMode & CRM_Core_Payment::BILLING_MODE_FORM)
       ) {
 
         CRM_Core_Payment_Form::setCreditCardFields($this);
@@ -880,7 +881,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     }
 
     if (!empty($contribution)) {
-      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([$contribution->id], 'contribution_id');
+      $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([is_object($contribution) ? ($contribution->id ?? NULL) : NULL], 'contribution_id');
       $dao->fetch();
       if ($dao->N > 0) {
         $coupon = [];
@@ -912,18 +913,18 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       'Participant'
     );
 
-    $createPayment = ($this->_params['amount'] != 0) ? TRUE : FALSE;
+    $createPayment = (CRM_Utils_Array::value('amount', $this->_params) != 0) ? TRUE : FALSE;
     // force to create zero amount payment, CRM-5095
-    if (!$createPayment && $contribution->id
-      && ($this->_params['amount'] == 0)
+    if (!$createPayment && (is_object($contribution) ? ($contribution->id ?? NULL) : NULL)
+      && (CRM_Utils_Array::value('amount', $this->_params) == 0)
       && $this->_priceSetId && $this->_lineItem
     ) {
       $createPayment = TRUE;
     }
 
     $coupon = $this->get('coupon');
-    if (!$createPayment && $contribution->id
-    && ($this->_params['amount'] == 0)
+    if (!$createPayment && (is_object($contribution) ? ($contribution->id ?? NULL) : NULL)
+    && (CRM_Utils_Array::value('amount', $this->_params) == 0)
     && !empty($coupon)) {
       $createPayment = TRUE;
     }
@@ -963,6 +964,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
   public function processRegistration($params, $contactID = NULL) {
     $session = CRM_Core_Session::singleton();
     $this->_participantInfo = [];
+    $registerByID = NULL;
 
     // CRM-4320, lets build array of cancelled additional participant ids
     // those are drop or skip by primary at the time of confirmation.
@@ -1161,16 +1163,20 @@ WHERE  v.option_group_id = g.id
 
     // handle register date CRM-4320
     $registerDate = NULL;
+    $participantRegisterDate = CRM_Utils_Array::value('participant_register_date', $params);
     if ($this->_allowConfirmation && $this->_participantId) {
-      $registerDate = $params['participant_register_date'];
+      $registerDate = $participantRegisterDate;
     }
-    elseif (is_array($params['participant_register_date']) && !empty($params['participant_register_date'])) {
-      $registerDate = CRM_Utils_Date::format($params['participant_register_date']);
+    elseif (is_array($participantRegisterDate) && !empty($participantRegisterDate)) {
+      $registerDate = CRM_Utils_Date::format($participantRegisterDate);
     }
 
     if (!empty($params['coupon'])) {
       $coupon = $params['coupon'];
       $couponDescription = ts('Coupon').'-'.$coupon['code'].'-'.$coupon['description'].': -'.$coupon['discount_amount'];
+      if (!CRM_Utils_Array::arrayKeyExists('amount_level', $params)) {
+        $params['amount_level'] = NULL;
+      }
       $params['amount_level'] .= $couponDescription.CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
     }
 
@@ -1188,8 +1194,12 @@ WHERE  v.option_group_id = g.id
         $roleID
       ),
       'register_date' => ($registerDate) ? $registerDate : date('YmdHis'),
-      'source' => $params['participant_source'] ?? $params['description'],
-      'fee_level' => $params['amount_level'],
+      'source' => CRM_Utils_Array::value(
+        'participant_source',
+        $params,
+        CRM_Utils_Array::value('description', $params)
+      ),
+      'fee_level' => CRM_Utils_Array::value('amount_level', $params),
       'is_pay_later' => CRM_Utils_Array::value('is_pay_later', $params, 0),
       'fee_amount' => CRM_Utils_Array::value('fee_amount', $params),
       'registered_by_id' => CRM_Utils_Array::value('registered_by_id', $params),
@@ -1699,7 +1709,7 @@ WHERE  v.option_group_id = g.id
       }
 
       // if we find more than one contact, use the first one
-      $contact_id = $ids[0];
+      $contact_id = CRM_Utils_Array::value(0, $ids);
       if (isset($email)) {
         $params['email-Primary'] = $email;
       }

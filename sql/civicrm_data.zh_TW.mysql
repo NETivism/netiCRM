@@ -4449,7 +4449,7 @@ VALUES
    ('mobile_provider'               , '電信業者'             , 0, 1),
    ('individual_prefix'             , '聯絡人稱謂'        , 0, 1),
    ('individual_suffix'             , '個人稱呼字尾'        , 0, 1),
-   ('acl_role'                      , '權限角色'                           , 0, 1),
+   ('acl_role'                      , '權限/角色'                           , 0, 1),
    ('accept_creditcard'             , '接受的信用卡'              , 0, 1),
    ('payment_instrument'            , '付款工具'                , 0, 1),
    ('contribution_status'           , '捐款狀態'                , 0, 1),
@@ -5635,10 +5635,10 @@ INSERT INTO civicrm_uf_group
     (6,  'new_household',      'Household,Contact',   '新增家庭'     , 0,           1,           NULL),
     (7,  'summary_overlay',    'Contact',   		  'Summary Overlay'   , 0,           1,           NULL),
     (8,  'shared_address',     'Contact',   		  'Shared Address'    , 0,           1,           NULL),
-    (9,  'participants_information_proflie',     'Participant,Contact',   		  'Participants Information Proflie'    , 0,           1,           NULL),
-    (10,  'volunteer_information_proflie',     'Participant,Contact',   		  'Volunteer Information Proflie'    , 0,           1,           NULL),
-    (11,  'website_registered_member_information_proflie',     'Individual,Contact',   		  'Website Registered Member Information Proflie'    , 0,           1,           NULL),
-    (12,  'subscribe_information_proflie',     'Contact',   		  'Subscribe Information Proflie'    , 0,           1,           NULL);
+    (9,  'participants_information_profile',     'Participant,Contact',   		  '參加者報名表單'    , 0,           1,           NULL),
+    (10,  'volunteer_information_profile',     'Participant,Contact',   		  '志工基本資料表單'    , 0,           1,           NULL),
+    (11,  'website_registered_member_information_profile',     'Individual,Contact',   		  '網站註冊會員表單'    , 0,           1,           NULL),
+    (12,  'subscribe_information_profile',     'Contact',   		  '電子報訂閱表單'    , 0,           1,           NULL);
 
 INSERT INTO civicrm_uf_join
    (is_active,module,entity_table,entity_id,weight,uf_group_id)

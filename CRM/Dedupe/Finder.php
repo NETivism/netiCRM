@@ -323,7 +323,7 @@ class CRM_Dedupe_Finder {
         if (isset($flat[$flatKey]) && !is_array($flat[$flatKey])) {
           unset($flat[$flatKey]);
         }
-        $hasResult = is_array($flat[$flatKey]) ? array_search($value, $flat[$flatKey]) : NULL;
+        $hasResult = isset($flat[$flatKey]) && is_array($flat[$flatKey]) ? array_search($value, $flat[$flatKey]) : NULL;
         if (!$hasResult) {
           $flat[$flatKey][] = $value;
         }
@@ -372,7 +372,8 @@ class CRM_Dedupe_Finder {
         $contact->$field = $value;
         $formatParams[$field] = $value;
       }
-      foreach ($params['civicrm_email'] as $field => $value) {
+      $emails = $params['civicrm_email'] ?? [];
+      foreach ($emails as $field => $value) {
         $contact->$field = $value;
         $formatParams[$field][] = ['email' => $value];
       }

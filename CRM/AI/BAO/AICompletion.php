@@ -5,11 +5,16 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     // default completion service
     COMPLETION_SERVICE = 'OpenAI',
     // default model base on above service
-    COMPLETION_MODEL = 'gpt-3.5-turbo',
+    COMPLETION_MODEL = 'gpt-5.6-terra',
     // default max tokens base on model
     COMPLETION_MAX_TOKENS = 4096,
 
     TEMPLATE_LIST_ROW_LIMIT = 10,
+
+    // Every turn resends the whole conversation, so both the cost and the size
+    // of post_data grow with each one. Cap the thread and ask the user to start
+    // a new conversation instead.
+    CONVERSATION_MAX_TURNS = 20,
 
     // temperature TODO: add client side adjustment
     TEMPERATURE_DEFAULT = 0.7,
@@ -74,9 +79,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Saving chat parameters to DB, return the encrypted text about id.
    *
-   * @param array $params The input chat parameters. ['ai_role', 'tone_style', 'context', 'prompt']
+   * @param array $params The input chat parameters. ['ai_role', 'tone_style', 'context', 'prompt', 'conversation_id']
    *
-   * @return array The prepared chat session data. ['token', 'id']
+   * @return array The prepared chat session data. ['token', 'id', 'conversation_id']
    *
    * @throws CRM_Core_Exception
    */
@@ -98,12 +103,21 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $aicompletionData['contact_id'] = $session->get('userID');
     // save data to DB
     $aicompletion = self::create($aicompletionData);
+    // A conversation is identified by the id of its own first row, so the very
+    // first turn can only be stamped after the insert gave us that id.
+    // Follow up turns already carry the value through $aicompletionData.
+    $conversationId = $aicompletion->conversation_id;
+    if (empty($conversationId)) {
+      $conversationId = $aicompletion->id;
+      CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $aicompletion->id, 'conversation_id', $conversationId);
+    }
     // Get token for validation.
     $keyToken = CRM_Core_Key::get('aicompletion_'.$aicompletion->id);
     // prepare return array.
     return [
       'token' => $keyToken,
       'id' => $aicompletion->id,
+      'conversation_id' => $conversationId,
     ];
   }
 
@@ -130,13 +144,36 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     $requestData = self::validateChatParams($params);
     $requestData['action'] = self::CHAT_COMPLETION;
 
+    // Multi turn: replace the single prompt with the whole conversation.
+    // This only kicks in when earlier finished turns exist, so the first turn
+    // of a new conversation and every legacy caller keep the original prompt
+    // path in CRM_AI_CompletionService_OpenAI::formatParams().
+    if (!empty($requestData['conversation_id']) && !empty($requestData['id'])) {
+      $history = self::buildMessages($requestData['conversation_id'], $requestData['id']);
+      if (!empty($history)) {
+        // Rebuilt from this row's own role and tone, so changing either one
+        // mid conversation takes effect from the next request onwards.
+        $systemPrompt = self::buildSystemPrompt($requestData['ai_role'], $requestData['tone_style']);
+        $requestData['messages'] = array_merge(
+          [['role' => 'system', 'content' => $systemPrompt]],
+          $history,
+          [['role' => 'user', 'content' => $requestData['context']]]
+        );
+      }
+    }
+
     // Send request to OpenAI API
     $responseData = CRM_AI_BAO_AICompletion::getCompletion($requestData);
 
-    // Save response data to db record.
-    // Stream mode already saved the record while receiving the response, saving it
-    // again here would overwrite the failed status with the pending one.
-    if (isset($requestData['id']) && is_array($responseData) && empty($params['stream'])) {
+    // Streaming already wrote the record from inside the curl write callback,
+    // including the failed status set by handleStreamError(). Saving again here
+    // would overwrite it with the pending one, and the reply was already flushed.
+    if (!empty($requestData['stream'])) {
+      return $responseData;
+    }
+
+    // Save response data to db record
+    if (isset($requestData['id'])) {
       $data = array_merge($requestData, $responseData);
       $data['id'] = $requestData['id'];
       $data['output_text'] = $responseData['message'];
@@ -176,7 +213,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       if (isset($params['token'])) {
         $key = $params['token'];
         $getKey = CRM_Core_Key::validate($key, 'aicompletion_'.$acID);
-        $isKeyPass = ($getKey == $key);
+        // validate() returns NULL on failure, and NULL == '' is TRUE in PHP, so
+        // a loose comparison let an empty token through and gave any logged in
+        // user access to any record by id. Reject empty tokens outright and
+        // compare strictly.
+        $isKeyPass = !empty($key) && $getKey === $key;
         if ($isKeyPass) {
           $isPass = TRUE;
           $aiCompletionArray = self::retrieveAICompletionDataArray($acID);
@@ -213,6 +254,140 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
       }
     }
     return $aicompletion;
+  }
+
+  /**
+   * Build the system instruction out of the role and tone of one turn.
+   *
+   * Single turn requests glue this in front of the user message and store the
+   * result in the prompt column, multi turn requests send it as a real system
+   * message. Both go through here so the wording stays identical.
+   *
+   * @param string $aiRole The role the AI should play.
+   * @param string $toneStyle The tone of the requested copy.
+   *
+   * @return string The system instruction.
+   */
+  public static function buildSystemPrompt($aiRole, $toneStyle) {
+    global $tsLocale;
+    $countryId = CRM_Core_Config::singleton()->defaultContactCountry;
+    $languages = CRM_Core_PseudoConstant::languages();
+    $countries = CRM_Core_PseudoConstant::country();
+    $country = $countries[$countryId];
+    $language = $languages[$tsLocale];
+    if ($toneStyle && $aiRole) {
+      return ts(
+        "Please use %4 language of %3 to play the role of %1 and help generate a %2.",
+        [1 => $aiRole, 2 => $toneStyle, 3 => $country, 4 => ts($language)]
+      );
+    }
+    return ts('Please using %1 language to generate content.', [2 => ts($language)]);
+  }
+
+  /**
+   * Build the finished turns of a conversation as chat API messages.
+   *
+   * Reads context, the raw user input, rather than prompt, because prompt has
+   * the system instruction glued in front of it.
+   *
+   * @param int $conversationId The conversation to read.
+   * @param int $beforeId Only turns older than this row, so the row being
+   *   generated right now is never fed back to itself.
+   *
+   * @return array Alternating user and assistant messages, oldest first.
+   */
+  public static function buildMessages($conversationId, $beforeId) {
+    $messages = [];
+    if (empty($conversationId) || empty($beforeId)) {
+      return $messages;
+    }
+    $sql = "SELECT context, output_text FROM civicrm_aicompletion
+      WHERE conversation_id = %1 AND id < %2 AND status_id = %3 ORDER BY id";
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$conversationId, 'Integer'],
+      2 => [$beforeId, 'Integer'],
+      3 => [self::STATUS_SUCCESS, 'Integer'],
+    ]);
+    while ($dao->fetch()) {
+      $messages[] = [
+        'role' => 'user',
+        'content' => $dao->context,
+      ];
+      $messages[] = [
+        'role' => 'assistant',
+        'content' => $dao->output_text,
+      ];
+    }
+    return $messages;
+  }
+
+  /**
+   * Check that a conversation exists and belongs to the given contact.
+   *
+   * Every AI ajax endpoint only requires 'access CiviCRM', so without this any
+   * logged in user could read someone else's conversation by guessing an id.
+   * Templates are shared on purpose, conversation history is not.
+   *
+   * A conversation that does not exist has no owner and fails the same way, so
+   * the caller cannot tell the two cases apart.
+   *
+   * @param int $conversationId The conversation to check.
+   * @param int $contactId The contact the request claims to act as.
+   *
+   * @return bool TRUE when the contact owns the conversation.
+   */
+  public static function isConversationOwner($conversationId, $contactId) {
+    if (empty($conversationId) || empty($contactId)) {
+      return FALSE;
+    }
+    $ownerId = CRM_Core_DAO::singleValueQuery(
+      "SELECT contact_id FROM civicrm_aicompletion WHERE conversation_id = %1 ORDER BY id LIMIT 1",
+      [1 => [$conversationId, 'Integer']]
+    );
+    return !empty($ownerId) && (int) $ownerId === (int) $contactId;
+  }
+
+  /**
+   * Check that a record exists and belongs to the given contact.
+   *
+   * Same reasoning as isConversationOwner(), for endpoints that act on a single
+   * row. A record that does not exist fails the same way, so the caller cannot
+   * use it to probe for ids.
+   *
+   * Callers are the ajax endpoints only. The admin template form edits other
+   * people's records on purpose, so this must not move into setTemplate().
+   *
+   * @param int $acId The AICompletion record to check.
+   * @param int $contactId The contact the request claims to act as.
+   *
+   * @return bool TRUE when the contact owns the record.
+   */
+  public static function isRecordOwner($acId, $contactId) {
+    if (empty($acId) || empty($contactId)) {
+      return FALSE;
+    }
+    $ownerId = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'contact_id');
+    return !empty($ownerId) && (int) $ownerId === (int) $contactId;
+  }
+
+  /**
+   * Count the turns already stored in a conversation.
+   *
+   * Counts every row, matching how quota() counts usage: one submission is one
+   * turn whether or not the reply came back.
+   *
+   * @param int $conversationId The conversation to count.
+   *
+   * @return int The number of turns.
+   */
+  public static function getConversationTurns($conversationId) {
+    if (empty($conversationId)) {
+      return 0;
+    }
+    return (int) CRM_Core_DAO::singleValueQuery(
+      "SELECT COUNT(*) FROM civicrm_aicompletion WHERE conversation_id = %1",
+      [1 => [$conversationId, 'Integer']]
+    );
   }
 
   /**
@@ -293,19 +468,20 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * Retrieve AI Completion data array by ID.
    *
    * @param int $aiCompletionID The ID of the AI Completion.
+   * @param array $extraParams Additional field values to narrow the lookup with.
    *
    * @return array The retrieved AI Completion data array.
    *
    * @throws CRM_Core_Exception
    */
-  private static function retrieveAICompletionDataArray($aiCompletionID) {
+  private static function retrieveAICompletionDataArray($aiCompletionID, $extraParams = []) {
     if (empty($aiCompletionID)) {
       throw new CRM_Core_Exception("\$aiCompletionID has no value.");
     }
     elseif (!is_numeric($aiCompletionID)) {
       throw new CRM_Core_Exception("\$aiCompletionID is not number.");
     }
-    $params = [
+    $params = $extraParams + [
       'id' => $aiCompletionID,
     ];
     $returnArray = [];
@@ -383,14 +559,17 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Retrieve AICompletion Template object(array) by AICompletion ID.
    *
+   * is_template is part of the lookup, not a check on the result: without it
+   * this returns any row by id, which exposes other people's conversations.
+   *
    * @param int $acID The AICompletion ID in DB row.
    *
-   * @return array AICompletion data row.
+   * @return array AICompletion data row, empty when the id is not a template.
    *
    * @throws CRM_Core_Exception
    */
   public static function getTemplate($acID) {
-    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($acID);
+    $retrieveAICompletionArray = self::retrieveAICompletionDataArray($acID, ['is_template' => 1]);
     return $retrieveAICompletionArray;
   }
 

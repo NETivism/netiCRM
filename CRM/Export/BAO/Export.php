@@ -2101,7 +2101,7 @@ GROUP BY civicrm_primary_id ";
             $row[$column] = $fieldValue;
           }
         }
-        fputcsv($handle, $row);
+        fputcsv($handle, $row, ',', '"', '\\');
       }
       fclose($handle);
     }

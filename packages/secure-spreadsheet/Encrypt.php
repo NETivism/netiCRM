@@ -24,7 +24,7 @@ class Encrypt
         ]
     ];
 
-    public function __construct(bool $nofile = NULL)
+    public function __construct(?bool $nofile = NULL)
     {
         $this->NOFILE = $nofile;
     }

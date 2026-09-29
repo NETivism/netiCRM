@@ -191,7 +191,7 @@ class Log_firebug extends Log
         
         /* Build the string containing the complete log line. */
         $line = $this->_format($this->_lineFormat,
-                               strftime($this->_timeFormat),
+                               self::_formatTime($this->_timeFormat),
                                $priority, 
                                $message);
 

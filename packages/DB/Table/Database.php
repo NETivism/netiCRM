@@ -3358,7 +3358,7 @@ class DB_Table_Database extends DB_Table_Base
                 $type     = (string) $field->type;
                 $def = array('type' => $type);
                 if (isset($field->length)) {
-                    $def['size'] = (integer) $field->length;
+                    $def['size'] = (int) $field->length;
                 }
                 if (isset($field->notnull)) {
                     if ($field->notnull) {

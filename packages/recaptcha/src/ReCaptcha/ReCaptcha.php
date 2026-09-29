@@ -55,7 +55,7 @@ class ReCaptcha
      * @param string $secret shared secret between site and reCAPTCHA server.
      * @param RequestMethod $requestMethod method used to send the request. Defaults to POST.
      */
-    public function __construct($secret, RequestMethod $requestMethod = null)
+    public function __construct($secret, ?RequestMethod $requestMethod = null)
     {
         if (empty($secret)) {
             throw new \RuntimeException('No secret provided');

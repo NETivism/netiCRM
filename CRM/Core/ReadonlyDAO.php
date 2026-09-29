@@ -55,6 +55,9 @@ class CRM_Core_ReadonlyDAO {
    *   Each entry must have:
    *     'source' (string) – the source table name
    *     'fields' (array)  – list of column names to expose
+   *   Each entry may optionally have:
+   *     'where' (string)  – a row-restriction condition, evaluated against the
+   *                         source table's own columns (not the view's alias)
    *
    * @throws RuntimeException  When CIVICRM_DSN / CIVICRM_DSN_READONLY is
    *                           unavailable, unsupported, or cannot connect.
@@ -178,23 +181,111 @@ class CRM_Core_ReadonlyDAO {
   // ---------------------------------------------------------------------------
 
   /**
+   * Create the view, or recreate it when the columns it exposes, or its WHERE
+   * restriction, no longer match the definition.
+   *
+   * Definitions evolve between releases (e.g. a new column is added to an
+   * existing view, or a row-level restriction is introduced). Because this
+   * method runs on every MCP request, comparing the live view against the
+   * definition lets an already-provisioned site pick up definition changes on
+   * its next request, without a dedicated upgrade script.
+   *
    * @return string  Log message.
    */
   private function createViewIfNotExists($viewName, array $def) {
-    if ($this->viewExists($viewName)) {
+    $expected = $def['fields'];
+    $actual = $this->viewColumns($viewName);
+
+    // Compare case-insensitively: a case mismatch reported by the server would
+    // otherwise make this run a DDL statement on every single request.
+    $columnsMatch = $actual !== NULL
+      && array_map('strtolower', $actual) === array_map('strtolower', $expected);
+
+    // Column names say nothing about a WHERE restriction, since it only affects
+    // which rows are visible, not which columns exist. A definition that adds or
+    // changes 'where' would otherwise look identical to the self-heal check above
+    // and never get applied on a site where the view already exists.
+    $whereMatches = empty($def['where']) || $this->viewHasWhereClause($viewName, $def['where']);
+
+    if ($columnsMatch && $whereMatches) {
       return "";
     }
 
     $fields = implode(', ', array_map(function ($f) { return "`{$f}`"; }, $def['fields']));
     $source = $def['source'];
+    $where = empty($def['where']) ? '' : " WHERE {$def['where']}";
 
     // ALGORITHM=MERGE: MariaDB/MySQL will inline the view into the outer query,
     // meaning the optimizer sees the base table directly – no performance penalty.
-    $sql = "CREATE ALGORITHM=MERGE VIEW `{$viewName}` AS "
-         . "SELECT {$fields} FROM `{$source}`";
+    // A WHERE restriction does not disable MERGE; only aggregates, DISTINCT, UNION,
+    // GROUP BY, LIMIT and subqueries in the select list do.
+    $sql = "CREATE OR REPLACE ALGORITHM=MERGE VIEW `{$viewName}` AS "
+         . "SELECT {$fields} FROM `{$source}`{$where}";
 
     $this->pdo->exec($sql);
-    return "[CREATED] View `{$viewName}` on `{$source}`.";
+
+    if ($actual === NULL) {
+      return "[CREATED] View `{$viewName}` on `{$source}`.";
+    }
+    return "[UPDATED] View `{$viewName}` recreated; columns changed from ["
+      . implode(', ', $actual) . '] to [' . implode(', ', $expected) . '], '
+      . 'or its WHERE restriction changed.';
+  }
+
+  /**
+   * Return the columns of an existing view, in ordinal position order.
+   *
+   * @param string $viewName
+   * @return array|null  Column names, or NULL when the view does not exist.
+   */
+  private function viewColumns($viewName) {
+    $stmt = $this->pdo->prepare(
+      "SELECT COLUMN_NAME FROM information_schema.COLUMNS
+       WHERE TABLE_SCHEMA = :db AND TABLE_NAME = :view
+       ORDER BY ORDINAL_POSITION"
+    );
+    $stmt->execute([':db' => $this->dbName, ':view' => $viewName]);
+    $columns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    return empty($columns) ? NULL : $columns;
+  }
+
+  /**
+   * Check whether an existing view's definition already contains the expected
+   * WHERE clause. Uses a substring match against information_schema's stored
+   * definition text rather than parsing SQL, matching the same lightweight
+   * approach as viewColumns().
+   *
+   * MariaDB/MySQL rewrite a view's stored definition: identifiers get wrapped in
+   * backticks and keywords are lowercased (observed directly on this schema — see
+   * SHOW CREATE VIEW output for v_civicrm_contribution). A raw substring match
+   * against our as-written clause would therefore never match, so both sides are
+   * normalised the same way (strip backticks, collapse whitespace, lowercase)
+   * before comparing.
+   *
+   * @param string $viewName
+   * @param string $whereClause
+   * @return bool  FALSE if the view does not exist or the clause is not found.
+   */
+  private function viewHasWhereClause($viewName, $whereClause) {
+    $stmt = $this->pdo->prepare(
+      "SELECT VIEW_DEFINITION FROM information_schema.VIEWS
+       WHERE TABLE_SCHEMA = :db AND TABLE_NAME = :view"
+    );
+    $stmt->execute([':db' => $this->dbName, ':view' => $viewName]);
+    $definition = $stmt->fetchColumn();
+
+    if ($definition === FALSE) {
+      return FALSE;
+    }
+
+    $normalize = function ($sql) {
+      $sql = str_replace('`', '', $sql);
+      $sql = preg_replace('/\s+/', ' ', trim($sql));
+      return strtolower($sql);
+    };
+
+    return strpos($normalize($definition), $normalize($whereClause)) !== FALSE;
   }
 
   /**

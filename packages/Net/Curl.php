@@ -581,7 +581,7 @@ class Net_Curl
             if (is_array($this->fields)) {
                 $sets = array();
                 foreach ($this->fields as $key => $val) {
-                    if (strlen($val) > 1 && $val{0} == '@') {
+                    if (strlen($val) > 1 && $val[0] == '@') {
                         $file = substr($val, 1);
                         if (is_file($file) && is_readable($file)) {
                             $sets = null;

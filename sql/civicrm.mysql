@@ -2530,6 +2530,7 @@ CREATE TABLE civicrm_aicompletion (
 
      `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'AICompletion ID',
      `contact_id` int unsigned    COMMENT 'FK to civicrm_contact',
+     `conversation_id` int unsigned    COMMENT 'Groups rows of the same conversation. Points to the id of the first row in the thread.',
      `is_template` tinyint NOT NULL  DEFAULT 0 COMMENT 'Set to 1 to indicate that this AI completion is saved as a template.',
      `template_title` varchar(128)    COMMENT 'Save as template title.',
      `tone_style` varchar(64) NOT NULL   COMMENT 'AI tone style',
@@ -2550,7 +2551,10 @@ CREATE TABLE civicrm_aicompletion (
 ,
     PRIMARY KEY ( id )
  
- 
+    ,     INDEX index_conversation_id(
+        conversation_id
+  )
+  
 ,      
      CONSTRAINT FK_civicrm_aicompletion_contact_id FOREIGN KEY (contact_id) REFERENCES civicrm_contact(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
