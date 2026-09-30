@@ -66,16 +66,19 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
     //set the context for the profile
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
-    //set the block no
-    $this->_blockNo = CRM_Utils_Request::retrieve('blockNo', 'String', $this);
+    // Set the block number used by the new-contact dialog.
+    $blockNo = CRM_Utils_Request::retrieve('blockNo', 'Positive', $this);
+    $this->_blockNo = isset($blockNo) ? (int) $blockNo : NULL;
 
     if ($this->_context) {
       $this->assign('context', $this->_context);
     }
 
-    if ($this->_blockNo) {
-      $this->assign('blockNo', $this->_blockNo);
-    }
+    $this->assign('blockNo', $this->_blockNo);
+    $this->assign('blockNoJson', json_encode(
+      $this->_blockNo,
+      JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+    ));
 
     if ($this->get('skipPermission')) {
       $this->_skipPermission = TRUE;
