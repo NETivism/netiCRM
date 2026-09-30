@@ -94,7 +94,8 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
    * Validate tracking fields before any lookup or write.
    *
    * Invalid optional fields are omitted. Required page fields are checked by
-   * add(). Store plain text, never HTML entities; output still needs escaping.
+   * add(). UTM fields store < and > as HTML entities; other characters stay
+   * plain text. Output still needs escaping.
    *
    * @param array $params
    * @return array
@@ -155,12 +156,18 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
           if ($name === 'referrer_network') {
             $value = strip_tags($value);
           }
-          // Reject the whole UTM field when it contains HTML markup. Do not
-          // strip text such as spring<2024, or clear an existing stored value.
-          // This is a data-quality rule; report output must still be escaped.
-          elseif (in_array($name, $utmFields, TRUE)
-            && preg_match('/<(?:\/?[a-z][a-z0-9:-]*(?=[\s\/>])[^>]*|!--.*?--)>/is', $value)) {
-            continue;
+          // Store < and > of UTM fields as entities, so a value such as
+          // <svg onload=... cannot open a tag even where output is unescaped.
+          // Truncate before encoding so an entity is never cut in half.
+          elseif (in_array($name, $utmFields, TRUE)) {
+            $entities = ['<' => '&lt;', '>' => '&gt;'];
+            if (isset($field['maxlength'])) {
+              $value = mb_substr($value, 0, $field['maxlength'], 'UTF-8');
+              while (mb_strlen(strtr($value, $entities), 'UTF-8') > $field['maxlength']) {
+                $value = mb_substr($value, 0, -1, 'UTF-8');
+              }
+            }
+            $value = strtr($value, $entities);
           }
         }
         if (isset($field['maxlength']) && mb_strlen($value, 'UTF-8') > $field['maxlength']) {
