@@ -52513,3 +52513,55 @@ msgstr "網站註冊會員表單"
 #: xml/templates/civicrm_data.tpl
 msgid "Subscribe Information Profile"
 msgstr "電子報訂閱表單"
+
+#: CRM/Contact/Form/Merge.php:320 CRM/Dedupe/Merger.php:1670 templates/CRM/Contact/Form/Merge.tpl:154
+msgid "Both contacts have active user accounts and cannot be merged. Please disable the user account of one of the contacts before merging."
+msgstr "兩位聯絡人都有啟用中的網站使用者帳號，無法合併。請先停用其中一位聯絡人的帳號，再進行合併。"
+
+#: templates/CRM/Contact/Form/Merge.tpl:130
+msgid "Both contacts have active user accounts and cannot be merged."
+msgstr "兩位聯絡人都有啟用中的網站使用者帳號，無法合併。"
+
+#: templates/CRM/Contact/Form/Merge.tpl:133
+msgid "Both user accounts are disabled and will be un-linked."
+msgstr "兩個網站使用者帳號皆已停用，將取消與聯絡人的連結。"
+
+#: CRM/Core/BAO/CMSUser.php:51 templates/CRM/Admin/Form/CMSUser.tpl:33
+msgid "Bulk user synchronization is disabled to prevent duplicate contacts."
+msgstr "為避免產生重複的聯絡人，已停用批次同步使用者功能。"
+
+#: CRM/Dedupe/Merger.php:444 CRM/Dedupe/Merger.php:1629
+msgid "CMS user ID %1 has been re-linked from contact ID %2 to contact ID %3 because of merge duplicate contacts."
+msgstr "因合併重複的聯絡人，網站使用者（編號 %1）已從聯絡人（系統編號 %2）改為連結至聯絡人（系統編號 %3）。"
+
+#: CRM/Dedupe/Merger.php:435
+msgid "CMS user ID %1 has been unlinked from contact ID %2 because of merge duplicate contacts."
+msgstr "因合併重複的聯絡人，網站使用者（編號 %1）已取消與聯絡人（系統編號 %2）的連結。"
+
+#: CRM/Core/BAO/UFMatchRegistration.php:58 CRM/Core/BAO/UFMatchRegistration.php:71 CRM/Core/BAO/UFMatchRegistration.php:77 CRM/Core/BAO/UFMatchRegistration.php:86 CRM/Core/BAO/UFMatchRegistration.php:233 CRM/Core/BAO/UFMatchRegistration.php:237
+msgid "Invalid registration field value."
+msgstr "註冊欄位的值無效。"
+
+#: templates/CRM/Contact/Form/Merge.tpl:132 templates/CRM/Contact/Form/Merge.tpl:136
+msgid "The user account of the main contact will be kept."
+msgstr "保留的聯絡人原有的網站使用者帳號將維持不變。"
+
+#: templates/CRM/Contact/Form/Merge.tpl:131
+msgid "The user account will be linked to the main contact."
+msgstr "此網站使用者帳號將連結至保留的聯絡人。"
+
+#: templates/CRM/Contact/Form/Merge.tpl:127 templates/CRM/Contact/Form/Merge.tpl:136
+msgid "This user account is disabled, it will be un-linked and not moved."
+msgstr "此網站使用者帳號已停用，將取消連結，不會搬移。"
+
+#: CRM/Core/BAO/UFMatch.php:243 CRM/Core/BAO/UFMatch.php:351 CRM/Core/BAO/UFMatchRegistration.php:211 drupal/civicrm_user.inc:89
+msgid "Unable to link the account to a contact."
+msgstr "無法將帳號連結至聯絡人。"
+
+#: CRM/Core/BAO/UFMatchRegistration.php:242
+msgid "Unable to save the uploaded file."
+msgstr "無法儲存上傳的檔案。"
+
+#: templates/CRM/Contact/Form/Merge.tpl:127 templates/CRM/Contact/Form/Merge.tpl:136
+msgid "Un-link"
+msgstr "取消連結"
