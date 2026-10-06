@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: SIAOLING HUANG, 2024\n"
+"Last-Translator: Seal Shen, 2025-2026\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45021,7 +45021,7 @@ msgstr "本%2預計將有 %3 人、 %1 筆定期定額捐款，總金額為 %4�
 
 #: CRM/Contact/Form/Search/Custom/RecurSearch.php
 msgid "Recurring ended"
-msgstr "已結束定期"
+msgstr "已完成"
 
 #: CRM/Contribute/xml/Menu/Contribute.xml
 msgid "Recurring Settings"
@@ -52464,7 +52464,7 @@ msgstr "%1 至 %2"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:44
 msgid "Monthly Recurring Debit Audit"
-msgstr "月繳定捐款查核"
+msgstr "月繳定捐扣款查核"
 
 #: templates/CRM/Contact/Form/Search/Custom/RecurSearch.tpl:54
 msgid ""
