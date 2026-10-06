@@ -376,6 +376,121 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
   }
 
   /**
+   * Get CMS user status of both contacts when both linked to CMS user
+   *
+   * @param int $mainId
+   * @param int $otherId
+   *
+   * @return array|null NULL when not both contacts have CMS user
+   */
+  public static function getUFMatchStatus($mainId, $otherId) {
+    $mainUfId = CRM_Core_BAO_UFMatch::getUFId($mainId);
+    $otherUfId = CRM_Core_BAO_UFMatch::getUFId($otherId);
+    if (!$mainUfId || !$otherUfId) {
+      return NULL;
+    }
+    // CMS without account status check, treat as active
+    $userSystem = CRM_Core_Config::singleton()->userSystem;
+    $checkActive = method_exists($userSystem, 'isUserActive');
+    return [
+      'main' => $mainUfId,
+      'other' => $otherUfId,
+      'main_active' => $checkActive ? $userSystem->isUserActive($mainUfId) : TRUE,
+      'other_active' => $checkActive ? $userSystem->isUserActive($otherUfId) : TRUE,
+    ];
+  }
+
+  /**
+   * Both contacts have active CMS user, they can't be merged
+   *
+   * @param int $mainId
+   * @param int $otherId
+   *
+   * @return bool
+   */
+  public static function isUFMatchConflict($mainId, $otherId) {
+    $ufStatus = self::getUFMatchStatus($mainId, $otherId);
+    return $ufStatus && $ufStatus['main_active'] && $ufStatus['other_active'];
+  }
+
+  /**
+   * Clean up uf_match when both contacts have CMS user and at most one is active
+   *
+   * @param int $mainId
+   * @param int $otherId
+   * @param array $ufStatus result of getUFMatchStatus()
+   *
+   * @return void
+   */
+  public static function mergeUFMatch($mainId, $otherId, $ufStatus) {
+    $logs = [];
+    $activeUfId = NULL;
+    foreach (['main' => $mainId, 'other' => $otherId] as $key => $contactId) {
+      $ufId = $ufStatus[$key];
+      if ($ufStatus[$key . '_active']) {
+        $activeUfId = $ufId;
+        continue;
+      }
+      CRM_Core_DAO::executeQuery("DELETE FROM civicrm_uf_match WHERE uf_id = %1", [1 => [$ufId, 'Integer']]);
+      $logs[] = ts('CMS user ID %1 has been unlinked from contact ID %2 because of merge duplicate contacts.', [1 => $ufId, 2 => $contactId]);
+    }
+
+    if ($activeUfId) {
+      if ($ufStatus['other_active']) {
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_uf_match SET contact_id = %1 WHERE uf_id = %2", [
+          1 => [$mainId, 'Integer'],
+          2 => [$activeUfId, 'Integer'],
+        ]);
+        $logs[] = ts('CMS user ID %1 has been re-linked from contact ID %2 to contact ID %3 because of merge duplicate contacts.', [1 => $activeUfId, 2 => $otherId, 3 => $mainId]);
+      }
+
+      // make sure email of CMS user exists in main contact
+      $ufName = CRM_Core_DAO::singleValueQuery("SELECT uf_name FROM civicrm_uf_match WHERE uf_id = %1 LIMIT 1", [1 => [$activeUfId, 'Integer']]);
+      if ($ufName && CRM_Utils_Rule::email($ufName)) {
+        $exists = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1 AND email = %2 LIMIT 1", [
+          1 => [$mainId, 'Integer'],
+          2 => [$ufName, 'String'],
+        ]);
+        if (!$exists) {
+          $locationType = CRM_Core_BAO_LocationType::getDefault();
+          $emailParams = [
+            'contact_id' => $mainId,
+            'email' => $ufName,
+            'location_type_id' => $locationType->id,
+            'is_primary' => 0,
+          ];
+          CRM_Core_BAO_Email::create($emailParams);
+        }
+      }
+    }
+
+    self::addUFMatchLog($mainId, $logs);
+  }
+
+  /**
+   * Add change log of uf_match to main contact
+   *
+   * @param int $mainId
+   * @param array $logs log messages
+   *
+   * @return void
+   */
+  public static function addUFMatchLog($mainId, $logs) {
+    if (empty($logs)) {
+      return;
+    }
+    $session = CRM_Core_Session::singleton();
+    $logParams = [
+      'entity_table' => 'civicrm_contact',
+      'entity_id' => $mainId,
+      'modified_id' => $session->get('userID') ? $session->get('userID') : $mainId,
+      'modified_date' => date('YmdHis'),
+      'data' => CRM_Utils_Array::implode(' ', $logs),
+    ];
+    CRM_Core_BAO_Log::add($logParams);
+  }
+
+  /**
    * Based on the provided two contact_ids and a set of tables, move the
    * belongings of the other contact to the main one.
    */
@@ -613,6 +728,11 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    *
    */
   public static function skipMerge($mainId, $otherId, &$migrationInfo, $mode, &$reason) {
+    // both contacts have active CMS user, never merge
+    if (self::isUFMatchConflict($mainId, $otherId)) {
+      $reason = ['move_rel_table_users' => NULL];
+      return TRUE;
+    }
     $conflicts = [];
     $migrationData = [
       'old_migration_info' => $migrationInfo,
@@ -1139,6 +1259,29 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
       return FALSE;
     }
 
+    $canDelete = CRM_Core_Permission::check('merge duplicate contacts') && CRM_Core_Permission::check('delete contacts');
+
+    // both contacts have CMS user, handle uf_match by account status instead of moving
+    $ufStatus = self::getUFMatchStatus($mainId, $otherId);
+    $movedUfId = NULL;
+    if ($ufStatus) {
+      if ($ufStatus['main_active'] && $ufStatus['other_active']) {
+        return FALSE;
+      }
+      unset($migrationInfo['move_rel_table_users']);
+    }
+    elseif ($otherUfId = CRM_Core_BAO_UFMatch::getUFId($otherId)) {
+      if ($canDelete) {
+        // only other contact has CMS user, always move it, or it will be unlinked when other contact deleted
+        $migrationInfo['move_rel_table_users'] = 1;
+        $movedUfId = $otherUfId;
+      }
+      else {
+        // other contact won't be deleted, keep its CMS user
+        unset($migrationInfo['move_rel_table_users']);
+      }
+    }
+
     $allLocationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
     $otherLocationTypeId = array_search('Other', $allLocationTypes);
     $qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
@@ -1477,9 +1620,14 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     }
 
     // **** Delete other contact & update prev-next caching
-    if (CRM_Core_Permission::check('merge duplicate contacts') &&
-      CRM_Core_Permission::check('delete contacts')
-    ) {
+    if ($canDelete) {
+      // uf_match must be resolved before other contact deleted, deleteContact will remove uf_match of other contact
+      if ($ufStatus) {
+        self::mergeUFMatch($mainId, $otherId, $ufStatus);
+      }
+      elseif ($movedUfId) {
+        self::addUFMatchLog($mainId, [ts('CMS user ID %1 has been re-linked from contact ID %2 to contact ID %3 because of merge duplicate contacts.', [1 => $movedUfId, 2 => $otherId, 3 => $mainId])]);
+      }
       CRM_Contact_BAO_Contact::deleteContact($otherId, FALSE, FALSE, ts('Delete Contact').' - '.ts('merge duplicate contacts'));
     }
     // FIXME: else part
@@ -1517,6 +1665,9 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
       $field = str_replace('move_', '', $conflict);
       if (isset($fields[$field])) {
         $labels[$conflict] = $fields[$field]['title'];
+      }
+      elseif ($conflict === 'move_rel_table_users') {
+        $labels[$conflict] = ts('Both contacts have active user accounts and cannot be merged. Please disable the user account of one of the contacts before merging.');
       }
       else {
         $labels[$conflict] = str_replace('_', ' ', $field);

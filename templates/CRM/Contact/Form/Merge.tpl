@@ -50,6 +50,17 @@ table.dedupe-merge td .zmdi-minus {
 table.dedupe-merge td .zmdi-plus {
   background-color: #e6ffed;
 }
+table.dedupe-merge td .zmdi-refresh-sync-off {
+  display: block;
+  background-color: #ffeef0;
+  text-decoration: line-through;
+  color: red;
+}
+table.dedupe-merge td .zmdi-refresh-sync-off:before {
+  display: inline-block;
+  margin-right: 6px;
+  color: #999;
+}
 </style>
 {/literal}
 
@@ -110,11 +121,19 @@ table.dedupe-merge td .zmdi-plus {
   </tr>
   {foreach from=$rel_tables item=params key=paramName}
     {if $paramName eq 'move_rel_table_users'}
+    {capture assign=otherUfLine}{ts}CMS User{/ts}<a href="{$params.other_url}" target="_blank">{$params.other_title}</a> ({ts}{/ts} {$otherUfName} - {if $otherUfLink}<a href="{$otherUfLink}" target="_blank">{$otherUfId}</a>{else}{$otherUfId}{/if}){/capture}
     <tr class="{cycle values="even-row,odd-row"}">
       <td><i class="zmdi zmdi-forward"></i> {ts}Move related...{/ts}</td>
-      <td>{ts}CMS User{/ts}<a href="{$params.other_url}" target="_blank">{$params.other_title}</a> ({ts}{/ts} {$otherUfName} - {$otherUfId})</td>
-      <td style='white-space: nowrap'>{if $otherUfId}<label>{$form.$paramName.html} <i class="zmdi zmdi-redo"></i></label>{/if}</td>
-      <td>{if $mainUfId}<div>{ts}CMS User{/ts} <a href="{$params.main_url}" target="_blank">{$params.main_title}</a> ({$mainUfName} - {$mainUfId})</div>{/if}</td>
+      <td{if $user && $otherUfActive && !$mainUfActive} class="disabled"{/if}><div{if $user && !$otherUfActive} class="zmdi zmdi-refresh-sync-off" title="{ts}Un-link{/ts}"{/if}>{$otherUfLine}</div>{if $user && !$otherUfActive}<div class="description">{ts}This user account is disabled, it will be un-linked and not moved.{/ts}</div>{/if}</td>
+      <td style='white-space: nowrap'>
+        {if $otherUfId && !$user}<label>{$form.$paramName.html} <i class="zmdi zmdi-redo"></i></label>
+        {elseif $ufConflict}<i class="zmdi zmdi-close-circle font-red" title="{ts}Both contacts have active user accounts and cannot be merged.{/ts}"></i>
+        {elseif $user && $otherUfActive}<i class="zmdi zmdi-redo" title="{ts}The user account will be linked to the main contact.{/ts}"></i>
+        {elseif $user && $mainUfActive}<i class="zmdi zmdi-check-circle" title="{ts}The user account of the main contact will be kept.{/ts}"></i>
+        {elseif $user}<i class="zmdi zmdi-block" title="{ts}Both user accounts are disabled and will be un-linked.{/ts}"></i>
+        {/if}
+      </td>
+      <td>{if $mainUfId}<div{if $user && !$mainUfActive} class="zmdi zmdi-refresh-sync-off" title="{ts}Un-link{/ts}"{/if}>{ts}CMS User{/ts} <a href="{$params.main_url}" target="_blank">{$params.main_title}</a> ({$mainUfName} - {if $mainUfLink}<a href="{$mainUfLink}" target="_blank">{$mainUfId}</a>{else}{$mainUfId}{/if})</div>{if $user && $mainUfActive && !$ufConflict}<div class="description">{ts}The user account of the main contact will be kept.{/ts}</div>{/if}{if $user && !$mainUfActive}<div class="description">{ts}This user account is disabled, it will be un-linked and not moved.{/ts}</div>{/if}{/if}{if $user && $otherUfActive && !$mainUfActive}<div class="zmdi zmdi-plus">{$otherUfLine}</div>{/if}</td>
     </tr>
     {else}
     <tr class="{cycle values="even-row,odd-row"}">
@@ -131,9 +150,10 @@ table.dedupe-merge td .zmdi-plus {
 </div>
 <div class="form-item">
   <div class="messages warning">
-    <strong>{ts}WARNING: The duplicate contact record WILL BE DELETED after the merge is complete.{/ts}</strong>
-    {if $user}
-      <p><strong>{ts}There are Drupal user accounts associated with both the original and duplicate contacts. If you continue with the merge, the user record associated with the duplicate contact will not be deleted, but will be un-linked from the associated contact record (which will be deleted). If that user logs in again, a new contact record will be created for them.{/ts}</strong></p>
+    {if $ufConflict}
+      <p><strong>{ts}Both contacts have active user accounts and cannot be merged. Please disable the user account of one of the contacts before merging.{/ts}</strong></p>
+    {else}
+      <p><strong>{ts}WARNING: The duplicate contact record WILL BE DELETED after the merge is complete.{/ts}</strong></p>
     {/if}
     {if $other_contact_subtype}
       <p><strong>The duplicate contact (the one that will be deleted) is a <em>{$other_contact_subtype}</em>. Any data related to this will be lost forever (there is no undo) if you complete the merge.</strong></p>
