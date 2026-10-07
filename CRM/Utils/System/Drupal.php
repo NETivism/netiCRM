@@ -1164,6 +1164,21 @@ class CRM_Utils_System_Drupal {
     return CRM_Core_Config::$_userSystem->versionalClass->getLastLoginTime($ufId);
   }
 
+  /**
+   * Check CMS user account is active (not blocked) by Drupal UID.
+   *
+   * Dispatches to the versional implementation (Drupal6, Drupal7 or Drupal8/10).
+   *
+   * @param int $ufId Drupal user ID
+   * @return bool FALSE when the account is blocked or not exists
+   */
+  public static function isUserActive($ufId) {
+    if (empty($ufId)) {
+      return FALSE;
+    }
+    return CRM_Core_Config::$_userSystem->versionalClass->isUserActive($ufId);
+  }
+
   public static function loadUser($params = []) {
     if (empty($params)) {
       return FALSE;

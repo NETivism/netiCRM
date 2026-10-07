@@ -107,6 +107,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     if ($mainUfId) {
       if ($config->userFramework == 'Drupal') {
         $mainUserName = CRM_Core_Config::$_userSystem->getBestUFName($mainUfId);
+        $this->assign('mainUfLink', CRM_Core_Config::$_userSystem->getUFProfileLink($mainUfId));
       }
       elseif ($config->userFramework == 'Joomla') {
         $mainUser = JFactory::getUser($mainUfId);
@@ -130,6 +131,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     if ($otherUfId) {
       if ($config->userFramework == 'Drupal') {
         $otherUserName = CRM_Core_Config::$_userSystem->getBestUFName($otherUfId);
+        $this->assign('otherUfLink', CRM_Core_Config::$_userSystem->getUFProfileLink($otherUfId));
       }
       elseif ($config->userFramework == 'Joomla') {
         $otherUser = JFactory::getUser($otherUfId);
@@ -141,6 +143,17 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
 
     $cmsUser = ($mainUfId && $otherUfId) ? TRUE : FALSE;
     $this->assign('user', $cmsUser);
+
+    if ($cmsUser) {
+      $ufStatus = CRM_Dedupe_Merger::getUFMatchStatus($cid, $oid);
+      $this->assign('mainUfActive', $ufStatus['main_active']);
+      $this->assign('otherUfActive', $ufStatus['other_active']);
+      // both contacts have active CMS user, block merge
+      if ($ufStatus['main_active'] && $ufStatus['other_active']) {
+        $this->assign('ufConflict', TRUE);
+        $this->_hasError = TRUE;
+      }
+    }
 
     $session = CRM_Core_Session::singleton();
 
@@ -225,8 +238,11 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
 
     // add related table elements
     foreach ($rowsElementsAndInfo['rel_table_elements'] as $relTableElement) {
-      $element = $this->addElement($relTableElement[0], $relTableElement[1]);
-      $element->setChecked(TRUE);
+      // only other contact has CMS user, lock checked or user will be unlinked when other contact deleted
+      $attr = ($otherUfId && !$mainUfId && $relTableElement[1] === 'move_rel_table_users') ? ['onclick' => 'return false;'] : NULL;
+      $element = $this->addElement($relTableElement[0], $relTableElement[1], NULL, NULL, $attr);
+      // CMS user of both contacts will be handled by account status, not moved
+      $element->setChecked(!($cmsUser && $relTableElement[1] === 'move_rel_table_users'));
     }
 
     $this->assign('rel_tables', $rowsElementsAndInfo['rel_tables']);
@@ -298,6 +314,11 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $formValues['main_details']['contact_type'] = $this->_contactType;
     $formValues['main_details']['loc_block_ids'] = $this->_locBlockIds['main'];
     $formValues['other_details']['loc_block_ids'] = $this->_locBlockIds['other'];
+
+    // both contacts have active CMS user, status may change after form loaded
+    if (CRM_Dedupe_Merger::isUFMatchConflict($this->_cid, $this->_oid)) {
+      return CRM_Core_Error::statusBounce(ts('Both contacts have active user accounts and cannot be merged. Please disable the user account of one of the contacts before merging.'));
+    }
 
     CRM_Dedupe_Merger::moveAllBelongings($this->_cid, $this->_oid, $formValues);
 
