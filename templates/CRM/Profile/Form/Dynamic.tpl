@@ -55,7 +55,7 @@
             {if $field.groupTitle != $fieldset}
                 {if $fieldset != $zeroField}
                    {if $groupHelpPost}
-                      <div class="messages help profile-group-help-post">{$groupHelpPost}</div>
+                      <div class="messages help profile-group-help-post">{$groupHelpPost|purify}</div>
                    {/if}
                    {if $mode neq 8 && $mode neq 4}
                         </div><!-- end form-layout-compressed-div -->
@@ -71,7 +71,7 @@
                 {assign var=fieldset  value=`$field.groupTitle`}
                 {assign var=groupHelpPost  value=`$field.groupHelpPost`}
                 {if $field.groupHelpPre}
-                    <div class="profile-group-help-pre">{$field.groupHelpPre}</div>
+                    <div class="profile-group-help-pre">{$field.groupHelpPre|purify}</div>
                 {/if}
                 <div class="form-layout-compressed">
             {/if}
@@ -158,7 +158,7 @@
             {* Show explanatory text for field if not in 'view' mode *}
             {if $field.help_post && $action neq 4 && $form.$n.html}
                 <div class="crm-section helprow-{$n}-section" id="helprow-{$n}">
-                    <div class="content description">{$field.help_post}</div>
+                    <div class="content description">{$field.help_post|purify}</div>
                 </div>
             {/if}
         {/if}{* end of main if field name if *}        
@@ -172,7 +172,7 @@
     {/if}
 
     {if $field.groupHelpPost}
-        <div class="messages help profile-group-help-post">{$field.groupHelpPost}</div>
+        <div class="messages help profile-group-help-post">{$field.groupHelpPost|purify}</div>
     {/if}
 
     {if $mode neq 8 && $mode neq 4}

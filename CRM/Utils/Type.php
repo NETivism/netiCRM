@@ -199,6 +199,41 @@ class CRM_Utils_Type {
         }
         break;
 
+      case 'MysqlOrderBy':
+        if (CRM_Utils_Rule::mysqlOrderBy($data)) {
+          $parts = explode(',', $data);
+
+          // The field() syntax is tricky here because it uses commas & when
+          // we separate by them we break it up. But we want to keep the clause
+          // in order, so we just re-assemble it.
+          $fieldClauseStart = NULL;
+          foreach ($parts as $index => &$part) {
+            if (substr(trim($part), 0, 6) === 'field(') {
+              // Looking to escape a string like 'field(contribution_status_id,3,4,5) asc'
+              // to 'field(`contribution_status_id`,3,4,5) asc'
+              $fieldClauseStart = $index;
+              continue;
+            }
+            if ($fieldClauseStart !== NULL) {
+              // This is part of the list of field() options. Concatenate it back on.
+              $parts[$fieldClauseStart] .= ',' . $part;
+              unset($parts[$index]);
+              if (strpos($parts[$fieldClauseStart], ')') === FALSE) {
+                // We have not reached the end of the list yet.
+                continue;
+              }
+              // We have the last piece of the field() clause, time to escape it.
+              $parts[$fieldClauseStart] = self::mysqlOrderByFieldFunctionCallback($parts[$fieldClauseStart]);
+              $fieldClauseStart = NULL;
+              continue;
+            }
+            // Normal `table.column [asc|desc]` clause.
+            $part = preg_replace_callback('/^(?:(?:((?:`[\w-]{1,64}`|[\w-]{1,64}))(?:\.))?(`[\w-]{1,64}`|[\w-]{1,64})(?: (asc|desc))?)$/i', ['CRM_Utils_Type', 'mysqlOrderByCallback'], trim($part));
+          }
+          return implode(', ', $parts);
+        }
+        break;
+
       case 'CommaSeperatedIntegers':
       case 'CommaSeparatedIntegers':
       case 'CSInts':
@@ -385,5 +420,50 @@ class CRM_Utils_Type {
     }
 
     return NULL;
+  }
+
+  /**
+   * preg_replace_callback for the `field(...)` clause of a MysqlOrderBy escape.
+   *
+   * Wraps the column name argument (the first token inside the parens) in
+   * backticks; the remaining comma-separated values are left untouched since
+   * CRM_Utils_Rule::mysqlOrderBy() already restricted them to digits.
+   *
+   * @param string $clause e.g. 'field(contribution_status_id,3,4,5) asc'
+   *
+   * @return string
+   */
+  public static function mysqlOrderByFieldFunctionCallback($clause) {
+    return preg_replace('/field\((\w+)/', 'field(`${1}`', $clause);
+  }
+
+  /**
+   * preg_replace_callback for a single `table.column [asc|desc]` clause of a
+   * MysqlOrderBy escape.
+   *
+   * @param array $matches
+   *
+   * @return string
+   */
+  public static function mysqlOrderByCallback($matches) {
+    $output = '';
+    $matches = str_replace('`', '', $matches);
+
+    // Table name.
+    if (!empty($matches[1])) {
+      $output .= '`' . $matches[1] . '`.';
+    }
+
+    // Column name.
+    if (!empty($matches[2])) {
+      $output .= '`' . $matches[2] . '`';
+    }
+
+    // Sort direction.
+    if (!empty($matches[3])) {
+      $output .= ' ' . $matches[3];
+    }
+
+    return $output;
   }
 }

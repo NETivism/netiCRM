@@ -37,8 +37,8 @@
 
       {foreach from=$usedBy.civicrm_event item=event key=id}
            <tr>
-               <td><a href="{crmURL p="civicrm/event/manage/fee" q="action=update&reset=1&id=`$id`"}">{$event.title}</a></td>
-               <td>{$event.eventType}</td>
+               <td><a href="{crmURL p="civicrm/event/manage/fee" q="action=update&reset=1&id=`$id`"}">{$event.title|escape}</a></td>
+               <td>{$event.eventType|escape}</td>
                <td>{if $event.isPublic}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td>
                <td>{$event.startDate|crmDate}{if $event.endDate}&nbsp;to&nbsp;{$event.endDate|crmDate}{/if}</td>
            </tr>
@@ -57,8 +57,8 @@
 
       {foreach from=$usedBy.civicrm_contribution_page item=contributionPage key=id}
            <tr>
-               <td><a href="{crmURL p="civicrm/admin/contribute/amount" q="action=update&reset=1&id=`$id`"}">{$contributionPage.title}</a></td>
-               <td>{$contributionPage.type}</td>
+               <td><a href="{crmURL p="civicrm/admin/contribute/amount" q="action=update&reset=1&id=`$id`"}">{$contributionPage.title|escape}</a></td>
+               <td>{$contributionPage.type|escape}</td>
                <td>{$contributionPage.startDate|crmDate}{if $contributionPage.endDate}&nbsp;to&nbsp;{$contributionPage.endDate|crmDate}{/if}</td>
            </tr>
       {/foreach}
