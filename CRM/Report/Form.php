@@ -2943,6 +2943,24 @@ ORDER BY cg.weight";
           $curFields[$fieldName]['alias'] = "contact_{$fieldName}_civireport";
           break;
 
+        case 'Link':
+          // formatCustomValues() wraps Link values in an <a> tag, so the
+          // display template needs to tell this column apart from plain text.
+          // Must stay a CRM_Utils_Type::T_* bitmask value (not a string) since
+          // report layout templates do bitwise checks like `$header.type & 4`.
+          $curFilters[$fieldName]['type'] = CRM_Utils_Type::T_STRING;
+          $curFields[$fieldName]['type'] = CRM_Utils_Type::T_URL;
+          break;
+
+        case 'Memo':
+          // RichTextEditor-backed Note fields store real HTML from the WYSIWYG
+          // editor, so they need the same non-escaping treatment as Link.
+          $curFilters[$fieldName]['type'] = CRM_Utils_Type::T_STRING;
+          if ($customDAO->html_type == 'RichTextEditor') {
+            $curFields[$fieldName]['type'] = CRM_Utils_Type::T_TEXT;
+          }
+          break;
+
         default:
           $curFields[$fieldName]['type'] = CRM_Utils_Type::T_STRING;
           $curFilters[$fieldName]['type'] = CRM_Utils_Type::T_STRING;

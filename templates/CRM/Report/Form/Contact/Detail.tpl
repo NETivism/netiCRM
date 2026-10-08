@@ -69,19 +69,21 @@
                                         {if $row.$fieldLink}<a title="{$row.$fieldHover}" href="{$row.$fieldLink}">{/if}
                         
                                         {if $row.$field eq 'Subtotal'}
-                                            {$row.$field}
+                                            {$row.$field|escape}
                                         {elseif $header.type eq 12}
                                             {if $header.group_by eq 'MONTH' or $header.group_by eq 'QUARTER'}
                                                 {$row.$field|crmDate:$config->dateformatPartial}
-                                            {elseif $header.group_by eq 'YEAR'}	
+                                            {elseif $header.group_by eq 'YEAR'}
                                                 {$row.$field|crmDate:$config->dateformatYear}
-                                            {else}				
+                                            {else}
                                                 {$row.$field|truncate:10:''|crmDate}
-                                            {/if}	
+                                            {/if}
                                         {elseif $header.type eq 1024}
                                             {$row.$field|crmMoney}
+                                        {elseif $header.type eq 4096 OR $header.type eq 32}
+                                            {$row.$field|purify}
                                         {else}
-                                            {$row.$field}
+                                            {$row.$field|escape}
                                         {/if}
 				
                                         {if $row.contactID} {/if}
