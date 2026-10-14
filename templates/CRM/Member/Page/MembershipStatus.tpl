@@ -55,7 +55,7 @@
         {foreach from=$rows item=row}
         <tr id="row_{$row.id}" class="{cycle values="odd-row,even-row"} {$row.class} {if NOT $row.is_active} disabled{/if} crm-membership-status">
           <td class="crm-membership-status-id">{$row.id}</td>
-	        <td class="crm-membership-status-label">{$row.label}</td>	
+	        <td class="crm-membership-status-label">{$row.label|escape}</td>	
 	        <td class="crm-membership-status-start_event">{ts}{$row.start_event}{/ts}</td>
 	        <td class="crm-membership-status-end_event">{ts}{$row.end_event}{/ts}</td>
 	        <td class="crm-membership-status-is_current_member">{if $row.is_current_member eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
