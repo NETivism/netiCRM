@@ -40,12 +40,12 @@
 {foreach from=$groupTree item=cd_edit key=group_id}
     <p></p>
     <fieldset>{if $preview_type eq 'group'}<legend>{$smarty.capture.legend}</legend>{/if}
-    {if $cd_edit.help_pre}<div class="messages help">{$cd_edit.help_pre}</div><br />{/if}
+    {if $cd_edit.help_pre}<div class="messages help">{$cd_edit.help_pre|purify}</div><br />{/if}
     <table class="form-layout-compressed">
     {foreach from=$cd_edit.fields item=element key=field_id}
       {if $element.is_view eq 0}{* fix for CRM-2699 *}
         {if $element.help_pre}
-            <tr><td class="label"></td><td class="description">{$element.help_pre}</td></tr>
+            <tr><td class="label"></td><td class="description">{$element.help_pre|purify}</td></tr>
         {/if}
 	{if $element.options_per_line }
         {*assign var="element_name" value=$element.custom_group_id|cat:_|cat:$field_id|cat:_|cat:$element.name*}
@@ -101,7 +101,7 @@
      {/if}
     {/foreach}
     </table>
-    {if $cd_edit.help_post}<br /><div class="messages help">{$cd_edit.help_post}</div>{/if}
+    {if $cd_edit.help_post}<br /><div class="messages help">{$cd_edit.help_post|purify}</div>{/if}
     </fieldset>
 {/foreach}
 {/strip}
