@@ -165,6 +165,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         CRM_Core_Action::DELETE
       );
       //$this->setContext( $id, $action );
+      $controller->setParent($this);
       $controller->set('id', $id);
       $controller->process();
       return $controller->run();
