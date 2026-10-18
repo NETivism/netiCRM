@@ -96,7 +96,40 @@ class CRM_Event_Form_Task_Email extends CRM_Event_Form_Task {
    * @return void
    */
   public function postProcess() {
+    $this->mergeParticipantTokenValues();
     CRM_Contact_Form_Task_EmailCommon::postProcess($this);
+  }
+
+  /**
+   * Merge participant fields (contact_id, event_id, source, role_id,
+   * status_id) into $this->_contactDetails so {participant.*} tokens can
+   * be resolved per recipient during send. Keyed by contact_id since that
+   * is the only recipient key the generic send-email pipeline understands;
+   * if a contact has more than one participant record in the selected set,
+   * the last one wins.
+   *
+   * @return void
+   */
+  protected function mergeParticipantTokenValues() {
+    if (empty($this->_participantIds) || empty($this->_contactDetails)) {
+      return;
+    }
+
+    $participantIds = implode(',', array_map('intval', $this->_participantIds));
+    $dao = CRM_Core_DAO::executeQuery("
+      SELECT contact_id, event_id, source, role_id, status_id
+      FROM civicrm_participant
+      WHERE id IN (%1)
+    ", [1 => [$participantIds, 'CommaSeparatedIntegers']]);
+    while ($dao->fetch()) {
+      if (isset($this->_contactDetails[$dao->contact_id])) {
+        $this->_contactDetails[$dao->contact_id]['contact_id'] = $dao->contact_id;
+        $this->_contactDetails[$dao->contact_id]['event_id'] = $dao->event_id;
+        $this->_contactDetails[$dao->contact_id]['source'] = $dao->source;
+        $this->_contactDetails[$dao->contact_id]['role_id'] = $dao->role_id;
+        $this->_contactDetails[$dao->contact_id]['status_id'] = $dao->status_id;
+      }
+    }
   }
 
   /**

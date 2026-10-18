@@ -1305,12 +1305,14 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       }
 
       $tokenSubject = CRM_Utils_Token::replaceContactTokens($subject, $values, FALSE, $subjectToken, FALSE, $escapeSmarty);
+      $tokenSubject = CRM_Utils_Token::replaceParticipantTokens($tokenSubject, $values, FALSE, $subjectToken, FALSE, $escapeSmarty);
       $tokenSubject = CRM_Utils_Token::replaceDomainTokens($tokenSubject, $domain, FALSE, $subjectToken, $escapeSmarty);
       $tokenSubject = CRM_Utils_Token::replaceHookTokens($tokenSubject, $values, $categories, FALSE, $escapeSmarty);
 
       //CRM-4539
       if ($values['preferred_mail_format'] == 'Text' || $values['preferred_mail_format'] == 'Both') {
         $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
+        $tokenText = CRM_Utils_Token::replaceParticipantTokens($tokenText, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
         $tokenText = CRM_Utils_Token::replaceDomainTokens($tokenText, $domain, FALSE, $messageToken, $escapeSmarty);
         $tokenText = CRM_Utils_Token::replaceHookTokens($tokenText, $values, $categories, FALSE, $escapeSmarty);
       }
@@ -1320,6 +1322,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
 
       if ($values['preferred_mail_format'] == 'HTML' || $values['preferred_mail_format'] == 'Both') {
         $tokenHtml = CRM_Utils_Token::replaceContactTokens($html, $values, TRUE, $htmlToken, FALSE, $escapeSmarty);
+        $tokenHtml = CRM_Utils_Token::replaceParticipantTokens($tokenHtml, $values, TRUE, $htmlToken, FALSE, $escapeSmarty);
         $tokenHtml = CRM_Utils_Token::replaceDomainTokens($tokenHtml, $domain, TRUE, $htmlToken, $escapeSmarty);
         $tokenHtml = CRM_Utils_Token::replaceHookTokens($tokenHtml, $values, $categories, TRUE, $escapeSmarty);
       }

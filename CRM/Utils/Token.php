@@ -709,6 +709,104 @@ class CRM_Utils_Token {
   }
 
   /**
+   * Replace all the participant-level tokens in $str with information from
+   * $participant.
+   *
+   * @param string  $str               The string with tokens to be replaced
+   * @param array   $participant       Associative array of participant properties
+   * @param boolean $html              Replace tokens with HTML or plain text
+   * @param array   $knownTokens       A list of tokens that are known to exist in the email body
+   * @param boolean $returnBlankToken  return unevaluated token if value is null
+   * @param boolean $escapeSmarty
+   *
+   * @return string                    The processed string
+   * @access public
+   * @static
+   */
+  public static function &replaceParticipantTokens(
+    $str,
+    &$participant,
+    $html = FALSE,
+    $knownTokens = NULL,
+    $returnBlankToken = FALSE,
+    $escapeSmarty = FALSE
+  ) {
+    $key = 'participant';
+    if (self::$_tokens[$key] == NULL) {
+      self::$_tokens[$key] = array_map(function ($field) {
+        return $field['name'];
+      }, CRM_Event_DAO_Participant::fields());
+    }
+
+    // here we intersect with the list of pre-configured valid tokens
+    // so that we remove anything we do not recognize
+    if (!$knownTokens || !CRM_Utils_Array::value($key, $knownTokens)) {
+      return $str;
+    }
+
+    $str = preg_replace_callback(
+      self::tokenRegex($key),
+      function ($matches) use (&$participant, $html, $returnBlankToken, $escapeSmarty) {
+        return CRM_Utils_Token::getParticipantTokenReplacement($matches[1], $participant, $html, $returnBlankToken, $escapeSmarty);
+      },
+      $str
+    );
+
+    $str = preg_replace('/\\\\|\{(\s*)?\}/', ' ', $str);
+    return $str;
+  }
+
+  public static function getParticipantTokenReplacement(
+    $token,
+    &$participant,
+    $html = FALSE,
+    $returnBlankToken = FALSE,
+    $escapeSmarty = FALSE
+  ) {
+    if (self::$_tokens['participant'] == NULL) {
+      self::$_tokens['participant'] = array_map(function ($field) {
+        return $field['name'];
+      }, CRM_Event_DAO_Participant::fields());
+    }
+
+    if (!in_array($token, self::$_tokens['participant'])) {
+      $value = "{participant.$token}";
+    }
+    else {
+      $value = CRM_Utils_Array::retrieveValueRecursive($participant, $token);
+
+      if ($token === 'role_id') {
+        $labels = [];
+        foreach (explode(',', (string) $value) as $roleId) {
+          $roleId = trim($roleId);
+          if ($roleId !== '') {
+            $labels[] = CRM_Event_PseudoConstant::participantRole($roleId);
+          }
+        }
+        $value = implode(', ', $labels);
+      }
+      elseif ($token === 'status_id') {
+        $value = CRM_Event_PseudoConstant::participantStatus($value, NULL, 'label');
+      }
+    }
+
+    if (!$html) {
+      $value = str_replace('&amp;', '&', $value);
+    }
+
+    // if null then return actual token
+    if ($returnBlankToken && !$value) {
+      $value = "{participant.$token}";
+    }
+
+    if ($escapeSmarty) {
+      $value = self::tokenEscapeSmarty($value);
+    }
+
+    return $value;
+  }
+
+  /**
    * Replace all the contact-level tokens in $str with information from
    * $contact.
    *
