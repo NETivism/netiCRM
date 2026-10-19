@@ -482,6 +482,45 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 		}
 		return ret;
 	};
+
+
+	/**
+	 * Simulate focusin/focusout from captured focus/blur
+	 * Code source: jquery-3.6.0.js
+	 */
+
+	// 3.6 installs this when window has no onfocusin, which is every current browser.
+	// jquery.validate checks special.focusin when it loads and otherwise adds its own shim,
+	// which calls the removed jQuery.event.handle, so this must be defined before it loads.
+	jQuery.each( { focus: "focusin", blur: "focusout" }, function( orig, fix ) {
+		var handler = function( event ) {
+			jQuery.event.simulate( fix, event.target, jQuery.event.fix( event ) );
+		};
+
+		jQuery.event.special[ fix ] = {
+			setup: function() {
+				var doc = this.ownerDocument || this.document || this,
+					attaches = jQuery._data( doc, fix );
+
+				if ( !attaches ) {
+					doc.addEventListener( orig, handler, true );
+				}
+				jQuery._data( doc, fix, ( attaches || 0 ) + 1 );
+			},
+			teardown: function() {
+				var doc = this.ownerDocument || this.document || this,
+					attaches = jQuery._data( doc, fix ) - 1;
+
+				if ( !attaches ) {
+					doc.removeEventListener( orig, handler, true );
+					jQuery._removeData( doc, fix );
+
+				} else {
+					jQuery._data( doc, fix, attaches );
+				}
+			}
+		};
+	} );
 }
 
 
