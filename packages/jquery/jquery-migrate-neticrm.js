@@ -195,7 +195,8 @@ var oldToggle = jQuery.fn.toggle;
 jQuery.fn.toggle = function( fn, fn2 ) {
 
 	// Don't mess with animation or css toggles
-	if ( !jQuery.isFunction( fn ) || !jQuery.isFunction( fn2 ) ) {
+	// jQuery.isFunction is removed in 4.0, so do not depend on it here
+	if ( typeof fn !== "function" || typeof fn2 !== "function" ) {
 		return oldToggle.apply( this, arguments );
 	}
 	migrateWarn("jQuery.fn.toggle(handler, handler...) is deprecated");
@@ -273,7 +274,7 @@ jQuery.attr = function( elem, name, value, pass ) {
 			migrateWarn("jQuery.fn.attr( props, pass ) is deprecated");
 		}
 		if ( elem && !rnoAttrNodeType.test( nType ) &&
-			(attrFn ? name in attrFn : jQuery.isFunction(jQuery.fn[name])) ) {
+			(attrFn ? name in attrFn : typeof jQuery.fn[ name ] === "function") ) {
 			return jQuery( elem )[ name ]( value );
 		}
 	}
