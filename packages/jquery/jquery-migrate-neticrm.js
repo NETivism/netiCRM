@@ -377,5 +377,113 @@ jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 } );
 
 
+/**
+ * Restore APIs removed in jQuery 4.0
+ * Migrate 4 only warns about these. Skip on 3.6, where Migrate 3.3.2 or jQuery itself
+ * already provides them; applying twice would e.g. fire the 'ready' event twice.
+ */
+if ( jQueryVersionSince( "4.0.0" ) ) {
+
+	/**
+	 * Detect 'ready' event
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	// Trigger "ready" event only once, on document ready
+	jQuery( function() {
+		jQuery( window.document ).triggerHandler( "ready" );
+	} );
+
+	jQuery.event.special.ready = {
+		setup: function() {
+			if ( this === window.document ) {
+				migrateWarn( "'ready' event is deprecated" );
+			}
+		}
+	};
+
+
+	/**
+	 * Detect 'jQuery.event.props', 'jQuery.event.fixHooks'
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	var originalFix = jQuery.event.fix;
+
+	// Own objects instead of Migrate 4's empty placeholders, so this does not depend on Migrate 4
+	jQuery.event.props = [];
+	jQuery.event.fixHooks = {};
+
+	jQuery.event.fix = function( originalEvent ) {
+		var event,
+			type = originalEvent.type,
+			fixHook = this.fixHooks[ type ],
+			props = jQuery.event.props;
+
+		if ( props.length ) {
+			migrateWarn( "jQuery.event.props are deprecated and removed: " + props.join() );
+			while ( props.length ) {
+				jQuery.event.addProp( props.pop() );
+			}
+		}
+
+		if ( fixHook && !fixHook._migrated_ ) {
+			fixHook._migrated_ = true;
+			migrateWarn( "jQuery.event.fixHooks are deprecated and removed: " + type );
+			if ( ( props = fixHook.props ) && props.length ) {
+				while ( props.length ) {
+					jQuery.event.addProp( props.pop() );
+				}
+			}
+		}
+
+		event = originalFix.call( this, originalEvent );
+
+		return fixHook && fixHook.filter ? fixHook.filter( event, originalEvent ) : event;
+	};
+
+
+	/**
+	 * Detect 'jQuery.event.global'
+	 * Code source: jquery-3.6.0.js (jQuery.event.add)
+	 */
+
+	var oldEventAdd = jQuery.event.add,
+		eventGlobal = {},
+		rnothtmlwhite = /[^\x20\t\r\n\f]+/g,
+		rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
+
+	// Replaces Migrate 4's getter. jQuery.event.add writes to eventGlobal directly,
+	// so only reads from other code are recorded as warnings.
+	migrateWarnProp( jQuery.event, "global", eventGlobal, "jQuery.event.global is removed" );
+
+	jQuery.event.add = function( elem, types, handler, data, selector ) {
+		var t, tmp, type, special,
+			ret = oldEventAdd.apply( this, arguments );
+
+		// Same as jQuery's acceptData(): other nodes never get handlers
+		if ( !( elem.nodeType === 1 || elem.nodeType === 9 || !( +elem.nodeType ) ) ) {
+			return ret;
+		}
+		if ( handler && handler.handler ) {
+			selector = handler.selector;
+		}
+
+		types = ( types || "" ).match( rnothtmlwhite ) || [ "" ];
+		for ( t = 0; t < types.length; t++ ) {
+			tmp = rtypenamespace.exec( types[ t ] ) || [];
+			type = tmp[ 1 ];
+			if ( !type ) {
+				continue;
+			}
+			special = jQuery.event.special[ type ] || {};
+			type = ( selector ? special.delegateType : special.bindType ) || type;
+			eventGlobal[ type ] = true;
+		}
+		return ret;
+	};
+}
+
+
 return jQuery;
 } );
