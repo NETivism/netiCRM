@@ -919,6 +919,29 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   /**
+   * Check the contribution from IPN request belongs to the given payment processor class.
+   *
+   * @param mixed $contributionId contribution ID from request
+   * @param array $classNames allowed class_name of payment processor, eg. ['Payment_ALLPAY']
+   *
+   * @return bool TRUE if contribution belongs to one of the classes
+   */
+  public static function checkContributionProcessor($contributionId, $classNames) {
+    if (!is_scalar($contributionId) || !CRM_Utils_Rule::positiveInteger($contributionId)) {
+      CRM_Core_Error::debug_log_message("IPN: invalid contribution id from request.");
+      return FALSE;
+    }
+    $className = CRM_Core_DAO::singleValueQuery("SELECT pp.class_name FROM civicrm_contribution c INNER JOIN civicrm_payment_processor pp ON pp.id = c.payment_processor_id WHERE c.id = %1", [
+      1 => [$contributionId, 'Integer'],
+    ]);
+    if (empty($className) || !in_array($className, $classNames, TRUE)) {
+      CRM_Core_Error::debug_log_message("IPN: payment processor of contribution {$contributionId} is not ".CRM_Utils_Array::implode(', ', $classNames).".");
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
    * Get the billing location type ID.
    *
    * @param array &$ids array to store extracted IDs
