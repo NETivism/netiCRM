@@ -599,6 +599,248 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 
 		return oldStyle.call( this, elem, name, value, extra );
 	};
+
+
+	/**
+	 * Detect 'jQuery( "#" )' and the 'root' argument of 'jQuery.fn.init'
+	 * Code source: jquery-migrate-3.3.2.js, jquery-3.6.0.js (jQuery.fn.init)
+	 */
+
+	var oldFnInit = jQuery.fn.init,
+		rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/;
+
+	jQuery.fn.init = function( selector, context, root ) {
+		var args = Array.prototype.slice.call( arguments );
+
+		if ( selector === "#" ) {
+
+			// JQuery( "#" ) is a bogus ID selector, but it returned an empty set before jQuery 3.0
+			migrateWarn( "jQuery( '#' ) is not a valid selector" );
+			args[ 0 ] = [];
+
+		} else if ( root ) {
+			if ( typeof selector === "function" ) {
+				migrateWarn( "jQuery.fn.init() root argument is removed" );
+				return root.ready !== undefined ? root.ready( selector ) : selector( jQuery );
+			}
+
+			// 3.6 never used root for HTML or '#id' (getElementById), so those go to the
+			// original init; root.find( "#id" ) would miss elements outside root.
+			if ( selector && typeof selector === "string" && !context &&
+				!( selector[ 0 ] === "<" && selector[ selector.length - 1 ] === ">" &&
+					selector.length >= 3 ) &&
+				!rquickExpr.test( selector ) ) {
+				migrateWarn( "jQuery.fn.init() root argument is removed" );
+				return root.find( selector );
+			}
+		}
+
+		return oldFnInit.apply( this, args );
+	};
+	jQuery.fn.init.prototype = jQuery.fn;
+
+
+	/**
+	 * Detect unquoted '#' in attribute selectors
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	var findProp,
+		oldFind = jQuery.find,
+		rattrHashTest = /\[(\s*[-\w]+\s*)([~|^$*]?=)\s*([-\w#]*?#[-\w#]*)\s*\]/,
+		rattrHashGlob = /\[(\s*[-\w]+\s*)([~|^$*]?=)\s*([-\w#]*?#[-\w#]*)\s*\]/g;
+
+	jQuery.find = function( selector ) {
+		var args = Array.prototype.slice.call( arguments );
+
+		if ( typeof selector === "string" && rattrHashTest.test( selector ) ) {
+
+			// The nonstandard and undocumented unquoted-hash was removed in jQuery 1.12.0
+			// First see if qS thinks it's a valid selector, if so avoid a false positive
+			try {
+				window.document.querySelector( selector );
+			} catch ( err1 ) {
+
+				// Didn't *look* valid to qSA, warn and try quoting what we think is the value
+				selector = selector.replace( rattrHashGlob, function( _, attr, op, value ) {
+					return "[" + attr + op + "\"" + value + "\"]";
+				} );
+
+				// If the regexp *may* have created an invalid selector, don't update it
+				// Note that there may be false alarms if selector uses jQuery extensions
+				try {
+					window.document.querySelector( selector );
+					migrateWarn( "Attribute selector with '#' must be quoted: " + args[ 0 ] );
+					args[ 0 ] = selector;
+				} catch ( err2 ) {
+					migrateWarn( "Attribute selector with '#' was not fixed: " + args[ 0 ] );
+				}
+			}
+		}
+
+		return oldFind.apply( this, args );
+	};
+
+	// Copy properties attached to original jQuery.find method (e.g. .matches, .tokenize)
+	for ( findProp in oldFind ) {
+		if ( Object.prototype.hasOwnProperty.call( oldFind, findProp ) ) {
+			jQuery.find[ findProp ] = oldFind[ findProp ];
+		}
+	}
+
+
+	/**
+	 * Restore 'jQuery.expr.match.bool'
+	 * Code source: jquery-3.6.0.js
+	 */
+
+	jQuery.expr.match.bool = rbooleanAll;
+
+
+	/**
+	 * Restore 'jQuery.expr.attrHandle' for '.attr()'
+	 * Code source: jquery-3.6.0.js (jQuery.attr, Sizzle.attr)
+	 */
+
+	var attrBeforeHandle = jQuery.attr;
+
+	// 3.6 has 16 boolean handles here; boolHook above already gives .attr() the same
+	// results for those, so this starts empty.
+	jQuery.expr.attrHandle = {};
+
+	// Separate from the shared jQuery.attr wrapper above: there, 3.6 would read its boolean
+	// handles before boolHook and change results. Same order as 3.6: attrHooks get first.
+	// 4.0 reads attributes in non-qSA selectors through jQuery.attr, so they get handles too.
+	jQuery.attr = function( elem, name, value ) {
+		var lowerName, handle, hooks, ret;
+
+		if ( value === undefined && elem && elem.nodeType === 1 ) {
+			lowerName = name.toLowerCase();
+			handle = Object.prototype.hasOwnProperty.call( jQuery.expr.attrHandle, lowerName ) &&
+				jQuery.expr.attrHandle[ lowerName ];
+
+			if ( handle ) {
+
+				// 3.6 skips hooks per element (jQuery.attr) but passes isXML per document (Sizzle.attr)
+				hooks = jQuery.isXMLDoc( elem ) ? undefined : jQuery.attrHooks[ lowerName ];
+				if ( !( hooks && "get" in hooks && hooks.get( elem, name ) !== null ) ) {
+					migrateWarn( "jQuery.expr.attrHandle is removed" );
+					ret = handle( elem, name, jQuery.isXMLDoc( elem.ownerDocument || elem ) );
+					if ( ret !== undefined ) {
+						return ret == null ? undefined : ret;
+					}
+				}
+			}
+		}
+
+		return attrBeforeHandle.apply( this, arguments );
+	};
+
+
+	/**
+	 * Restore Sizzle APIs on 'jQuery.find'
+	 * Code source: jquery-3.6.0.js (Sizzle)
+	 */
+
+	jQuery.each( {
+		contains: jQuery.contains,
+		escape: jQuery.escapeSelector,
+		getText: jQuery.text,
+		isXML: jQuery.isXMLDoc,
+		selectors: jQuery.expr,
+		uniqueSort: jQuery.uniqueSort,
+
+		error: function( msg ) {
+			throw new Error( "Syntax error, unrecognized expression: " + msg );
+		},
+
+		// Sizzle.attr does not use attrHooks; booleans follow 3.6's boolean attrHandle entries
+		attr: function( elem, name ) {
+			var lowerName = name.toLowerCase(),
+				isXML = jQuery.isXMLDoc( elem.ownerDocument || elem ),
+				handle = Object.prototype.hasOwnProperty.call( jQuery.expr.attrHandle, lowerName ) &&
+					jQuery.expr.attrHandle[ lowerName ],
+				ret = handle ? handle( elem, name, isXML ) : undefined;
+
+			if ( ret !== undefined ) {
+				return ret;
+			}
+			if ( !isXML && rbooleanAll.test( name ) ) {
+				return elem.getAttribute( name ) != null ? lowerName : null;
+			}
+			return elem.getAttribute( name );
+		},
+
+		// Only the flag detection from 3.6 Sizzle (setDocument and the one-time checks),
+		// computed once for the current document, in the same key order
+		support: ( function() {
+			var matches,
+				support = {},
+				hasDuplicate = false,
+				document = window.document,
+				docElem = document.documentElement,
+				expando = "sizzle" + 1 * new Date(),
+				rnative = /^[^{]+\{\s*\[native \w/,
+				assert = function( fn ) {
+					var el = document.createElement( "fieldset" );
+
+					try {
+						return !!fn( el );
+					} catch ( e ) {
+						return false;
+					} finally {
+						if ( el.parentNode ) {
+							el.parentNode.removeChild( el );
+						}
+					}
+				};
+
+			// detectDuplicates records whether this sort compared equal items
+			support.sortStable = expando.split( "" ).sort( function( a, b ) {
+				if ( a === b ) {
+					hasDuplicate = true;
+				}
+				return 0;
+			} ).join( "" ) === expando;
+			support.detectDuplicates = !!hasDuplicate;
+
+			support.scope = assert( function( el ) {
+				docElem.appendChild( el ).appendChild( document.createElement( "div" ) );
+				return typeof el.querySelectorAll !== "undefined" &&
+					!el.querySelectorAll( ":scope fieldset div" ).length;
+			} );
+			support.attributes = assert( function( el ) {
+				el.className = "i";
+				return !el.getAttribute( "className" );
+			} );
+			support.getElementsByTagName = assert( function( el ) {
+				el.appendChild( document.createComment( "" ) );
+				return !el.getElementsByTagName( "*" ).length;
+			} );
+			support.getElementsByClassName = rnative.test( document.getElementsByClassName );
+			support.getById = assert( function( el ) {
+				docElem.appendChild( el ).id = expando;
+				return !document.getElementsByName || !document.getElementsByName( expando ).length;
+			} );
+			support.qsa = rnative.test( document.querySelectorAll );
+			if ( ( support.matchesSelector = rnative.test( ( matches = docElem.matches ||
+				docElem.webkitMatchesSelector ||
+				docElem.mozMatchesSelector ||
+				docElem.oMatchesSelector ||
+				docElem.msMatchesSelector ) ) ) ) {
+				assert( function( el ) {
+					support.disconnectedMatch = matches.call( el, "*" );
+				} );
+			}
+			support.sortDetached = assert( function( el ) {
+				return el.compareDocumentPosition( document.createElement( "fieldset" ) ) & 1;
+			} );
+
+			return support;
+		} )()
+	}, function( name, value ) {
+		migrateWarnProp( jQuery.find, name, value, "jQuery.find." + name + " is removed" );
+	} );
 }
 
 
