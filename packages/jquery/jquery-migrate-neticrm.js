@@ -260,6 +260,39 @@ var attrFn = jQuery( "<input/>", { size: 1 } ).attr("size") && jQuery.attrFn,
 	rboolean = /^(?:autofocus|autoplay|async|checked|controls|defer|disabled|hidden|loop|multiple|open|readonly|required|scoped|selected)$/i,
 	ruseDefault = /^(?:checked|selected)$/i;
 
+// Named so the jQuery 4.0 block below can install the same hook
+var boolHook = {
+	get: function( elem, name ) {
+		// Align boolean attributes with corresponding properties
+		// Fall back to attribute presence where some booleans are not supported
+		var attrNode,
+			property = jQuery.prop( elem, name );
+		return property === true || typeof property !== "boolean" &&
+			( attrNode = elem.getAttributeNode(name) ) && attrNode.nodeValue !== false ?
+
+			name.toLowerCase() :
+			undefined;
+	},
+	set: function( elem, value, name ) {
+		var propName;
+		if ( value === false ) {
+			// Remove boolean attributes when set to false
+			jQuery.removeAttr( elem, name );
+		} else {
+			// value is true since we know at this point it's type boolean and not false
+			// Set boolean attributes to the same name and set the DOM property
+			propName = jQuery.propFix[ name ] || name;
+			if ( propName in elem ) {
+				// Only set the IDL specifically if it already exists on the element
+				elem[ propName ] = true;
+			}
+
+			elem.setAttribute( name, name.toLowerCase() );
+		}
+		return name;
+	}
+};
+
 // jQuery.attrFn
 migrateWarnProp( jQuery, "attrFn", attrFn || {}, "jQuery.attrFn is deprecated" );
 
@@ -287,37 +320,7 @@ jQuery.attr = function( elem, name, value, pass ) {
 
 	// Restore boolHook for boolean property/attribute synchronization
 	if ( !jQuery.attrHooks[ lowerName ] && rboolean.test( lowerName ) ) {
-		jQuery.attrHooks[ lowerName ] = {
-			get: function( elem, name ) {
-				// Align boolean attributes with corresponding properties
-				// Fall back to attribute presence where some booleans are not supported
-				var attrNode,
-					property = jQuery.prop( elem, name );
-				return property === true || typeof property !== "boolean" &&
-					( attrNode = elem.getAttributeNode(name) ) && attrNode.nodeValue !== false ?
-
-					name.toLowerCase() :
-					undefined;
-			},
-			set: function( elem, value, name ) {
-				var propName;
-				if ( value === false ) {
-					// Remove boolean attributes when set to false
-					jQuery.removeAttr( elem, name );
-				} else {
-					// value is true since we know at this point it's type boolean and not false
-					// Set boolean attributes to the same name and set the DOM property
-					propName = jQuery.propFix[ name ] || name;
-					if ( propName in elem ) {
-						// Only set the IDL specifically if it already exists on the element
-						elem[ propName ] = true;
-					}
-
-					elem.setAttribute( name, name.toLowerCase() );
-				}
-				return name;
-			}
-		};
+		jQuery.attrHooks[ lowerName ] = boolHook;
 
 		// Warn only for attributes that can remain distinct from their properties post-1.9
 		if ( ruseDefault.test( lowerName ) ) {
@@ -521,6 +524,43 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 			}
 		};
 	} );
+
+
+	/**
+	 * Detect boolean attributes in '.attr()'
+	 * Code source: jquery-migrate-1.4.1.js (boolHook above)
+	 */
+
+	// Migrate 4 registers its own hooks for these at load time, so the lazy install
+	// in jQuery.attr above never runs on 4.0. Overriding them also silences its
+	// 'boolean-attributes' warnings. Same names as rboolean.
+	jQuery.each( ( "autofocus autoplay async checked controls defer disabled hidden " +
+		"loop multiple open readonly required scoped selected" ).split( " " ), function( _i, name ) {
+		jQuery.attrHooks[ name ] = boolHook;
+	} );
+
+
+	/**
+	 * Detect boolean attributes in '.removeAttr()'
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	var oldRemoveAttr = jQuery.fn.removeAttr,
+		// 3.6 jQuery.expr.match.bool, which 4.0 removed
+		rbooleanAll = /^(?:checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped)$/i;
+
+	jQuery.fn.removeAttr = function( name ) {
+		var self = this;
+
+		// 4.0 accepts a missing name; unlike 3.3.2, do not throw on it
+		jQuery.each( String( name ).match( /\S+/g ) || [], function( _i, attr ) {
+			if ( rbooleanAll.test( attr ) ) {
+				self.prop( attr, false );
+			}
+		} );
+
+		return oldRemoveAttr.apply( this, arguments );
+	};
 }
 
 
