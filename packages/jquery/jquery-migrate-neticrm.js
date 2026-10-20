@@ -561,6 +561,44 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 
 		return oldRemoveAttr.apply( this, arguments );
 	};
+
+
+	/**
+	 * Append "px" to unitless numbers in 'jQuery.style'
+	 * Code source: jquery-3.6.0.js (jQuery.cssNumber, jQuery.style)
+	 */
+
+	var oldStyle = jQuery.style,
+		// 3.6 jQuery.cssNumber. Migrate 4's copy warns on every access and is the 3.7.1 list.
+		cssNumber36 = {
+			animationIterationCount: true, columnCount: true, fillOpacity: true, flexGrow: true,
+			flexShrink: true, fontWeight: true, gridArea: true, gridColumn: true, gridColumnEnd: true,
+			gridColumnStart: true, gridRow: true, gridRowEnd: true, gridRowStart: true, lineHeight: true,
+			opacity: true, order: true, orphans: true, widows: true, zIndex: true, zoom: true
+		},
+		rmsPrefix = /^-ms-/,
+		rdashAlpha = /-([a-z])/g,
+		rrelNum = /^[+-]=[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)$/,
+
+		// 4.0 removed jQuery.camelCase; Migrate 4 restores it but warns on every call
+		cssCamelCase = function( string ) {
+			return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, function( _all, letter ) {
+				return letter.toUpperCase();
+			} );
+		};
+
+	// 3.6 checks cssNumber with the name before cssProps aliasing, so a wrapper that
+	// maps aliases must be installed before this one and run inside it.
+	jQuery.style = function( elem, name, value, extra ) {
+		if ( ( typeof value === "number" && value === value ||
+				typeof value === "string" && rrelNum.test( value ) ) &&
+			typeof name === "string" && name.indexOf( "--" ) !== 0 &&
+			!cssNumber36[ cssCamelCase( name ) ] ) {
+			value += "px";
+		}
+
+		return oldStyle.call( this, elem, name, value, extra );
+	};
 }
 
 
