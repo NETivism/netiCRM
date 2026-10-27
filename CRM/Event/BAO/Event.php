@@ -1126,7 +1126,7 @@ WHERE civicrm_event.is_active = 1
         // #18853, tokenize thank you top text
         $confirmText = CRM_Utils_Array::value('confirm_email_text', $values['event']);
         if ($confirmText) {
-          $confirmText = self::tokenize($contactID, $confirmText);
+          $confirmText = self::tokenize($contactID, $confirmText, $participantId);
           $eventVar = $template->get_template_vars('event');
           $eventVar['confirm_email_text'] = $confirmText;
           $template->assign('event', $eventVar);
@@ -2168,7 +2168,7 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
    *
    * @return string
    */
-  public static function tokenize($contactId, $input) {
+  public static function tokenize($contactId, $input, $participantId = NULL) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
     if (isset($tokens['contact'])) {
@@ -2180,7 +2180,16 @@ LEFT  JOIN  civicrm_price_field_value value ON ( value.id = lineItem.price_field
       list($contact) = CRM_Mailing_BAO_Mailing::getDetails($contactParams, $returnProperties, FALSE);
       $contact = $contact[$contactId];
 
-      $output = CRM_Utils_Token::replaceContactTokens($input, $contact, FALSE, $tokens, FALSE, TRUE);
+      $output = CRM_Utils_Token::replaceContactTokens($output, $contact, FALSE, $tokens, FALSE, TRUE);
+    }
+    if ($participantId && isset($tokens['participant'])) {
+      $participant = new CRM_Event_DAO_Participant();
+      $participant->id = $participantId;
+      if ($participant->find(TRUE)) {
+        $participantValues = [];
+        CRM_Core_DAO::storeValues($participant, $participantValues);
+        $output = CRM_Utils_Token::replaceParticipantTokens($output, $participantValues, FALSE, $tokens, FALSE, TRUE);
+      }
     }
     return $output;
   }

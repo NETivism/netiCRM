@@ -197,7 +197,19 @@
             </tr>
             <tr class="crm-event-manage-registration-form-block-confirm_thankyou_text">
               <td scope="row" class="label" width="20%">{$form.thankyou_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='thankyou_text' id=$eventID}{/if}</td>
-              <td>{$form.thankyou_text.html}
+              <td>
+                  <span class="helpIcon" id="helphtml3">
+                      <a class="token-trigger" href="#" onClick="return showTokenThankYou();">{$form.token3.label}</a>
+                      {help id="id-token-html" file="CRM/Contact/Form/Task/Email.hlp"}
+                      <div id="tokenHtml3" style="display:none;">
+                          <input style="border:1px solid #999999;" type="text" id="filter3" size="20" name="filter3" onkeyup="filter(this, 3)"/><br />
+                          <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+                          {$form.token3.html}
+                      </div>
+                  </span>
+                  <br>
+                  <br>
+                  {$form.thankyou_text.html}
                  <div class="description">{ts}Optional message for Thank-you screen (may include HTML formatting).{/ts}</div>
               </td>
             </tr>
@@ -386,6 +398,50 @@ invert              = 0
     })
     cj('#expiration_day').val(Math.floor(cj('#expiration_time').val()/24));
     cj('.crm-event-manage-registration-form-block-expiration_time').hide();
+
+    function showTokenThankYou() {
+        initFilter(3);
+        cj("#token3").css({"width":"290px", "size":"8"});
+        cj("#tokenHtml3").show().dialog({
+            title       : {/literal}'{ts escape="js"}Select Token{/ts}'{literal},
+            modal       : true,
+            width       : '310px',
+            resizable   : false,
+            bgiframe    : false,
+            position    : { my: "right center", at: "right center", of: window},
+            overlay     : { opacity: 0.9, background: "black" },
+            beforeclose : function(event, ui) { cj(this).dialog("destroy"); },
+            buttons     : {
+                {/literal}"{ts escape="js"}Done{/ts}"{literal}: function() {
+                    cj(this).dialog("close");
+                    var editor = {/literal}"{$editor}"{literal};
+                    if ( editor == "ckeditor" && window.CKEDITOR && CKEDITOR.instances['thankyou_text'] ) {
+                        CKEDITOR.instances['thankyou_text'].focus();
+                    } else {
+                        cj("#thankyou_text").focus();
+                    }
+                }
+            }
+        });
+        return false;
+    }
+
+    cj('#token3').on('change', function() {
+        var token = cj(this).val() ? cj(this).val()[0] : null;
+        if ( !token ) {
+            return;
+        }
+        var editor = {/literal}"{$editor}"{literal};
+        if ( editor == "ckeditor" && window.CKEDITOR && CKEDITOR.instances['thankyou_text'] ) {
+            CKEDITOR.instances['thankyou_text'].insertHtml( token.toString() );
+        } else if ( editor == "ckeditor5" && window.CiviCKEditor5 ) {
+            window.CiviCKEditor5.insertHtml( 'thankyou_text', token.toString() );
+        } else if ( editor == "joomlaeditor" && window.tinyMCE ) {
+            tinyMCE.execCommand( 'mceInsertContent', false, token );
+        } else {
+            cj("#thankyou_text").replaceSelection( token );
+        }
+    });
 
     {/literal}
 </script>

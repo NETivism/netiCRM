@@ -343,6 +343,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     // tokens
     $tokens = [];
     $tokens = CRM_Core_SelectValues::contactTokens();
+    $tokens = array_merge(CRM_Core_SelectValues::participantTokens(), $tokens);
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
     $form->add(
@@ -373,6 +374,21 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
     // explicit height and width.
     $form->addWysiwyg('thankyou_footer_text', ts('Footer Text'), ['rows' => 2, 'cols' => 40]);
+
+    // tokens for inserting into thankyou_text
+    $tokens = CRM_Core_SelectValues::contactTokens();
+    $tokens = array_merge(CRM_Core_SelectValues::participantTokens(), $tokens);
+    $form->add(
+      'select',
+      'token3',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
+      [
+        'size' => "5",
+        'multiple' => TRUE,
+      ]
+    );
   }
 
   /**
