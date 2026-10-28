@@ -564,6 +564,60 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 
 
 	/**
+	 * Map 'jQuery.cssProps' aliases in 'jQuery.style' and 'jQuery.css'
+	 * Code source: jquery-3.6.0.js (jQuery.style, jQuery.css)
+	 */
+
+	var rmsPrefix = /^-ms-/,
+		rdashAlpha = /-([a-z])/g,
+
+		// 4.0 removed jQuery.camelCase; Migrate 4 restores it but warns on every call
+		cssCamelCase = function( string ) {
+			return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, function( _all, letter ) {
+				return letter.toUpperCase();
+			} );
+		};
+
+	// Keep Migrate 4's object (it only warns on writes) so aliases added by other code land here
+	jQuery.cssProps = jQuery.cssProps || {};
+
+	// 4.0 calls jQuery.style and jQuery.css as properties, so wrapping them covers .css().
+	// Not restorable: animate() decides how to write a property with 4.0's internal
+	// finalPropName, which ignores cssProps, so animating an alias still fails.
+	jQuery.each( [ "style", "css" ], function( _i, fnName ) {
+		var oldFn = jQuery[ fnName ];
+
+		jQuery[ fnName ] = function( elem, name ) {
+			var alias, args, hooks, origName, borrowed;
+
+			if ( typeof name === "string" && name.indexOf( "--" ) !== 0 &&
+				( alias = jQuery.cssProps[ origName = cssCamelCase( name ) ] ) ) {
+				args = Array.prototype.slice.call( arguments );
+				args[ 1 ] = alias;
+				hooks = jQuery.cssHooks;
+
+				// 3.6 falls back to the hook of the original name; 4.0 only sees the alias,
+				// so lend it to the alias for this call
+				if ( !hooks[ alias ] && hooks[ origName ] ) {
+					hooks[ alias ] = hooks[ origName ];
+					borrowed = true;
+				}
+
+				try {
+					return oldFn.apply( this, args );
+				} finally {
+					if ( borrowed ) {
+						delete hooks[ alias ];
+					}
+				}
+			}
+
+			return oldFn.apply( this, arguments );
+		};
+	} );
+
+
+	/**
 	 * Append "px" to unitless numbers in 'jQuery.style'
 	 * Code source: jquery-3.6.0.js (jQuery.cssNumber, jQuery.style)
 	 */
@@ -576,19 +630,10 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 			gridColumnStart: true, gridRow: true, gridRowEnd: true, gridRowStart: true, lineHeight: true,
 			opacity: true, order: true, orphans: true, widows: true, zIndex: true, zoom: true
 		},
-		rmsPrefix = /^-ms-/,
-		rdashAlpha = /-([a-z])/g,
-		rrelNum = /^[+-]=[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)$/,
+		rrelNum = /^[+-]=[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)$/;
 
-		// 4.0 removed jQuery.camelCase; Migrate 4 restores it but warns on every call
-		cssCamelCase = function( string ) {
-			return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, function( _all, letter ) {
-				return letter.toUpperCase();
-			} );
-		};
-
-	// 3.6 checks cssNumber with the name before cssProps aliasing, so a wrapper that
-	// maps aliases must be installed before this one and run inside it.
+	// 3.6 checks cssNumber with the name before cssProps aliasing, so the alias wrapper
+	// above is installed first and runs inside this one.
 	jQuery.style = function( elem, name, value, extra ) {
 		if ( ( typeof value === "number" && value === value ||
 				typeof value === "string" && rrelNum.test( value ) ) &&
@@ -841,6 +886,80 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 	}, function( name, value ) {
 		migrateWarnProp( jQuery.find, name, value, "jQuery.find." + name + " is removed" );
 	} );
+
+
+	/**
+	 * Detect 'jQuery.swap'
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	// 4.0 never calls jQuery.swap itself, so unlike 3.3.2 every call is a warning
+	jQuery.swap = function( elem, options, callback, args ) {
+		var ret, name,
+			old = {};
+
+		migrateWarn( "jQuery.swap() is undocumented and deprecated" );
+
+		// Remember the old values, and insert the new ones
+		for ( name in options ) {
+			old[ name ] = elem.style[ name ];
+			elem.style[ name ] = options[ name ];
+		}
+
+		ret = callback.apply( elem, args || [] );
+
+		// Revert the old values
+		for ( name in options ) {
+			elem.style[ name ] = old[ name ];
+		}
+
+		return ret;
+	};
+
+
+	/**
+	 * Restore css hooks that 4.0 removed
+	 * Code source: jquery-3.6.0.js (jQuery.cssHooks.opacity, top and left, marginLeft)
+	 */
+
+	// Must not call jQuery.css here: it calls this hook first and would recurse
+	jQuery.cssHooks.opacity = {
+		get: function( elem, computed ) {
+			var ret;
+
+			if ( computed ) {
+				ret = window.getComputedStyle( elem ).opacity;
+
+				// Detached elements have no computed value, 3.6 falls back to the inline style
+				if ( ret === "" ) {
+					ret = elem.style.opacity;
+				}
+
+				return ret === "" ? "1" : ret;
+			}
+		}
+	};
+
+	// 3.6 deletes the getters of these three on first use in current browsers, leaving
+	// empty objects
+	jQuery.each( [ "top", "left", "marginLeft" ], function( _i, name ) {
+		jQuery.cssHooks[ name ] = {};
+	} );
+
+
+	/**
+	 * Restore 'jQuery.Tween.propHooks.scrollTop' and 'scrollLeft'
+	 * Code source: jquery-3.6.0.js (Tween.propHooks)
+	 */
+
+	// 4.0's default setter writes any target; this skips ones without a parentNode, as 3.6 does
+	jQuery.Tween.propHooks.scrollTop = jQuery.Tween.propHooks.scrollLeft = {
+		set: function( tween ) {
+			if ( tween.elem.nodeType && tween.elem.parentNode ) {
+				tween.elem[ tween.prop ] = tween.now;
+			}
+		}
+	};
 }
 
 
