@@ -148,7 +148,10 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $pass = TRUE;
 
     // check contribution id matches
-    if (!strstr($contribution->trxn_id, $input['MerchantTradeNo'])) {
+    // trxn_id is MerchantTradeNo, or MerchantTradeNo-gwsr when recurringCopySetting loads the latest installment
+    // no substring match, a signed callback of contribution 12 must not complete contribution 123
+    $merchantTradeNo = is_scalar($input['MerchantTradeNo']) ? (string) $input['MerchantTradeNo'] : '';
+    if ($merchantTradeNo === '' || ((string) $contribution->trxn_id !== $merchantTradeNo && strpos((string) $contribution->trxn_id, $merchantTradeNo.'-') !== 0)) {
       $msg = "AllPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['MerchantTradeNo']} ";
       CRM_Core_Error::debug_log_message($msg);
       $note .= ts("Failuare: $msg")."\n";
@@ -165,20 +168,24 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // allpay validation
-    // only validate this when not test.
-    if (!empty($input['CheckMacValue'])) {
-      $mac = CRM_Core_Payment_ALLPAY::generateMacValue($this->_post, self::$_payment_processor);
-      if (strtolower($input['CheckMacValue']) != strtolower($mac)) {
-        $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
-        $msg = "AllPay: Failuare: CheckMacValue not match. Should be '{$mac}', but '{$input['CheckMacValue']}' displayed.";
-        CRM_Core_Error::debug_log_message($msg);
-        $pass = FALSE;
-      }
+    // CheckMacValue is the only proof the request comes from allpay, always required
+    // without HashKey / HashIV the mac can be computed by anyone
+    if (empty(self::$_payment_processor['password']) || empty(self::$_payment_processor['signature'])) {
+      CRM_Core_Error::debug_log_message("AllPay: Failuare: could not find HashKey / HashIV of payment processor for contribution {$contribution->id}");
+      return FALSE;
+    }
+    $mac = CRM_Core_Payment_ALLPAY::generateMacValue($this->_post, self::$_payment_processor);
+    if (!is_string($input['CheckMacValue'] ?? NULL) || strtolower($input['CheckMacValue']) !== strtolower($mac)) {
+      $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
+      $msg = "AllPay: Failuare: CheckMacValue not match. Should be '{$mac}', but '{$input['CheckMacValue']}' displayed.";
+      CRM_Core_Error::debug_log_message($msg);
+      $pass = FALSE;
     }
 
     // recurring validation
     // certainly this is recurring contribution
-    if ($ids['contributionRecur']) {
+    // only touch recurring data after request verified
+    if ($pass && $ids['contributionRecur']) {
       $recur = &$objects['contributionRecur'];
       $params = $null = [];
       // see if we are first time, if not first time, save new contribution

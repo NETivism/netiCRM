@@ -167,6 +167,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     ];
+    $macData = $post;
+    $post['CheckMacValue'] = CRM_Core_Payment_ALLPAY::generateMacValue($macData, $this->_processor);
     $this->doIPN(['allpay', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
@@ -267,6 +269,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TradeDate' => date('Y-m-d H:i:s', $now),
       'SimulatePaid' => '1',
     ];
+    $macData = $post;
+    $post['CheckMacValue'] = CRM_Core_Payment_ALLPAY::generateMacValue($macData, $this->_processor);
     $this->doIPN(['allpay', 'ipn', 'Credit'], $post, $get, __LINE__);
 
     // verify contribution status after trigger
@@ -314,6 +318,8 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'TotalSuccessTimes' => 2,
       'SimulatePaid' => '1',
     ];
+    $macData = $post;
+    $post['CheckMacValue'] = CRM_Core_Payment_ALLPAY::generateMacValue($macData, $this->_processor);
     $this->doIPN(['allpay', 'ipn', 'Credit'], $post, $get, __LINE__);
     $trxn_id2 = CRM_Core_Payment_ALLPAY::generateRecurTrxn($trxn_id, $gwsr1);
 
