@@ -104,12 +104,34 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
         ts('Path to qpdf executable'),
         ['size' => 64, 'maxlength' => 256]
       );
+      $this->addFormRule(['CRM_Admin_Form_Setting_Miscellaneous', 'formRule']);
     }
     else {
       $this->assign('admin', FALSE);
     }
 
     parent::buildQuickForm();
+  }
+
+  /**
+   * Validate executable path settings.
+   *
+   * @param array $fields The input form values.
+   *
+   * @return bool|array TRUE if valid, otherwise array of errors.
+   */
+  public static function formRule($fields) {
+    $errors = [];
+    $executables = [
+      'wkhtmltopdfPath' => 'wkhtmltopdf',
+      'qpdfPath' => 'qpdf',
+    ];
+    foreach ($executables as $field => $basename) {
+      if (!empty($fields[$field]) && !CRM_Utils_PDF_Utils::isAllowedExecutable($fields[$field], $basename)) {
+        $errors[$field] = ts('Path must be an absolute path to an executable file named %1.', [1 => $basename]);
+      }
+    }
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**

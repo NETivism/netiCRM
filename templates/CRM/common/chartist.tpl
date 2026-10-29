@@ -1,17 +1,19 @@
 
 {* Shared chartist libs load in <head> via {js}/{css}; both auto-dedupe so
-   multiple charts on one page load them only once (replaces $crmChartistAdded). *}
-{js src=packages/moment/moment.min.js library=civicrm/civicrm-js-chartist}{/js}
-{js src=packages/chartist/dist/chartist.min.js library=civicrm/civicrm-js-chartist}{/js}
-{js src=packages/chartist/plugin/chartist-plugin-axistitle.js library=civicrm/civicrm-js-chartist}{/js}
+   multiple charts on one page load them only once (replaces $crmChartistAdded).
+   Core and plugins need different weights: on Drupal 7 re-adding a file resets its
+   weight, so with several charts every file ends up equal and PHP 7 sort shuffles them. *}
+{js src=packages/moment/moment.min.js group=999 weight=997 library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/dist/chartist.min.js group=999 weight=997 library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-axistitle.js group=999 weight=998 library=civicrm/civicrm-js-chartist}{/js}
 {css src=packages/chartist/dist/chartist.min.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
-{css src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
-{css src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
-{css src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css group=999 weight=997 library=civicrm/civicrm-css-chartist}{/css}
-{js src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js library=civicrm/civicrm-js-chartist}{/js}
-{js src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js library=civicrm/civicrm-js-chartist}{/js}
-{js src=packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js library=civicrm/civicrm-js-chartist}{/js}
-{js src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend.js library=civicrm/civicrm-js-chartist}{/js}
+{css src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.css group=999 weight=998 library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.css group=999 weight=998 library=civicrm/civicrm-css-chartist}{/css}
+{css src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend-custom.css group=999 weight=998 library=civicrm/civicrm-css-chartist}{/css}
+{js src=packages/chartist/plugin/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js group=999 weight=998 library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-verticalhint/chartist-plugin-verticalhint.js group=999 weight=998 library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-fill-donut/chartist-plugin-fill-donut.min.js group=999 weight=998 library=civicrm/civicrm-js-chartist}{/js}
+{js src=packages/chartist/plugin/chartist-plugin-legend/chartist-plugin-legend.js group=999 weight=998 library=civicrm/civicrm-js-chartist}{/js}
 <div class="chartist-wrapper">
 {if $chartist.series}
   {if $chartist.title}<h3>{$chartist.title}</h3>{/if}
