@@ -960,6 +960,232 @@ if ( jQueryVersionSince( "4.0.0" ) ) {
 			}
 		}
 	};
+
+
+	/**
+	 * Restore 'jQuery.fn.andSelf'
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	var oldSelf = jQuery.fn.addBack;
+
+	jQuery.fn.andSelf = function() {
+		migrateWarn( "jQuery.fn.andSelf() is deprecated and removed, use jQuery.fn.addBack()" );
+		return oldSelf.apply( this, arguments );
+	};
+
+
+	/**
+	 * Restore 'success', 'error' and 'complete' on the jqXHR object
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	// Support jQuery slim which excludes the ajax module
+	if ( jQuery.ajax ) {
+		var oldAjax = jQuery.ajax;
+
+		// Synchronous requests fire their events before this returns, so ajaxComplete
+		// handlers still do not see these methods, same as 3.3.2
+		jQuery.ajax = function() {
+			var jqXHR = oldAjax.apply( this, arguments );
+
+			// Be sure we got a jqXHR (e.g., not sync)
+			if ( jqXHR.promise ) {
+				migrateWarnFunc( jqXHR, "success", jqXHR.done,
+					"jQXHR.success is deprecated and removed" );
+				migrateWarnFunc( jqXHR, "error", jqXHR.fail,
+					"jQXHR.error is deprecated and removed" );
+				migrateWarnFunc( jqXHR, "complete", jqXHR.always,
+					"jQXHR.complete is deprecated and removed" );
+			}
+
+			return jqXHR;
+		};
+	}
+
+
+	/**
+	 * Restore '.offset()' on window and document
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	var oldOffset = jQuery.fn.offset;
+
+	// 4.0 calls elem.getClientRects() on any object and throws; 3.6 returned undefined
+	jQuery.fn.offset = function() {
+		var elem = this[ 0 ];
+
+		if ( elem && ( !elem.nodeType || !elem.getBoundingClientRect ) ) {
+			migrateWarn( "jQuery.fn.offset() requires a valid DOM element" );
+			return arguments.length ? this : undefined;
+		}
+
+		return oldOffset.apply( this, arguments );
+	};
+
+
+	/**
+	 * Restore 'jQuery.UNSAFE_restoreLegacyHtmlPrefilter'
+	 * Code source: jquery-migrate-3.3.2.js
+	 */
+
+	var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi;
+
+	// Intentionally opt-in only: it brings back CVE-2020-11022 and CVE-2020-11023
+	jQuery.UNSAFE_restoreLegacyHtmlPrefilter = function() {
+		jQuery.htmlPrefilter = function( html ) {
+			return html.replace( rxhtmlTag, "<$1></$2>" );
+		};
+	};
+
+
+	/**
+	 * Restore 'jQuery.attrHooks.type' and 'jQuery.valHooks.option'
+	 * Code source: jquery-3.6.0.js (attrHooks), jquery-4.0.0.js (valHooks.option, IE only)
+	 */
+
+	// 3.6's setter only does something when support.radioValue is false (IE)
+	jQuery.attrHooks.type = {
+		set: function() {}
+	};
+
+	jQuery.valHooks.option = {
+		get: function( elem ) {
+			var val = elem.getAttribute( "value" );
+
+			return val != null ?
+				val :
+				( jQuery.text( elem ).match( rnothtmlwhite ) || [] ).join( " " );
+		}
+	};
+
+
+	/**
+	 * Restore 'jQuery.support'
+	 * Code source: jquery-3.6.0.js
+	 * Detected in this browser, not hard-coded: for instance 'focusin' is false in Chromium
+	 */
+
+	( function() {
+		var support = jQuery.support,
+			document = window.document,
+			documentElement = document.documentElement,
+			fragment = document.createDocumentFragment(),
+			div = fragment.appendChild( document.createElement( "div" ) ),
+			input = document.createElement( "input" ),
+			select, opt, xhrSupported;
+
+		// Fragment checks (3.6 L4915)
+		input.setAttribute( "type", "radio" );
+		input.setAttribute( "checked", "checked" );
+		input.setAttribute( "name", "t" );
+		div.appendChild( input );
+		support.checkClone = div.cloneNode( true ).cloneNode( true ).lastChild.checked;
+
+		div.innerHTML = "<textarea>x</textarea>";
+		support.noCloneChecked = !!div.cloneNode( true ).lastChild.defaultValue;
+
+		div.innerHTML = "<option></option>";
+		support.option = !!div.lastChild;
+
+		// Form element checks (3.6 L7960)
+		input = document.createElement( "input" );
+		select = document.createElement( "select" );
+		opt = select.appendChild( document.createElement( "option" ) );
+		input.type = "checkbox";
+		support.checkOn = input.value !== "";
+		support.optSelected = opt.selected;
+
+		input = document.createElement( "input" );
+		input.value = "t";
+		input.type = "radio";
+		support.radioValue = input.value === "t";
+
+		support.focusin = "onfocusin" in window;
+		support.createHTMLDocument = ( function() {
+			var body = document.implementation.createHTMLDocument( "" ).body;
+			body.innerHTML = "<form></form><form></form>";
+			return body.childNodes.length === 2;
+		} )();
+
+		// jQuery.ajaxSettings.xhr() still exists in 4.0
+		if ( jQuery.ajax ) {
+			xhrSupported = jQuery.ajaxSettings.xhr();
+			support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported );
+			support.ajax = !!xhrSupported;
+		}
+
+		// Style checks (3.6 L6439): the layout-based ones run lazily and only once
+		( function() {
+			var pixelPositionVal, boxSizingReliableVal, scrollboxSizeVal, pixelBoxStylesVal,
+				reliableMarginLeftVal,
+				container = document.createElement( "div" ),
+				box = document.createElement( "div" );
+
+			function roundPixelMeasures( measure ) {
+				return Math.round( parseFloat( measure ) );
+			}
+
+			function computeStyleTests() {
+				var boxStyle;
+
+				if ( !box ) {
+					return;
+				}
+
+				container.style.cssText = "position:absolute;left:-11111px;width:60px;" +
+					"margin-top:1px;padding:0;border:0";
+				box.style.cssText =
+					"position:relative;display:block;box-sizing:border-box;overflow:scroll;" +
+					"margin:auto;border:1px;padding:1px;" +
+					"width:60%;top:1%";
+				documentElement.appendChild( container ).appendChild( box );
+
+				boxStyle = window.getComputedStyle( box );
+				pixelPositionVal = boxStyle.top !== "1%";
+				reliableMarginLeftVal = roundPixelMeasures( boxStyle.marginLeft ) === 12;
+
+				box.style.right = "60%";
+				pixelBoxStylesVal = roundPixelMeasures( boxStyle.right ) === 36;
+				boxSizingReliableVal = roundPixelMeasures( boxStyle.width ) === 36;
+
+				box.style.position = "absolute";
+				scrollboxSizeVal = roundPixelMeasures( box.offsetWidth / 3 ) === 12;
+
+				documentElement.removeChild( container );
+
+				// Also marks the checks as done
+				box = null;
+			}
+
+			box.style.backgroundClip = "content-box";
+			box.cloneNode( true ).style.backgroundClip = "";
+			support.clearCloneStyle = box.style.backgroundClip === "content-box";
+
+			jQuery.extend( support, {
+				boxSizingReliable: function() {
+					computeStyleTests();
+					return boxSizingReliableVal;
+				},
+				pixelBoxStyles: function() {
+					computeStyleTests();
+					return pixelBoxStylesVal;
+				},
+				pixelPosition: function() {
+					computeStyleTests();
+					return pixelPositionVal;
+				},
+				reliableMarginLeft: function() {
+					computeStyleTests();
+					return reliableMarginLeftVal;
+				},
+				scrollboxSize: function() {
+					computeStyleTests();
+					return scrollboxSizeVal;
+				}
+			} );
+		} )();
+	} )();
 }
 
 
