@@ -4069,6 +4069,17 @@ div#crm-toolTip
   filter: Alpha(Opacity=60);
 }
 
+/* The jQuery UI theme files are kept as shipped; override the blue active
+   background here (same selectors as the theme). */
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+  background: #555;
+}
+
 .crm-container .crm-search-display_name a {
   min-width: 50px;
 }
