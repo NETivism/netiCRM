@@ -29,6 +29,10 @@ jQuery.neticrmMigrateVersion = "3";
 // Set to true to prevent console output;
 jQuery.neticrmMigrateMute = true;
 
+// jQuery UI 1.14 turns back-compat off by default and reads this flag when it loads,
+// so it must be set here, before jQuery UI. Our dialogs still use the dialogClass option.
+jQuery.uiBackCompat = true;
+
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
 	var i,
