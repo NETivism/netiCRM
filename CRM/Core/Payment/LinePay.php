@@ -32,7 +32,7 @@ class CRM_Core_Payment_LinePay {
    * A confirm arriving later is not sent to LINE Pay; the reserved transaction
    * is never captured, so the donor is not charged.
    */
-  public const CONFIRM_EXPIRED_TIME = 3600;
+  public const CONFIRM_EXPIRED_TIME = 600;
 
   /**
    * Days a preapproved regKey stays valid without being used (refs #45587).
@@ -246,6 +246,10 @@ class CRM_Core_Payment_LinePay {
     $mode = !empty($paymentProcessor['is_test']) ? 'test' : 'live';
     $linePay = new self($mode, $paymentProcessor);
     $thankyouUrl = $linePay->doConfirm($params);
+    if (empty($thankyouUrl)) {
+      CRM_Utils_System::permissionDenied();
+      return;
+    }
     CRM_Utils_System::redirect($thankyouUrl);
   }
 
@@ -254,12 +258,19 @@ class CRM_Core_Payment_LinePay {
    *
    * @param array $params confirmation parameters (including transactionId)
    *
-   * @return string thank you URL the caller should redirect to
+   * @return string|null thank you URL the caller should redirect to, NULL when
+   *   the request is forged and should be denied
    */
   public function doConfirm($params) {
     $config = CRM_Core_Config::singleton();
     $isEvent = !empty($params['pid']) && !empty($params['eid']);
     $thankYouPath = $isEvent ? 'civicrm/event/register' : 'civicrm/contribute/transact';
+    // A qfKey not shaped like the one we generated never comes from our own
+    // redirect, don't echo it back into the failed url.
+    if (!CRM_Core_Key::valid($params['qfKey'], TRUE)) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: malformed qfKey for contribution {$params['cid']}.");
+      return NULL;
+    }
     $failedUrl = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
 
     // The confirm url is public, only confirm the transaction this browser
@@ -267,6 +278,12 @@ class CRM_Core_Payment_LinePay {
     $binding = self::getConfirmSession($params, $isEvent);
     if (empty($binding)) {
       return $failedUrl;
+    }
+    // This session did send a transaction, asking for another contribution or
+    // transaction means the request was forged.
+    if ((int) $binding['cid'] !== (int) $params['cid'] || !hash_equals((string) $binding['transactionId'], (string) $params['transactionId'])) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: contribution {$params['cid']} or transaction doesn't match the confirm session.");
+      return NULL;
     }
     // Reloading the confirm url after it was processed.
     if (!empty($binding['thankyou_url'])) {
@@ -280,8 +297,10 @@ class CRM_Core_Payment_LinePay {
       self::setConfirmSession($params['qfKey'], NULL);
       return $failedUrl;
     }
+    // The session binding matched, so a mismatch here means the request or
+    // the contribution was tampered with.
     if (!$this->isLinePayContribution($contribution, $params)) {
-      return $failedUrl;
+      return NULL;
     }
     // Only pending contribution can be confirmed.
     if ((int) $contribution->contribution_status_id !== 2) {
@@ -539,21 +558,21 @@ class CRM_Core_Payment_LinePay {
   }
 
   /**
-   * Load the confirm binding matching a confirm request.
+   * Load the confirm binding of a confirm request.
    *
    * The qfKey must be signed by this browser session for the payment form
-   * controller, and the binding stored by doRequest() under it must carry the
-   * same contribution id and transactionId as the request.
+   * controller, and doRequest() must have stored a binding under it. The
+   * caller still has to compare the binding with the request.
    *
-   * @param array $params confirm parameters (qfKey, cid, transactionId)
+   * @param array $params confirm parameters (qfKey, cid)
    * @param bool $isEvent whether the payment comes from event registration
    *
-   * @return array|null the binding, or NULL when the request is not verified
+   * @return array|null the binding, or NULL when this session has none
    */
   private static function getConfirmSession($params, $isEvent) {
     $qfKey = (string) $params['qfKey'];
     $controller = $isEvent ? 'CRM_Event_Controller_Registration' : 'CRM_Contribute_Controller_Contribution';
-    if (strpos($qfKey, '_') === FALSE || !CRM_Core_Key::validate($qfKey, $controller, TRUE)) {
+    if (!CRM_Core_Key::validate($qfKey, $controller, TRUE)) {
       CRM_Core_Error::debug_log_message("LinePay confirm: invalid qfKey for contribution {$params['cid']}.");
       return NULL;
     }
@@ -561,10 +580,6 @@ class CRM_Core_Payment_LinePay {
     $binding = $session->get($qfKey, self::CONFIRM_SESSION_SCOPE);
     if (empty($binding) || !is_array($binding)) {
       CRM_Core_Error::debug_log_message("LinePay confirm: no confirm session for contribution {$params['cid']}.");
-      return NULL;
-    }
-    if ((int) $binding['cid'] !== (int) $params['cid'] || !hash_equals((string) $binding['transactionId'], (string) $params['transactionId'])) {
-      CRM_Core_Error::debug_log_message("LinePay confirm: contribution {$params['cid']} or transaction doesn't match the confirm session.");
       return NULL;
     }
     return $binding;

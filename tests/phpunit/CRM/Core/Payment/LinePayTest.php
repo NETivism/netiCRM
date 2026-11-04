@@ -681,23 +681,37 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   }
 
   /**
-   * A valid session may only confirm the contribution / transaction it sent.
+   * A valid session may only confirm the contribution / transaction it sent,
+   * a forged request through the confirm url gets 403.
    */
   public function testConfirmRejectsMismatchedBinding() {
+    if (!class_exists('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException')) {
+      $this->markTestSkipped('permissionDenied() only throws on Drupal 8+.');
+    }
     $sent = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
     $other = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
     $params = $this->prepareConfirm($sent['contribution']->id);
     $this->prepareConfirm($other['contribution']->id, ['expired' => 0]);
-    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
 
-    // other contribution with the session of the sent one
-    $forged = $params;
-    $forged['cid'] = $other['contribution']->id;
-    $linePay->doConfirm($forged);
-    // sent contribution with another transaction
-    $forged = $params;
-    $forged['transactionId'] = 'lptxn' . $other['contribution']->id;
-    $linePay->doConfirm($forged);
+    $forgeries = [
+      'other contribution with the session of the sent one' => ['cid' => $other['contribution']->id],
+      'sent contribution with another transaction' => ['transactionId' => 'lptxn' . $other['contribution']->id],
+    ];
+    $originalGet = $_GET;
+    foreach ($forgeries as $case => $forged) {
+      $_GET = array_merge($params, $forged);
+      $denied = FALSE;
+      try {
+        CRM_Core_Payment_LinePay::confirm();
+      }
+      catch (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e) {
+        $denied = TRUE;
+      }
+      finally {
+        $_GET = $originalGet;
+      }
+      $this->assertTrue($denied, "Forged confirm ({$case}) should get 403. " . __LINE__);
+    }
 
     $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Mismatched confirm must not call LINE Pay. ' . __LINE__);
     $this->assertEquals(2, $this->contributionStatusOf($sent['contribution']->id), __LINE__);
@@ -705,7 +719,8 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   }
 
   /**
-   * A contribution not paid by LINE Pay is never confirmed.
+   * A contribution not paid by LINE Pay is never confirmed and the request is
+   * denied.
    */
   public function testConfirmRejectsNonLinePayContribution() {
     $setup = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
@@ -714,8 +729,9 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     $params = $this->prepareConfirm($contributionId, ['instrument' => FALSE]);
 
     $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
-    $linePay->doConfirm($params);
+    $url = $linePay->doConfirm($params);
 
+    $this->assertNull($url, 'Non LINE Pay contribution should be denied. ' . __LINE__);
     $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Non LINE Pay contribution must not call LINE Pay. ' . __LINE__);
     $this->assertEquals(2, $this->contributionStatusOf($contributionId), __LINE__);
   }
