@@ -204,6 +204,56 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   }
 
   /**
+   * Turn a contribution into a LINE Pay one sent by doRequest() and bind it to
+   * the current session, as the browser returning from LINE Pay would carry.
+   *
+   * @param int $contributionId contribution ID
+   * @param array $opts overrides: expired, instrument (FALSE keeps the original)
+   *
+   * @return array doConfirm() parameters
+   */
+  protected function prepareConfirm($contributionId, $opts = []) {
+    $transactionId = 'lptxn' . $contributionId;
+    $instrumentId = CRM_Core_DAO::singleValueQuery("SELECT v.value FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.name = 'LinePay'");
+    if (empty($instrumentId)) {
+      $this->markTestSkipped('LinePay payment instrument is missing.');
+    }
+    if (isset($opts['instrument']) && $opts['instrument'] === FALSE) {
+      $instrumentId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'payment_instrument_id');
+    }
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution SET trxn_id = %1, payment_instrument_id = %2 WHERE id = %3", [
+      1 => [$transactionId, 'String'],
+      2 => [$instrumentId, 'Integer'],
+      3 => [$contributionId, 'Positive'],
+    ]);
+    $qfKey = CRM_Core_Key::get('CRM_Contribute_Controller_Contribution', TRUE);
+    CRM_Core_Session::singleton()->set($qfKey, [
+      'cid' => (int) $contributionId,
+      'transactionId' => $transactionId,
+      'expired' => $opts['expired'] ?? CRM_REQUEST_TIME + CRM_Core_Payment_LinePay::CONFIRM_EXPIRED_TIME,
+    ], CRM_Core_Payment_LinePay::CONFIRM_SESSION_SCOPE);
+    return [
+      'qfKey' => $qfKey,
+      'cid' => $contributionId,
+      'ppid' => $this->_processor['id'],
+      'transactionId' => $transactionId,
+    ];
+  }
+
+  /**
+   * Current contribution_status_id of a contribution, read from the DB.
+   *
+   * @param int $contributionId contribution ID
+   *
+   * @return int
+   */
+  protected function contributionStatusOf($contributionId) {
+    return (int) CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE id = %1", [
+      1 => [$contributionId, 'Positive'],
+    ]);
+  }
+
+  /**
    * Current regKey stored for a recurring (NULL when cleared).
    *
    * @param int $recurId contribution recur ID
@@ -604,16 +654,127 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     $this->queueResponse('0000', ['regKey' => 'RK_TEST_001']);
 
     $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
-    $linePay->doConfirm([
-      'qfKey' => 'qfkeytest',
-      'cid' => $contributionId,
-      'ppid' => $this->_processor['id'],
-      'transactionId' => 'lptxn' . $contributionId,
-    ]);
+    $linePay->doConfirm($this->prepareConfirm($contributionId));
 
     $this->assertDBCompareValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_status_id', 'id', 1, 'First charge should complete the contribution. ' . __LINE__);
     $this->assertEquals(5, $this->recurStatusOf($recurId), 'Recurring should move Pending(2) -> In Progress(5). ' . __LINE__);
     $this->assertEquals('RK_TEST_001', $this->regKeyOf($recurId), 'regKey returned on confirm should be stored. ' . __LINE__);
+  }
+
+  /**
+   * A forged confirm request (qfKey not signed by this session) must never
+   * call LINE Pay nor touch the contribution, even a completed one.
+   */
+  public function testConfirmRejectsForgedQfKey() {
+    $setup = $this->createLinePayRecur(['recur_status' => 5, 'contribution_status' => 1]);
+    $contributionId = $setup['contribution']->id;
+    $params = $this->prepareConfirm($contributionId);
+    $params['qfKey'] = str_repeat('a', 64) . '_1';
+    $this->queueResponse('1150');
+
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+    $url = $linePay->doConfirm($params);
+
+    $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Forged confirm must not call LINE Pay. ' . __LINE__);
+    $this->assertEquals(1, $this->contributionStatusOf($contributionId), 'Completed contribution must stay completed. ' . __LINE__);
+    $this->assertStringContainsString('payment_result_type=4', $url);
+  }
+
+  /**
+   * A valid session may only confirm the contribution / transaction it sent.
+   */
+  public function testConfirmRejectsMismatchedBinding() {
+    $sent = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
+    $other = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
+    $params = $this->prepareConfirm($sent['contribution']->id);
+    $this->prepareConfirm($other['contribution']->id, ['expired' => 0]);
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+
+    // other contribution with the session of the sent one
+    $forged = $params;
+    $forged['cid'] = $other['contribution']->id;
+    $linePay->doConfirm($forged);
+    // sent contribution with another transaction
+    $forged = $params;
+    $forged['transactionId'] = 'lptxn' . $other['contribution']->id;
+    $linePay->doConfirm($forged);
+
+    $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Mismatched confirm must not call LINE Pay. ' . __LINE__);
+    $this->assertEquals(2, $this->contributionStatusOf($sent['contribution']->id), __LINE__);
+    $this->assertEquals(2, $this->contributionStatusOf($other['contribution']->id), __LINE__);
+  }
+
+  /**
+   * A contribution not paid by LINE Pay is never confirmed.
+   */
+  public function testConfirmRejectsNonLinePayContribution() {
+    $setup = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
+    $contributionId = $setup['contribution']->id;
+    // createLinePayRecur() uses the credit card instrument
+    $params = $this->prepareConfirm($contributionId, ['instrument' => FALSE]);
+
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+    $linePay->doConfirm($params);
+
+    $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Non LINE Pay contribution must not call LINE Pay. ' . __LINE__);
+    $this->assertEquals(2, $this->contributionStatusOf($contributionId), __LINE__);
+  }
+
+  /**
+   * Only a pending contribution is confirmed; others are left untouched.
+   */
+  public function testConfirmSkipsNonPendingContribution() {
+    $completed = $this->createLinePayRecur(['recur_status' => 5, 'contribution_status' => 1]);
+    $failed = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 4]);
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+
+    $url = $linePay->doConfirm($this->prepareConfirm($completed['contribution']->id));
+    $this->assertStringContainsString('payment_result_type=1', $url);
+    $url = $linePay->doConfirm($this->prepareConfirm($failed['contribution']->id));
+    $this->assertStringContainsString('payment_result_type=4', $url);
+
+    $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Non pending contribution must not call LINE Pay. ' . __LINE__);
+    $this->assertEquals(1, $this->contributionStatusOf($completed['contribution']->id), __LINE__);
+    $this->assertEquals(4, $this->contributionStatusOf($failed['contribution']->id), __LINE__);
+  }
+
+  /**
+   * A confirm arriving after the session expired is not sent to LINE Pay and
+   * its binding is cleared.
+   */
+  public function testConfirmExpiredSession() {
+    $setup = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
+    $contributionId = $setup['contribution']->id;
+    $params = $this->prepareConfirm($contributionId, ['expired' => CRM_REQUEST_TIME - 1]);
+
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+    $url = $linePay->doConfirm($params);
+
+    $this->assertEmpty(CRM_Core_Payment_LinePayAPI::$_requestLog, 'Expired confirm must not call LINE Pay. ' . __LINE__);
+    $this->assertStringContainsString('payment_result_type=4', $url);
+    $this->assertEquals(2, $this->contributionStatusOf($contributionId), __LINE__);
+    $this->assertEmpty(CRM_Core_Session::singleton()->get($params['qfKey'], CRM_Core_Payment_LinePay::CONFIRM_SESSION_SCOPE), 'Expired binding should be cleared. ' . __LINE__);
+  }
+
+  /**
+   * Reloading the confirm url returns the first result without confirming
+   * the transaction again.
+   */
+  public function testConfirmReloadDoesNotConfirmTwice() {
+    $setup = $this->createLinePayRecur(['recur_status' => 2, 'contribution_status' => 2]);
+    $contributionId = $setup['contribution']->id;
+    $params = $this->prepareConfirm($contributionId);
+    $this->queueResponse('0000', ['regKey' => 'RK_TEST_RELOAD']);
+    $this->queueResponse('1150');
+
+    $linePay = new CRM_Core_Payment_LinePay('test', $this->_processor);
+    $first = $linePay->doConfirm($params);
+    $second = $linePay->doConfirm($params);
+
+    $this->assertCount(1, CRM_Core_Payment_LinePayAPI::$_requestLog, 'Reload must not confirm again. ' . __LINE__);
+    $this->assertEquals($first, $second);
+    $this->assertStringContainsString('payment_result_type=1', $second);
+    $this->assertEquals(1, $this->contributionStatusOf($contributionId), __LINE__);
   }
 
   /**
