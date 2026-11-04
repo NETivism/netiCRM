@@ -198,6 +198,8 @@
             <tr class="crm-event-manage-registration-form-block-confirm_thankyou_text">
               <td scope="row" class="label" width="20%">{$form.thankyou_text.label} {if $action == 2}{include file='CRM/Core/I18n/Dialog.tpl' table='civicrm_event' field='thankyou_text' id=$eventID}{/if}</td>
               <td>
+                  {* temporarily hide the insert-token link; token replacement still works *}
+                  {*
                   <span class="helpIcon" id="helphtml3">
                       <a class="token-trigger" href="#" onClick="return showTokenThankYou();">{$form.token3.label}</a>
                       {help id="id-token-html" file="CRM/Contact/Form/Task/Email.hlp"}
@@ -209,6 +211,7 @@
                   </span>
                   <br>
                   <br>
+                  *}
                   {$form.thankyou_text.html}
                  <div class="description">{ts}Optional message for Thank-you screen (may include HTML formatting).{/ts}</div>
               </td>
