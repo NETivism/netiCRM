@@ -2807,9 +2807,11 @@ FROM civicrm_contribution c
 LEFT JOIN civicrm_membership_payment  mp ON mp.contribution_id = c.id
 LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id
 LEFT JOIN civicrm_participant         p  ON pp.participant_id  = p.id
-WHERE c.id = $id";
+WHERE c.id = %1";
 
-    $dao = CRM_Core_DAO::executeQuery($query);
+    $dao = CRM_Core_DAO::executeQuery($query, [
+      1 => [$id, 'Integer'],
+    ]);
     $dao->fetch();
     if (!empty($dao->N)) {
       if ($type == 'form') {
