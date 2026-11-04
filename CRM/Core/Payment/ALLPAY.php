@@ -770,6 +770,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               }
 
               // manually trigger ipn
+              // validateOthers() always requires CheckMacValue
+              self::generateMacValue($post, $processor);
               self::doIPN(['allpay', 'ipn', 'Credit'], $post, $get, FALSE);
             }
           }
@@ -857,6 +859,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               $ipnPost['do_not_email'] = 1;
             }
             */
+            // validateOthers() always requires CheckMacValue
+            self::generateMacValue($ipnPost, $processor);
             $result = self::doIPN(['allpay', 'ipn', 'Credit'], $ipnPost, $ipnGet, FALSE);
             return $result;
           }
@@ -1014,7 +1018,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
-    $get = !empty($get) ? $get : $_GET;
+    if (empty($get)) {
+      $get = $_GET;
+      if (!CRM_Core_Payment_BaseIPN::checkContributionProcessor($get['cid'] ?? NULL, ['Payment_ALLPAY'])) {
+        CRM_Utils_System::civiExit();
+      }
+    }
     if (!empty($arguments)) {
       if (is_array($arguments)) {
         $instrument = end($arguments);

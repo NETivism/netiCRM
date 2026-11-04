@@ -368,10 +368,10 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * Decode JSON data before save from Spgateway / neweb response
    *
    * @param array|object|string $post Data to decode
-   * @return array Decoded data
+   * @return array|bool Decoded data
    */
   public static function dataDecode($post = NULL) {
-    $data = empty($post) ? $_POST : $post;
+    $data = func_num_args() ? $post : $_POST;
     if (is_object($data)) {
       $data = (array) $data;
     }

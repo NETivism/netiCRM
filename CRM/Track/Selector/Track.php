@@ -799,7 +799,8 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    *   Name of the file.
    */
   public function getExportFileName($output = 'csv') {
-    return date('Ymd_') . 'traffic_source.xlsx';
+    $rand = substr(md5(microtime(TRUE)), 0, 4);
+    return date('Ymd_') . 'traffic_source_' . $rand . '.xlsx';
   }
 
   /**
