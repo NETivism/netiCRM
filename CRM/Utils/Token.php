@@ -786,7 +786,16 @@ class CRM_Utils_Token {
         $value = implode(', ', $labels);
       }
       elseif ($token === 'status_id') {
-        $value = CRM_Event_PseudoConstant::participantStatus($value, NULL, 'label');
+        $value = $value ? CRM_Event_PseudoConstant::participantStatus($value, NULL, 'label') : '';
+      }
+      elseif ($token === 'register_date') {
+        $value = $value ? CRM_Utils_Date::customFormat($value) : '';
+      }
+      elseif ($token === 'fee_amount') {
+        $value = $value !== NULL && $value !== '' ? CRM_Utils_Money::format($value, CRM_Utils_Array::value('fee_currency', $participant)) : '';
+      }
+      elseif ($token === 'is_test' || $token === 'is_pay_later') {
+        $value = $value ? ts('Yes') : ts('No');
       }
     }
 
