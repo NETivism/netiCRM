@@ -66,8 +66,14 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     $this->assign('context', $this->_context);
     $this->set('context', $this->_context);
 
-    $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-    $this->_contactID = CRM_Utils_Request::retrieve('contactID', 'Positive', $this, FALSE);
+    // pcp wizard only creates new pcp
+    if (is_a($this->controller, 'CRM_Contribute_Controller_PCP')) {
+      $this->_pageId = NULL;
+    }
+    else {
+      $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+    }
+    $this->_contactID = $this->get('contactID');
     $pcpShowPreview = CRM_Utils_Request::retrieve('preview', 'Positive', $this, FALSE);
     if (!empty($pcpShowPreview)) {
       $this->assign('pcp_show_preview', TRUE);
@@ -294,6 +300,11 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     }
     $params['contact_id'] = $contactID;
     $params['contribution_page_id'] = $this->get('contribution_page_id') ? $this->get('contribution_page_id') : $this->_contriPageId;
+
+    // block new pcp when pcp is disabled for this contribution page
+    if (!$this->_pageId && !CRM_Core_Permission::check('access CiviContribute') && !CRM_Contribute_BAO_PCP::isPcpBlockActive($params['contribution_page_id'])) {
+      CRM_Core_Error::statusBounce(ts('Personal Campaign Pages are currently not enabled for this contribution page.'));
+    }
 
     $params['goal_amount'] = CRM_Utils_Rule::cleanMoney($params['goal_amount']);
 
