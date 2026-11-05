@@ -62,7 +62,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
 
     if (!$this->_action) {
       $this->_action = CRM_Utils_Array::value('action', $_GET);
-      $this->_id = CRM_Utils_Array::value('id', $_GET);
+      $this->_id = CRM_Utils_Type::escape(CRM_Utils_Array::value('id', $_GET), 'Positive', FALSE);
     }
     else {
       $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -75,6 +75,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     //do not allow destructive actions without permissions
     if (!$userID) {
       CRM_Utils_System::permissionDenied();
+      return;
     }
     $isManager = $isOwner = FALSE;
     if (CRM_Core_Permission::check('administer CiviCRM')) {
@@ -83,7 +84,19 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     if ($userID && $this->_id && (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contact_id') == $userID)) {
       $isOwner = TRUE;
     }
-    if (($isOwner || $isManager) && $this->_id) {
+
+    // civicrm/contribute/pcp is only an action endpoint, the search form only works when embedded in CRM_Contribute_Page_PCP
+    if (!is_object($this->controller->getParent())) {
+      $this->processActionLink($isManager, $isOwner, $context);
+      return;
+    }
+
+    // embedded in CRM_Contribute_Page_PCP
+    if (!$isManager) {
+      CRM_Utils_System::permissionDenied();
+      return;
+    }
+    if ($this->_id) {
       $this->_title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'title');
       $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'status_id');
       $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
@@ -110,6 +123,63 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
         CRM_Utils_System::redirect($context);
       }
     }
+  }
+
+  /**
+   * Handle enable / disable links when civicrm/contribute/pcp is accessed directly.
+   *
+   * This never renders the form. Valid requests redirect back after processing,
+   * invalid requests are denied or redirected to the proper page.
+   * Delete is not supported here.
+   *
+   * @param bool $isManager whether current user can administer CiviCRM
+   * @param bool $isOwner whether current user owns the PCP
+   * @param string|null $context user context popped from session
+   *
+   * @return void
+   */
+  private function processActionLink($isManager, $isOwner, $context) {
+    if (!$isManager && !$isOwner) {
+      CRM_Utils_System::permissionDenied();
+      return;
+    }
+
+    if ($isManager) {
+      $fallbackUrl = CRM_Utils_System::url('civicrm/admin/pcp', 'reset=1');
+    }
+    else {
+      $fallbackUrl = CRM_Utils_System::url('civicrm/contribute/pcp/info', 'reset=1&id=' . $this->_id);
+    }
+
+    $action = $this->_action;
+    if (is_numeric($action)) {
+      $actionNames = [
+        CRM_Core_Action::ENABLE => 'enable',
+        CRM_Core_Action::DISABLE => 'disable',
+      ];
+      $action = CRM_Utils_Array::value((int) $action, $actionNames);
+    }
+    $title = $this->_id ? CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'title') : NULL;
+    if (!$title || !in_array($action, ['enable', 'disable'], TRUE)) {
+      CRM_Utils_System::redirect($fallbackUrl);
+      return;
+    }
+    $this->_title = $title;
+
+    $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'status_id');
+    $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
+    // owner can only enable / disable an approved page
+    if ($isManager || (int) $statusId === $statusApprovedId) {
+      if ($action === 'disable') {
+        CRM_Contribute_BAO_PCP::setDisable($this->_id, '0');
+        CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been disabled.", [1 => $this->_title]));
+      }
+      else {
+        CRM_Contribute_BAO_PCP::setDisable($this->_id, '1');
+        CRM_Core_Session::setStatus(ts("The Campaign Page '%1' has been enabled.", [1 => $this->_title]));
+      }
+    }
+    CRM_Utils_System::redirect($context ? $context : $fallbackUrl);
   }
 
   /**

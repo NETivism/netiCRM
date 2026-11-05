@@ -1795,7 +1795,12 @@ LIMIT 0, 100
     $requestURL = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
     $requestURL .= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 
-    $get = empty($get) ? $_GET : $get;
+    if (empty($get)) {
+      $get = $_GET;
+      if (!CRM_Core_Payment_BaseIPN::checkContributionProcessor($get['cid'] ?? NULL, ['Payment_TapPay'])) {
+        return 0;
+      }
+    }
     $contributionID = CRM_Utils_Type::escape($get['cid'], 'Integer', TRUE);
     $module = $get['module'];
 
@@ -1809,11 +1814,76 @@ LIMIT 0, 100
       ];
       CRM_Core_Payment_TapPayAPI::writeRecord(NULL, $recordData);
 
+      // refs #48120, verify notify comes from TapPay
+      #$data = self::verifyNotify($contributionID, $data);
+      #if (empty($data)) {
+      #  return 0;
+      #}
+
       // Execute original trasaction.
       self::doTransaction($data, $contributionID, $sendMail);
     }
 
     return;
+  }
+
+  /**
+   * Verify notify data by TapPay record API.
+   *
+   * Notify has no signature, so the rec_trade_id must be ours and the
+   * success / failure must be the same as the record on TapPay.
+   *
+   * @param int $contributionId contribution ID
+   * @param object $data notify data
+   *
+   * @return object|null notify data, NULL when not verified
+   */
+  public static function verifyNotify($contributionId, $data) {
+    $recTradeId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TapPay', $contributionId, 'rec_trade_id', 'contribution_id');
+    $notifyRecTradeId = is_object($data) && is_string($data->rec_trade_id ?? NULL) ? $data->rec_trade_id : '';
+    if (empty($recTradeId) || $notifyRecTradeId === '' || !hash_equals((string) $recTradeId, $notifyRecTradeId)) {
+      CRM_Core_Error::debug_log_message("TapPay: rec_trade_id of notify doesn't match contribution {$contributionId}. Skipped.");
+      return NULL;
+    }
+
+    // query record by our rec_trade_id
+    $contribution = new CRM_Contribute_DAO_Contribution();
+    $contribution->id = $contributionId;
+    $contribution->find(TRUE);
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($contribution->payment_processor_id, $contribution->is_test ? 'test' : 'live');
+    $api = new CRM_Core_Payment_TapPayAPI([
+      'apiType' => 'record',
+      'partnerKey' => $paymentProcessor['password'],
+      'isTest' => $contribution->is_test,
+    ]);
+    $params = [
+      'contribution_id' => $contributionId,
+      'partner_key' => $paymentProcessor['password'],
+      'filters' => [
+        'rec_trade_id' => $recTradeId,
+      ],
+    ];
+    // Allow further manipulation of the arguments via custom hooks ..
+    $null = NULL;
+    $paymentClass = self::singleton($paymentProcessor['is_test'] ? 'test' : 'live', $paymentProcessor, $null);
+    CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, CRM_Core_DAO::$_nullObject, $params);
+    $result = $api->request($params);
+    $record = !empty($result->trade_records[0]) ? $result->trade_records[0] : NULL;
+    if (empty($record) || (string) $record->rec_trade_id !== (string) $recTradeId) {
+      CRM_Core_Error::debug_log_message("TapPay: could not find record {$recTradeId} of contribution {$contributionId} from TapPay. Skipped.");
+      return NULL;
+    }
+
+    // same status rule as doTransaction
+    $notifyStatus = $data->status ?? NULL;
+    $notifySuccess = in_array($notifyStatus, ["0", "1"]);
+    $recordSuccess = in_array($record->record_status, ["0", "1"]);
+    if ($notifySuccess !== $recordSuccess) {
+      CRM_Core_Error::debug_log_message("TapPay: status of notify doesn't match record {$recTradeId} of contribution {$contributionId}. Skipped.");
+      return NULL;
+    }
+
+    return $data;
   }
 
   /**

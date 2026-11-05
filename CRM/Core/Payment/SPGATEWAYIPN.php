@@ -10,6 +10,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   private $_post;
   private $_get;
   private $_paymentProcessor;
+  private $_requireCheckCode = FALSE;
 
   /**
    * Constructor
@@ -55,14 +56,14 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         CRM_Utils_System::civiExit();
       }
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [1 => [$ppid, 'Integer']]);
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+      $paymentProcessor = self::getKeyProcessor($ppid, $isTest ? 'test' : 'live');
       $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
       // special case for credit card agreement
       // first contribution and follow contribution have diffrent merchant id
       if (empty($post) || json_decode($post) === NULL) {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
         $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
-        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+        $paymentProcessor = self::getKeyProcessor($ppid, $isTest ? 'test' : 'live');
         $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
       }
       $this->_post = $post;
@@ -83,6 +84,8 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     elseif (empty($ids['contributionRecur']) && (!empty($this->_post['JSONData']) || !empty($this->_post['TradeInfo']))) {
       $recur = FALSE;
       if (!empty($this->_post['JSONData'])) {
+        // legacy plain JSON format, only CheckCode can verify it
+        $this->_requireCheckCode = TRUE;
         CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post);
         $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
       }
@@ -97,7 +100,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
           CRM_Utils_System::civiExit();
         }
         $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [1 => [$ppid, 'Integer']]);
-        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+        $paymentProcessor = self::getKeyProcessor($ppid, $isTest ? 'test' : 'live');
         $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
         $this->_post = $post;
 
@@ -122,7 +125,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_payment_processor WHERE id = %1", [
         1 => [$ppid, 'Integer'],
       ]);
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+      $paymentProcessor = self::getKeyProcessor($ppid, $isTest ? 'test' : 'live');
       $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
       // special case for credit card agreement
       // first contribution and follow contribution have diffrent merchant id
@@ -130,7 +133,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
         $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
         if (!empty($ppid)) {
-          $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
+          $paymentProcessor = self::getKeyProcessor($ppid, $isTest ? 'test' : 'live');
           $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
         }
       }
@@ -304,14 +307,16 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     // check contribution id matches
     // If is from old neweb. Skip check.
     // if it's recurring, the merchant order not should be first recurring no
-    if (!strstr($contribution->trxn_id, $validValue['MerchantOrderNo']) && !preg_match('/^99[\d]{7}$/', $validValue['MerchantOrderNo'])) {
+    $merchantOrderNo = is_scalar($validValue['MerchantOrderNo']) ? (string) $validValue['MerchantOrderNo'] : '';
+    $isOldRecurFirst = !empty($contribution->contribution_recur_id) && preg_match('/^99[\d]{7}$/', $merchantOrderNo);
+    if (($merchantOrderNo === '' || strpos((string) $contribution->trxn_id, $merchantOrderNo) === FALSE) && !$isOldRecurFirst) {
       CRM_Core_Error::debug_log_message("Spgateway: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$validValue['MerchantOrderNo']} ");
       $note .= ts("Failuare: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$validValue['MerchantOrderNo']}")."\n";
       $pass = FALSE;
     }
 
     // check amount
-    if (round($contribution->total_amount) != $validValue['Amt'] && $input['Status'] == 'SUCCESS') {
+    if ((!is_numeric($validValue['Amt']) || round($contribution->total_amount) != $validValue['Amt']) && $input['Status'] == 'SUCCESS') {
       CRM_Core_Error::debug_log_message("Spgateway: Amount values dont match between database and IPN request. {$contribution->trxn_id}-{$input['AlreadyTimes']} : {$validValue['Amt']}");
       $note .= ts("Failuare: Amount values dont match between database and IPN request. {$contribution->trxn_id}-{$input['AlreadyTimes']} : {$validValue['Amt']}")."\n";
       $pass = FALSE;
@@ -319,17 +324,16 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
 
     // spgateway validation
     // only validate this when not test.
-    if (strtolower($instrument) == 'googlepay') {
-      $ppid = $this->_paymentProcessor['user_name'];
-      $test = $contribution->is_test ? 'test' : 'live';
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $test);
+    // mobile processor (google pay / apple pay) use linked spgateway processor, never trust instrument from url
+    if (($this->_paymentProcessor['class_name'] ?? '') === 'Payment_Mobile') {
+      $paymentProcessor = self::getKeyProcessor($this->_paymentProcessor['id'], $contribution->is_test ? 'test' : 'live');
     }
     else {
       $paymentProcessor = $this->_paymentProcessor;
     }
-    if (!empty($validValue['CheckCode'])) {
+    if (!empty($validValue['CheckCode']) || $this->_requireCheckCode) {
       $checkCode = CRM_Core_Payment_SPGATEWAYAPI::checkCode($input, $paymentProcessor);
-      if (strtolower($validValue['CheckCode']) != strtolower($checkCode)) {
+      if (!is_string($input['CheckCode'] ?? NULL) || strtolower($input['CheckCode']) !== strtolower($checkCode)) {
         $note .= ts("Failuare: CheckCode not match. Contact system admin.")."\n";
         CRM_Core_Error::debug_log_message("Spgateway: Failuare: CheckCode not match. Should be '{$checkCode}', but '{$input['CheckCode']}' provided.");
         $pass = FALSE;
@@ -450,6 +454,28 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     return $pass;
+  }
+
+  /**
+   * Get payment processor which holds HashKey / HashIV
+   *
+   * Mobile processor only links to spgateway processor by user_name,
+   * its own password / signature are not secret.
+   *
+   * @param int $ppid Payment processor ID
+   * @param string $mode 'test' or 'live'
+   * @return array|null Payment processor
+   */
+  private static function getKeyProcessor($ppid, $mode) {
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
+    if (!empty($paymentProcessor) && $paymentProcessor['class_name'] === 'Payment_Mobile') {
+      $linkedId = $paymentProcessor['user_name'];
+      $paymentProcessor = NULL;
+      if (CRM_Utils_Rule::positiveInteger($linkedId) && CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $linkedId, 'class_name') === 'Payment_SPGATEWAY') {
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($linkedId, $mode);
+      }
+    }
+    return $paymentProcessor;
   }
 
   /**

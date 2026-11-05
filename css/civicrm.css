@@ -6358,6 +6358,30 @@ tbody.scrollContent tr.alternateRow {
   color: var(--color-recur-audit-summary-not-executed);
 }
 
+/* Audit debit status badges in the search results, colored as the summary. */
+.crm-container .crm-recur-audit-status {
+  --recur-audit-status-color: var(--color-recur-audit-summary-neutral);
+  display: inline-block;
+  margin: 1px 0;
+  padding: 0 .5em;
+  border-radius: 3px;
+  background-color: color-mix(in srgb, var(--recur-audit-status-color) 15%, transparent);
+  color: var(--recur-audit-status-color);
+  white-space: nowrap;
+}
+
+.crm-container .crm-recur-audit-status--completed {
+  --recur-audit-status-color: var(--color-recur-audit-summary-completed);
+}
+
+.crm-container .crm-recur-audit-status--failed {
+  --recur-audit-status-color: var(--color-recur-audit-summary-failed);
+}
+
+.crm-container .crm-recur-audit-status--not-executed {
+  --recur-audit-status-color: var(--color-recur-audit-summary-not-executed);
+}
+
 /* material design form style */
 /* md: crm form elements */
 .crm-container-md .crm-form-elem {

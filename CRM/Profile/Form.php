@@ -217,6 +217,9 @@ class CRM_Profile_Form extends CRM_Core_Form {
     // if we dont have a gid use the default, else just use that specific gid
     if (($this->_mode == self::MODE_REGISTER || $this->_mode == self::MODE_CREATE) && !$this->_gid) {
       $this->_ctype = CRM_Utils_Request::retrieve('ctype', 'String', $this, FALSE, 'Individual', 'REQUEST');
+      if (!in_array($this->_ctype, CRM_Contact_BAO_ContactType::contactTypes(TRUE), TRUE)) {
+        $this->_ctype = 'Individual';
+      }
       $this->_fields = CRM_Core_BAO_UFGroup::getRegistrationFields($this->_action, $this->_mode, $this->_ctype);
     }
     elseif ($this->_mode == self::MODE_SEARCH) {

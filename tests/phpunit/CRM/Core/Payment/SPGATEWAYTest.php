@@ -208,6 +208,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Inst' => 0,
       'ECI' => '',
     ];
+    $checkData = $data;
+    $data['CheckCode'] = CRM_Core_Payment_SPGATEWAYAPI::checkCode($checkData, $this->_processor);
     $json = json_encode($data);
     $jsonData = json_encode([
       'Status' => 'SUCCESS',
@@ -529,6 +531,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Inst' => 0,
       'ECI' => '',
     ];
+    $checkData = $data;
+    $data['CheckCode'] = CRM_Core_Payment_SPGATEWAYAPI::checkCode($checkData, $this->_processor);
     $json = json_encode($data);
     $jsonData = json_encode([
       'Status' => 'SUCCESS',
@@ -1009,6 +1013,8 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'ExpireDate' => date('Y-m-d', $afteweek),
     ];
     $data = array_merge($data, $return_params);
+    $checkData = $data;
+    $data['CheckCode'] = CRM_Core_Payment_SPGATEWAYAPI::checkCode($checkData, $this->_processor);
     $json = json_encode($data);
     $jsonData = json_encode([
       'Status' => 'SUCCESS',

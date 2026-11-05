@@ -70,10 +70,22 @@ class CRM_Core_BAO_UFMatchRegistration {
         if (!$date && !$multiple) {
           throw new CRM_Core_Exception(ts('Invalid registration field value.'));
         }
+        // Custom checkbox keys are configured option values (may be text), not list indexes.
+        $optionKeys = NULL;
+        if (($field['html_type'] ?? NULL) === 'CheckBox' && ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name))) {
+          $optionKeys = array_map('strval', array_keys(CRM_Core_BAO_CustomOption::valuesByID($customFieldID)));
+        }
         foreach ($value as $key => $item) {
-          if (!is_scalar($item) || ($date
-            ? !in_array((string) $key, ['Y', 'M', 'd', 'H', 'i', 's', 'm', 'year', 'month', 'day'], TRUE)
-            : !ctype_digit((string) $key))) {
+          if ($date) {
+            $validKey = in_array((string) $key, ['Y', 'M', 'd', 'H', 'i', 's', 'm', 'year', 'month', 'day'], TRUE);
+          }
+          elseif ($optionKeys !== NULL) {
+            $validKey = in_array((string) $key, $optionKeys, TRUE);
+          }
+          else {
+            $validKey = ctype_digit((string) $key);
+          }
+          if (!is_scalar($item) || !$validKey) {
             throw new CRM_Core_Exception(ts('Invalid registration field value.'));
           }
         }

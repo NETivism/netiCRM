@@ -377,6 +377,38 @@ class CRM_Core_Permission {
   }
 
   /**
+   * Menu access callback which only requires an authenticated CMS user.
+   *
+   * access_arguments are ignored on purpose. Menu items always receive
+   * access_arguments propagated from their parent path, which would otherwise
+   * turn this into a permission check.
+   *
+   * @param mixed ...$args Ignored menu access arguments.
+   *
+   * @return bool
+   */
+  public static function checkLoggedIn(...$args) {
+    return (bool) CRM_Utils_System::isUserLoggedIn();
+  }
+
+  /**
+   * Check if a menu access callback is checkLoggedIn.
+   *
+   * @param mixed $callback The access_callback value of a menu item.
+   *
+   * @return bool
+   */
+  public static function isLoggedInCallback($callback) {
+    if (is_string($callback) && strpos($callback, '::')) {
+      $callback = explode('::', $callback);
+    }
+    return is_array($callback) &&
+      count($callback) === 2 &&
+      $callback[0] === 'CRM_Core_Permission' &&
+      $callback[1] === 'checkLoggedIn';
+  }
+
+  /**
    * Check if a menu item is accessible.
    *
    * @param array $item The menu item definition.

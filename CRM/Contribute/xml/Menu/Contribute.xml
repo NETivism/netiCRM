@@ -301,8 +301,7 @@
   <item>
      <path>civicrm/contribute/pcp</path>
      <page_callback>CRM_Contribute_Form_PCP_PCP</page_callback>
-     <access_callback>1</access_callback>
-     <is_public>true</is_public>
+     <access_callback>CRM_Core_Permission::checkLoggedIn</access_callback>
   </item>
   <item>
      <path>civicrm/ajax/permlocation</path>

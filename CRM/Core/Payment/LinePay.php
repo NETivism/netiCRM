@@ -18,6 +18,23 @@ class CRM_Core_Payment_LinePay {
   public const QUEUE_NAME = 'linepay_recurring';
 
   /**
+   * Session scope holding the confirm binding written by doRequest().
+   *
+   * Each entry is keyed by the form qfKey and holds the contribution id and
+   * LINE Pay transactionId that were just sent, so doConfirm() only confirms a
+   * transaction this browser session really initiated.
+   */
+  public const CONFIRM_SESSION_SCOPE = 'linepay_confirm';
+
+  /**
+   * Seconds a confirm binding stays valid after redirecting to LINE Pay.
+   *
+   * A confirm arriving later is not sent to LINE Pay; the reserved transaction
+   * is never captured, so the donor is not charged.
+   */
+  public const CONFIRM_EXPIRED_TIME = 600;
+
+  /**
    * Days a preapproved regKey stays valid without being used (refs #45587).
    *
    * After this window LINE Pay invalidates the regKey, so the recurring is
@@ -184,6 +201,12 @@ class CRM_Core_Payment_LinePay {
         $contribution = self::prepareContribution($contributionId);
         $contribution->trxn_id = $transactionId;
         $contribution->save();
+        // bind this transaction to the browser session for doConfirm()
+        self::setConfirmSession($qfKey, [
+          'cid' => (int) $contributionId,
+          'transactionId' => (string) $transactionId,
+          'expired' => CRM_REQUEST_TIME + self::CONFIRM_EXPIRED_TIME,
+        ]);
       }
       if ($isPreapproved) {
         CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_linepay SET contribution_recur_id = %1 WHERE trxn_id = %2", [
@@ -223,6 +246,10 @@ class CRM_Core_Payment_LinePay {
     $mode = !empty($paymentProcessor['is_test']) ? 'test' : 'live';
     $linePay = new self($mode, $paymentProcessor);
     $thankyouUrl = $linePay->doConfirm($params);
+    if (empty($thankyouUrl)) {
+      CRM_Utils_System::permissionDenied();
+      return;
+    }
     CRM_Utils_System::redirect($thankyouUrl);
   }
 
@@ -231,11 +258,55 @@ class CRM_Core_Payment_LinePay {
    *
    * @param array $params confirmation parameters (including transactionId)
    *
-   * @return string thank you URL the caller should redirect to
+   * @return string|null thank you URL the caller should redirect to, NULL when
+   *   the request is forged and should be denied
    */
   public function doConfirm($params) {
     $config = CRM_Core_Config::singleton();
+    $isEvent = !empty($params['pid']) && !empty($params['eid']);
+    $thankYouPath = $isEvent ? 'civicrm/event/register' : 'civicrm/contribute/transact';
+    // A qfKey not shaped like the one we generated never comes from our own
+    // redirect, don't echo it back into the failed url.
+    if (!CRM_Core_Key::valid($params['qfKey'], TRUE)) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: malformed qfKey for contribution {$params['cid']}.");
+      return NULL;
+    }
+    $failedUrl = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
+
+    // The confirm url is public, only confirm the transaction this browser
+    // session just sent. Anything else must not touch the contribution.
+    $binding = self::getConfirmSession($params, $isEvent);
+    if (empty($binding)) {
+      return $failedUrl;
+    }
+    // This session did send a transaction, asking for another contribution or
+    // transaction means the request was forged.
+    if ((int) $binding['cid'] !== (int) $params['cid'] || !hash_equals((string) $binding['transactionId'], (string) $params['transactionId'])) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: contribution {$params['cid']} or transaction doesn't match the confirm session.");
+      return NULL;
+    }
+    // Reloading the confirm url after it was processed.
+    if (!empty($binding['thankyou_url'])) {
+      return $binding['thankyou_url'];
+    }
+
     $contribution = self::prepareContribution($params['cid']);
+    if (CRM_REQUEST_TIME > $binding['expired']) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: session of contribution {$params['cid']} expired, skip confirm.");
+      CRM_Core_Payment_Mobile::addNote(ts('LINE Pay confirmation arrived after the session expired; the payment was not confirmed.'), $contribution);
+      self::setConfirmSession($params['qfKey'], NULL);
+      return $failedUrl;
+    }
+    // The session binding matched, so a mismatch here means the request or
+    // the contribution was tampered with.
+    if (!$this->isLinePayContribution($contribution, $params)) {
+      return NULL;
+    }
+    // Only pending contribution can be confirmed.
+    if ((int) $contribution->contribution_status_id !== 2) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: contribution {$contribution->id} is not pending, skip confirm.");
+      return (int) $contribution->contribution_status_id === 1 ? self::prepareThankYouUrl($thankYouPath, $params['qfKey']) : $failedUrl;
+    }
 
     // confirm (v4: POST /v4/payments/{transactionId}/confirm, body amount + currency)
     $confirmParams = [
@@ -268,16 +339,14 @@ class CRM_Core_Payment_LinePay {
       $triedTimes++;
     }
     $is_success = $api->_success;
-    $thankYouPath = 'civicrm/contribute/transact';
 
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
     $input = $ids = $objects = [];
-    if (!empty($params['pid']) && !empty($params['eid'])) {
+    if ($isEvent) {
       $input['component'] = 'event';
       $ids['participant'] = $params['pid'];
       $ids['event'] = $params['eid'];
-      $thankYouPath = 'civicrm/event/register';
     }
     else {
       if (!empty($params['mid'])) {
@@ -323,8 +392,12 @@ class CRM_Core_Payment_LinePay {
       $transaction->commit();
     }
     else {
-      $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
+      $thankyou_url = $failedUrl;
     }
+
+    // Remember the result so a reload never confirms the transaction again.
+    $binding['thankyou_url'] = $thankyou_url;
+    self::setConfirmSession($params['qfKey'], $binding);
 
     // refs #45587, this confirm carries the first preapproved charge. If the
     // gateway voided the just-issued regKey, drop it and fail the recurring so
@@ -469,6 +542,77 @@ class CRM_Core_Payment_LinePay {
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
     return $contribution;
+  }
+
+  /**
+   * Store or clear the confirm binding of a qfKey in the session.
+   *
+   * @param string $qfKey quickform key of the payment form
+   * @param array|null $binding [cid, transactionId, expired, thankyou_url], NULL to clear
+   *
+   * @return void
+   */
+  private static function setConfirmSession($qfKey, $binding) {
+    $session = CRM_Core_Session::singleton();
+    $session->set($qfKey, $binding, self::CONFIRM_SESSION_SCOPE);
+  }
+
+  /**
+   * Load the confirm binding of a confirm request.
+   *
+   * The qfKey must be signed by this browser session for the payment form
+   * controller, and doRequest() must have stored a binding under it. The
+   * caller still has to compare the binding with the request.
+   *
+   * @param array $params confirm parameters (qfKey, cid)
+   * @param bool $isEvent whether the payment comes from event registration
+   *
+   * @return array|null the binding, or NULL when this session has none
+   */
+  private static function getConfirmSession($params, $isEvent) {
+    $qfKey = (string) $params['qfKey'];
+    $controller = $isEvent ? 'CRM_Event_Controller_Registration' : 'CRM_Contribute_Controller_Contribution';
+    if (!CRM_Core_Key::validate($qfKey, $controller, TRUE)) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: invalid qfKey for contribution {$params['cid']}.");
+      return NULL;
+    }
+    $session = CRM_Core_Session::singleton();
+    $binding = $session->get($qfKey, self::CONFIRM_SESSION_SCOPE);
+    if (empty($binding) || !is_array($binding)) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: no confirm session for contribution {$params['cid']}.");
+      return NULL;
+    }
+    return $binding;
+  }
+
+  /**
+   * Whether a contribution was paid through this LINE Pay processor.
+   *
+   * @param CRM_Contribute_DAO_Contribution $contribution contribution object
+   * @param array $params confirm parameters (transactionId)
+   *
+   * @return bool TRUE when the contribution belongs to this LINE Pay transaction
+   */
+  private function isLinePayContribution($contribution, $params) {
+    if (!CRM_Core_Payment_BaseIPN::checkContributionProcessor($contribution->id, ['Payment_Mobile'])) {
+      return FALSE;
+    }
+    if ((int) $contribution->payment_processor_id !== (int) $this->_paymentProcessor['id']) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: payment processor of contribution {$contribution->id} doesn't match.");
+      return FALSE;
+    }
+    if ((string) $contribution->trxn_id !== (string) $params['transactionId']) {
+      CRM_Core_Error::debug_log_message("LinePay confirm: transaction of contribution {$contribution->id} doesn't match.");
+      return FALSE;
+    }
+    // Compare the option value machine name, the label is localized.
+    $instruments = CRM_Contribute_PseudoConstant::paymentInstrument('name');
+    $instrumentName = $instruments[$contribution->payment_instrument_id] ?? '';
+    if (strtolower((string) $instrumentName) !== 'linepay') {
+      CRM_Core_Error::debug_log_message("LinePay confirm: payment instrument of contribution {$contribution->id} is not LINE Pay.");
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**

@@ -69,23 +69,25 @@
                         {/if}
                         
                         {if $row.$field eq 'Subtotal'}
-                            {$row.$field}
-                        {elseif $header.type & 4 OR $header.type & 256}   
+                            {$row.$field|escape}
+                        {elseif $header.type & 4 OR $header.type & 256}
                             {if $header.group_by eq 'MONTH' or $header.group_by eq 'QUARTER'}
                                 {$row.$field|crmDate:$config->dateformatPartial}
-                            {elseif $header.group_by eq 'YEAR'}	
+                            {elseif $header.group_by eq 'YEAR'}
                                 {$row.$field|crmDate:$config->dateformatYear}
-                            {else}	
-                                {if $header.type & 4}	
+                            {else}
+                                {if $header.type & 4}
                                    {$row.$field|truncate:10:''|crmDate}
                                 {else}
                                    {$row.$field|crmDate}
                                 {/if}
-                            {/if} 
+                            {/if}
                         {elseif $header.type eq 1024}
                             <span class="nowrap">{$row.$field|crmMoney}</span>
+                        {elseif $header.type eq 4096 OR $header.type eq 32}
+                            {$row.$field|purify}
                         {else}
-                            {$row.$field}
+                            {$row.$field|escape}
                         {/if}
                         
                         {if $row.$fieldLink}</a>{/if}
@@ -102,7 +104,7 @@
                         {if $header.type eq 1024}
                             {$grandStat.$field|crmMoney}
                         {else}
-                            {$grandStat.$field}
+                            {$grandStat.$field|escape}
                         {/if}
                     </td>
                 {/foreach}

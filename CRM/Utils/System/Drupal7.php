@@ -337,6 +337,20 @@ class CRM_Utils_System_Drupal7 {
   }
 
   /**
+   * Check if a Drupal 7 user is active (not blocked).
+   *
+   * @param int $ufId Drupal user ID
+   * @return bool
+   */
+  public function isUserActive($ufId) {
+    if (function_exists('user_load')) {
+      $account = user_load($ufId);
+      return !empty($account->status);
+    }
+    return FALSE;
+  }
+
+  /**
    * @inheritDoc
    */
   public function synchronizeUser() {

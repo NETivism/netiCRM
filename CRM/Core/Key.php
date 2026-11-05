@@ -164,30 +164,25 @@ class CRM_Core_Key {
   /**
    * Check if a form key is structurally valid.
    *
+   * A valid key has the shape get() generates: a HASH_LENGTH digit lowercase
+   * hex digest, followed by an optional _ and a sequence between 1 and 10000.
+   * This only checks the format, use validate() to check the signature.
+   *
    * @param string $key The form key to check.
+   * @param bool $requireSequence Whether the sequence number is required.
    *
    * @return bool True if structurally valid.
    */
-  public static function valid($key) {
-    // a valid key is a 32 digit hex number
-    // followed by an optional _ and a number between 1 and 10000
-    if (strpos('_', $key) !== FALSE) {
-      list($hash, $seq) = explode('_', $key);
-
-      // ensure seq is between 1 and 10000
-      if (!is_numeric($seq) ||
-        $seq < 1 ||
-        $seq > 10000
-      ) {
-        return FALSE;
-      }
+  public static function valid($key, $requireSequence = FALSE) {
+    if (!is_string($key)) {
+      return FALSE;
     }
-    else {
-      $hash = $key;
+    $sequence = '_(?:[1-9][0-9]{0,3}|10000)';
+    if (!$requireSequence) {
+      $sequence = "(?:{$sequence})?";
     }
-
-    // ensure that hash is a 32 digit hex number
-    return preg_match('#[0-9a-f]{' . self::HASH_LENGTH . '}#i', $hash) ? TRUE : FALSE;
+    // D: $ must not match before a trailing newline
+    return preg_match('/^[0-9a-f]{' . self::HASH_LENGTH . '}' . $sequence . '$/D', $key) === 1;
   }
 
   /**

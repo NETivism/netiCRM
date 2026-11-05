@@ -63,7 +63,7 @@
 					<td class="html-adjust">
 					    {* sort by fails for option per line. Added a variable to iterate through the element array*}
 					    {foreach from=$element.field_value item=val}
-						{$val|escape}<br/>
+						{$val|purify}<br/>
 					    {/foreach}
 					</td>
 				    {else}
@@ -75,7 +75,7 @@
 						<td class="html-adjust"><a href="{$element.field_value.fileURL}">{$element.field_value.fileName|escape}</a></td>
 					    {/if}
 					{else}
-					    <td class="html-adjust">{$element.field_value|escape}</td>
+					    <td class="html-adjust">{$element.field_value|purify}</td>
 					{/if}
 				    {/if}
 				</tr>

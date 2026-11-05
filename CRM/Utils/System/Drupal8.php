@@ -841,6 +841,17 @@ class CRM_Utils_System_Drupal8 {
   }
 
   /**
+   * Check if a Drupal 8+ user is active (not blocked).
+   *
+   * @param int $ufId Drupal user ID
+   * @return bool
+   */
+  public function isUserActive($ufId) {
+    $account = \Drupal\user\Entity\User::load($ufId);
+    return $account ? $account->isActive() : FALSE;
+  }
+
+  /**
    * Determine if the Views module exists.
    *
    * @return bool

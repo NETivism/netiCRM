@@ -66,16 +66,9 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
     //set the context for the profile
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
-    //set the block no
-    $this->_blockNo = CRM_Utils_Request::retrieve('blockNo', 'String', $this);
-
-    if ($this->_context) {
-      $this->assign('context', $this->_context);
-    }
-
-    if ($this->_blockNo) {
-      $this->assign('blockNo', $this->_blockNo);
-    }
+    // Set the block number used by the new-contact dialog.
+    $blockNo = CRM_Utils_Request::retrieve('blockNo', 'Positive', $this);
+    $this->_blockNo = isset($blockNo) ? (int) $blockNo : NULL;
 
     if ($this->get('skipPermission')) {
       $this->_skipPermission = TRUE;
@@ -104,6 +97,24 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
     }
 
     parent::preProcess();
+
+    if ($this->_context === 'dialog' &&
+      !CRM_Core_Permission::check('edit all contacts') &&
+      !CRM_Core_Permission::check('add contacts')
+    ) {
+      $this->_context = NULL;
+      $this->set('context', NULL);
+    }
+
+    if ($this->_context) {
+      $this->assign('context', $this->_context);
+    }
+
+    $this->assign('blockNo', $this->_blockNo);
+    $this->assign('blockNoJson', json_encode(
+      $this->_blockNo,
+      JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+    ));
 
     // make sure the gid is set and valid
     if (!$this->_gid) {

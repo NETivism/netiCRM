@@ -187,6 +187,27 @@ class CRM_Core_Menu {
   }
 
   /**
+   * Check if an access callback can be propagated to child paths.
+   *
+   * Public (1) and logged-in-only callbacks loosen access of the item itself,
+   * child paths should keep looking up for a real permission check instead.
+   * Note 0 (deny) is still inheritable.
+   *
+   * @param mixed $callback The access_callback value of the parent item.
+   *
+   * @return bool
+   */
+  public static function isInheritableAccessCallback($callback) {
+    if ($callback === '1' || $callback === 1 || $callback === TRUE) {
+      return FALSE;
+    }
+    if (CRM_Core_Permission::isLoggedInCallback($callback)) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
    * Fill menu values by propagating from parent paths.
    *
    * @param array $menu The menu array.
@@ -213,6 +234,10 @@ class CRM_Core_Menu {
       foreach ($fieldsToPropagate as $field) {
         if (!$fieldsPresent[$field]) {
           if (CRM_Utils_Array::value($field, $menu[$parentPath]) !== NULL) {
+            // public or logged-in-only access belongs to the parent itself, do not grant it to children
+            if ($field === 'access_callback' && !self::isInheritableAccessCallback($menu[$parentPath][$field])) {
+              continue;
+            }
             $fieldsPresent[$field] = TRUE;
             $menu[$path][$field] = $menu[$parentPath][$field];
           }

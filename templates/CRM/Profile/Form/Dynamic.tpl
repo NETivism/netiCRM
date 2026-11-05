@@ -248,7 +248,7 @@ cj(document).ready(function(){
         var queryString = cj.param(formData); 
         queryString = queryString + '&snippet=5&gid=' + {/literal}"{$profileID}"{literal};
         var postUrl = {/literal}"{crmURL p='civicrm/profile/create' h=0 }"{literal}; 
-        var blockNo = {/literal}{$blockNo}{literal};
+        var blockNo = {/literal}{$blockNoJson}{literal};
         var response = cj.ajax({
            type: "POST",
            url: postUrl,

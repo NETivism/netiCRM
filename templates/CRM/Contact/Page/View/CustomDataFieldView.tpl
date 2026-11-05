@@ -29,7 +29,7 @@
       <td class="crm-custom_data">
           {* sort by fails for option per line. Added a variable to iterate through the element array*}
           {foreach from=$element.field_value item=val}
-              {$val|escape}
+              {$val|purify}
           {/foreach}
       </td>
   {else}
@@ -46,7 +46,7 @@
               <a href="{crmURL p='civicrm/contact/view' q="reset=1&cid=`$element.contact_ref_id`"}" title="View contact">{$element.field_value|escape}</a>
           </td>
       {else}
-          <td class="html-adjust crm-custom-data">{$element.field_value|escape}</td>
+          <td class="html-adjust crm-custom-data">{$element.field_value|purify}</td>
       {/if}
 {/if}
 </tr>

@@ -177,9 +177,9 @@ class CRM_Utils_PDF_Utils {
    */
   public static function wkhtmltopdf($html, $dest, $option = '-n') {
     $config = CRM_Core_Config::singleton();
-    $wkhtmltopdf = $config->wkhtmltopdfPath;
+    $wkhtmltopdf = escapeshellarg($config->wkhtmltopdfPath);
 
-    if (!empty(exec("test -x $wkhtmltopdf && echo 1"))) {
+    if (self::isAllowedExecutable($config->wkhtmltopdfPath, 'wkhtmltopdf')) {
       // version compare
       $version = exec("$wkhtmltopdf -V");
       preg_match('/[a-z]+\s([0-9]+\.[0-9]+\.[0-9]+)/i', $version, $matches);
@@ -203,7 +203,7 @@ class CRM_Utils_PDF_Utils {
         // release memory before wkhtmltopdf
         unset($html);
       }
-      $exec = $wkhtmltopdf . escapeshellcmd(" $option $source $dest");
+      $exec = $wkhtmltopdf . ' ' . escapeshellcmd($option) . ' ' . escapeshellarg($source) . ' ' . escapeshellarg($dest);
 
       if (!empty($config->wkhtmltopdfLang)) {
         putenv("LANG=".$config->wkhtmltopdfLang.'.utf8');
@@ -220,6 +220,24 @@ class CRM_Utils_PDF_Utils {
       CRM_Core_Error::debug_log_message("Could not find wkhtmltopdf library");
       return FALSE;
     }
+  }
+
+  /**
+   * Check executable path is absolute, executable and has expected basename
+   *
+   * @param string $path path of executable
+   * @param string $basename expected basename, eg. wkhtmltopdf, qpdf
+   *
+   * @return bool
+   */
+  public static function isAllowedExecutable($path, $basename) {
+    if (empty($path) || $path[0] !== '/') {
+      return FALSE;
+    }
+    if (basename($path) !== $basename) {
+      return FALSE;
+    }
+    return is_executable($path);
   }
 
   public static function makeHTML($values, $strip_html = FALSE) {

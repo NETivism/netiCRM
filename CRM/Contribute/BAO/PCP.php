@@ -305,8 +305,6 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
    */
   public static function &pcpLinks() {
     if (!(self::$_pcpLinks)) {
-      $deleteExtra = ts('Are you sure you want to delete this Personal Campaign Page?') . '\n' . ts('This action cannot be undone.');
-
       self::$_pcpLinks['add'] = [
         CRM_Core_Action::ADD => ['name' => ts('Create a Personal Campaign Page'),
           'url' => 'civicrm/contribute/campaign',
@@ -340,12 +338,6 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
           'url' => 'civicrm/contribute/pcp',
           'qs' => 'action=disable&reset=1&id=%%pcpId%%',
           'title' => ts('Disable'),
-        ],
-        CRM_Core_Action::DELETE => ['name' => ts('Delete'),
-          'url' => 'civicrm/contribute/pcp',
-          'qs' => 'action=delete&reset=1&id=%%pcpId%%',
-          'extra' => 'onclick = "return confirm(\'' . $deleteExtra . '\');"',
-          'title' => ts('Delete'),
         ],
       ];
     }

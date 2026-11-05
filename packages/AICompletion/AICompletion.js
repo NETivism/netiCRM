@@ -368,12 +368,20 @@
                   tone = tplData.tone_style ? tplData.tone_style : tplData.tone,
                   context = tplData.context ? tplData.context : tplData.content;
 
+              // Templates are visible to everyone, so whatever one user typed
+              // ends up rendered in another user's panel. The browser decodes
+              // the data-* attributes again, so applying a template is
+              // unaffected. refs #46672
+              let escapedRole = escapeHtml(role),
+                  escapedTone = escapeHtml(tone),
+                  escapedContext = escapeHtml(context);
+
               let templateItemHtml = `
-                <div class="template-item" data-ai-role="${role}" data-tone-style="${tone}" data-context="${context}">
+                <div class="template-item" data-ai-role="${escapedRole}" data-tone-style="${escapedTone}" data-context="${escapedContext}">
                   <div class="inner">
-                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${role}</div>
-                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${tone}</div>
-                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${context}</div>
+                    <div class="ai-role"><span class="label">${ts['Copywriting Role']}</span>${colon}${escapedRole}</div>
+                    <div class="tone-style"><span class="label">${ts['Tone Style']}</span>${colon}${escapedTone}</div>
+                    <div class="context"><span class="label">${ts['Content Summary']}</span>${colon}${escapedContext}</div>
                     <div class="actions">
                       <button type="button" class="apply-btn btn">${ts['Apply Template']}</button>
                     </div>
@@ -381,7 +389,7 @@
                 </div>`;
 
               if (key === 'communityRecommendations') {
-                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${tplData.org}</div><div class="actions">`);
+                templateItemHtml = templateItemHtml.replace('<div class="actions">', `<div class="org"><span class="label">${ts['The organization sharing this template']}</span>${colon}${escapeHtml(tplData.org)}</div><div class="actions">`);
               }
 
               output += templateItemHtml;
@@ -1455,7 +1463,10 @@
                         copyText = '';
 
                     if ($msgContent.length) {
-                      copyText = $msgContent.html().replace(/<br>/g, '\n');
+                      // Turn the line breaks back into newlines, then read it
+                      // as text so the escaped entities come back decoded.
+                      copyText = $msgContent.html().replace(/<br\s*\/?>/gi, '\n');
+                      copyText = $('<div>').html(copyText).text();
                     }
 
                     copyText = copyText.trim();
@@ -1475,7 +1486,9 @@
                 }
                 else {
                   if (eventData.hasOwnProperty('message')) {
-                    let message = eventData.message.replace(/\n/g, '<br>');
+                    // The reply echoes whatever the user asked for, so it goes
+                    // through the same escaping as the request. refs #46672
+                    let message = escapeHtml(eventData.message).replace(/\n/g, '<br>');
 
                     if (eventData.hasOwnProperty('is_error')) {
                       let msgID = 'ai-msg-' + renderID();
@@ -1491,7 +1504,8 @@
                         AICompletion.prototype.createMessage(msgID, '', errorMessageDefault, 'ai', 'error');
                       }
 
-                      console.error(message);
+                      // Log the raw text, escaping is only for the DOM.
+                      console.error(eventData.message);
                     }
                     else {
                       AICompletion.prototype.createMessage(aiMsgID, userMsgID, message, 'ai', 'stream');

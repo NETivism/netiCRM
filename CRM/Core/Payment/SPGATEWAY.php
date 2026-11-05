@@ -1303,8 +1303,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @return void
    */
   public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
-    $post = !empty($post) ? $post : $_POST;
-    $get = !empty($get) ? $get : $_GET;
+    if (empty($post)) {
+      $post = $_POST;
+      // plain 'Result' is only for internal query sync, never accept it from request
+      unset($post['Result']);
+    }
+    if (empty($get)) {
+      $get = $_GET;
+      if (!CRM_Core_Payment_BaseIPN::checkContributionProcessor($get['cid'] ?? NULL, ['Payment_SPGATEWAY', 'Payment_Mobile'])) {
+        CRM_Utils_System::civiExit();
+      }
+    }
     if (!empty($arguments)) {
       if (is_array($arguments)) {
         $instrument = end($arguments);

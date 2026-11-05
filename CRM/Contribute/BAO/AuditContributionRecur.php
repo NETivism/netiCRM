@@ -128,6 +128,7 @@ class CRM_Contribute_BAO_AuditContributionRecur {
       $estimateIds = self::normalizeIds($estimateIds);
       ksort($processorByRecur);
       ksort($processorNames);
+      $expected = self::classifyExpected($gateway, $estimateIds, $time);
 
       $now = date('Y-m-d H:i:s', $time);
       $cache = [
@@ -142,7 +143,11 @@ class CRM_Contribute_BAO_AuditContributionRecur {
           'attempt' => [],
           'added' => [],
           'removed' => [],
+          'ineligible' => [],
+          'expected_skip' => $expected['expected_skip'],
+          'overdue' => $expected['overdue'],
         ],
+        'skip_reasons' => $expected['skip_reasons'],
         'processor_by_recur' => $processorByRecur,
         'processor_names' => $processorNames,
       ];
@@ -211,6 +216,8 @@ class CRM_Contribute_BAO_AuditContributionRecur {
    *
    * The estimate becomes stable when two consecutive observations contain
    * the same recurring IDs whose last_execute_date is in the audit day.
+   * When stable, undispatched estimate IDs which no longer match the daily
+   * candidates are recorded as ineligible and not counted as missed.
    *
    * Stable empty observations are reused for 30 minutes before checking for
    * late asynchronous completions.
@@ -239,6 +246,7 @@ class CRM_Contribute_BAO_AuditContributionRecur {
       ) {
         return [];
       }
+      $recurIds = self::filterLiveIds($recurIds);
 
       $checkedAt = strtotime((string) CRM_Utils_Array::value(
         'updated_at',
@@ -313,6 +321,13 @@ class CRM_Contribute_BAO_AuditContributionRecur {
       $cache['ids']['attempt'] = $attemptIds;
       $cache['ids']['added'] = $addedIds;
       $cache['ids']['removed'] = $removedIds;
+      $cache['ids']['ineligible'] = $stable
+        ? self::findIneligible(
+          $gateway,
+          array_diff($cache['ids']['estimate'], $dispatchIds),
+          $time
+        )
+        : [];
 
       $data = $log['data'];
       $data['version'] = self::VERSION;
@@ -358,6 +373,7 @@ class CRM_Contribute_BAO_AuditContributionRecur {
         ', current=' . count($attemptIds) .
         ', added=' . count($addedIds) .
         ', removed=' . count($removedIds) .
+        ', ineligible=' . count($cache['ids']['ineligible']) .
         ', stable=' . ($stable ? 'yes' : 'no')
       );
 
@@ -455,10 +471,12 @@ class CRM_Contribute_BAO_AuditContributionRecur {
    *
    * @param string $gateway
    * @param int $time
+   * @param array|null $recurIds
+   *   Only check these recurring IDs when given.
    *
    * @return array
    */
-  protected static function findCandidates($gateway, $time) {
+  protected static function findCandidates($gateway, $time, $recurIds = NULL) {
     $month = date('m', $time);
     $nextDayMonth = date('m', $time + 86400);
     $day = (int) date('j', $time);
@@ -505,6 +523,18 @@ AND s.token_value IS NOT NULL";
       2 => [date('Ymd000000', $time), 'Timestamp'],
       3 => [$processorType, 'String'],
     ];
+    if (is_array($recurIds)) {
+      $recurIds = self::normalizeIds($recurIds);
+      if (!$recurIds) {
+        return [];
+      }
+      $params[4] = [
+        CRM_Utils_Array::implode(',', $recurIds),
+        'CommaSeparatedIntegers',
+      ];
+      $extraWhere .= "
+  AND r.id IN (%4)";
+    }
     $sql = "
 SELECT
   r.id AS recur_id,
@@ -524,6 +554,7 @@ WHERE $cycleClause
     GROUP BY r.id
   ) < %1
   AND $statusClause
+  AND r.is_test = 0
   AND r.frequency_unit = 'month'
   AND p.payment_processor_type = %3
   AND (r.last_execute_date IS NULL OR r.last_execute_date < %2)
@@ -531,10 +562,12 @@ WHERE $cycleClause
 GROUP BY r.id
 ORDER BY r.id
 ";
-    $loggedSql = CRM_Core_DAO::composeQuery($sql, $params, TRUE);
-    CRM_Core_Error::debug_log_message(
-      "[AuditContributionRecur] $gateway estimate query:\n$loggedSql"
-    );
+    if (!is_array($recurIds)) {
+      $loggedSql = CRM_Core_DAO::composeQuery($sql, $params, TRUE);
+      CRM_Core_Error::debug_log_message(
+        "[AuditContributionRecur] $gateway estimate query:\n$loggedSql"
+      );
+    }
 
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
     $rows = [];
@@ -547,6 +580,181 @@ ORDER BY r.id
     }
     $dao->free();
     return $rows;
+  }
+
+  /**
+   * Mark estimate IDs which the gateway execution is expected not to charge.
+   *
+   * Follows the rules of each gateway's doCheckRecur(): an end date which has
+   * passed, full installments when no end date is set, an expired card, and a
+   * paused LINE Pay recurring are skipped without a contribution. TapPay
+   * overdue recurring depends on the card token status returned by the
+   * gateway at execution time, so it is marked separately.
+   *
+   * These marks are informational, they do not change dispatch_ok or
+   * attempt_ok.
+   *
+   * @param string $gateway
+   * @param array $recurIds
+   * @param int $time
+   *
+   * @return array
+   */
+  protected static function classifyExpected($gateway, array $recurIds, $time) {
+    $result = [
+      'expected_skip' => [],
+      'overdue' => [],
+      'skip_reasons' => [],
+    ];
+    $recurIds = self::normalizeIds($recurIds);
+    if (!$recurIds) {
+      return $result;
+    }
+
+    $expiryTables = [
+      'tappay' => 'civicrm_contribution_tappay',
+      'spgateway' => 'civicrm_contribution_spgateway',
+    ];
+    $expiryTable = CRM_Utils_Array::value($gateway, $expiryTables);
+    $expirySelect = $expiryTable
+      ? "(SELECT MAX(t.expiry_date) FROM $expiryTable t WHERE t.contribution_recur_id = r.id)"
+      : 'NULL';
+
+    $reasons = [];
+    foreach (array_chunk($recurIds, 1000) as $chunk) {
+      $dao = CRM_Core_DAO::executeQuery(
+        "SELECT
+          r.id,
+          r.contribution_status_id,
+          r.end_date,
+          r.installments,
+          (
+            SELECT COUNT(*)
+            FROM civicrm_contribution c
+            WHERE c.contribution_recur_id = r.id
+              AND c.contribution_status_id = 1
+              AND c.is_test = 0
+          ) AS success_count,
+          $expirySelect AS expiry_date
+        FROM civicrm_contribution_recur r
+        WHERE r.id IN (%1)
+        ORDER BY r.id",
+        [
+          1 => [
+            CRM_Utils_Array::implode(',', $chunk),
+            'CommaSeparatedIntegers',
+          ],
+        ]
+      );
+      while ($dao->fetch()) {
+        $recurId = (int) $dao->id;
+        $status = (int) $dao->contribution_status_id;
+        $reason = NULL;
+        if ($gateway === 'linepay' && $status === 7) {
+          $reason = 'paused';
+        }
+        elseif (!empty($dao->end_date)) {
+          // The end date takes precedence, installments are not checked then.
+          if ($time > strtotime($dao->end_date)) {
+            $reason = 'end_date';
+          }
+        }
+        elseif (
+          !empty($dao->installments) &&
+          (int) $dao->success_count >= (int) $dao->installments
+        ) {
+          $reason = 'installments';
+        }
+
+        if ($reason === NULL && $gateway === 'tappay' && $status === 6) {
+          $result['overdue'][] = $recurId;
+          continue;
+        }
+        if ($reason === NULL && $expiryTable) {
+          // doCheckRecur() charges only when $time <= expiry date, a missing
+          // expiry date is not charged either.
+          if (empty($dao->expiry_date)) {
+            $reason = 'card_expiry_missing';
+          }
+          elseif ($time > strtotime($dao->expiry_date)) {
+            $reason = 'card_expired';
+          }
+        }
+        if ($reason !== NULL) {
+          $reasons[$reason][] = $recurId;
+          $result['expected_skip'][] = $recurId;
+        }
+      }
+      $dao->free();
+    }
+
+    ksort($reasons);
+    foreach ($reasons as $reason => $ids) {
+      $result['skip_reasons'][$reason] = self::normalizeIds($ids);
+    }
+    $result['expected_skip'] = self::normalizeIds($result['expected_skip']);
+    $result['overdue'] = self::normalizeIds($result['overdue']);
+    return $result;
+  }
+
+  /**
+   * Find undispatched estimate IDs which no longer match the daily candidates.
+   *
+   * The estimate is a snapshot of the first execution of the day. A recurring
+   * which is cancelled, or gets a contribution of this month, after that is
+   * skipped by the later executions and is not a missed dispatch.
+   *
+   * @param string $gateway
+   * @param array $recurIds
+   * @param int $time
+   *
+   * @return array
+   */
+  protected static function findIneligible($gateway, array $recurIds, $time) {
+    $recurIds = self::normalizeIds($recurIds);
+    if (!$recurIds) {
+      return [];
+    }
+
+    $eligibleIds = [];
+    foreach (self::findCandidates($gateway, $time, $recurIds) as $row) {
+      $eligibleIds[] = (int) $row['recur_id'];
+    }
+    return array_values(array_diff($recurIds, $eligibleIds));
+  }
+
+  /**
+   * Keep live recurring IDs only, test recurring is not audited.
+   *
+   * @param array $recurIds
+   *
+   * @return array
+   */
+  protected static function filterLiveIds(array $recurIds) {
+    $recurIds = self::normalizeIds($recurIds);
+    if (!$recurIds) {
+      return [];
+    }
+
+    $dao = CRM_Core_DAO::executeQuery(
+      'SELECT id
+       FROM civicrm_contribution_recur
+       WHERE id IN (%1)
+         AND is_test = 0
+       ORDER BY id',
+      [
+        1 => [
+          CRM_Utils_Array::implode(',', $recurIds),
+          'CommaSeparatedIntegers',
+        ],
+      ]
+    );
+    $liveIds = [];
+    while ($dao->fetch()) {
+      $liveIds[] = (int) $dao->id;
+    }
+    $dao->free();
+    return self::normalizeIds($liveIds);
   }
 
   /**
@@ -599,6 +807,16 @@ ORDER BY r.id
     $estimateIds = self::normalizeIds($cache['ids']['estimate']);
     $dispatchIds = self::normalizeIds($cache['ids']['dispatch']);
     $attemptIds = self::normalizeIds($cache['ids']['attempt']);
+    $ineligibleIds = self::normalizeIds(
+      CRM_Utils_Array::value('ineligible', $cache['ids'], [])
+    );
+    $expectedSkipIds = self::normalizeIds(
+      CRM_Utils_Array::value('expected_skip', $cache['ids'], [])
+    );
+    $overdueIds = self::normalizeIds(
+      CRM_Utils_Array::value('overdue', $cache['ids'], [])
+    );
+    $skipReasons = CRM_Utils_Array::value('skip_reasons', $cache, []);
     $processorByRecur = $cache['processor_by_recur'];
     $processorNames = $cache['processor_names'];
     $ready = CRM_Utils_Array::value('state', $data) === 'stable';
@@ -614,11 +832,21 @@ ORDER BY r.id
           'estimate' => [],
           'dispatch' => [],
           'attempt' => [],
+          'ineligible' => [],
+          'expected_skip' => [],
+          'overdue' => [],
         ];
       }
       $sets[$processorId]['estimate'][] = $recurId;
     }
-    foreach (['dispatch' => $dispatchIds, 'attempt' => $attemptIds] as $key => $ids) {
+    $groups = [
+      'dispatch' => $dispatchIds,
+      'attempt' => $attemptIds,
+      'ineligible' => $ineligibleIds,
+      'expected_skip' => $expectedSkipIds,
+      'overdue' => $overdueIds,
+    ];
+    foreach ($groups as $key => $ids) {
       foreach ($ids as $recurId) {
         $processorId = CRM_Utils_Array::value($recurId, $processorByRecur);
         if ($processorId && isset($sets[$processorId])) {
@@ -632,14 +860,18 @@ ORDER BY r.id
       $estimate = self::normalizeIds($ids['estimate']);
       $dispatch = self::normalizeIds($ids['dispatch']);
       $attempt = self::normalizeIds($ids['attempt']);
-      $remaining = array_values(array_diff($estimate, $attempt));
-      $undispatched = array_values(array_diff($estimate, $dispatch));
+      $ineligible = self::normalizeIds($ids['ineligible']);
+      $remaining = array_values(array_diff($estimate, $attempt, $ineligible));
+      $undispatched = array_values(array_diff($estimate, $dispatch, $ineligible));
       $processors[$processorId] = [
         'id' => (int) $processorId,
         'name' => CRM_Utils_Array::value($processorId, $processorNames, ''),
         'estimate' => self::summarizeIds($estimate),
         'dispatch' => self::summarizeIds($dispatch),
         'attempt' => self::summarizeIds($attempt),
+        'ineligible' => self::summarizeIds($ineligible),
+        'expected_skip' => count($ids['expected_skip']),
+        'overdue' => count($ids['overdue']),
         'remaining' => count($remaining),
         'undispatched' => count($undispatched),
         'dispatch_ok' => $ready
@@ -652,13 +884,20 @@ ORDER BY r.id
     }
     ksort($processors);
 
-    $remaining = array_values(array_diff($estimateIds, $attemptIds));
-    $undispatched = array_values(array_diff($estimateIds, $dispatchIds));
+    $remaining = array_values(array_diff($estimateIds, $attemptIds, $ineligibleIds));
+    $undispatched = array_values(array_diff($estimateIds, $dispatchIds, $ineligibleIds));
     $extraDispatch = array_values(array_diff($dispatchIds, $estimateIds));
     $extraAttempt = array_values(array_diff($attemptIds, $estimateIds));
     $data['estimate'] = self::summarizeIds($estimateIds);
     $data['dispatch'] = self::summarizeIds($dispatchIds);
     $data['attempt'] = self::summarizeIds($attemptIds);
+    $data['ineligible'] = self::summarizeIds($ineligibleIds);
+    $data['expected_skip'] = self::summarizeIds($expectedSkipIds);
+    $data['expected_skip']['reasons'] = [];
+    foreach ($skipReasons as $reason => $ids) {
+      $data['expected_skip']['reasons'][$reason] = count($ids);
+    }
+    $data['overdue'] = self::summarizeIds($overdueIds);
     $data['remaining'] = count($remaining);
     $data['undispatched'] = count($undispatched);
     $data['extra_dispatch'] = count($extraDispatch);
@@ -746,6 +985,9 @@ ORDER BY r.id
       $data['estimate']['count'] .
       ', dispatch=' . $data['dispatch']['count'] .
       ', attempt=' . $data['attempt']['count'] .
+      ', ineligible=' . $data['ineligible']['count'] .
+      ', expected_skip=' . $data['expected_skip']['count'] .
+      ', overdue=' . $data['overdue']['count'] .
       ', remaining=' . $data['remaining']
     );
     return $saved['data'] + ['log_id' => (int) $saved['id']];
@@ -808,11 +1050,29 @@ ORDER BY r.id
       return NULL;
     }
 
-    foreach (['estimate', 'dispatch', 'attempt', 'added', 'removed'] as $key) {
+    $idKeys = [
+      'estimate',
+      'dispatch',
+      'attempt',
+      'added',
+      'removed',
+      'ineligible',
+      'expected_skip',
+      'overdue',
+    ];
+    foreach ($idKeys as $key) {
       $cache['ids'][$key] = self::normalizeIds(
         CRM_Utils_Array::value($key, $cache['ids'], [])
       );
     }
+    $skipReasons = [];
+    foreach (CRM_Utils_Array::value('skip_reasons', $cache, []) as $reason => $ids) {
+      if (is_string($reason) && is_array($ids)) {
+        $skipReasons[$reason] = self::normalizeIds($ids);
+      }
+    }
+    ksort($skipReasons);
+    $cache['skip_reasons'] = $skipReasons;
     $processorByRecur = [];
     foreach (
       CRM_Utils_Array::value('processor_by_recur', $cache, [])
