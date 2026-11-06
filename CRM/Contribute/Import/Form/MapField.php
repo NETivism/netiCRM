@@ -190,6 +190,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     else {
       $this->_mapperFields = $this->get('fields');
     }
+    // Master Address ID (shared address) is not supported in import, hide it from the field list
+    unset($this->_mapperFields['master_id']);
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
