@@ -115,6 +115,7 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
       [1 => $report['mailing']['name']]
     ));
 
-    return parent::run();
+    // skip CRM_Core_Page_Basic::browse(), it loads every mailing into memory
+    return $this->superRun();
   }
 }

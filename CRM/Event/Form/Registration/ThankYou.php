@@ -94,6 +94,16 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
       }
     }
 
+    // replace {contact.*} / {participant.*} tokens in the thank-you text before display
+    if (!empty($this->_values['event']['thankyou_text']) && !empty($participantContactID) && $primaryParticipant) {
+      $this->_values['event']['thankyou_text'] = CRM_Event_BAO_Event::tokenize(
+        $participantContactID,
+        $this->_values['event']['thankyou_text'],
+        $primaryParticipant
+      );
+      $this->assign('event', $this->_values['event']);
+    }
+
     // add dataLayer for gtm
     if (!$this->get('dataLayerAdded')) {
       if ($this->_trxnId) {

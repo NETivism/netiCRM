@@ -121,6 +121,11 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
         $this->_pageId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP', $this->_id, 'contribution_page_id');
       }
     }
+
+    // block new pcp when pcp is disabled for this contribution page
+    if (!$this->_id && !$isManager && !CRM_Contribute_BAO_PCP::isPcpBlockActive($this->_pageId)) {
+      CRM_Core_Error::statusBounce(ts('Personal Campaign Pages are currently not enabled for this contribution page.'));
+    }
     $this->_single = $this->get('single');
 
     if (!$this->_single) {
