@@ -594,6 +594,33 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
   }
 
   /**
+   * Function to check new pcp can be created for contribution page
+   *
+   * Both pcp block and contribution page should be active.
+   * Contribution page is_active is bitmask, IS_SPECIAL page may be 3.
+   *
+   * @param int $pageId contribution page id
+   *
+   * @return boolean
+   * @access public
+   * @static
+   *
+   */
+  public static function isPcpBlockActive($pageId) {
+    $query = "
+     SELECT pb.id
+     FROM civicrm_contribution_page cp
+          INNER JOIN civicrm_pcp_block pb ON ( cp.id = pb.entity_id AND pb.entity_table = 'civicrm_contribution_page' )
+     WHERE pb.is_active = 1 AND (cp.is_active & %2) AND cp.id = %1";
+
+    $params = [
+      1 => [$pageId, 'Integer'],
+      2 => [CRM_Contribute_BAO_ContributionPage::IS_ACTIVE, 'Integer'],
+    ];
+    return (bool) CRM_Core_DAO::singleValueQuery($query, $params);
+  }
+
+  /**
    * Function to get email is enabled for supporter's profile
    *
    * @param int $profileId supporter's profile id
