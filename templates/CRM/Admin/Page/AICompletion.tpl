@@ -91,7 +91,7 @@
     {if $row.ai_role}
       {capture assign=filter_role}{$row.ai_role|escape:'url'}{/capture}
       <a href="{crmURL p="civicrm/admin/aicompletion" q="reset=1&role=`$filter_role`"}">
-        {$row.ai_role}
+        {$row.ai_role|escape}
       </a>
     {else}
       {ts}(n/a){/ts}
@@ -101,19 +101,19 @@
     {if $row.tone_style}
       {capture assign=filter_tone}{$row.tone_style|escape:'url'}{/capture}
       <a href="{crmURL p="civicrm/admin/aicompletion" q="reset=1&tone=`$filter_tone`"}">
-        {$row.tone_style}
+        {$row.tone_style|escape}
       </a>
     {else}
       {ts}(n/a){/ts}
     {/if}
   </td>
   <td class="crm-aicomplete-items-content">
-    <div><i class="zmdi zmdi-comment-alt-text"></i> {$row.content}</div>
-    <div class="description"><i class="zmdi zmdi-comments"></i> {$row.output}</div>
+    <div><i class="zmdi zmdi-comment-alt-text"></i> {$row.content|escape}</div>
+    <div class="description"><i class="zmdi zmdi-comments"></i> {$row.output|escape}</div>
   </td>
   <td class="crm-aicomplete-items-template_title">
     {if $row.template_title}
-      {$row.template_title}
+      {$row.template_title|escape}
     {else}
       {ts}(n/a){/ts}
     {/if}

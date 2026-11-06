@@ -41,20 +41,20 @@
       </tr>
       <tr>
         <td class="label">{ts}Copywriting Role{/ts}</td>
-        <td>{$item.ai_role}</td>
+        <td>{$item.ai_role|escape}</td>
       </tr>
       <tr>
         <td class="label">{ts}Tone Style{/ts}</td>
-        <td>{$item.tone_style}</td>
+        <td>{$item.tone_style|escape}</td>
       </tr>
       <tr>
         <td class="label">{ts}Context{/ts}</td>
-        <td>{$item.context|nl2br}</td>
+        <td>{$item.context|escape|nl2br}</td>
       </tr>
       <tr>
         <td class="label">{ts}Result{/ts}</td>
         <td>
-          <textarea class="huge" data="copy-text">{$item.output_text}</textarea>
+          <textarea class="huge" data="copy-text">{$item.output_text|escape}</textarea>
           {include file="CRM/common/copyText.tpl"}
           <div class="description font-red">
             <i class="zmdi zmdi-info-outline"></i>{ts}Remember to verify AI-generated text before using it.{/ts}<br>
@@ -64,7 +64,7 @@
       {if $item.is_template}
       <tr>
         <td class="label">{ts}Template Title{/ts}</td>
-        <td>{$item.template_title}</td>
+        <td>{$item.template_title|escape}</td>
       </tr>
       {/if}
     </table>
