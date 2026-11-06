@@ -34,7 +34,7 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
     /**
      * Date when every site is switched to CKEditor 5 automatically (ref #45339).
      */
-    const CKE5_AUTO_SWITCH_DATE = '2026-12-23';
+    const CKE5_AUTO_SWITCH_DATE = '2026-12-21';
 
     /**
      * Class constructor
