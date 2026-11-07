@@ -1290,18 +1290,34 @@ GROUP BY currency
    * @access public
    * static  */
   public static function checkDuplicateIds($params) {
-    $dao = new CRM_Contribute_DAO_Contribution();
+    // Only these columns can be used for matching, value type for query params
+    $allowedFields = [
+      'id' => 'Integer',
+      'trxn_id' => 'String',
+      'invoice_id' => 'String',
+    ];
 
     $clause = [];
     $input = [];
+    $index = 1;
     foreach ($params as $k => $v) {
-      if ($v) {
-        $clause[] = "$k = '$v'";
+      if ($v && isset($allowedFields[$k])) {
+        // Invalid contribution id can not match any record
+        if ($k == 'id' && !CRM_Utils_Rule::positiveInteger($v)) {
+          return NULL;
+        }
+        // Use query params so values with quotes are escaped properly
+        $clause[] = "$k = %{$index}";
+        $input[$index] = [$v, $allowedFields[$k]];
+        $index++;
       }
+    }
+    if (empty($clause)) {
+      return NULL;
     }
     $clause = CRM_Utils_Array::implode(' AND ', $clause);
     $query = "SELECT id FROM civicrm_contribution WHERE $clause";
-    $dao = &CRM_Core_DAO::executeQuery($query, $input);
+    $dao = CRM_Core_DAO::executeQuery($query, $input);
 
     while ($dao->fetch()) {
       $result = $dao->id;
