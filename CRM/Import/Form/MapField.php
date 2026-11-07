@@ -198,6 +198,8 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $skipColumnHeader = $this->get('skipColumnHeader');
     $this->_mapperFields = $this->get('fields');
     $this->_mapperFields = CRM_Core_FieldHierarchy::arrange($this->_mapperFields);
+    // Master Address ID (shared address) is not supported in import, hide it from the field list
+    unset($this->_mapperFields['master_id']);
     $this->_importTableName = $this->get('importTableName');
     $this->_onDuplicate = $this->get('onDuplicate');
     $this->_dedupeRuleGroupId = $this->get('dedupeRuleGroupId');
@@ -425,6 +427,10 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
         $values = [];
         foreach ($relatedFields as $name => $field) {
+          // Master Address ID is not supported in import
+          if ($name == 'master_id') {
+            continue;
+          }
           $values[$name] = $field['title'];
           if (isset($hasLocationTypes[$name])) {
             $sel3[$key][$name] = $this->_location_types;

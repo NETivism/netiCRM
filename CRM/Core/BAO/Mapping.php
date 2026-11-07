@@ -305,6 +305,9 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       $fields[$value] = CRM_Core_BAO_Address::validateAddressOptions($contactFields);
 
       if ($mappingType == 'Export') {
+        // Master Address ID (shared address) is not useful for export, hide it from the field list
+        unset($fields[$value]['master_id']);
+
         $relationships = [];
         $relationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $value);
         // Fetch all relationship types (both directions, all contact types) for opposite-label lookup
@@ -670,7 +673,8 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
         if (!empty($mappingName)) {
           $locationId = $mappingLocation[$x][$i] ?? 0;
-          if (isset($mappingName[$x][$i])) {
+          // Old saved export mappings may contain Master Address ID, leave that column empty
+          if (isset($mappingName[$x][$i]) && !($mappingType == 'Export' && $mappingName[$x][$i] == 'master_id')) {
             if (is_array($mapperFields[$mappingContactType[$x][$i]])) {
 
               if (isset($mappingRelation[$x][$i])) {
