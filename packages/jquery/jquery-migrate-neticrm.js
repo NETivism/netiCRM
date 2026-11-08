@@ -33,6 +33,10 @@ jQuery.neticrmMigrateMute = true;
 // so it must be set here, before jQuery UI. Our dialogs still use the dialogClass option.
 jQuery.uiBackCompat = true;
 
+// Migrate 4 reads this flag each time it logs, so setting it after Migrate loads is early enough.
+// Messages are still kept in jQuery.migrateMessages for debugging.
+jQuery.migrateMute = true;
+
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
 	var i,
