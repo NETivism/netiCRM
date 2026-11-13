@@ -127,6 +127,42 @@ class CRM_Utils_Rule {
   }
 
   /**
+   * Validate that a string is a valid ORDER BY clause.
+   *
+   * Supports comma-separated `table.column [asc|desc]` clauses, optionally
+   * backtick-quoted, and the `field(column,1,2,3)` sort helper. Rejects
+   * anything else (subqueries, function calls, etc.) to prevent SQL
+   * injection via user-supplied sort parameters.
+   *
+   * @param string $str the order by clause to validate
+   *
+   * @return bool
+   */
+  public static function mysqlOrderBy($str) {
+    $matches = [];
+    // The field() sort helper uses commas internally, e.g.
+    // field(contribution_status_id,3,4,5) or field(civicrm_contribution.contribution_status_id,3,4,5).
+    // Strip it out first so it does not get mangled by the comma-split below.
+    if (preg_match('/field\([a-z_.]+,[0-9,]+\)/', $str, $matches)) {
+      $str = str_replace($matches, '', $str);
+    }
+    $str = trim($str, ", \t\n\r\0\x0B");
+    if (!empty($matches) && $str === '') {
+      // Nothing left to check after removing the field() clause.
+      return TRUE;
+    }
+
+    $parts = explode(',', $str);
+    foreach ($parts as $part) {
+      if (!preg_match('/^((`[\w-]{1,64}`|[\w-]{1,64})\.)*(`[\w-]{1,64}`|[\w-]{1,64})( (asc|desc))?$/i', trim($part))) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
    * Validate a QuickForm variable string.
    *
    * @param string $str the string to validate

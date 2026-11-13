@@ -204,8 +204,8 @@
                                 {foreach from=$website item=item}
                                     {if $item.url}
                                     <tr>
-                                        <td class="label">{$item.website_type} {ts}Website{/ts}</td>
-                                        <td><a href="{$item.url}" target="_blank">{$item.url}</a></td>
+                                        <td class="label">{$item.website_type|escape} {ts}Website{/ts}</td>
+                                        <td><a href="{$item.url|escape}" target="_blank">{$item.url|escape}</a></td>
                                         <td></td>
                                     </tr>
                                     {/if}
