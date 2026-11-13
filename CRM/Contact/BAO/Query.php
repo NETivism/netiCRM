@@ -365,6 +365,7 @@ class CRM_Contact_BAO_Query {
     'email',
     'im',
     'address_name',
+    'master_id',
   ];
 
   /**

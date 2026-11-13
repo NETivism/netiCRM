@@ -160,6 +160,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_mapperFields = $this->get('fields');
+    // Master Address ID (shared address) is not supported in import, hide it from the field list
+    unset($this->_mapperFields['master_id']);
 
     $this->_columnCount = $this->get('columnCount');
     $this->assign('columnCount', $this->_columnCount);
